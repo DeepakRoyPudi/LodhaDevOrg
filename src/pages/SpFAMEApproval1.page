@@ -1,0 +1,543 @@
+<apex:page standardController="FAME__c" extensions="SpFAMEApprovalProcess1" sidebar="false">
+  <style type="text/css">
+   table td{padding:3px; font-weight: bold}
+    .td-color{background-color:#000080; color:#fff; text-align:center}
+    th{background-color:#00BFFF;color:#fff;padding:3px;text-align:center}  
+  </style>
+  
+  <script type="text/javascript">
+function closeWindow(){
+    window.close();
+}
+
+</script>
+  <apex:pagemessages />
+  <apex:form id="FAMEFORM">
+      <div align="Right"><apex:image value="{!$Resource.Lodha_Logo}"/></div>
+     
+  <table width="100%" border="2" style="border-collapse: collapse">
+      <tr>
+          <td colspan="6"><div style="font-size:10px;color:red;font-weight: bold">* Indicate mandatory for FAME Accept.</div></td>
+      </tr>
+      <tr>
+          <td colspan="6" class="td-color" style="font-size:25px;"><Center>FAME CHECKLIST</Center></td>
+      </tr>
+      <tr>
+          <td colspan="6">  
+              <apex:outputText style="font-weight: bold">CUSTOMER NAME:&nbsp;</apex:outputText>
+              <apex:outputText >{!customer_name_details }</apex:outputText> &nbsp;&nbsp;&nbsp;
+              <apex:outputText style="font-weight: bold"> FLAT DETAILS:&nbsp;</apex:outputText>
+              <apex:outputText > {!flat_details}</apex:outputText>
+          </td>
+
+      </tr>
+  </table>
+  <table width="100%" border="2" style="border-collapse: collapse">
+    <tr>
+      <th rowspan="2">Contents</th>
+      <th rowspan="2">Task</th>
+      <th width="5%" colspan="2">Fame By Sales</th>
+      <th width="5%" colspan="2">Fame By CC</th>
+    </tr>
+    <tr>
+      <th width="5%">Check</th>
+      <th width="5%">NA</th>
+      <th width="5%">Check</th>
+      <th width="5%">NA</th>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+    </tr>
+    <tr>
+      <td class="td-color">Customer Name</td>
+      <td>Spellings of Applicant and Co-applicant Names have been cross checked with the clients, These also match with the names in the BDF in SFDC *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Applicant_Co_applicant_names__c}" id="Applicant_Co_applicant_names__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Applicant_Co_applicant_names__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+    </tr>
+    <tr>
+      <td class="td-color" rowspan="2">Customer Contact Details</td>
+      <td>Communication Address - residence/office addresses are complete and legible</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Residence_and_Office_address_readable__c}" id="Residence_and_Office_address_readable__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Residence_and_Office_address_readable__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Contact details - Cell phone/landline number and email id are mentioned</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Cell_Landline_number_and_email_id__c}" id="Cell_Landline_number_and_email_id__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Cell_Landline_number_and_email_id__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="7"></td>
+    </tr>
+    <tr>
+      <td class="td-color" rowspan="5">Residential Unit &amp; Consideration Value</td>
+      <td>Checked for the inventory details in SFDC &amp; ensured that they are not booked in someone else&apos;s name. *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Inventory_not_booked_in_other_name__c}" id="Inventory_not_booked_in_other_name__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Inventory_not_booked_in_other_name__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Booking date and Consideration value on the Application form matches with the BDF  &amp; Opportunity in SFDC *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Booking_date_and_consideration_value__c}" id="Booking_date_and_consideration_value__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Booking_date_and_consideration_value__c}"/></td>
+      <td></td>
+    </tr>
+    
+    <tr>
+      
+      <td>Date of application is mentioned &amp; consistent across documents (CP form/Loyalty/ Corporate,etc.) *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.CRN_and_date_of_application__c}" id="CRN_and_date_of_application__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.CRN_and_date_of_application__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Rates offered to the client on the application form matches the approved price sheet in BDF applicable on the date of application* </td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Rates_offered_wrt_applicable_price_sheet__c}" id="Rates_offered_wrt_applicable_price_sheet__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Rates_offered_wrt_applicable_price_sheet__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><span style="font-weight:bold;">Check Carpet area &amp; area for exclusive use if applicable.</span>  Compared Flat Number and Typology on the form with SFDC Inventory/Allotment list *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Flat_number_typolology__c}" id="Flat_number_typolology__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Flat_number_typolology__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+    </tr>
+    <tr>
+      <td class="td-color" rowspan="3">Payments related</td>
+      <td>Current status of construction is ticked and all fields are filled in. Percentage or value payable in 21 / 42 days updated based on construction status *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Current_status_of_const_relevant_field__c}" id="Current_status_of_const_relevant_field__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Current_status_of_const_relevant_field__c}"/></td>
+      <td></td>
+    </tr>
+    <!-- Code Modified By Deepak Pudi 29/9/2014 -->
+    <tr>
+      <td>Token money check should be from applicant account only , NO third party cheques to be accepted.</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.No_Third_Party_Cheques__c}"  id="No_Third_Party_Cheques__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.No_Third_Party_Cheques__c}"/></td>
+      <td></td>
+    </tr>
+    
+    <tr>
+      <td>Booking amount / cheque/card details match with physical cheque/swipe slip attached. Favouring name spell check done. *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Booking_amount_cheque_details_Name__c}" id="Booking_amount_cheque_details_Name__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Booking_amount_cheque_details_Name__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+    </tr>
+    <tr>
+      <td class="td-color" rowspan="3">Mandatory Signatures</td>
+      <td>Customer&apos;s ID proof has been attached*</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Customer_s_ID_proof__c}" id="Customer_s_ID_proof__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Customers_ID_proof__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>All Applicants signatures are present on all MANDATORY places in the application form (Signature should match with the Photo Id) *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Sign_at_all_places_according_to_photo_id__c}" id="Sign_at_all_places_according_to_photo_id__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Sign_at_all_places_according_to_photo_id__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Sales Manager has also signed in all relevant spaces</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Sales_manager_signatures__c}" id="Sales_manager_signatures__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Sales_manager_signatures__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+    </tr>
+    <tr>
+      <td class="td-color" rowspan="4">Booking Detail Form (BDF)</td>
+      <td>BDF is printed from SFDC Inventory with signature of Sales manager and Site In-charge</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.BDF_printed_with_proper_sign_of_SM_SI__c}" id="BDF_printed_with_proper_sign_of_SM_SI__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.BDF_printed_with_proper_sign_of_SM_SI__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>BDF is signed by the Sales Manager, Site Head and HOD in case of DAM/SCUD approvals</td>
+      <td align="center"><apex:inputField id="DAMSCUD1" value="{!famebysalesObj.Dam_Signature_of_SM_SI_and_HOD__c}" /></td>
+      <td><apex:inputField id="DAMSCUDNA1" value="{!famebysalesObj.DAM_SCUD_NA__c}"/></td>
+      <td align="center"><apex:inputField id="DAMSCUD" value="{!fame.Dam_Signature_of_SM_SI_and_HOD__c}"/></td>
+      <td><apex:inputField id="DAMSCUDNA" value="{!fame.DAM_SCUD_NA__c}"/></td>
+    </tr>
+    <tr>
+      <td>Checked that the Allotment numbers are correctly mentioned in BDF.</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Allotment_numbers__c}" id="Allotment_numbers__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Allotment_numbers__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Relevant approvals are attached / Signatures have been taken for any deviations</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Approvals_for_deviations__c}" id="Approvals_for_deviations__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Approvals_for_deviations__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+    </tr>
+    <!-- Code Modified By Deepak Pudi 29/9/2014 -->
+    <tr>
+      <td class="td-color" rowspan="8">Pricing &amp; Commercial Details</td>
+      <td>Price sheet is attached and signed by applicant/s *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Pricesheet_attached_signed_by_applicnt__c}" id="Pricesheet_attached_signed_by_applicnt__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Pricesheet_attached_signed_by_applicnt__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>In case of corp booking, company ID card attached &amp; inform SAP to provide interest waiver as per the LCUBE policy</td>
+      <td align="center"><apex:inputField id="CUSTOMERTYPE1" value="{!famebysalesObj.Customer_ID_proof_Comp_ID_for_Corp_book__c}"/></td>
+      <td><apex:inputField id="CUSTOMERTYPENA1" value="{!famebysalesObj.Customer_Type_Corporate_NA__c}"/></td>
+      <td align="center"><apex:inputField id="CUSTOMERTYPE" value="{!fame.Customer_ID_proof_Company_ID_for_Corp__c}"/></td>
+      <td><apex:inputField id="CUSTOMERTYPENA" value="{!fame.Customer_Type_Corporate_NA__c}"/></td>
+    </tr>
+    <tr>
+      <td>In case of any overwriting/ cancellation/ white ink – customer counter sign is done *</td>
+      <td align="center"><apex:inputField Id="OVERWRITING1" value="{!famebysalesObj.Overwriting_Cancellation_White_ink_sign__c}"/></td>
+      <td><apex:inputField Id="OVERWRITINGNA1" value="{!famebysalesObj.overwriting_cancellation_white_ink_NA__c}"/></td>
+      <td align="center"><apex:inputField Id="OVERWRITING" onchange="document.getElementById('{!$Component.FAMEFORM.OVERWRITINGNA}').disabled = document.getElementById('{!$Component.FAMEFORM.OVERWRITING}').checked;" value="{!fame.Overwriting_Cancellation_White_ink_sign__c}"/></td>
+      <td><apex:inputField Id="OVERWRITINGNA" onchange="document.getElementById('{!$Component.FAMEFORM.OVERWRITING}').disabled = document.getElementById('{!$Component.FAMEFORM.OVERWRITINGNA}').checked;" value="{!fame.overwriting_cancellation_white_ink_NA__c}"/></td>
+    </tr>
+    
+    <tr>
+      <td>Deal Closure Form (original/photocopy) attached with the application form (Applicable for High End and Aspi) *</td>
+      <td align="center"><apex:inputField Id="Deal_Closure_Form_original_photocopy1" value="{!famebysalesObj.Deal_Closure_Form_original_photocopy__c}"/></td>
+      <td><apex:inputField Id="Project_Type_CASA_Commercial_and_NA1" value="{!famebysalesObj.Project_Type_CASA_Commercial_and_NA__c}"/></td>
+      <td align="center"><apex:inputField Id="Deal_Closure_Form_original_photocopy" value="{!fame.Deal_Closure_Form_original_photocopy__c}"/></td>
+      <td><apex:inputField Id="Project_Type_CASA_Commercial_and_NA" value="{!fame.Project_Type_CASA_Commercial_and_NA__c}"/></td>
+    </tr>
+    <tr>
+      <td>CAM charges, society and other charges mentioned in the application form matches with the price sheet</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.CAM_charges_society_and_other_charges__c}" id="CAM_charges_society_and_other_charges__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.CAM_charges_society_and_other_charges__c}"/></td>
+      <td></td>
+    </tr>
+    
+    <tr>
+      <td>All relevent taxes are mentioned in the application form, For  eg: Provisional Property tax, PA tax etc…</td>
+      <td align="center"><apex:inputField Id="PROPERTYTAX1"  value="{!famebysalesObj.Provisional_Property_Tax__c}"/></td>
+      <td><apex:inputField Id="PROPERTYTAXNA1" value="{!famebysalesObj.Provisional_Property_Tax_NA__c}"/></td>
+      <td align="center"><apex:inputField Id="PROPERTYTAX" onchange="document.getElementById('{!$Component.FAMEFORM.PROPERTYTAXNA}').disabled = document.getElementById('{!$Component.FAMEFORM.PROPERTYTAX}').checked;" value="{!fame.Provisional_Property_Tax__c}"/></td>
+      <td><apex:inputField Id="PROPERTYTAXNA" onchange="document.getElementById('{!$Component.FAMEFORM.PROPERTYTAX}').disabled = document.getElementById('{!$Component.FAMEFORM.PROPERTYTAXNA}').checked;" value="{!fame.Provisional_Property_Tax_NA__c}"/></td>
+    </tr>
+    
+    <tr>
+      <td>All relevant documents attached, including SCUD or DAM approvals. These have come attached alongwith the application form and not post receipt of the form.</td>
+      <td align="center"><!--<apex:inputField value="{!famebysalesObj.All_relevant_doc_incl_SCUD_DAM_attached__c}" id="All_relevant_doc_incl_SCUD_DAM_attached__c"/>--></td>
+      <td><!--<apex:inputField value="{!famebysalesObj.All_relevant_doc_incl_SCUD_DAM_NA__c}" id="All_relevant_doc_incl_SCUD_DAM_attached__NA"/>--></td>
+      <td align="center"><apex:inputField value="{!fame.All_relevant_docs_including_SCUD_DAM__c}"/></td>
+      <td></td>
+    </tr>
+    <!-- Code Modified By Deepak Pudi 29/9/2014 -->
+     <tr>
+      <td>Site visit form (original / photocopy) attached and details match with app form. For NRI / Outstation customers signed photocopy would suffice. Site visit form should have a unique PAC number.</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Site_visit_form_original_photocopy__c}" id="Site_visit_form_original_photocopy__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Site_visit_form_original_photocopy__c}"/></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="4"></td>
+    </tr>
+    <tr>
+      <td class="td-color" rowspan="6">Source Verification</td>
+      <td>In case of channel partner booking-  Source of booking mentioned on the Know your deal page of the application is matching with Inventory form, Site visit form &amp; CP authentication form. *</td>
+      <td align="center"><!--<apex:inputField Id="CP_Name_is_same_as_Know_your_deal_page1" value="{!famebysalesObj.CP_Name_is_same_as_Know_your_deal_page__c}"/>--></td>
+      <td><!--<apex:inputField Id="Booked_BY_Channel_Partner_NA1" value="{!famebysalesObj.Booked_BY_Channel_Partner_NA__c}"/>--></td>
+      <td align="center"><apex:inputField Id="CP_Name_is_same_as_Know_your_deal_page" value="{!fame.CP_Name_is_same_as_Know_your_deal_page__c}"/></td>
+      <td><apex:inputField Id="Booked_BY_Channel_Partner_NA" value="{!fame.Booked_BY_Channel_Partner_NA__c}"/></td>
+    </tr>
+    <tr>
+      <td>Customer’s signature as per customer ID proof matches with site visit form, CP authentication form &amp; application form.Address proof for NRI &amp; Outstation customer *</td>
+      <td align="center"><!--<apex:inputField Id="Customers_signature_verification1" value="{!famebysalesObj.Customer_s_signature_verification__c}"/>--></td>
+      <td><!--<apex:inputField Id="Booked_BY_Channel_Partner_NA_021" value="{!famebysalesObj.Booked_BY_Channel_Partner_NA_02__c}"/>--></td>
+      <td align="center"><apex:inputField Id="Customers_signature_verification" value="{!fame.Customers_signature_verification__c}"/></td>
+      <td><apex:inputField Id="Booked_BY_Channel_Partner_NA_02" value="{!fame.Booked_BY_Channel_Partner_NA_02__c}"/></td>
+    </tr>
+    <tr>
+      <td>REAP / iREAP ID mentioned on the site visit form matches with CP authentication form &amp; application form. *</td>
+      <td align="center"><!--<apex:inputField id="REAP_iREAP_ID_verification1" value="{!famebysalesObj.REAP_iREAP_ID_verification__c}"/>--></td>
+      <td><!--<apex:inputField Id="Booked_BY_Channel_Partner_NA_031" value="{!famebysalesObj.Booked_BY_Channel_Partner_NA_03__c}"/>--></td>
+      <td align="center"><apex:inputField id="REAP_iREAP_ID_verification" value="{!fame.REAP_iREAP_ID_verification__c}"/></td>
+      <td><apex:inputField Id="Booked_BY_Channel_Partner_NA_03" value="{!fame.Booked_BY_Channel_Partner_NA_03__c}"/></td>
+    </tr>
+    <tr>
+      <td>Channel Partner signature is available on site visit form and application form &amp; both are matching. *</td>
+      <td align="center"><!--<apex:inputField id="CP_signature_verification1" value="{!famebysalesObj.CP_signature_verification__c}"/>--></td>
+      <td><!--<apex:inputField Id="Booked_BY_Channel_Partner_NA_041" value="{!famebysalesObj.Booked_BY_Channel_Partner_NA_04__c}"/>--></td>
+      <td align="center"><apex:inputField id="CP_signature_verification" value="{!fame.CP_signature_verification__c}"/></td>
+      <td><apex:inputField Id="Booked_BY_Channel_Partner_NA_04" value="{!fame.Booked_BY_Channel_Partner_NA_04__c}"/></td>
+    </tr>
+    <tr>
+      <td>Channel Partner * <span style="padding-left:33px;"><apex:inputField id="Channel_Partner_Name_CC" value="{!fame.Channel_Partner_Name__c}"/></span></td>
+      <td align="center"><!--<apex:inputField id="Capture_of_Channel_Partner_name1" value="{!famebysalesObj.Capture_of_Channel_Partner_name__c}"/>--></td>
+      <td><!--<apex:inputField id="Channel_Partner_Name_NA1" value="{!famebysalesObj.Channel_Partner_Name_NA__c}"/>--></td>
+      <td align="center"><apex:inputField id="Capture_of_Channel_Partner_name" value="{!fame.Capture_of_Channel_Partner_name__c}"/></td>
+      <td><apex:inputField id="Channel_Partner_Name_NA" value="{!fame.Channel_Partner_Name_NA__c}"/></td>
+      <!--<td><apex:inputField id="Channel_Partner_Name" value="{!fame.Channel_Partner_Name__c}"/></td>-->
+    </tr>
+    
+        
+    <tr>
+      <td>REAP ID * <span style="padding-left:78px;"><!--<apex:inputField id="Reap_ID_Name_sales" value="{!famebysalesObj.Reap_ID_Name__c}"/>--> <apex:inputField id="Reap_ID_Name_CC" value="{!fame.Reap_ID_Name__c}"/></span></td>
+      <td align="center"><!--<apex:inputField id="Capture_of_Channel_Partner_Reap_ID1" value="{!famebysalesObj.Capture_of_Channel_Partner_Reap_ID__c}"/>--></td>
+      <td><!--<apex:inputField id="Reap_ID_NA1" value="{!famebysalesObj.Reap_ID_NA__c}"/>--></td>
+      <td align="center"><apex:inputField id="Capture_of_Channel_Partner_Reap_ID" value="{!fame.Capture_of_Channel_Partner_Reap_ID__c}"/></td>
+      <td><apex:inputField id="Reap_ID_NA" value="{!fame.Reap_ID_NA__c}"/></td>
+      <!--<td><apex:inputField id="Reap_ID_Name" value="{!fame.Reap_ID_Name__c}"/></td>-->
+    </tr>
+    
+    <!-- Code Modified By Deepak Pudi 29/9/2014 -->
+    <tr>
+      <td colspan="4"></td>
+    </tr>
+    <tr>
+	  <td class="td-color" rowspan="2">Loyalty</td>
+      <td>In case of Client reference booking, his Loyalty ID &amp; Loyalty Source ID alongwith existing apartment no is mentioned on the application form and BDF</td>
+      <td align="center"><apex:inputField Id="REFERRAL1" value="{!famebysalesObj.Channel_partner_Ref_booking_details__c}"/></td>
+      <td><apex:inputField Id="REFERRALNA1" value="{!famebysalesObj.Referral_Self_Referral_NA__c}"/></td>
+      <td align="center"><apex:inputField Id="REFERRAL" value="{!fame.Channel_partner_Ref_booking_details__c}"/></td>
+      <td><apex:inputField Id="REFERRALNA" value="{!fame.Referral_Self_Referral_NA__c}"/></td>
+    </tr>
+	
+    <tr>
+      <td>Preferati Original form / card confirming the Loyalty ID of the client has been attached (no photocopies allowed) *</td>
+      <td align="center"><apex:inputField value="{!famebysalesObj.Preferati_original_form_Card__c}" id="Preferati_original_form_Card__c"/></td>
+      <td></td>
+      <td align="center"><apex:inputField value="{!fame.Preferati_original_form_Card__c}"/></td>
+      <td></td>
+    </tr>
+    
+    
+    <tr> 
+        <td></td>
+        <td>
+            <table width="100%">
+                <tr>
+                    <td>Name or Relationship Manager &amp; PIC</td> 
+                    <td align="right"> Signature of Relationship Manger &amp; PIC</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>---------------------------------------------------</td> 
+                    <td align="right"> ----------------------------------------------------</td>
+                </tr>
+            </table>
+        </td>   
+        <td colspan="4"></td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <td>Remarks:</td>
+      <td><apex:inputTextarea value="{!fame.Remarks__c}" cols="70" rows="8"/></td>
+    </tr>
+    <tr>
+      <td>FAME by CC member:</td>
+      <td><apex:inputfield value="{!fame.FAME_By_CC_Member__c}"/></td>
+    </tr>
+    <tr>
+      <td>Fame By Sales Sales Manager:</td>
+      <td><apex:inputText value="{!Salesmanager}" disabled="true"/></td>
+    </tr>
+    <tr>
+      <td>Relationship Manager:</td>
+      <td><apex:inputText value="{!relationship_manager}" Disabled="true"/></td>
+    </tr>
+    <tr>
+      <td>DATE OF FORM RECEIPT FROM SALES TEAM:</td>
+      <td><apex:inputField value="{!fame.DATE_OF_FORM_RECEIPT_FROM_SALES_TEAM__c}"/></td>
+    </tr>
+    <tr>
+      <td>DATE OF FORM LOGIN IN SAP:</td>
+      <td><apex:inputField value="{!fame.DATE_OF_FORM_LOGIN_IN_SAP__c}" id="DATEOFSAPLOGIN"/></td>
+    </tr>
+    
+    <tr>
+      <td>DATE OF FORM REJECT/ON HOLD:</td>
+      <td><apex:inputField value="{!fame.Form_Reject_On_Hold_Date__c}" id="DATEOFHOLD"/></td>
+    </tr>
+  </table>
+  
+  <table>
+    <tr>
+      <td>Fame Status</td>
+      <td>
+      <apex:inputField value="{!fame.FAME_Status__c}" id="status1" style="display:none;">
+          <!--<apex:actionsupport event="onchange" action="{!populate_reject_date}" rerender="FAMEFORM"/>-->
+      </apex:inputField>
+      <apex:selectList value="{!DummyStatus}" id="status" size="1"> 
+          <apex:selectOptions value="{!DummyStatusLst}">           
+          </apex:selectOptions>
+          <apex:actionsupport event="onchange" action="{!populate_reject_date}" rerender="FAMEFORM"/>      
+      </apex:selectList>
+      </td>
+      <td>Reason</td>
+      <td><apex:inputField value="{!fame.FAME_Reason_LOV__c}"/></td>
+    </tr>
+    <tr>
+      <td>Date</td>
+      <td><apex:inputText value="{!dateToday }" disabled="true"/></td>
+    </tr>
+    <tr>
+      <td>FAME Approved Date</td>
+      <td><apex:inputText value="{!fame_approved_date}" disabled="true" /></td>
+    </tr>
+  </table>
+
+  <apex:pagemessages />
+  <div align="center">
+    <apex:commandButton id="SAVEBUTTON" value="SAVE" rerender="FAMEFORM" action="{!save}" disabled="{!IsRMorPI}"/>
+    <apex:commandButton value="PRINT" onClick="window.print()"/>
+  </div>
+  <Script language="JavaScript">
+
+    document.getElementById('{!$Component.FAMEFORM.DAMSCUDNA}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.DATEOFSAPLOGIN}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.DATEOFHOLD}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.DAMSCUD}').disabled = document.getElementById('{!$Component.FAMEFORM.DAMSCUDNA}').checked;
+
+    document.getElementById('{!$Component.FAMEFORM.CUSTOMERTYPENA}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.CUSTOMERTYPE}').disabled = document.getElementById('{!$Component.FAMEFORM.CUSTOMERTYPENA}').checked;
+    
+    document.getElementById('{!$Component.FAMEFORM.OVERWRITING}').disabled = document.getElementById('{!$Component.FAMEFORM.OVERWRITINGNA}').checked;
+    document.getElementById('{!$Component.FAMEFORM.OVERWRITINGNA}').disabled = document.getElementById('{!$Component.FAMEFORM.OVERWRITING}').checked;
+    
+    document.getElementById('{!$Component.FAMEFORM.Project_Type_CASA_Commercial_and_NA}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Deal_Closure_Form_original_photocopy}').disabled = document.getElementById('{!$Component.FAMEFORM.Project_Type_CASA_Commercial_and_NA}').checked;
+
+    document.getElementById('{!$Component.FAMEFORM.REFERRALNA}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.REFERRAL}').disabled = document.getElementById('{!$Component.FAMEFORM.REFERRALNA}').checked;
+
+    document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.CP_Name_is_same_as_Know_your_deal_page}').disabled = document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA}').checked;
+
+    document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_02}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Customers_signature_verification}').disabled = document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_02}').checked;
+
+    document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_03}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.REAP_iREAP_ID_verification}').disabled = document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_03}').checked;
+    
+    document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_04}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.CP_signature_verification}').disabled = document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_04}').checked;
+
+    document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name_NA}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Capture_of_Channel_Partner_name}').disabled = document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name_NA}').checked;
+    //document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name}').disabled = document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name_NA}').checked;
+    
+    document.getElementById('{!$Component.FAMEFORM.Reap_ID_NA}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Capture_of_Channel_Partner_Reap_ID}').disabled = document.getElementById('{!$Component.FAMEFORM.Reap_ID_NA}').checked;
+    //document.getElementById('{!$Component.FAMEFORM.Reap_ID_Name}').disabled = document.getElementById('{!$Component.FAMEFORM.Reap_ID_NA}').checked;
+    
+    document.getElementById('{!$Component.FAMEFORM.DAMSCUDNA1}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.DAMSCUD1}').disabled = true;
+
+    document.getElementById('{!$Component.FAMEFORM.CUSTOMERTYPENA1}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.CUSTOMERTYPE1}').disabled = true;
+    
+    document.getElementById('{!$Component.FAMEFORM.OVERWRITING1}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.OVERWRITINGNA1}').disabled = true;
+    
+    document.getElementById('{!$Component.FAMEFORM.Project_Type_CASA_Commercial_and_NA1}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Deal_Closure_Form_original_photocopy1}').disabled = true;
+
+    document.getElementById('{!$Component.FAMEFORM.REFERRALNA1}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.REFERRAL1}').disabled = true;
+
+    //document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA1}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.CP_Name_is_same_as_Know_your_deal_page1}').disabled = true;
+
+    //document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_021}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.Customers_signature_verification1}').disabled = true;
+
+    //document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_031}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.REAP_iREAP_ID_verification1}').disabled = true;
+    
+    //document.getElementById('{!$Component.FAMEFORM.Booked_BY_Channel_Partner_NA_041}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.CP_signature_verification1}').disabled = true;
+
+    //document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name_NA1}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.Capture_of_Channel_Partner_name1}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name1}').disabled = document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name_NA}').checked;
+    
+    //document.getElementById('{!$Component.FAMEFORM.Reap_ID_NA1}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.Capture_of_Channel_Partner_Reap_ID1}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.Reap_ID_Name1}').disabled = true;
+    
+    document.getElementById('{!$Component.FAMEFORM.Applicant_Co_applicant_names__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Residence_and_Office_address_readable__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Cell_Landline_number_and_email_id__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Inventory_not_booked_in_other_name__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Booking_date_and_consideration_value__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Rates_offered_wrt_applicable_price_sheet__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Flat_number_typolology__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Current_status_of_const_relevant_field__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.No_Third_Party_Cheques__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Booking_amount_cheque_details_Name__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Customer_s_ID_proof__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Sign_at_all_places_according_to_photo_id__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Sales_manager_signatures__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.BDF_printed_with_proper_sign_of_SM_SI__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Allotment_numbers__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Approvals_for_deviations__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.CRN_and_date_of_application__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Pricesheet_attached_signed_by_applicnt__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.CAM_charges_society_and_other_charges__c}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.All_relevant_doc_incl_SCUD_DAM_attached__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Site_visit_form_original_photocopy__c}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Preferati_original_form_Card__c}').disabled = true;
+    
+    document.getElementById('{!$Component.FAMEFORM.OVERWRITING1}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.OVERWRITINGNA1}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.PROPERTYTAX1}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.PROPERTYTAXNA1}').disabled = true;
+    //document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name_sales}').disabled = true;
+    document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name_CC}').disabled = document.getElementById('{!$Component.FAMEFORM.Channel_Partner_Name_NA}').checked;;
+    //document.getElementById('{!$Component.FAMEFORM.Reap_ID_Name_sales}').disabled = true;    
+    document.getElementById('{!$Component.FAMEFORM.Reap_ID_Name_CC}').disabled = document.getElementById('{!$Component.FAMEFORM.Reap_ID_NA}').checked;;
+    //document.getElementById('{!$Component.FAMEFORM.All_relevant_doc_incl_SCUD_DAM_attached__NA}').disabled = true;   
+    
+</Script>
+</apex:form>
+    
+</apex:page>

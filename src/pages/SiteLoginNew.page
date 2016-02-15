@@ -1,0 +1,67 @@
+<apex:page id="loginPage" showHeader="false" title="{!$Label.site.site_login}" cache="false">
+            <apex:stylesheet value="{!URLFOR($Resource.w2l, "innerCSS")}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.w2l, "lodha.css")}"/>
+           
+    <apex:panelGrid columns="1" id="theGrid" border="0" width="100%" cellpadding="0" cellspacing="5"  bgcolor="#E5E5E5" style="font-family:futura_md_btmedium, Arial;overflow:auto;">
+              <!--<apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'bg_01_01.jpg')}" width="100%" height="48%"/> -->
+              <apex:image url="{!URLFOR($Resource.mylodha,'/mylodha/images/bg.jpg')}" width="100%" height="80%"/>
+              <apex:panelGroup id="panelgroup">
+              <center><c:SiteLogin id="siteLogin1"/></center>    
+              </apex:panelGroup>   
+              <center><p style="font-size:14px; padding-bottom:10px;">Ensuring seamless flow of information related to your treasured home purchase</p></center>              
+                
+    
+              <apex:panelGrid width="66.5%" cellpadding="0" cellspacing="0"  columns="4" border="0" style="margin-left:16.75%;" id="secondgrid">          
+    
+                  <apex:panelGroup style="background-color:#FFFFFF; width:200px; height:125px; float:left; border-radius: 20px; padding-top:5px;">
+                      <center><apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'imgs_15.jpg')}"/></center><br />
+                      <p style="font-size:12px;text-align:center;">Constuction Photographs<br />of your building. Online</p>
+                  </apex:panelGroup>
+                  
+                  <apex:panelGroup style="background-color:#FFFFFF; width:200px; height:125px; float:left; border-radius: 20px; padding-top:5px;">
+                      <center><apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'imgs_07.jpg')}"/></center><br />
+                      <p style="font-size:12px;text-align:center;">Single Log-on to give<br />you access to both the <br />self service portal and <br />the email service</p>
+                  </apex:panelGroup>             
+                  
+                  <apex:panelGroup style="background-color:#FFFFFF; width:200px; height:125px; float:left; border-radius: 20px; padding-top:5px;">
+                      <center><apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'imgs_10.jpg')}"/></center><br />
+                      <p style="font-size:12px;text-align:center;">View your booking details<br />any time, anywhere</p>
+                  </apex:panelGroup>
+                  
+                  <apex:panelGroup style="background-color:#FFFFFF; width:200px; height:125px; float:left; border-radius: 20px; padding-top:5px;">
+                      <center><apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'imgs_12.jpg')}"/></center><br />
+                      <p style="font-size:12px;text-align:center;">View your payment details<br />save the travel time &amp; call time<br />for checking your payment history</p>
+                  </apex:panelGroup>
+    
+              </apex:panelGrid>
+              
+              
+              <apex:panelGrid width="50%" cellpadding="0" cellspacing="0"  columns="3" border="0" style="margin-left:25%;margin-top:0.5em;">          
+    
+                  <apex:panelGroup style="background-color:#FFFFFF; width:200px; height:125px; float:left; border-radius: 20px; padding-top:5px;">
+                      <center><apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'imgs_28.jpg')}"/></center><br />
+                      <p style="font-size:12px;text-align:center;">Track your online transactions with<br />us by filling transaction<br />information form</p>
+                  </apex:panelGroup>
+                  
+                  <apex:panelGroup style="background-color:#FFFFFF; width:200px; height:125px; float:left; border-radius: 20px; padding-top:5px;">
+                      <center><apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'imgs_22.jpg')}"/></center><br />
+                      <p style="font-size:12px;text-align:center;">Track Despatches<br />from us, online</p>
+                  </apex:panelGroup>             
+                  
+                  <apex:panelGroup style="background-color:#FFFFFF; width:200px; height:125px; float:left; border-radius: 20px; padding-top:5px;">
+                      <center><apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'imgs_25.jpg')}"/></center><br />
+                      <p style="font-size:12px;text-align:center;">Redeem your ClubCASA/Preferati<br />rewards and share references</p>
+                  </apex:panelGroup>              
+    
+              </apex:panelGrid>
+              <apex:panelGrid columns="2" width="100%" Style="margin-top:0.5em;">
+              <apex:panelGroup >    
+                <div style="color:#000000; font-size:12px;padding-left:5em;text-align:left;">Copyright&copy;2011 Lodha Group. All rights reserved</div>
+                </apex:panelGroup>
+                <apex:panelGroup >
+                <div style="color:#000000; font-size:12px;padding-right:5em;text-align:right;"> <apex:outputlink style="" value="http://www.mylodha.com/TermsAndConditionForSites.pdf" target="_blank">Terms &amp; Conditions</apex:outputlink></div>
+                </apex:panelGroup>
+              </apex:panelGrid>   
+    </apex:panelGrid>
+  
+        </apex:page>

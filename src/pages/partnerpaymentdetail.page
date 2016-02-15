@@ -1,0 +1,198 @@
+<apex:page controller="partnerpaymentdetail" sidebar="false">
+<!--<apex:sectionHeader title="Channel Partner Payment Details" />-->
+ <apex:form id="fI"> 
+ <table style="border:none;"  width="100%" cellspacing="0px" id="payment_table">
+        <thead>
+            <tr style="background-color:#1F4A2A;color:white;"  width="100%" height="50" >
+                <td style="color:white;"><font size="2.5" face= " Calibri" ><center><b>PROJECT</b></center></font></td>
+                <td style="color:white;"> <font size="2.5" face= " Calibri" ><center><b> APPLICATION<br></br> DATE</b></center></font> </td>
+                <td style="color:white;"><font size="2.5" face= " Calibri" ><center><b> FLAT DETAILS</b></center> </font></td>
+               <!-- <td style="width:50px;color:white;"><font size="3" face= " Calibri" > Customer<br></br> Code</font> </td>-->
+                <td style="color:white;"><font size="2.5" face= " Calibri" ><center> <b>CUSTOMER<br></br> NAME</b></center></font> </td>
+                <td style="color:white;"> <font size="2.5" face= " Calibri"><center><b>PAYMENT<br></br> TYPE</b></center></font> </td>
+                <td style="color:white;"><font size="2.5" face= " Calibri" > <center><b>PAYMENT DETAILS</b></center></font> </td>
+                <td align="right" style="color:white;"><font size="2.5" face= " Calibri" > <b>GROSSS<br></br> AMOUNT</b></font> </td>
+                <td align="right" style="color:white;"><font size="2.5" face= " Calibri"> <b>TDS</b> </font></td>
+                <td align="right" style="color:white;"><font size="2.5" face= " Calibri"> <b>NET AMOUNT</b> </font> </td>
+                <td style="color:white;"><font size="2.5" face= " Calibri"> <center><b>NAME OF<br></br> BENEFICIARY</b></center></font></td>
+            </tr>
+        </thead>
+        <tbody>  
+            <apex:variable var="count" value="{!0}"/> 
+            <apex:repeat value="{!paymentList}" var="p">
+                <tr style="{! IF(mod(count,2) == 0,'background-color:#FFFFFF;','background-color:#C4CEAC;')}">
+                <td  width="100px"><center><font size="2">
+                    <apex:outputText value="{!p.ProjectNameUppercase__c}"></apex:outputText></font></center>
+                </td>
+                <td  width="20px"> <center><font size="2">
+                     <apex:outputText value="{0,date,dd'-'MMM'-'yyyy}">
+                     <apex:param value="{!p.Application_Date__c}" /> 
+                     </apex:outputText></font></center>
+              <!--  <apex:outputText value="{!p.Application_Date__c }"></apex:outputText>-->
+                </td>
+                <td width="150px" style="border:none;" align="center">
+                           <font size="2"> <apex:outputText value="{!p.CLuster__c}"></apex:outputText>
+                            &nbsp;<apex:outputText value="{!p.Wing__c }"></apex:outputText>
+                            &nbsp;<apex:outputText value="{!p.Flat_No__c}"></apex:outputText>
+                            </font>
+                 </td>  
+                 <!-- <td width="50"><font size="2">
+                        <apex:outputText value="{!p.Customer_Code__c}"></apex:outputText></font>
+                  </td>-->
+                  <td width="100px"><font size="2">
+                         <apex:outputText value="{!p.Primary_Applicant__c}"></apex:outputText></font>
+                  </td> 
+                  <td width="20px" ><center><font size="2">
+                         <apex:outputText value="{!p.Channel_Partner_Payment__r.Mode_of_Payment__c }"></apex:outputText></font></center></td>
+                
+                   <td width="60px"><center><font size="2"><apex:outputText value="{!p.Channel_Partner_Payment__r.Payment_Detail__c }"></apex:outputText></font></center></td>
+                
+                   <td align="right" width="20px"> <font size="2">
+                           <apex:OutputText value="{0, number, ###,##0}">
+                           <apex:param value="{!p.Channel_Partner_Payment__r.Gross_Amount__c    }"/>
+                           </apex:OutputText></font>
+                
+              <!--  <apex:outputText value="{!p.Channel_Partner_Payment__r.Gross_Amount__c }"></apex:outputText>-->
+                
+                   </td>
+                   <td width="20px" align="right"> <font size="2">
+                            <apex:OutputText value="{0, number, ###,##0}">
+                            <apex:param value="{! p.Channel_Partner_Payment__r.TDS__c   }"/>
+                            </apex:OutputText></font>
+                
+              <!--  <apex:outputText value="{!p.Channel_Partner_Payment__r.TDS__c }"></apex:outputText>-->
+                  </td>
+                  <td width="20px" align="right"><font size="2">
+                     <apex:OutputText value="{0, number, ###,##0}">
+                     <apex:param value="{!p.Channel_Partner_Payment__r.Net_Amount__c   }"/>
+                     </apex:OutputText></font>
+                
+               <!-- <apex:outputText value="{!p.Channel_Partner_Payment__r.Net_Amount__c}"></apex:outputText>-->
+                </td>
+                <td width="20px" ><center><font size="2">
+                       <apex:outputText value="{!p.Channel_Partner_Payment__r.Name_of_Beneficiary__c }"></apex:outputText></font></center>
+                </td>
+                        <apex:variable var="count" value="{!count + 1}"/> 
+                 </tr>
+              </apex:repeat>
+               <tr>
+                <td colspan="6"><b><font size="3" face= " Calibri">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TOTAL</font></b></td>
+                <td align="right"><b> <font size="2"><apex:OutputText value="{0, number, ###,##0}">
+                  <apex:param value="{!TotalGrossAmount}"/>
+                  </apex:OutputText></font></b> </td>
+                  <td align="right"><b> <font size="2"><apex:OutputText value="{0, number, ###,##0}">
+                  <apex:param value="{!TotalTDSAmount}"/>
+                  </apex:OutputText></font></b></td>
+                  <td align="right"><b> <font size="2"> <apex:OutputText value="{0, number, ###,##0}">
+                  <apex:param value="{!TotalNetAmount }"/>
+                  </apex:OutputText></font></b></td>
+                  <td></td>
+                  </tr>
+             
+              </tbody>
+              
+              <tr><td height="5"></td></tr>              
+               <tr>
+               
+<td align="center" colspan="10">             <b>  <font size="2">
+              <apex:panelGrid columns="4">
+                <apex:commandLink action="{!first}" rendered="{!(hasPrevious)}" rerender="fI">First</apex:commandlink>
+                <apex:commandLink action="{!previous}" rendered="{!hasPrevious}" rerender="fI">Previous</apex:commandlink>
+                <apex:commandLink action="{!next}" rendered="{!hasNext}" rerender="fI">Next</apex:commandlink>
+                <apex:commandLink action="{!last}" rendered="{!AND(paymentList.size>0,hasNext)}" rerender="fI">Last</apex:commandlink>
+                </apex:panelGrid></font></b></td></tr>
+              
+               </table>
+               
+    <br/><br/><br/>
+    <div style="">              
+    <h2>Channel Partner Portal Disclaimer:</h2>
+    <ol>
+    <li>
+    The channel partner will be eligible to view the payment details on the portal.
+    </li>
+    <li>
+    The Payment details on the site are for information purpose only and do not create binding obligations
+    on the company to make any payment to the Channel Partner Account. All payments will be released
+    subject to compliance of applicable policies, laws, orders regulations and agreement executed with the
+    Company.
+    </li>
+    <li>
+    Service tax will be payable as per applicable laws.
+    </li>
+    <li>
+    In the event the commission is enormously paid to the channel partner, the Channel Partner is required
+    to promptly refund the commission received from the Company failing which the Company reserve the right
+    to recover the amount by deducting the same from the commission payable to the Channel Partner in
+    respect of any other transaction.
+    </li>
+    <li>
+    The information disclosed on the portal is confidential and shall not be disclosed to any third party
+    without the prior written permission from the Company.
+    </li><li>
+    Error and omission expected.
+    </li>
+    </ol>
+    *** for more information please refer FAQ section****
+    
+    </div>           
+                
+               
+               
+           
+
+
+<!--<apex:pageBlock >
+ <apex:pageBlockTable value="{!paymentList}" var="p" border="1">
+             <apex:column headerValue="Project" >
+                    <apex:outputField value="{!p.Project__c}"/>
+             </apex:column>
+             <apex:column headerValue="Application Date">
+                    <apex:outputField value="{!p.Application_Date__c}"/>
+             </apex:column>
+             <apex:column headerValue="Cluster">
+                    <apex:outputField value="{!p.CLuster__c}"/>
+             </apex:column>
+             <apex:column headerValue="Wing">
+                    <apex:outputField value="{!p.Wing__c}"/>
+             </apex:column>
+             <apex:column headerValue="Flat No">
+                    <apex:outputField value="{!p.Flat_No__c}"/>
+             </apex:column>
+             <apex:column headerValue="Customer Code">
+                    <apex:outputField value="{!p.Customer_Code__c}"/>
+             </apex:column>
+             <apex:column headerValue="Customer Name">
+                    <apex:outputField value="{!p.Primary_Applicant__c}"/>
+             </apex:column>
+             <apex:column headerValue="Payment Type">
+                    <apex:outputField value="{!p.Channel_Partner_Payment__r.Mode_of_Payment__c}"/>
+             </apex:column>
+             <apex:column headerValue="Payment Details">
+                    <apex:outputField value="{!p.Channel_Partner_Payment__r.Payment_Detail__c}"/>
+             </apex:column>
+             <apex:column headerValue="Gross Amount">
+                    <apex:outputField value="{!p.Channel_Partner_Payment__r.Gross_Amount__c}"/>
+             </apex:column>           
+             <apex:column headerValue="TDS">
+                    <apex:outputField value="{!p.Channel_Partner_Payment__r.TDS__c}"/>
+             </apex:column>            
+             <apex:column headerValue="Net Amount">
+                    <apex:outputField value="{!p.Channel_Partner_Payment__r.Net_Amount__c}"/>
+             </apex:column>             
+             <apex:column headerValue="Name of Beneficiary">
+                    <apex:outputField value="{!p.Channel_Partner_Payment__r.Name_of_Beneficiary__c}"/>
+             </apex:column>
+        </apex:pageBlockTable>
+        <apex:panelGrid columns="4">
+                <apex:commandLink action="{!first}" rendered="{!(hasPrevious)}" rerender="fId">First</apex:commandlink>
+                <apex:commandLink action="{!previous}" rendered="{!hasPrevious}" rerender="fId">Previous</apex:commandlink>
+                <apex:commandLink action="{!next}" rendered="{!hasNext}" rerender="fId">Next</apex:commandlink>
+                <apex:commandLink action="{!last}" rendered="{!AND(paymentList.size>0,hasNext)}" rerender="fId">Last</apex:commandlink>
+        </apex:panelGrid>
+</apex:pageBlock>-->
+
+
+
+</apex:form>
+</apex:page>

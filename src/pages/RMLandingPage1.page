@@ -1,0 +1,1514 @@
+<!--
+    Description: This is Main page which will be shown to RM
+    @Created by: Shruti Nikam
+    @Created Date: 25/02/2015
+    
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+    -->
+<apex:page controller="RMLandingPageController1" showHeader="true" docType="html-5.0">
+    <apex:outputPanel rendered="{!NOT(iserror)}">
+        <apex:form >
+            <apex:param name="CRN" assignTo="{!CRN}" value=""/>
+            <!-- use to pass crn throught url-->
+            <!--<apex:param name="mobileno" assignTo="{!mobileno}" value=""/>-->
+            <!-- use to pass mobile no throught url-->
+ <html>
+                <head>
+                    <!------Start new Files Include with old-------------->
+                    <link href="{!URLFOR($Resource.bootStrap, '/bootstrap/css/bootstrap.min.css')}" rel="stylesheet" />
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                    <script src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+                    <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/js/bootstrap.min.js')}"></script>
+                    <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/js/jquery.sidebar.js')}"></script>
+                    <!----End new Files Include with old------->
+                    <!----------------------------Script for tabs ------------------------------>
+                    <script src="{!$Resource.YearRangeIncr}"></script>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                           
+                            $(".tab_content").hide();
+                            $(".tab_content:first").show();
+                            
+                            $("ul.tabs li").click(function() {
+                            
+                             var activeTab = $(this).attr("rel"); 
+                                 //console.log('CLICK TAB');
+                                $("ul.tabs li").removeClass("active");
+                                $(this).addClass("active");
+                                $(".tab_content").hide();
+                                $("#"+activeTab).fadeIn(1); 
+                            
+                            });
+                            
+                        //this scroll to  100 from top for display all the widgets without scroll    
+                        $('body').scrollTop( 100 );
+                        
+                        });
+                        
+                                          
+                    </script> 
+                    <!-----------------------------END------------------------------------------>
+                   <style>
+                        .pagination:last-child {
+                            margin-left:0px!important;
+                        }
+                        .table-heading {  
+                            background: #1797C0;  
+                            color: #fff;  
+                            font-size: 12px; 
+                            padding:5px
+                        }
+                    </style>
+                    <!---------------------- Start CSS Style for tabPanel ------------------------>
+                    <style type="text/css">
+                        .relatedListLinks{
+                            margin: 0;
+                            padding: 1px;
+                            float: left;
+                            list-style: none;
+                            height: 26px;
+                            border-bottom: 1px solid #1897c0;
+                            border-left: 0px solid #1897c0;
+                            border-radius: 10px 10px 0px 0px;
+                            width: 60%;
+                        }   
+                        th{
+                            font-size: 11px !important;
+                        }
+                        .container{
+                            width: 100% !important;
+                        }
+                        .modal-body{
+                            padding:2% !important
+                        } 
+                        /*---------------------------new changes----------------------------------*/
+                        ul.tabs {
+                            margin: 0;
+                            padding: 1px;
+                            float: left;
+                            list-style: none;
+                            height: 26px;
+                            border-bottom: 1px solid #1897c0;
+                            border-left: 0px solid #1897c0;
+                            border-radius: 10px 10px 0px 0px;
+                            width: 40%;
+                        }
+                        ul.tabs li  {
+                            float: left;
+                            margin: 0;
+                            margin-left: 10px;
+                            cursor: pointer;
+                            padding: 0px 21px ;
+                            height: 25px;
+                            line-height: 25px;
+                            border: 1px solid #1897c0;
+                            border-left: none;
+                            font-weight: bold;
+                            background:#1897c0;
+                            overflow: hidden;
+                            position: relative;
+                            color:White;
+                            border-radius: 6px 6px 0px 0px;
+                        }
+                        ul.tabs li.active   {
+                            background: #f0f9ff; /* Old browsers */
+                            background: -moz-linear-gradient(top,  #f0f9ff 0%, #cbebff 47%, #b2dfee 100%); /* FF3.6+ */
+                            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f9ff), color-stop(47%,#cbebff), color-stop(100%,#b2dfee)); /* Chrome,Safari4+ */
+                            background: -webkit-linear-gradient(top,  #f0f9ff 0%,#cbebff 47%,#b2dfee 100%); /* Chrome10+,Safari5.1+ */
+                            background: -o-linear-gradient(top,  #f0f9ff 0%,#cbebff 47%,#b2dfee 100%); /* Opera 11.10+ */
+                            background: -ms-linear-gradient(top,  #f0f9ff 0%,#cbebff 47%,#b2dfee 100%); /* IE10+ */
+                            background: linear-gradient(to bottom,  #f0f9ff 0%,#cbebff 47%,#b2dfee 100%); /* W3C */
+                            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', endColorstr='#b2dfee',GradientType=0 ); /* IE6-9 */
+                            border-bottom: 1px solid #B2DFEE;
+                            color:Black;
+                        }
+                        .tab_container {
+                            border: 1px solid #1897c0;
+                            border-top: none;
+                            clear: both;
+                            float: left; 
+                            width: 100%;
+                            background: #b2dfee; /* Old browsers */
+                            background: -moz-linear-gradient(top,  #b2dfee 0%, #f0f9ff 100%); /* FF3.6+ */
+                            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b2dfee), color-stop(100%,#f0f9ff)); /* Chrome,Safari4+ */
+                            background: -webkit-linear-gradient(top,  #b2dfee 0%,#f0f9ff 100%); /* Chrome10+,Safari5.1+ */
+                            background: -o-linear-gradient(top,  #b2dfee 0%,#f0f9ff 100%); /* Opera 11.10+ */
+                            background: -ms-linear-gradient(top,  #b2dfee 0%,#f0f9ff 100%); /* IE10+ */
+                            background: linear-gradient(to bottom,  #b2dfee 0%,#f0f9ff 100%); /* W3C */
+                            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b2dfee', endColorstr='#f0f9ff',GradientType=0 ); /* IE6-9 */
+                        }
+                        .tab_content {
+                            padding: 0px;
+                            font-size: 87%;
+                            display: none;
+                            font-color: Black;
+                            height:152px;
+                        }
+                    </style>
+                    <!----------------------------------------- End------------------------------>
+                    <!---------- start CSS for view detail  popup in personal detial tab -------->
+                    <style>
+                        .ViewDlabel {
+                            text-align: right;
+                            width: 15%;
+                            Font-weight:Bold;
+                            height: 10%;
+                        }
+                        .ViewDvalue{
+                            height: 10%;
+                            width: 18%; 
+                            padding-left: 2%;
+                        }
+                        .setWidth{
+                            width:50%;
+                        }
+                    </style>
+                    <!--------------------------------- End--------------------------------------->
+                    <!---- start CSS for view detail popup in other detial tab (booking detail)--->
+                    <style>
+                        .BookingViewDlabel {
+                            text-align: right;
+                            width: 12%;
+                            Font-weight:Bold;
+                            height: 32px;
+                            border-left: 1px solid #c0c0c0;
+                            border-top: 1px solid #c0c0c0;
+                            border-bottom: 1px solid #c0c0c0;
+                            font-size: 12px;
+                            padding-top: 0%;
+                            padding-bottom: 0%;
+                            vertical-align: inherit !important;
+                        }
+                        .BookingViewDvalue{
+                            width: 23%; 
+                            height: 32px;
+                            padding-left: 2%;
+                            border-top: 1px solid #c0c0c0;
+                            border-bottom: 1px solid #c0c0c0;
+                            border-right: 1px solid #C0C0C0;
+                            font-size: 12px;
+                            padding-top: 0%;
+                            padding-bottom: 0%;
+                            vertical-align: inherit !important;
+                        }
+                    </style>
+                    <!---------------------------------- End-------------------------------------->
+                    <!--------------- Start CSS Style for Table in Personal Detail ------------->
+                    <style>
+                        .table1 {
+                            width:100%;
+                            height:100%;
+                            position: realtive;
+                            //background-color:white
+                        }
+                        td.labelleft {
+                            width:20%;
+                            text-align:left;
+                            font-weight:Bold;
+                            vertical-align: middle !important;
+                            padding: 1%;
+                        }
+                        td.valueleft {
+                            width:40%;
+                            text-align:left;
+                            vertical-align: middle !important;
+                        }
+                        td.valuebottom {
+                            width:80%;
+                            text-align:left;
+                            vertical-align: middle !important;
+                        }
+                        td.labelright  {
+                            width:25%;
+                            text-align:left;
+                            font-weight:Bold;
+                            vertical-align: middle !important;
+                        }
+                        td.valueright{
+                            width:15%;
+                            text-align:left;
+                            vertical-align: middle !important;
+                        }
+                        div.tab_content div.divstyle {
+                            width:55%;
+                            margin-top: 1%;
+                            //border-top: 1px solid #C0C0C0;
+                            //border-left: 1px solid #C0C0C0;
+                            //border-right: 1px solid #C0C0C0;
+                            float:left;
+                            margin-left:1%;
+                            font-size:100%;
+                            //background-color:white
+                        }
+                        .subdiv {
+                            width:100%;
+                            height:29px;
+                            border-bottom: 1px solid #C0C0C0;
+                            background-color: #F2F2F2;
+                        }
+                    </style>
+                    <!---------------------------- End--------------------------------->
+                    
+                    <!------------- start profile detials css style  ------------------>
+                    <style>
+                        .r_rectbox {
+                            padding: 0% 3% 0% 3%;            
+                            //color: white;
+                            font-size:99%; 
+                            text-align: center;
+                            display:block !important;                                                 
+                        }
+                        .checked_image {
+                            width: 40%;
+                            margin-left: 27%;
+                            display:block !important;
+                        }
+                        .checked_image_div {
+                            float: left;
+                            width: 11%;
+                            margin-left: 9px;
+                        }
+                        .profileD_div{
+                            border: 1px solid #C0C0C0;
+                            width: 24.5%;
+                            font-size: 11.5px;
+                            height: 145px;
+                            background: white;
+                            float: left;
+                            vertical-align: middle !important;
+                            margin-top: 1%;
+                            margin-left: 1%;
+                            background-color: #F2F2F2;
+                        }
+                        .profileD_items{
+                              text-align: center;
+                              font-weight: bold;
+                              border: 1px solid #C0C0C0;
+                              background-color: rgb(181, 224, 239);
+                              padding: 10% 3%;
+                              vertical-align: middle !important;
+                        }
+                        .profile_flag_labels{
+                          height: 11%;
+                          width: 100%;
+                          margin-top: 3px;
+                          font-weight: bold;
+                          margin-left: 5px;
+                          font-size: 12px;
+                        }
+                        .profileD_items_value{
+                              
+                              text-align: left;
+                              font-weight: bold;
+                              font-size: 85%;
+                              vertical-align: middle !important;
+                         }
+                         .PersonalDLink  {
+                           color: black !important;
+                           text-decoration: none !important;
+                         }
+                    </style>
+                    <!----------------------------- end ------------------------------>
+                    <!------------- start css fro profile completeness  -------------->
+                    <style>
+                        .graph {
+                            width: 90%; /* width and height are arbitrary, just make sure the #bar styles are changed accordingly */
+                            height: 26%;
+                            background: white;
+                            border-radius: 15px;
+                            position: relative;
+                            display:block;
+                        }
+                        #bar {
+                            height: 100%; 
+                            background: #1897c0; 
+                            border-radius: 15px;
+                            border: 1px solid #fceabb;
+                        }
+                    </style>
+                    <!----------------------------- end ------------------------------->
+                    <!---------------- start other details css style  ----------------->
+                    <style>                                 
+                        .otherDHeading {
+                            width:100%; 
+                            height:15%; 
+                            font-weight:bold;
+                            color:#1897C0;
+                            font-size:13px;
+                            margin-bottom:5px;
+                        }
+                        .otherDDiv {
+                            //border: 1px solid #C0C0C0;
+                            width:100%; 
+                            height:90%; 
+                            //background:white;
+                            font-size: 104%;
+                        }
+                    </style>
+                    <!----------------------------- end ------------------------------->    
+                    <!------------------ start login details css style  --------------->
+                    <style>
+                        .rectbox1 {
+                            padding: 5px 9px; 
+                            width: 60px;
+                            border-radius: 4px;
+                            margin-left: 6px;
+                            margin-right: 2px;
+                            color: white;
+                            background: #1897C0;
+                        }
+                        td.loginDLabel_col {
+                            height:50%; 
+                            width:26%; 
+                            font-weight:bold; 
+                            padding-left: 2%;
+                            vertical-align: middle !important;
+                        }
+                        td.loginDvalue_left {
+                            height:50%;
+                            width:25%; 
+                            vertical-align: middle !important;
+                        }
+                        td.loginDvalue_right {
+                            height:50%; 
+                            width:25%; 
+                            vertical-align: middle !important;
+                        }
+                    </style>
+                    <!----------------------------- end ------------------------------->
+                    <!-------------- start Booking details css style  ----------------->
+                    <style>
+                        td.bookingDLabel_col {
+                            height:20%;
+                            width:10%;
+                            font-weight:bold;
+                            vertical-align: middle !important;
+                            padding-left: 10px;
+                        }
+                        td.bookingDvalue_right {
+                            height:20%;
+                            width:30%;
+                            vertical-align: middle !important;
+                            text-align:left;
+                            margin-left:10px;
+                        }
+                        td.bookingDvalue_left{
+                            height:20%; 
+                            width:27%; 
+                            vertical-align: middle !important;
+                            text-align:left; 
+                            margin-left:10px;
+                        }
+                    </style>
+                    <!--------------------------- end ---------------------------->
+                    <!-------------------Customer Life Cycle --------------------->
+                    <style>
+                        .topdata{
+                            height: 100%;
+                            width: 7%;
+                            border: 1px solid #C0C0C0;
+                            float: left;
+                            margin-left: 6%;
+                            text-align: center;
+                            font-size: 12px;
+                        }
+                        .bottomdata{
+                            height:100%; 
+                            width:7%; 
+                            border: 1px solid #C0C0C0; 
+                            float:left;
+                            margin-left: 6%;
+                            text-align: center;
+                            font-size: 12px;
+                        }
+                    </style>
+                    <!--------------------------- end ---------------------------->
+                    <!-----------start css DataTable Loyalty point and other Detail view Formual in profile Indicator popup---------->
+                    <style>
+                        .Loyaltyheader{
+                            text-align: center !important;
+                            background-color: #1797C0;
+                            white-space: pre-wrap; /* css-3 */
+                            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+                            white-space: -pre-wrap; /* Opera 4-6 */
+                            padding:2px;
+                            white-space: -o-pre-wrap; /* Opera 7 */
+                            word-wrap: break-word; /* Internet Explorer 5.5+ */
+                            vertical-align: inherit !important;
+                        }
+                    </style>
+                    <!--------------------------- end ---------------------------->
+                    <!-------------Start Sidebar CSS------------------------------>
+                    <style>
+                        .sidebar.left {
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            bottom: 0;
+                            width: 270px;
+                            background: rgba(68, 68, 68,.9);
+                            color: white;
+                            padding: 30px;
+                            box-shadow: 0 0 5px black;
+                            font-size: 31px;
+                            text-align: center;
+                        }
+                        .sidebar.right {
+                            position: fixed;
+                            top: 0;
+                            right: 0;
+                            bottom: 0;
+                            width: 270px;
+                            background:White;
+                            color: Black;
+                            padding: 30px;
+                            box-shadow: 0 0 5px rgb(35, 126, 229);
+                            font-size: 31px;
+                            margin-top:165px;
+                            height:300px;
+                            border-radius: 8px; 
+                            z-index: 99999;
+                        }
+                        .sidebar.bottom {
+                            position: fixed;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            height: 270px;
+                            background: rgb(68, 68, 68);
+                            color: white;
+                            padding: 30px;
+                            box-shadow: 0 0 5px black;
+                            font-size: 31px;
+                            text-align: center;
+                        }
+                        .sidebar.top {
+                            position: fixed;
+                            left: 0;
+                            right: 0;
+                            top: 0;
+                            height: 120px;
+                            background: rgb(68, 68, 68);
+                            color: white;
+                            padding: 30px;
+                            box-shadow: 0 0 5px black;
+                            font-size: 31px;
+                            text-align: center;
+                        }
+                        #divCloserightBar {
+                            margin-left:-10px;
+                            box-shadow: 0 0 5px rgb(55, 151, 220);
+                            margin-top: 112px;
+                            width: 240px;
+                            height: 20px;
+                            background-color: rgb(55, 151, 220);
+                           
+                        }
+                        #imageout{
+                            margin-left: -60px;
+                            margin-top: 100px;
+                            position: fixed;
+                            width: 36px;
+                            height: 49px;
+                            background-color: rgb(248, 251, 253);
+                            border: 6px solid rgb(252, 254, 255);
+                            box-shadow: 0 0 5px rgb(55, 151, 220);
+                            border-radius: 7px 7px 7px 7px;
+                        }
+                        #imagein{
+                            margin-left: -60px;
+                            margin-top: 100px;
+                            position: fixed;
+                            width: 36px;
+                            height: 49px;
+                            display:none;
+                            background-color: rgb(248, 251, 253);
+                            border: 6px solid rgb(252, 254, 255);
+                            box-shadow: 0 0 5px rgb(55, 151, 220);
+                            border-radius: 7px 7px 7px 7px;
+                        }
+                    </style>
+                    <!-- start of widget padding of table td class override of in panel-default panel body----------->
+                    <style>
+                        .bs .table thead>tr>th, .bs .table tbody>tr>th, .bs .table tfoot>tr>th, .bs .table thead>tr>td, .bs .table tbody>tr>td, .bs .table tfoot>tr>td {
+                            padding: 2px;
+                            line-height: 1.428571429;
+                            vertical-align: top;
+                            border-top: 1px solid #ddd;
+                        }
+                    </style>
+                    <!--End----------->
+                    <style>
+                        .panel-heading {
+                            padding: 5px 15px;
+                            background-color: #F0FAFF;
+                        }
+                    </style>
+                    <!--  CSS for sidebar alignment -->
+                    <style>
+                        .outer td {
+                            vertical-align: top;
+                        }
+                         .small_widget_tbody {
+                            position: absolute;
+                            overflow: auto;
+                            height: 31%;
+                            width: 93%;
+                        }
+                        .large_widget_tbody {
+                            position: absolute;
+                            overflow: auto;
+                            height: 80%;
+                            width: 96%;
+                        }
+                      
+                        
+                    </style>
+                    <!--  End CSS for sidebar alignment -->
+                    <!-------------END Sidebar CSS-------------------------> 
+                    <style>
+                        #assign-action-spinner-main {
+                            position: fixed;
+                            left: 0;
+                            top: 0;
+                            background-color:rgba(0,0,0,.6);
+                            height: 100%;
+                            width: 100%;
+                            z-index: 9999999;
+                            align: center;
+                            vertical-align: middle !important;
+                        }
+                        #assign-action-spinner-content {
+                            position: absolute; 
+                            top: 50%;
+                            left: 50%;
+                            z-index: 1000;
+                            background-color:none;
+                            width: 40px;
+                            height: 40px;
+                        }
+                        #assign-action-spinner-content img {
+                            width: 40px;
+                            height: 40px;
+                            align: center;
+                            vertical-align: middle !important;
+                        }
+                    </style>
+                    <style>
+                        .bs .container {
+                            max-width: 1300px;
+                         }
+                         .leftLength{
+                              color:red;
+                         }
+                        .smsTextArea{
+                             background-color:rgba(236, 229, 233, 0.45);
+                             border-color: turquoise;
+                         }
+                         .profile_overflow {
+                             display:block; 
+                             overflow:auto;
+                             height:420px;
+                         }
+                         
+                    </style>
+                </head>
+                <div class="bs" id="maindiv">
+                    <ul class="tabs">
+                        <li class="active" rel="tab1"> Customer Details</li>
+                        <li rel="tab2"> Booking Details</li>
+                        <li rel="tab3"> Life Cycle</li>
+                    </ul>
+                    <!-----realted list of rmalnding page links--------------->
+                    <div class="relatedListLinks" id="relaListLinksID">
+                    <span style="margin-top:0px;margin-left:0%"><a href="#OpportunitiesID">Opportunities[{!account_obj.opportunities.size}]</a></span>
+                        <span style="margin-top:0px;margin-left:1%"><a href="#CombinedAttachmentsID">{!'Notes & Attachments['}{!account_obj.CombinedAttachments.size}{!']'}</a></span>
+                        <span style="margin-top:0px;margin-left:1%"><a href="#Service_Tax_Details__rID">Service Tax[{!account_obj.Service_Tax_Details__r.size}]</a></span>
+                        <span style="margin-top:0px;margin-left:1%"><a href="#ActivityHistoriesID">Activity History[{!account_obj.ActivityHistories.size}]</a></span>
+                        <span style="margin-top:0px;margin-left:1%"><a href="#MygainStatementID">MyGain Statement</a></span>
+                        <span style="margin-top:0px;margin-left:1%"><apex:commandLink value="Construction Update" action="{!gotoConstructionUpadatePage}" target="_blank"/></span>
+                    </div>
+                    <!-----------tab container------------------>
+                    <div class="tab_container">
+                        <apex:actionStatus id="loading" layout="block">
+                            <apex:facet name="start">
+                                <div id="assign-action-spinner-main">
+                                    <div id="assign-action-spinner-content">
+                                        <img src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}" />  
+                                    </div>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        <div id="tab1" class="tab_content">
+                            <!-----------------------first div of personal details (start)--------------------------->
+                            <div class="col-md-4 col-sm-6" style="width:16%; padding:5px;">
+                                <div class="media" style="  text-align: center;">
+                                    <p><apex:outputText value="{!account_obj.name}" style="font-size:13px; font-weight:bold; color:rgb(0, 153, 204)"/> </p>
+                                    <p><apex:outputText value="{!'('&CRN&')'}" style="font-size:13px; font-weight:bold; color:rgb(0, 153, 204)"/></p>
+                                    <a class="thumbnail" style="width:80%; padding:0px; height:77px;     margin: 2% 2% 2% 9%;" id="userImageID">
+                                        <apex:image value="{!userphoto}" rendered="{!userphoto!=null}" style=" width: 100%; height: 100%;"/>
+                                        <apex:image value="{!URLFOR($Resource.RMImages2, 'RMImages2/User-blue.png')}" rendered="{!userphoto==null}" style="width: 100%; height: 100%;"/>
+                                    </a>
+                                    
+                                    <div class="progress" style="height: 15px; width: 95%;margin-bottom: 0px; border: 1px solid #C0C0C0;">
+                                        <apex:outputPanel id="pc1">
+                                            <div id="pcb1" class="progress-bar progress-bar-info" style="width: {!profile_completeness}%">
+                                                <p style="margin-bottom: 2px;">
+                                                    <span style="color:black; display:block;font-size:10px;">
+                                                     <apex:outputText id="pc2" style="position: absolute;left: 10%;" value="Profile Completeness ({!profile_completeness}%)"/>   
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </apex:outputPanel>
+                                    </div>
+                                   
+                                    <div>
+                                        
+                                        <p style="margin-top: 5px;margin-bottom: 1px;">
+                                            <!------------------------- Personal detail view details----------------------------->
+                                            <a class="PersonalDLink" id="jsMe" href="#"  data-toggle="modal" data-target="#myModal" style="Background-color:transparent;cursor: hand;" data-backdrop="static" data-keyboard="false" onclick="disableScroll()">
+                                            <span style="font-size: 12px;">
+                                            View Details
+                                            </span>
+                                            </a>
+                                            <!------------------------------------ Modal Detail View ---------------------------------------->
+                                            <!--------------------------- Detail View Non editable---------------------------->
+                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="padding-bottom: 3%;">
+                                                        <h3><i class="glyphicon glyphicon-user"></i> Profile Details</h3>
+                                                        <apex:commandButton value="X" styleClass="close" html-data-dismiss="modal" html-aria-label="Close"  style="color: #168EB5"  reRender="pc1,pc2,pc5,pc6, pcb" action="{!intializeAccount}" oncomplete="callProfileMeter();" onclick="Reloadprofiledetailview(), scrollBodyOnClose();" >
+                                                        </apex:commandButton>
+                                                        <apex:actionFunction name="callProfileMeter" action="{!profilecompleteness}" reRender="pc1,pc2, pcb1"/>
+                                                    </div>
+                                                    <apex:iframe src="/apex/RMcustomerInfoPage?CRN={!account_obj.CRN__c}" scrolling="true" id="profiledetail" height="555"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!------------------------------Modal popup End--------------------------------->
+                                        </p> 
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <apex:outputPanel id="pc6">
+                                <div class="divstyle">
+                                    <div class="subdiv">
+                                        <table class="table1" >
+                                            <tr>
+                                                
+                                                <td class="labelleft">
+                                                    Email 
+                                                </td>
+                                                <td style="vertical-align: middle;">:&nbsp;</td>
+                                                <td  class="valueleft"> 
+                                                    <a  class="PersonalDLink" href="mailto:{!account_obj.PersonEmail}" style="font-size: 11px;" >{!account_obj.PersonEmail}</a>
+                                                </td>
+                                                 <td class="labelright" >
+                                                    Click to&nbsp;
+                                                    <a class="PersonalDLink" href="tel:{!account_obj.Click_To_Call__c}" style="color:black;font-size: 11px;" >Call</a>
+                                                    &nbsp;/&nbsp;
+                                                    <!--<a class="PersonalDLink" href="{!$Label.RMClick_to_SMS}{!account_obj.Click_To_Call__c}" style="color:black;font-size: 11px;" target="_blank" >SMS</a>-->
+                                                    <a id="jsMe" href="#"  data-toggle="modal" data-target="#mySMSModal" data-backdrop="static" style="color:black;font-size: 11px;" data-keyboard="false">
+                                                        SMS 
+                                                    </a>
+                                                     <!--------Start Modal pop up for SMS text area----->
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="mySMSModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                      <div class="modal-dialog" style="width: 42%;margin-top: 18%;">
+                                                        <div class="modal-content" style="height: 40%;">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #168EB5" onclick="refreshSMS();"><span aria-hidden="true">&times;</span></button>
+                                                                <h4>SMS</h4>
+                                                            </div>
+                                                            <div class="modal-body" style="height: 90%;padding: 2% !important;overflow:auto;font-size: small; margin-left: 30px;">
+                                                              
+                                                                <div >
+                                                                     <h5><strong>Message</strong></h5>
+                                                                </div>
+                                                                <apex:outputPanel id="smsTextID1">
+                                                                <div style="padding-top: 4px;">
+                                                                     <textarea  class="smsTextArea" cols="60" rows="5" 
+                                                                               id="smsTextAreaID" maxlength="{!$Label.SMSTextLength}" 
+                                                                               onkeyup="countCharacter(this);" 
+                                                                               placeholder="Type Your Message Here" />                     
+                                                                   
+                                                                </div>
+                                                                <div id='usedLengthID' style="padding-top: 4px;">
+                                                                        <Strong>Left : <Span class="leftLength" id='maxLengthID'>{!$Label.SMSTextLength}</span></strong>
+                                                                </div>
+                                                                <div class="pull-right" style="padding-right: 45px;">
+                                                                <button type="button" class="btn btn-danger">Send SMS</button>
+                                                                </div> 
+                                                                </apex:outputPanel>      
+                                                            </div>
+                                                        </div>
+                                                     </div>
+                                                    </div>
+                                                    
+                                                    <!---End MOdal pop up for sms text area------------>
+                                                </td>
+                                                <td style="vertical-align: middle;">:&nbsp;</td>
+                                                <td class="valueright">
+                                                    <apex:outputText value="{!maskphoneno}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="subdiv">
+                                        <table class="table1" >
+                                            <tr>
+                                                <td class="labelleft" >
+                                                    PAN No. 
+                                                </td>
+                                                <td style="vertical-align: middle;">:&nbsp;</td>
+                                                <td class="valueleft">
+                                                    <apex:outputText value="{!account_obj.Primary_PAN_number__c}"/>
+                                                </td>
+                                                <td class="labelright">
+                                                    Preferred time to call 
+                                                </td>
+                                                <td style="vertical-align: middle;">:&nbsp;</td>
+                                                <td  class="valueright">
+                                                    <apex:outputText value="{!RestAPICallout_wrapper_obj.time_of_communication }"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="subdiv">
+                                        <table class="table1" >
+                                            <tr>
+                                                <td class="labelleft" >
+                                                    Billing Address 
+                                                </td>
+                                                <td style="vertical-align: middle;">:&nbsp;</td>
+                                                <td class="valueleft">
+                                                    <apex:outputText value="{!address}"/>
+                                                </td>
+                                                <td class="labelright">
+                                                    Preferred Comm. Mode 
+                                                </td>
+                                                <td style="vertical-align: middle;">:&nbsp;</td>
+                                                <td  class="valueright">
+                                                    <apex:outputText value="{!account_obj.Preferred_Mode_of_Contact__c}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="subdiv">
+                                        <table class="table1" >
+                                            <tr>
+                                                <td class="labelleft" >
+                                                    Special Instr. for RM 
+                                                </td>
+                                                <td style="vertical-align: middle;">:&nbsp;</td>
+                                                <td class="valuebottom">
+                                                    <apex:outputText value="{!account_obj.Special_instruction_for_RM__c}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="subdiv">
+                                        <table class="table1">
+                                            <tr  >
+                                                <td class="labelleft" >
+                                                    Instr. by PI/HOD 
+                                                </td>
+                                                <td style="vertical-align: middle;">:&nbsp;</td>
+                                                <td class="valuebottom">
+                                                    <apex:outputText value="{!account_obj.Instruction_by_PI_HOD__c }"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                            <!----------------------------------------------Profile Indicators------------------------------------------------------------------------>
+                            <div class="profileD_div">
+                                <div class="profile_flag_labels" >
+                                    Profile Indicators
+                                </div >
+                                <div style="width:100%;height:57%;">
+                                <table style="  width: 98%; height: 100%;  margin-left: 2%;">
+                                    
+                                    <tr>
+                                        <td class="profileD_items_value" style="width:20%">
+                                        <a class="PersonalDLink" href="#" data-toggle="modal" data-target="#myModalSegment" style="Background-color:transparent;" data-backdrop="static" data-keyboard="false">
+                                            <div class="profileD_items">
+                                                Seg
+                                            </div>
+                                        </a>
+                                        </td>
+                                        <td class="profileD_items_value" style="width:25%; padding-left: 2%;">
+                                        
+                                            <apex:outputText value="{!RMSegmentIndicator_obj.CurrentBookingSegment}" />
+                                        </td>
+                                        <td  class="profileD_items_value" style="width:20%">
+                                            <div class="profileD_items" >
+                                                Source
+                                            </div>
+                                        </td>
+                                        <td class="profileD_items_value" style="width:30%; padding-left: 2%;">
+                                            <apex:outputText value="{!account_obj.AccountSource}" />
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td class="profileD_items_value" style="width:20%">
+                                        <a class="PersonalDLink" href="#"  data-toggle="modal" data-target="#myModalLoyalty" style="Background-color:transparent;" data-backdrop="static" data-keyboard="false">
+                                            <div class="profileD_items" >
+                                                    Loyalty 
+                                            </div>
+                                        </a>
+                                        </td>
+                                        <td class="profileD_items_value" style="width:25%; padding-left: 2%;">
+                                            <apex:outputText value="{!RMLoyaltyPoint_obj.Loyalty_Points_customer_specific}" />
+                                        </td>
+                                        <td class="profileD_items_value" style="width:20%">
+                                            <div class="profileD_items" >
+                                                <a class="PersonalDLink" href="#" data-popover="true" data-html="true"  data-content=" Spot Index :  {!RMCollecetionIndex_obj.spot_index} <p>Life-cycle Index : {!RMCollecetionIndex_obj.LifecycleIndex}</p>">
+                                                    Collection
+                                                </a>
+                                            </div>
+                                            
+                                        </td>
+                                        <td class="profileD_items_value" style="width:30%;padding-left: 2%;">
+                                            <apex:outputText value="{!RMCollecetionIndex_obj.spot_index}" />
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td class="profileD_items_value" style="width:20%">
+                                        <a class="PersonalDLink" href="#"  data-toggle="modal" data-target="#myModalService" style="Background-color:transparent;" data-backdrop="static" data-keyboard="false">
+                                            <div class="profileD_items" >
+                                                    Service
+                                            </div>
+                                         </a>
+                                         </td>
+                                        <td class="profileD_items_value" style="width:25%;padding-left: 2%;">
+                                            <apex:outputText value="{!RMServiceIndex_obj.service_index_CustomerSpecific}" />
+                                        </td>
+                                        <td class="profileD_items_value" style="width:20%">
+                                            <div class="profileD_items">
+                                                CV
+                                            </div>
+                                        </td>
+                                        <td class="profileD_items_value" style="width:30%;padding-left: 2%;">
+                                            <apex:outputText value="{! bookingdetails_obj.CV_paid_New__c}%" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                </div>
+                                
+                                    <!------------------------------Modal popup for Segment---------------------->
+                                    <div class="modal fade" id="myModalSegment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" >
+                                            <div class="modal-content" style="height: 100%;">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #168EB5"><span aria-hidden="true">&times;</span></button>
+                                                    <h4>Segment Details</h4>
+                                                </div>
+                                                
+                                                <div id="Tablebody" class="modal-body" style="height: 90%; padding:2% !important">
+                                                    <h5 style="text-alignment:right; margin-bottom:10px; font-weight:bold;">Is Customer NRI? : {!RestAPICallout_wrapper_obj.isnri}</h5>
+                                                    <br />
+                                                    <apex:outputPanel >
+                                                        <br />
+                                                        <div class="profile_overflow">
+                                                        <table class="table table-striped table-bordered"  >
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="Loyaltyheader table-heading">Booking ID</th>
+                                                                    <th class="Loyaltyheader table-heading">CV {!$Label.Currency_INR_notation_RM_CSS}</th>
+                                                                    <th class="Loyaltyheader table-heading">Segment</th>
+                                                                </tr>
+                                                            </thead>
+                                                         
+                                                            <tbody>
+                                                                <apex:repeat value="{!RMSegmentIndicator_obj.booking_Segments}" var="BookingS">
+                                                                <tr>
+                                                                    <td style="text-align: center;">{!BookingS.BookingCRN}</td>
+                                                                    <td style="text-align: center;"><c:FormatCurrencyComponent currency_value="{!BookingS.CV}" /></td>
+                                                                    <td style="text-align: center;">{!BookingS.segment}</td>
+                                                                </tr>
+                                                                </apex:repeat>
+                                                            </tbody>
+                                                            
+                                                         </table>
+                                                         </div>
+                                                    </apex:outputPanel>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------Modal popup End---------------------->
+                                    <!------------------------------Modal popup for Loyalty Points---------------------->
+                                    <div class="modal fade" id="myModalLoyalty" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" >
+                                            <div class="modal-content" style="height: 100%;">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #168EB5"><span aria-hidden="true">&times;</span></button>
+                                                    <h4>Loyalty Contribution Details</h4>
+                                                </div>
+                                                <div id="Tablebody" class="modal-body" style="height: 90%; padding:2% !important">
+                                                    <apex:outputPanel >
+                                                        <div class="profile_overflow">
+                                                        <table class="table table-striped table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="Loyaltyheader table-heading">Booking ID</th>
+                                                                    <th class="Loyaltyheader table-heading">CV {!$Label.Currency_INR_notation_RM_CSS}</th>
+                                                                    <th class="Loyaltyheader table-heading">%CV Paid</th>
+                                                                    <th class="Loyaltyheader table-heading">Loyalty Contribution</th>
+                                                                    <th class="Loyaltyheader table-heading">Source of Booking</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <apex:repeat value="{!RMLoyaltyPoint_obj.BookingSpecificLoyaties}" var="BookingSL">
+                                                                <tr>
+                                                                    <td style="text-align: center;">{!BookingSL.CRN}</td>
+                                                                    <td style="text-align: center;"><c:FormatCurrencyComponent currency_value="{!BookingSL.CV}"/></td>
+                                                                    <td style="text-align: center;">{!BookingSL.percentage_cv_paid}</td>
+                                                                    <td style="text-align: center;">{!BookingSL.loyalty_Contribution}</td>
+                                                                    <td style="text-align: center;">{!BookingSL.Source_booking}</td>
+                                                                </tr>
+                                                                </apex:repeat>
+                                                            </tbody>
+                                                         </table>
+                                                         </div>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------Modal popup End---------------------->
+                                    <!------------------------------Modal popup for Service Index ---------------------->
+                                    <div class="modal fade" id="myModalService" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" >
+                                            <div class="modal-content" style="height: 100%; width:100%;">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #168EB5"><span aria-hidden="true">&times;</span></button>
+                                                    <h4>Service Index Details</h4>
+                                                </div>
+                                                <div id="Tablebody" class="modal-body" style="height: 90%; width:100%; margin-top:-20px !important  padding: 2% !important; ">
+                                                    <div id="Tablebody" class="modal-body" style="height: 90%; padding:2% !important ">
+                                                        <apex:outputPanel >
+                                                            <div class="profile_overflow">
+                                                            <table class="table table-striped table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="Loyaltyheader table-heading">Booking ID</th>
+                                                                    <th class="Loyaltyheader table-heading">Complaints Received</th>
+                                                                    <th class="Loyaltyheader table-heading">Grievances Received</th>
+                                                                    <th class="Loyaltyheader table-heading">Cases Created</th>
+                                                                    <th class="Loyaltyheader table-heading">Closed Unsatisfied Cases (Except Grievance/Complaint)</th>
+                                                                    <th class="Loyaltyheader table-heading">Closed Unsatisfied Cases (Grievance/Complaint)</th>
+                                                                    <th class="Loyaltyheader table-heading">Closed Satisfied Cases (Except Grievence/Complaint)</th>
+                                                                    <th class="Loyaltyheader table-heading">Closed Satisfied Cases (Grievance/Complaint)</th>
+                                                                    <th class="Loyaltyheader table-heading">Calls Received</th>
+                                                                    <th class="Loyaltyheader table-heading">Emails Received (from Registered Email)</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <apex:repeat value="{!RMServiceIndex_obj.service_index_BookingSpecific}" var="ServiceIBS">
+                                                                <tr>
+                                                                    <td style="text-align: center;">{!ServiceIBS.BookingID}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_Compaints}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_Grievances}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_Cases}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_Closed_Unsatisfied_casesWithoutGrievanceComplaint}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_Closed_Unsatisfied_casesWithGrievanceComplaint}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_Closed_satisfied_casesWithoutGrievanceComplaint}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_Closed_satisfied_casesWithGrievanceComplaint}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_call_recieved}</td>
+                                                                    <td style="text-align: center;">{!ServiceIBS.no_of_Email_recieved}</td>
+                                                                </tr>
+                                                                </apex:repeat>
+                                                            </tbody>
+                                                         </table>
+                                                         </div>
+                                                         
+                                                        </apex:outputPanel>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!------------------------------Modal popup End---------------------->
+                                    
+                                
+                                <!--<div class="profile_flag_labels">
+                                    Other Flags
+                                </div>-->
+                                <div style=" width:100%;height:17%;  margin-top: 2%;">
+                                    <div Class="checked_image_div">
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Unchecked.png')}" title="Tax Deducted at Source" styleClass="checked_image" rendered="{!account_obj.TDS_Related__c=='Authorized Lodha to pay'}" />
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Checked.png')}" title="Tax Deducted at Source" styleClass="checked_image" rendered="{!account_obj.TDS_Related__c=='Would pay TDS by self'}"/>
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Unchecked.png')}" title="Tax Deducted at Source" styleClass="checked_image" rendered="{!(account_obj.TDS_Related__c!='Would pay TDS by self' && account_obj.TDS_Related__c!='Authorized Lodha to pay')}" />
+                                        <apex:outputLabel value="TDS (Self)" title="Tax Deducted at Source" styleclass="r_rectbox" />
+                                    </div>
+                                    <div Class="checked_image_div">
+                                        <apex:outputPanel id="pc5">
+                                            <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Unchecked.png')}" title="Do Not Disturb" styleClass="checked_image" rendered="{!!account_obj.TRAI_DND__c}"/>
+                                            <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Checked.png')}" title="Do Not Disturb" styleClass="checked_image" rendered="{!account_obj.TRAI_DND__c}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputLabel value="DND" title="Do Not Disturb" styleclass="r_rectbox"/>
+                                    </div>
+                                    <div Class="checked_image_div">
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Unchecked.png')}" title="Legal Alert" styleClass="checked_image" rendered="{!!RestAPICallout_wrapper_obj.legal_alert}"/>
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Checked.png')}" title="Legal Alert" styleClass="checked_image" rendered="{!RestAPICallout_wrapper_obj.legal_alert}"/>
+                                        <apex:outputLabel value="LA" title="Legal Alert" styleclass="r_rectbox" />
+                                    </div>
+                                    <div Class="checked_image_div">
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Unchecked.png')}" title="Cancellation In Progress" styleClass="checked_image" rendered="{!!account_obj.CIP__c}"/>
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Checked.png')}" title="Cancellation In Progress" styleClass="checked_image" rendered="{!account_obj.CIP__c}"/>
+                                        <apex:outputLabel value="CIP" title="Cancellation In Progress" styleclass="r_rectbox"/>
+                                    </div>
+                                    <div Class="checked_image_div">
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Unchecked.png')}" title="Loan Against Property" styleClass="checked_image" rendered="{!!RestAPICallout_wrapper_obj.loan_against_property}"/>
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Checked.png')}" title="Loan Against Property" styleClass="checked_image" rendered="{!RestAPICallout_wrapper_obj.loan_against_property}"/>
+                                        <apex:outputLabel value="LAP" title="Loan Against Property" styleclass="r_rectbox" />
+                                    </div>
+                                    <div Class="checked_image_div">
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Unchecked.png')}" title="Management Booking" styleClass="checked_image" rendered="{!!RestAPICallout_wrapper_obj.management_booking}"/>
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Checked.png')}" title="Management Booking" styleClass="checked_image" rendered="{!RestAPICallout_wrapper_obj.management_booking}"/>
+                                        <apex:outputLabel value="MB" title="Management Booking" styleclass="r_rectbox" />
+                                    </div>
+                                    <!--<div Class="checked_image_div">
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Unchecked.png')}" styleClass="checked_image" rendered="{!!RestAPICallout_wrapper_obj.isnri}"/>
+                                        <apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/Checked.png')}" styleClass="checked_image" rendered="{!RestAPICallout_wrapper_obj.isnri}"/>
+                                        <apex:outputLabel value="NRI" title="Non-Resident Indian" styleclass="r_rectbox" />
+                                    </div>-->
+                                </div>
+                            </div>
+                            <!---------------------------------------------------------------------------------------------------------------------->   
+                        </div>
+                        <!-- #tab1 -->
+                        <!-----------------------Second div of other details (start)--------------------------->
+                        <div id="tab2" class="tab_content" style="height:162px">
+                            <!-- ---------------Booking Detail (Start)------------------ --> 
+                            <div style="width:50%; height: 85%; padding: 10px;margin: 7px; float:left;padding-left: 0px;margin-left: 3px;" >
+                                <div class="otherDHeading" >
+                                    Booking Details
+                                    <a id="jsMe" href="#"  data-toggle="modal" data-target="#myModalBooking" style="Background-color:transparent;cursor: hand; float: right; font-weight: normal;" data-backdrop="static" data-keyboard="false" >
+                                    <span style="font-size: 12px;">
+                                    View Details
+                                    </span>
+                                    </a>
+                                </div>
+                                <!------------------------- Booking view details--------------------------- -->
+                                <!-- Modal -->
+                                <div class="modal fade" id="myModalBooking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" >
+                                        <div class="modal-content" style="height: 100%;">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #168EB5"><span aria-hidden="true">&times;</span></button>
+                                                <h4>Booking Details</h4>
+                                            </div>
+                                            <div id="Tablebody" class="modal-body" style="height: 90%;padding: 2% !important;">
+                                                <apex:outputPanel >
+                                                    <table style="width:100%;">
+                                                        <tr>
+                                                            <td class="BookingViewDlabel" >Account Name   
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputField value="{! bookingdetails_obj.Account__r.Name}" />
+                                                            </td>
+                                                            <td class="BookingViewDlabel">Project
+                                                            </td>
+                                                            <td class="BookingViewDvalue" >
+                                                                <apex:outputField value="  {! bookingdetails_obj.Project__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="BookingViewDlabel">Co-Applicant Name
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputField value="  {! bookingdetails_obj.Co_Applicant__c}" />
+                                                            </td>
+                                                            <td class="BookingViewDlabel">Cluster
+                                                            </td>
+                                                            <td class="BookingViewDvalue" >
+                                                                <apex:outputField value="{! bookingdetails_obj.CLuster__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="BookingViewDlabel" >Booking ID/CRN 
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputField value="{! bookingdetails_obj.CRN__c}" />
+                                                            </td>
+                                                            <td class="BookingViewDlabel">Wing
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputField value="{! bookingdetails_obj.Wing__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="BookingViewDlabel">Application Date
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <c:FormatDateComponent date_value="{!bookingdetails_obj.Application_Date__c}"/>
+                                                                <!-- <apex:outputField value="{!bookingdetails_obj.Application_Date__c}"/> -->
+                                                            </td>
+                                                            <td class="BookingViewDlabel">Flat No.
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputField value="{! bookingdetails_obj.Flat_No__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="BookingViewDlabel">Allotment Date
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <c:FormatDateComponent date_value="{!bookingdetails_obj.Allotment_Date__c}"/>
+                                                                <!-- <apex:outputField value="{! bookingdetails_obj.Allotment_Date__c}" /> -->
+                                                            </td>
+                                                            <td class="BookingViewDlabel">Flat ID
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputField value="{! bookingdetails_obj.Flat_ID__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="BookingViewDlabel">Consideration Value
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputField value="{! bookingdetails_obj.Consideration_Value__c}" />
+                                                            </td>
+                                                            <td class="BookingViewDlabel">Flat Type
+                                                            </td>
+                                                            <td class="BookingViewDvalue" >
+                                                                <apex:outputField value="{! bookingdetails_obj.Flat_Type__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="BookingViewDlabel">Project Location
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputText value="{! project_Location}" />
+                                                            </td>
+                                                            <td class="BookingViewDlabel">Parking
+                                                            </td>
+                                                            <td class="BookingViewDvalue">
+                                                                <apex:outputText value="{!parking}" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </apex:outputPanel>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!------------------------------Modal popup End---------------------->
+                                <div class="otherDDiv" >
+                                    <table style=" height:100%; width:100%;">
+                                       <tr>
+                                            <td class="bookingDLabel_col">
+                                                CRN :
+                                            </td>
+                                            <td class="bookingDvalue_left">
+                                                <apex:outputText value="{!bookingdetails_obj.CRN__c}"/>
+                                            </td>
+                                        
+                                            <td class="bookingDLabel_col">
+                                                Cluster :
+                                            </td>
+                                            <td class="bookingDvalue_right">
+                                                <apex:outputText value="{!bookingdetails_obj.CLuster__c}" />
+                                                
+                                            </td>
+                                        
+                                        </tr>
+                                        <tr>
+                                            <td class="bookingDLabel_col">
+                                                CV :
+                                            </td>
+                                            <td class="bookingDvalue_left">
+                                                <apex:outputField value="{!bookingdetails_obj.Consideration_Value__c}"/>
+                                                
+                                            </td>
+                                            <td class="bookingDLabel_col">
+                                                Wing :
+                                            </td>
+                                            <td class="bookingDvalue_right">
+                                                <apex:outputText value="{!bookingdetails_obj.Wing__c}" />
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bookingDLabel_col">
+                                                Project :
+                                            </td>
+                                            <td class="bookingDvalue_left">
+                                               <apex:outputText value="{!bookingdetails_obj.Project__c}" />
+                                               
+                                            </td>
+                                            <td class="bookingDLabel_col">
+                                               Flat No :
+                                            </td>
+                                            <td class="bookingDvalue_right">
+                                                 <apex:outputText value="{!bookingdetails_obj.Flat_No__c}" /> 
+                                            </td>
+                                         </tr>
+                                         <tr>
+                                            <td class="bookingDLabel_col">
+                                                Location :
+                                            </td>
+                                            <td class="bookingDvalue_left">
+                                               <apex:outputText value="{!project_Location}"/>
+                                            </td>
+                                            <td class="bookingDLabel_col">
+                                                Parking :
+                                            </td>
+                                            <td class="bookingDvalue_right">
+                                                <apex:outputText value="{!parking}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- --------------Login Details (Start)------------------- -->
+                            <!-- if login detail is on left widht should be 50% if on left it should be 44% -->
+                            <div style="border-left: 1px solid #1897c0; width:44%; height: 85%; padding: 10px;margin: 7px; float:left" >
+                                <div class="otherDHeading" >
+                                    Customer's CSS Login Details (Last 6 Months)
+                                </div>
+                                <div class="otherDDiv" >
+                                    <table style=" height:100%; width:100%;">
+                                        <tr>
+                                            <td class="loginDLabel_col">
+                                                Last Login :
+                                            </td>
+                                            <td class="loginDvalue_left">
+                                                <apex:outputText value="{!logindetails_obj.last_login_time}" />
+                                            </td>
+                                            <td class="loginDLabel_col">
+                                                Total Logins Till Now :
+                                            </td>
+                                            <td class="loginDvalue_right">
+                                                <apex:outputText value="{!logindetails_obj.Total_Login_in_Six_Month}" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="loginDLabel_col">
+                                                Logins In Last Month :
+                                            </td>
+                                            <td class="loginDvalue_left">
+                                                <apex:outputText value="{!logindetails_obj.No_of_Login_Last_Month}" />
+                                            </td>
+                                            <td class="loginDLabel_col">
+                                                Max. Viewed Page :
+                                            </td>
+                                            <td class="loginDvalue_right">
+                                                <apex:outputText value="{!logindetails_obj.Max_viewd_widget_page}" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- #tab2 -->
+                        <!-----------------------Third tab of Customer Life Cycle (start)--------------------------->
+                        <div id="tab3" class="tab_content" style="height:102px">
+                            <c:RMCustomerLifeCycle CRN="{!CRN}"/>
+                        </div>
+                        <!-- #tab3 END -->
+                    </div>
+                    <!-- .tab_container --> 
+                    <!-----  widgets section started------------------------------------------------>
+         <!-----  widgets section started------------------------------------------------>
+                    <div class="container" id="main">
+                        <hr style="margin-top: 2px; margin-bottom: 2px" />
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6"
+                                style="width: 48%; padding-left: 0px; padding-right: 1%;">
+                                <div class="panel panel-default" style="margin-bottom: 5px;height:384px">
+                                    <c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="5"
+                                        rendered="{!firstDiv == 'Recent Activity'}"/>
+                                    <c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="5"
+                                        rendered="{!firstDiv == 'Upcoming/Due Payments'}"/>
+                                    <c:PaymentsReceivedRM CRN="{!CRN}" NoOfRecrd="5" 
+                                        rendered="{!firstDiv == 'Payments Received'}"/>
+                                    <c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="5" 
+                                        rendered="{!firstDiv == 'Recent Documents/SMS/Dispatch'}"/>
+                                    <c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="5" 
+                                        rendered="{!firstDiv == 'Booking Payments Transactions'}"/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6"
+                                Style="width: 26%; padding-left: 0px; padding-right: 1%;">
+                                <div class="panel panel-default" style="margin-bottom: 5px;height:190px">
+                                    <c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="3"
+                                        rendered="{!secondDiv == 'Recent Activity'}"/>
+                                    <c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="3"
+                                        rendered="{!secondDiv == 'Upcoming/Due Payments'}"/>
+                                    <c:PaymentsReceivedRM CRN="{!CRN}" rendered="{!secondDiv == 'Payments Received'}" NoOfRecrd="3"/>
+                                    <c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3"  rendered="{!secondDiv == 'Recent Documents/SMS/Dispatch'}"/>
+                                    <c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!secondDiv == 'Booking Payments Transactions'}"/>
+                                </div>
+                                <!----------------3------------------------>
+                                <div class="panel panel-default" style="margin-bottom: 5px;height:190px">
+                                    <c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="3"
+                                        rendered="{!fourthDiv == 'Recent Activity'}"/>
+                                    <c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="3"
+                                        rendered="{!fourthDiv == 'Upcoming/Due Payments'}"/>
+                                    <c:PaymentsReceivedRM CRN="{!CRN}" rendered="{!fourthDiv == 'Payments Received'}" NoOfRecrd="3"/>
+                                    <c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!fourthDiv == 'Recent Documents/SMS/Dispatch'}"/>
+                                    <c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!fourthDiv == 'Booking Payments Transactions'}"/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6"
+                                Style="width: 26%; padding-left: 0px; padding-right: 0%;">
+                                <div class="panel panel-default" style="margin-bottom: 5px;height:190px;">
+                                    <c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="3"
+                                        rendered="{!thirdDiv == 'Recent Activity'}"/>
+                                    <c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="3"
+                                        rendered="{!thirdDiv == 'Upcoming/Due Payments'}"/>
+                                    <c:PaymentsReceivedRM CRN="{!CRN}" rendered="{!thirdDiv == 'Payments Received'}" NoOfRecrd="3"/>
+                                    <c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!thirdDiv == 'Recent Documents/SMS/Dispatch'}"/>
+                                    <c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!thirdDiv == 'Booking Payments Transactions'}"/>
+                                </div>
+                                <!----------------3------------------------>
+                                <div class="panel panel-default" style="margin-bottom: 5px;height:190px">
+                                    <c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="3"
+                                        rendered="{!fifthDiv == 'Recent Activity'}"/>
+                                    <c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="3"
+                                        rendered="{!fifthDiv == 'Upcoming/Due Payments'}"/>
+                                    <c:PaymentsReceivedRM CRN="{!CRN}" rendered="{!fifthDiv == 'Payments Received'}" NoOfRecrd="3"/>
+                                    <c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!fifthDiv == 'Recent Documents/SMS/Dispatch'}"/>
+                                    <c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!fifthDiv == 'Booking Payments Transactions'}"/>
+                                </div>
+                            </div>
+                            <!--/articles-->
+                        </div>
+                        <!-----End Widgets placing-------->
+                        <!----------Sidebar component Section Start-------------------->
+                        <c:RMSideBarComponent CRN="{!CRN}" registration_status="{!RestAPICallout_wrapper_obj.registration_status}" 
+                            registration_challan_date="{!RestAPICallout_wrapper_obj.registration_challan_date}" stamp_duty="{!RestAPICallout_wrapper_obj.stamp_duty}"
+                            registration_date="{!RestAPICallout_wrapper_obj.registration_date}" registration_charges="{!RestAPICallout_wrapper_obj.registration_charges}" />
+                        
+                        <!----------Sidebar Componet  Section End-------------------->
+                    </div>
+                </div>
+          
+                
+                <!------------------------- script for popover tool tip------------------------------>
+                <script>            
+                    var originalLeave = $.fn.popover.Constructor.prototype.leave;
+                    $.fn.popover.Constructor.prototype.leave = function(obj){
+                      var self = obj instanceof this.constructor ?
+                      obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data('bs.' + this.type)
+                      var container, timeout;
+                    
+                      originalLeave.call(this, obj);
+                    
+                      if(obj.currentTarget) {
+                        container = $(obj.currentTarget).siblings('.popover')
+                       container.one('mouseenter', function(){
+                          //Let's monitor popover content instead
+                          container.one('mouseleave', function(){
+                            $.fn.popover.Constructor.prototype.leave.call(self, self);
+                          });
+                        })
+                      }
+                    };
+                    
+                    
+                    $('body').popover({ selector: '[data-popover]', trigger: 'click hover', placement: 'left', delay: {show: 1, hide:1 }});
+                    
+                    
+                </script>
+                <!-----------------------------END------------------------------------------>
+                <!---------Script and css to prevent page from scrolling when popup open ----------->
+                <script>
+                    // $('.bs .modal-open').css('overflow','hidden')
+                </script>
+                <style>
+
+                    .bs .modal{  
+                    -webkit-box-sizing: border-box;  
+                    -moz-box-sizing: border-box;  
+                    box-sizing: border-box;  
+                    max-height: 100%;  
+                    width:100%;  
+                    overflow:hidden;
+                    }  
+                    .bs .modal-dialog{  
+                    width:100%; 
+                    padding-top: 0px; 
+                    overflow: hidden;
+                    height: 100%;
+                    }  
+                    .modal-screen {
+                    position: fixed;
+                    overflow: hidden;
+                    height: 100%;
+                    }
+                    element.style {
+                    font-size: 80%;
+                    }
+                </style>
+                <!-----------------------------END------------------------------------------>
+                <script>
+                    function Reloadprofiledetailview() {
+                        var f = document.getElementById('profiledetail');
+                        f.src = f.src;
+                        disableScroll();
+                    }
+                    
+                    function scrollBodyOnClose() {
+                    $('html, body').css({
+                            'overflow': 'auto'
+                             });
+                    }
+                    
+                    function disableScroll() {
+                    $('html, body').css({
+                       'overflow': 'hidden'
+                        });
+                    }
+                    
+                    
+                     //this below function is used to display 
+                    //no of character left in sms text area
+                    function countCharacter (tArea){
+                         console.log('hi'+tArea.value.length);
+                         $('#usedLengthID').empty();
+                         var left='{!$Label.SMSTextLength}'-tArea.value.length;
+                         $('#usedLengthID').append('<Strong>Left : <Span class=leftLength>'+left+'</span></strong>');
+                     }
+                     
+                    function refreshSMS(){
+                        $('#usedLengthID').empty();
+                        var left='{!$Label.SMSTextLength}';
+                        $('#usedLengthID').append('<Strong>Left : <Span class=leftLength>'+left+'</span></strong>');
+                        $('#smsTextAreaID').val('');
+                    }  
+                                
+                    
+                </script>
+            </html>
+            <apex:actionFunction name="yearIncrcall" oncomplete="yearIncr();"/>
+        </apex:form>
+        <!-------Strat Related List Component-------------->
+        <c:RMRelatedListComponent Acc="{!account_obj}"/>
+        <!----- End Related List Component-------------------->
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!iserror}">
+        <apex:pageMessage severity="error" strength="1" summary="{!errormessage}" 
+            />
+    </apex:outputPanel>
+    <script>
+        yearIncrcall();
+        
+    </script>
+</apex:page>

@@ -1,0 +1,26 @@
+<apex:component >
+  <apex:attribute name="PreRange" type="integer" description="Number by which you need to make year start. "/>
+  <apex:attribute name="PostRange" type="integer" description="Number by which you need to make year end."/>
+  
+  <script>
+        var PRELIMIT = parseInt("{!PreRange}");
+        var POSTLIMIT = parseInt("{!PostRange}"); 
+        var  firstValue=parseInt($("#calYearPicker option:nth-child(1)").val());
+        var  lastValue=parseInt($("#calYearPicker option:nth-child(7)").val());
+     
+          
+        //create and prepend the options befor the default first element
+          for (var i=1;i<=PRELIMIT;i++){
+          firstValue=firstValue-1;  
+          var optionvar  ='<option value=' +firstValue+ '>' +firstValue+ '</option>';  
+          $('#calYearPicker').prepend(optionvar);       
+          } 
+           //create and append the options befor the default first element
+          for (var i=1;i<=POSTLIMIT  ;i++){
+          lastValue=lastValue+1;  
+          var optionvar  ='<option value=' +lastValue+ '>' +lastValue+ '</option>';  
+          $('#calYearPicker').append(optionvar);       
+          }   
+  </script>
+  
+</apex:component>

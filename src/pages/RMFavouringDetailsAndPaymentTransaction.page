@@ -1,0 +1,116 @@
+<!--
+   Description:This page contains CRN as a parameter and open faouring details ,
+               new payments information and transaction history in cotext of CRN 
+   @Created by: Sudeep Dube
+   @Created Date: 11/06/2015
+   
+   --------------------------------------------------------------------------------
+   | Modified By      | Modified Date       | Version        | Description         |
+   --------------------------------------------------------------------------------
+   |
+   --------------------------------------------------------------------------------
+   |
+   --------------------------------------------------------------------------------
+   -->
+
+<apex:page controller="RMFavouringDetailsController"  title="FavouringDetails & PaymentTransation" showHeader="false" sidebar="false">
+<apex:messages />
+<apex:param name="crn" assignTo="{!CRN}" value=""/>
+
+
+ <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/bootstrap.min.css')}"/>
+              <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/datatablescript/bootstrap.min.js')}"></script>
+              <apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery-1.11.1.min.js')}"/>
+              <apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery.dataTables.min.js')}"/>
+              <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery.dataTables.css')}"/>
+              <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/font-awesome.min.css')}" rel="stylesheet" media="screen" />
+              <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+              <script src="{!$Resource.YearRangeIncr}"></script> 
+<style>
+.favorDetailStyle{
+background-color: rgb(229, 229, 229);
+border:1px solid black;
+
+width:100%;
+}
+
+.favorDetailStyle td {
+    padding: 15px;
+    border: 1px solid black;
+
+}
+</style>
+
+           <a style="float:left;" href="#" data-toggle="modal" data-target="#reminder"  data-backdrop="static" data-keyboard="false" >
+           <apex:image style="margin-top:0px;margin-right:0px" height="30" width="30" url="{!URLFOR($Resource.RMImages2, 'RMImages2/blue-arrow.png')}" />Favoring Details
+           </a>
+ 
+  
+                    <div class="modal fade"  id="reminder">
+                      <div class="modal-dialog" style="width:90%;height:50%">
+                        <div class="modal-content" >
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <center><h4 class="modal-title">Favoring Details</h4></center>
+                           </div>
+                          <div class="modal-body">
+                            <center>
+                             <table class="favorDetailStyle"  >
+       
+                                <tr>
+                                    <td align="center" bgcolor="#c0c0c0"><b>Mode</b></td>
+                                    <td align="center" bgcolor="#c0c0c0"><b>Favoring</b></td>
+                                    <td align="center" bgcolor="#c0c0c0"><b>Steps to make payment</b></td>
+                                </tr>
+        
+                                <tr>
+                                    <td><apex:outputText value="Cheque / Demand Draft / Pay Order"/></td>
+                                    <td><apex:outputText value="{!mode.In_Favor_of__c}" />. Payable at : &nbsp;<apex:outputText value="{!mode.Branch__c }" /></td>
+                                    <td>1. Drop Box available at site office or Corporate office<br>OR</br>2. Send via Courier to our Corporate Office address</td>
+                                </tr>
+        
+                                 <tr>
+                                    <td><apex:outputText value="RTGS / NEFT"/></td>
+                                    <td>
+                                        <apex:outputText value="{!mode.In_Favor_of__c}" />. A/C : &nbsp;<apex:outputText value="{!mode.Account_Number__c}" />
+                                         Of &nbsp;<apex:outputText value="{!mode.Bank_Name__c}" />, &nbsp;<apex:outputText value="{!mode.Bank_Address__c}" />.
+                                    </td>
+                                    <td>
+                                        <p>
+                                        Mention
+                                         </p>               
+                                         <p>
+                                        IFSC Code : &nbsp;<apex:outputText value="{!mode.IFSC_Code__c}"/>
+                                         </p>
+                                         <p>
+                                        MICR Code : &nbsp;<apex:outputText value="{!mode.MICR_Code__c}"/>
+                                        </p>
+                                         <p>
+                                        
+                                        SWIFT Code : &nbsp;<apex:outputText value="{!mode.SWIFT_Code__c}"/>
+                                         </p>
+                                        
+                
+                                    </td>
+                                    </tr>       
+                                </table>    
+                               </center> 
+                          </div>
+                          
+                        </div><!-- /.modal-content -->
+                      </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal --> 
+ 
+  
+  <iframe  frameborder="0" height="450" id="BptIframe" name="BptIframe" src="apex/RMNewPaymentTransaction?crn={!CRN}&isdtp=vw" title="New Transaction" width="100%"></iframe> 
+   
+
+ <apex:pageBlock title="Payment Transaction History" tabStyle="Booking_Payment_Transaction__c">
+    
+      <iframe frameborder="0" height="615" id="PaymentsHistoryIframe" name="PaymentsHistoryIframe" src="/apex/BookingPaymentsDetailRM?CRN={!CRN}" title="Content" width="100%"></iframe>
+    
+</apex:pageBlock> 
+
+
+  
+</apex:page>

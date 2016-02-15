@@ -1,0 +1,4 @@
+<apex:page standardController="Project_Name__c">
+	{!Project_Name__c.Name}
+
+</apex:page>

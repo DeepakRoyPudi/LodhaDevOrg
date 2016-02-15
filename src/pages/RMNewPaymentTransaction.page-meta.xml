@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>34.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>This is Vf page with standard controller and will be used for create new transaction From Booking Payment Information widget of  RM Landing page</description>
+    <label>RMNewPaymentTransaction</label>
+</ApexPage>

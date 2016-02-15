@@ -1,0 +1,103 @@
+<!-- 
+   /* 
+   Description:
+   This class is used for Recent MilestonePaid(crisp) Component
+   
+    @Created by: Trupti Dhoka
+    @Created Date:  9/03/15   
+    
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    |Sneha p               03/04/2015          1.1             Logic for tracking click count
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+   */
+    -->
+<apex:component controller="RecentMilestonesPaidCSS2_0Controller" allowDML="true">
+<apex:attribute name="CRN" description="This is CRF Type." type="String" required="true" assignTo="{!Customer_CRN}" /> 
+<apex:outputLabel value="{!init}" style="display:none;"/> 
+   <apex:form >
+      <apex:outputPanel id="Table1">
+         <apex:actionFunction name="TrackPaymentRecdClick" action="{!clickPaymentRecdCount}" rerender="Table1">
+         </apex:actionFunction>
+         <div class ="col-md-6 ">
+            <!-- div col-md-6-->
+            <div class="panel panel-default Widgetset  ">
+               <div class="panel-heading">
+                  <div class="panel-title table_title"><i class="fa fa-money  fa-lg"></i>Recent Milestones Paid</div>
+                  <div class="view_all"><a onclick="TrackPaymentRecdClick()" href="{!URLFOR($Page.PaymentInformationCSS2_0)}" >View All</a></div>
+               </div>
+               <div class="panel-body ">
+                  <div class="col-md-6 Align_paymentimage">
+                     <div class="smallstat box">
+                        <div class="boxchart-overlay green ">
+                           <div class="boxchart">
+                              <apex:image url="{!URLFOR($Resource.CSS2_0,'/CSS2_0/images/asset.png')}"   styleclass="image_width" />
+                           </div>
+                        </div>
+                        <span class="title">Total Paid Towards CV <span></span></span>
+                        <!--<span class="value">INR &nbsp;{!restapicalloutpaymentObj.TotalPaymentR}</span>      -->
+                        <span class="value">
+                           INR&nbsp;
+                           <c:FormatCurrencyComponent currency_value=" {!Text(TotalReceived)}"/>
+                        </span>
+                     </div>
+                  </div>
+                  <div class="col-md-6 Align_paymentimage">
+                     <div class="smallstat box">
+                        <div class="boxchart-overlay green ">
+                           <div class="boxchart">
+                              <apex:image url="{!URLFOR($Resource.CSS2_0,'/CSS2_0/images/percent.png')}"   styleclass="image_width" />
+                           </div>
+                        </div>
+                        <span class="title">% CV Received<span></span></span>
+                        <span class="value">{!Received_Percent}</span>  
+                     </div>
+                  </div>
+                  <div class="clear"> </div>
+                  <div class="table-responsive crispPayment_Scroll">
+                     <table id="example1" class="table table-hover">
+                        <thead>
+                           <tr>
+                              <apex:repeat value="{!$ObjectType.Demands__c.FieldSets.MilestonePaidCSS2_0}" var="f">
+                                 <th>
+                                    {!f.label}
+                                 </th>
+                              </apex:repeat>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <apex:repeat value="{!lstMilestonePaid}" var="d" rows="3">
+                              <tr>
+                                 <apex:repeat value="{!$ObjectType.Demands__c.FieldSets.MilestonePaidCSS2_0}" var="f">
+                                    <td >
+                                       <apex:outputField value="{!d[f]}" rendered="{!AND(f.type != 'datetime',f.type != 'date')}" />
+                                       <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                          <c:FormatDateTimeComponent date_Timevalue="{!d[f]}"/>
+                                       </apex:outputPanel>
+                                       <apex:outputPanel rendered="{!f.type == 'date'}">
+                                          <c:FormatDateComponent date_value="{!d[f]}"/>
+                                       </apex:outputPanel>
+                                    </td>
+                                 </apex:repeat>
+                              </tr>
+                           </apex:repeat>
+                           <tr style="{!If(lstMilestonePaid.size > 0, 'display:none','' )}">
+                              <td align="center" colspan="{!lstMilestonePaid.size}">
+                                 No records to display.
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <!--EOF Panel Body  -->
+            </div>
+            <!-- EOF Panel Default -->
+         </div>
+         <!-- EOF col-md-6 -->
+      </apex:outputPanel>
+   </apex:form>
+</apex:component>

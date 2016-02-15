@@ -1,0 +1,279 @@
+<apex:page standardController="Account" extensions="visitoraccountpagecontroller" sidebar="false" showHeader="false">
+
+<apex:form rendered="{!useraccess}"  styleclass="lodha_form_style"> <!-- Modified by CG Dev Team 22/09/2011 Display WorldOne/WorldCrest-Project Specific form -->
+<style>  
+{!Usermap.AccountCSS__c}
+</style> 
+
+<apex:stylesheet value="{!Usermap.CSS_URL__c}" />
+<apex:pageMessages />
+<apex:outputPanel rendered="{!AND(Usermap.isFiorenzaTemplate__c,Usermap.isWorldTowersTemplate__c)}">
+SOME ERROR IN VISTOR FORM SETTINGS:many defaults
+{!Usermap.isFiorenzaTemplate__c}{!Usermap.isWorldTowersTemplate__c}
+</apex:outputPanel>        
+
+<apex:outputPanel rendered="{!AND(NOT(Usermap.isFiorenzaTemplate__c),NOT(Usermap.isWorldTowersTemplate__c))}">
+SOME ERROR IN VISTOR FORM SETTINGS:no defaults
+{!Usermap.isFiorenzaTemplate__c}{!Usermap.isWorldTowersTemplate__c}
+</apex:outputPanel>        
+<apex:outputPanel rendered="{!Usermap.isFiorenzaTemplate__c}"> 
+   <div id="fiorenza_template">
+  
+  
+  <div id="lodha_form_wrapper">
+   <div id="Lodha_WT_Header"></div>
+  
+  
+   <div id="about_cutomer" class="inputs_block">
+      <table>
+
+        <tbody>
+          <tr><th colspan="3">{!UserMap.Personal_Details__c}</th></tr>
+          <tr>
+            <td><span>Saluation:</span><apex:inputField value="{!a.Salutation}"/></td>
+            <td><span>First Name:</span><apex:inputField value="{!a.FirstName}"/></td>
+            <td class="reqd_input"><span style="float: left;">Last Name:</span><apex:inputField value="{!a.LastName}" /></td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+  
+  <div id="about_address" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.ContactInfo__c}</th></tr>
+         <tr>
+
+            <td><span>Current Residence:</span><apex:inputField value="{!a.Address1_R_cont__pc}"/> </td>
+            <td><span>Street:</span><apex:inputField value="{!a.Address2_R_cont__pc}"/> </td>
+            <td><span>Locality:</span><apex:inputField value="{!a.Address3_R_cont__pc}" /></td>
+          </tr>
+           <tr>
+            <td><span>Zone:</span><apex:inputField value="{!a.Zone_R_cont__pc}"/></td> 
+            <td><span>City:</span><apex:inputField value="{!a.City_cont__pc}"/></td> 
+            <td><span>Pincode:</span><apex:inputField value="{!a.Pincode_R_cont__pc}"  /></td>
+            </tr>
+           <tr>
+            <td><span>Suburb:</span><apex:inputField value="{!a.Suburb_R_cont__pc}"/></td> 
+            <td><span>Country:</span><apex:inputField value="{!a.Country_R_cont__pc}"/></td>
+          </tr>
+          <tr>
+            <td><span>Mobile:</span><apex:inputField value="{!a.Mobile_Phone__c}"   /></td>
+            <td><span>Residence Phone:</span><apex:inputField value="{!a.Phone}"  /></td>
+            <td><span>Email:</span><apex:inputField value="{!a.PersonEmail}"  /></td>
+          </tr>
+
+          <tr>
+            <td><span>Birthday:</span><apex:inputField value="{!a.DOB_Of_Client__c}"  /></td>
+            <td id='Ethinicity'><span>Ethinicity:</span><apex:inputField value="{!a.Ethinicity__c}"  /></td>
+            <td id='Anniversary'><span>Anniversary:</span><apex:inputField value="{!a.Anniversary_Date__c}"  /></td>                        
+          </tr>
+          <tr id='marital_status'>
+            <td><span>Marital Status:</span><apex:inputField value="{!a.Marital_Status__c}"  /></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      
+          <div id="about_designation" class="inputs_block">
+      <table>
+
+        <tbody>
+          <tr><th colspan="3">{!UserMap.WorkInfo__c}</th></tr>
+         <tr>
+            <td><span>Designation:</span><apex:inputField value="{!a.Designation__pc}"  /></td>
+            <td><span>Organization:</span><apex:inputField value="{!a.Lead_Company_Name_cont__pc}"  /></td>
+            <td><span>Work Location:</span><apex:inputField value="{!a.Address3_O_cont__pc}"  /></td>
+
+          </tr>
+           <tr id='no_of_employees'>
+
+            <td colspan="3" ><span style="width: 469px;">Number of employees <em style="font-style: normal; font-size: 11px; color: #333;">(for privately owned companies):</em></span><apex:inputField value="{!a.NumberOfEmployees}"  styleClass="no_of_emp"/></td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+      
+      
+      
+       <div id="about_indulgences" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.Indulgences__c}</th></tr>
+         <tr>
+            <td style="width: auto;"><span style="padding-left: 18px;">The car/s you drive:</span><apex:inputField value="{!a.Car_s_Owned__c}"/></td>
+            <td id="freq_clubs" style="width: auto;"><span>The club/s you frequent:</span><apex:inputField value="{!a.Club_Membership__pc}"/></td>
+          </tr>
+           <tr id='Favorite_travelled_destination'>
+            <td style="width: auto;"><span style="padding-left: 18px;">Favorite travelled destination (Abroad) : </span><apex:inputField value="{!a.Favorite_travelled_destination_Abroad__c}"   /></td>
+            <td style="width: auto;"><span>Favourite travelled destination (India) :</span><apex:inputField value="{!a.Favorite_travelled_destination_India__c}"    /></td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+      
+      <div class="action_btn">
+        <apex:commandButton styleClass="lodha_btn" style="margin-right: 0;" action="{!submitAccount}" value="Next Page"/>
+      </div>
+      
+      </div>
+   </div>     
+</apex:outputPanel>           
+<apex:outputPanel rendered="{!Usermap.isWorldTowersTemplate__c}"> 
+<div id="world_towers_template">
+<div id="lodha_form_wrapper">
+   <div id="Lodha_WT_Header"></div>
+ <div id="about_cutomer" class="inputs_block">
+      <table>
+
+        <tbody>
+          <tr><th colspan="3">{!UserMap.Personal_Details__c}</th></tr>
+          <tr>
+            <td><span>Saluation:</span><apex:inputField value="{!a.Salutation}"/></td>
+            <td><span>First Name:</span><apex:inputField value="{!a.FirstName}"/></td>
+            <td class="reqd_input"><span style="float: left;">Last Name:</span><apex:inputField value="{!a.LastName}" /></td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+      
+       <div id="about_designation" class="inputs_block">
+      <table>
+
+        <tbody>
+          <tr><th colspan="3">{!UserMap.WorkInfo__c}</th></tr>
+         <tr>
+            <td><span>Designation:</span><apex:inputField value="{!a.Designation__pc}"  /></td>
+            <td><span>Organization:</span><apex:inputField value="{!a.Lead_Company_Name_cont__pc}"  /></td>
+            <td><span>Work Location:</span><apex:inputField value="{!a.Address3_O_cont__pc}"  /></td>
+
+          </tr>
+           <tr id='no_of_employees'>
+
+            <td colspan="3" ><span style="width: 469px;">Number of employees <em style="font-style: normal; font-size: 11px; color: #333;">(for privately owned companies):</em></span><apex:inputField value="{!a.NumberOfEmployees}"  styleClass="no_of_emp"/></td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+      <div id="about_indulgences" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.Indulgences__c}</th></tr>
+         <tr>
+            <td><span>The car/s you drive:</span><apex:inputField value="{!a.Car_s_Owned__c}"/></td>
+            <td id="freq_clubs"><span>The club/s you frequent:</span><apex:inputField value="{!a.Club_Membership__pc}"/></td>
+          </tr>
+           <tr id='Favorite_travelled_destination'>
+            <td style="width: auto;"><span style="padding-left: 18px;">Favorite travelled destination (Abroad) : </span><apex:inputField value="{!a.Favorite_travelled_destination_Abroad__c}"   /></td>
+            <td style="width: auto;"><span>Favourite travelled destination (India) :</span><apex:inputField value="{!a.Favorite_travelled_destination_India__c}"    /></td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+            
+      
+      <div id="about_address" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.ContactInfo__c}</th></tr>
+         <tr>
+
+            <td><span>Current Residence:</span><apex:inputField value="{!a.Address1_R_cont__pc}"/> </td>
+            <td><span>Street:</span><apex:inputField value="{!a.Address2_R_cont__pc}"/> </td>
+            <td><span>Locality:</span><apex:inputField value="{!a.Address3_R_cont__pc}" /></td>
+          </tr>
+           <tr>
+            <td><span>Zone:</span><apex:inputField value="{!a.Zone_R_cont__pc}"/></td> 
+            <td><span>City:</span><apex:inputField value="{!a.City_cont__pc}"/></td> 
+            <td><span>Pincode:</span><apex:inputField value="{!a.Pincode_R_cont__pc}"  /></td>
+            </tr>
+           <tr>
+           <td><span>Suburb:</span><apex:inputField value="{!a.Suburb_R_cont__pc}"/></td> 
+            <td><span>Country:</span><apex:inputField value="{!a.Country_R_cont__pc}"/></td>
+          </tr>
+          <tr>
+            <td><span>Mobile:</span><apex:inputField value="{!a.Mobile_Phone__c}"   /></td>
+            <td><span>Residence Phone:</span><apex:inputField value="{!a.Phone}"  /></td>
+            <td><span>Email:</span><apex:inputField value="{!a.PersonEmail}"  /></td>
+          </tr>
+
+          <tr>
+            <td><span>Birthday:</span><apex:inputField value="{!a.DOB_Of_Client__c}"  /></td>
+            <td id='Ethinicity'><span>Ethinicity:</span><apex:inputField value="{!a.Ethinicity__c}"  /></td>
+            <td id='Anniversary'><span>Anniversary:</span><apex:inputField value="{!a.Anniversary_Date__c}"  /></td>                        
+          </tr>
+          <tr id='marital_status'>
+            <td><span>Marital Status:</span><apex:inputField value="{!a.Marital_Status__c}"  /></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+ <div id="loved_ones" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.Family__c}</th></tr>
+          <tr>
+
+              <td colspan="3" ><span style="width: 469px; height: 25px;">No. of family members staying together:</span><apex:inputField value="{!a.Family_Size__pc}"  styleClass="no_of_emp"/></td>
+          </tr>
+         <tr>
+
+            <td><span>Spouse's Name:</span><apex:inputField value="{!a.Spouse_Name__c}"/> </td>
+            <td id="childrens_name"><span>Children Name:</span><apex:inputField value="{!a.Children_Names__c}"/></td>
+          </tr>
+       
+        </tbody>
+      </table>
+      </div>
+      
+ <div  id='preference' class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.Preferences__c}</th></tr>
+         <tr>
+            <td><span>Holiday Destination/s:</span><apex:inputField value="{!a.Holiday_Destination_s__c}"/> </td>
+            <td><span>Shopping Destination:</span><apex:inputField value="{!a.Favorite_Mall_Shopping_Center__c}"/> </td>
+            <td><span>Newspaper/s:</span><apex:inputField value="{!a.Newspaper__c}"/> </td>            
+          </tr>
+
+         <tr>
+            <td><span>Website/s:</span><apex:inputField value="{!a.Website_s__c}"/> </td>
+            <td><span>Magazine/s:</span><apex:inputField value="{!a.Magazine_s__c}"/> </td>
+            <td><span>TV Channel/s:</span><apex:inputField value="{!a.TV_Channel_s__c}"/> </td>            
+          </tr>
+
+         <tr>
+            <td><span>Sport/s:</span><apex:inputField value="{!a.Sport_s__c}"/></td>
+            <td><span>Favorite Restaurant:</span><apex:inputField value="{!a.Favorite_Restaurant__c}"/> </td>            
+          </tr>          
+        </tbody>
+      </table>
+      <div id="interests_pref">
+          <div style="float: left; padding: 8px 4px; width: 148px; text-align: right;">Entertainment:</div>
+          <apex:selectCheckboxes value="{!entertainmentTypes}">
+               <apex:selectOptions value="{!items}"/>
+           </apex:selectCheckboxes>
+           <div style="clear: both;"></div>
+      </div>
+      </div>
+
+
+      <div class="action_btn">
+        <apex:commandButton styleClass="lodha_btn" style="margin-right: 0;" action="{!submitAccount}" value="Next Page"/>
+      </div>
+  </div>
+    </div>
+</apex:outputPanel> 
+</apex:form>
+<!-- End:Additions to include WorldOne/WorldCrest Project form and CSS--> 
+</apex:page>

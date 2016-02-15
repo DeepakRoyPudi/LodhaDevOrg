@@ -1,0 +1,324 @@
+<!-- /* 
+Description:
+This class is used for documents/sms/dispatch (crisp) Component
+
+ @Created by: Trupti Dhoka.
+ @Created Date:  9/03/15   
+ 
+ --------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |Sneha p               02/04/2015          1.1             Logic for tracking click count
+ --------------------------------------------------------------------------------
+ |Aditi Mulmule         23/12/2015          1.2             Track Button functionality
+ --------------------------------------------------------------------------------
+*/-->
+<apex:component controller="DocSmsDispatchCSS2_0Controller" allowDML="true">
+    <style>
+     .marginbtm
+        margin-bottom:25px;
+    }
+    .navbar-toggle {
+    top: 50px;
+    right: 50px;
+     }
+    // Css for track button
+    .icon-aftership-widget {
+               background-image: url(($Resource.TrackIcon));
+               }
+               .trackBtn {
+               padding: 3px;
+               align: right;
+               background-color: #f39c12;
+               border: none;
+               color: #fff;
+               border-radius: 4px;
+               float:right;
+               
+               } 
+               .Waybill-input{width: 55%;}
+               @media (min-width: 100px) and (max-width:1199px) 
+               {
+               .Waybill-input{width:100%; margin-bottom:6px}
+               .nav > li {
+               -moz-margin-start: 2px;
+               -webkit-margin-start: 3px;
+                 width: 100%;
+                 overflow:none;
+                 }
+               }
+               
+       </style>     
+    
+    <apex:attribute name="CRN" description="This is CRF Type." type="String" required="true" assignTo="{!Customer_CRN}" />  
+    <apex:form >
+    <apex:actionFunction name="TrackDocSmsClick" action="{!clickDocSMSCount}" rerender="Table1">
+    </apex:actionFunction>
+    
+    <apex:outputPanel id="Table1">
+        <div class="col-md-6 ">
+        <div class="panel panel-default Widgetset ">
+            
+            <div class="panel-heading">
+                <div class="panel-title table_title">   
+                    <i class="fa fa-folder-open-o fa-lg"></i>Recent Communication History
+                   
+                    </div>
+                     <div class="view_all">
+                        <a class="view-all-link" onclick="TrackDocSmsClick()" href="{!URLFOR($Page.DocumentsSMSCSS2_0)}">View All</a>
+                    </div>
+                
+            </div>
+             
+    
+            <div class="panel-body">
+           
+             <!--   <div class="box-body table-responsive"> -->
+                  
+                    <div class="navbar-inverse">
+                         <div class="container"> 
+                          <!-- <div class="navbar-header"> 
+                                 <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" type="button"> 
+                                     <span class="sr-only">Toggle navigation</span> 
+                                     <span class="icon-bar"></span> 
+                                     <span class="icon-bar"></span> 
+                                     <span class="icon-bar"></span> 
+                                 </button> 
+                                 <!--<a class="navbar-brand" href="#"> </a>
+                           </div>   -->
+                         
+                            <div class="collapse navbar-collapse paddingleft mobile-device" role="tabpanel"> 
+                                <ul class="nav navbar-nav nav-tabs"> 
+                                    <li role="presentation" class="active"><a data-toggle="tab" href="#Documents" aria-controls="messages" 
+                                                role="tab" >Documents</a> 
+                                    </li> 
+                                    <li role="presentation"><a data-toggle="tab" id="sms" href="#SMS" aria-controls="messages" 
+                                                role="tab" >SMS</a> 
+                                    </li> 
+                                    <li role="presentation"><a data-toggle="tab" href="#Dispatch" aria-controls="messages" 
+                                                role="tab" >Dispatch</a> 
+                                    </li> 
+                                </ul> 
+                               
+                               
+                              
+                            </div>
+                            
+                        </div> 
+                    </div> 
+                    
+                            
+                        <div class="tab-content">
+                                <!--Documents Crisp View---------->        
+                            <div id="Documents" class="tab-pane fade in active crispDocument_Scroll"> 
+                                    <table class="table table-hover" style="{!IF( lstDocument_crispView.size>0 , 'background-color:white', 'No records to display.')}" > 
+                                        <thead>
+                                            <tr>
+                                                <apex:repeat value="{!$ObjectType.Documents__c.FieldSets.DocumentCrispView_CSS2_0}" var="f">
+                                                    <th>
+                                                    {!f.label}
+                                                    </th>
+                                                </apex:repeat>
+                                            </tr>
+                                        </thead>
+            
+                                        <tbody>
+                                            <apex:repeat value="{!lstDocument_crispView}" var="d" rows="3">
+                                                <tr>
+                                                    <apex:repeat value="{!$ObjectType.Documents__c.FieldSets.DocumentCrispView_CSS2_0}" var="f">
+                                                        <td >
+            
+                                                             <apex:outputField value="{!d[f]}" rendered="{!AND(f.type != 'datetime',f.type != 'date')}" />
+                                                             <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                                                      <c:FormatDateTimeComponent date_Timevalue="{!d[f]}"/>
+                                                            </apex:outputPanel> 
+                                                             <apex:outputPanel rendered="{!f.type == 'date'}">
+                                                                     <c:FormatDateComponent date_value="{!d[f]}"/>
+                                                            </apex:outputPanel>
+                                                            
+                                                        </td>
+                                                    </apex:repeat>
+                                                </tr>
+                                            </apex:repeat>
+                                             <tr style="{!If(lstDocument_crispView.size > 0, 'display:none','' )}">  
+                                                  <td align="center" colspan="{!$ObjectType.Documents__c.FieldSets.DocumentCrispView_CSS2_0.size}">
+                                                        No records to display.
+                                                        
+                                                   </td>
+                                             </tr>
+                                        </tbody>
+                                    </table>
+                               </div>
+                            
+                            
+        <!--EOF Documents -->
+        <!------- SMS Crisp View ------->
+                            <div id="SMS" class="tab-pane fade crispDocument_Scroll"> 
+                                <table class="table table-hover" style="{!IF(lstSMS_crispView.size>0 , 'background-color:white', 'No records to display.')}"> 
+                                    <thead> 
+                                        <tr>
+                                            <apex:repeat value="{!$ObjectType.SMS_History__c.FieldSets.SMSCrispView_CSS2_0}" var="f">
+                                                <th>
+                                                    <apex:outputText value="{!f.label}" rendered="{!f.label != 'Created Date'}" />
+                                                    <apex:outputText value="Sent Date" rendered="{!f.label == 'Created Date'}" />
+                                                </th>
+                                            </apex:repeat>
+                                        </tr>
+                                    </thead>
+        
+                                    <tbody>
+                                        <apex:repeat value="{!lstSMS_crispView}" var="d">
+<!--                                            <tr style="display: {!IF(ISBLANK(d.Created_Date__c), 'No Data availble', 'none')};"> -->
+<!--                                            </tr> -->
+                                            <tr>
+                                                <apex:repeat value="{!$ObjectType.SMS_History__c.FieldSets.SMSCrispView_CSS2_0}" var="f">
+                                                    <td>
+                                                        <apex:outputField value="{!d[f]}" rendered="{!AND(f.type != 'datetime',f.type != 'date')}" />
+                                                         <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                                                  <c:FormatDateTimeComponent date_Timevalue="{!d[f]}"/>
+                                                        </apex:outputPanel> 
+                                                         <apex:outputPanel rendered="{!f.type == 'date'}">
+                                                                 <c:FormatDateComponent date_value="{!d[f]}"/>
+                                                        </apex:outputPanel>
+                                                    </td>
+                                                </apex:repeat>
+                                            </tr>
+                                        </apex:repeat>
+                                         <tr style="{!If(lstSMS_crispView.size > 0, 'display:none','' )}">  
+                                              <td align="center" colspan="{!$ObjectType.SMS_History__c.FieldSets.SMSCrispView_CSS2_0.size}">
+                                                    No records to display.
+                                                    
+                                               </td>
+                                         </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+        <!-- EOF SMS-->
+        <!--------Dispatch Crisp View------------>
+        
+                           <div id="Dispatch" class="tab-pane fade crispDocument_Scroll">
+                                <table class="table table-hover crispView_Scroll" style="{!IF(lstDispatch_crispView.size>0 , 'background-color:white', 'No records to display.')}"> 
+                                    <thead>
+                                        <tr>
+                                            <apex:repeat value="{!$ObjectType.Despatch__c.FieldSets.DispatchCrispView_CSS2_0}" var="f">
+                                              <th>  
+                                                    <apex:outputText value="Doc. Name " rendered="{!f.label == 'Contents'}" style="margin-right:70px" />
+                                                    <apex:outputText value="Dispatch Date    " rendered="{!f.label == 'Despatch Date'}" style="margin-right:40px"/>
+                                                    <apex:outputText value="{!f.label}" rendered="{!AND(f.label != 'Contents', f.label != 'Despatch Date')}" />
+                                                
+                                                </th>    
+                                            </apex:repeat>
+                                        </tr>
+                                    </thead>
+        
+                                    <tbody>
+                                        <apex:repeat value="{!lstDispatch_crispView}" var="d">
+                                            <tr>
+                                                <apex:repeat value="{!$ObjectType.Despatch__c.FieldSets.DispatchCrispView_CSS2_0}" var="f">
+                                                    <td> 
+                                                        <!-----Track button functionality-->
+                                                        <div style="margin-right:35px">
+                                                            <apex:outputField value="{!d[f]}"  rendered="{!(f.label == 'Waybill No') && (d[f] != null)}">
+                                                               <apex:outputLink value="https://track.aftership.com/{!d[f]}" styleClass="trackBtn "  target="_blank">
+                                                                  <apex:image id="theImage" value="{!$Resource.TrackIcon}" width="21" height="21"/>
+                                                                  Track
+                                                               </apex:outputLink>
+                                                            </apex:outputField>
+                                                            <apex:outputField value="{!d[f]}"   rendered="{!(f.label == 'Waybill No') && (d[f] == null)}">
+                                                               <apex:inputText id="way" styleClass="Waybill-input"/>
+                                                               <apex:outputLink value="#" styleClass="trackBtn"   onclick="trackWayBillNo();"> 
+                                                                  <apex:image id="img" value="{!$Resource.TrackIcon}" width="21" height="21"/>
+                                                                  Track
+                                                               </apex:outputLink>
+                                                            </apex:outputField>
+                                                         </div>
+                                                         <!-----Way bill No modal ---->
+                                                          <div id="myModal" class="modal fade" role="dialog">
+                                                            <div class="modal-dialog">
+                                                               <!-- Modal content-->
+                                                               <div class="modal-content">
+                                                                  <div class="modal-header">
+                                                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                     <center><h4 class="modal-title"><b>Waybill No</b></h4></center>
+                                                                  </div>
+                                                                  <div class="modal-body">
+                                                                     <center><p>Please enter Waybill number!</p></center>
+                                                                  </div>
+                                                                  <div class="modal-footer">
+                                                                     <center> <button type="button" class="btn btn-default" data-dismiss="modal">OK</button> </center>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                         <!---End of Modal Popup  --->
+                                                         <!----End of track button functionality---->
+                                                        <div>
+                                                            <apex:outputField value="{!d[f]}" rendered="{!AND(AND(f.type != 'datetime',f.type != 'date'),(f.label != 'Waybill No'))}" />
+                                                        </div>
+                                                        <div>
+                                                         <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                                                  <c:FormatDateTimeComponent date_Timevalue="{!d[f]}"/>
+                                                        </apex:outputPanel> 
+                                                         <apex:outputPanel rendered="{!f.type == 'date'}">
+                                                                 <c:FormatDateComponent date_value="{!d[f]}"/>
+                                                        </apex:outputPanel>
+                                                        </div>
+                                                    </td>
+                                                </apex:repeat>
+                                            </tr>
+                                        </apex:repeat>
+                                         <tr style="{!If(lstDispatch_crispView.size > 0, 'display:none','' )}">  
+                                              <td align="center" colspan="{!$ObjectType.Despatch__c.FieldSets.DispatchCrispView_CSS2_0.size}">
+                                                    No records to display.
+                                                    
+                                               </td>
+                                         </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+        <!-- EOF Dispatch-->
+                        </div><!--EOF Tab content -->
+        
+                    </div><!--EOF Panel Body -->
+                <!--</div><!-- EOF box body-->
+            </div><!--EOF Panel Default -->
+        </div> 
+    </apex:outputPanel>
+    </apex:form>
+    
+    <script type="text/javascript">
+        $(document).ready(function(event)
+        {
+            $(".view-all-link").click(function(event)
+            {
+                var current_tab = $(this).closest(".panel").find("li.active a").attr("href");
+                current_tab =current_tab.replace("#", "");
+                var href = $(this).attr("href")
+                href+='?currenttab='+current_tab;
+                $(this).attr("href",href);
+                console.log('current_tab='+current_tab);
+            });
+        });
+      
+    </script>
+    
+    <script type="text/javascript">
+      // Track button script
+         function trackWayBillNo() 
+         {
+             var theValue = jQuery('[id$=way]').val().trim();
+             if(theValue!=null && theValue!='' ){
+                 var url = 'https://track.aftership.com/'+theValue;
+                 window.open(url,'_blank');
+             }
+             if(theValue==null || theValue=='' ){
+                $('#myModal').modal({
+                  show: 'true',
+                  backdrop: 'static', 
+                  keyboard: false
+                }) 
+            }
+         } 
+    </script>
+    
+</apex:component>

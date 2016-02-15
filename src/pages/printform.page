@@ -1,0 +1,33 @@
+<apex:page sidebar="false" standardcontroller="Lead">
+<apex:form >
+<apex:image value="/servlet/servlet.FileDownload?file=015R00000005hTV"/>
+
+<p align="RIGHT">1) Attaching Your business Card is mandatory <br/>2) To be filled by the prospective buyer only.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br/>3) Viewing of the sample flat will be at the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/> sole discretion of the management.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p><br/>
+
+Dear Visitor,<br/>
+Bellissimo residences are available <b><i>BY INVITATION ONLY </i></b> <br/>
+<hr/>
+<h3><center><u> PROFILE </u></center></h3><br/>
+<apex:pageBlock >
+<apex:pageBlockSection >
+<apex:outputField value="{!Lead.Name}"/><br/>
+<apex:outputField value="{!Lead.Company}"/><apex:outputField value="{!Lead.Designation__c}"/> 
+<apex:outputField value="{!Lead.MobilePhone}"/>
+<apex:outputField value="{!Lead.Email}"/>
+<apex:outputField value="{!Lead.Consultant_Name__c}"/><apex:outputField value="{!Lead.Consultant_Tel_No__c}"/>
+<apex:outputField value="{!Lead.Budget_in_Crores__c}"/><br/>
+<apex:inputField value="{!Lead.Owned_Car_Name__c}"/><br/>
+
+</apex:pageBlockSection>
+<table cols="2">
+<tr><td>Requirement: </td><td><apex:inputCheckbox ></apex:inputCheckbox>3BHK <apex:inputCheckbox ></apex:inputCheckbox>4BHK <apex:inputCheckbox ></apex:inputCheckbox>Penthouse/Duplex</td>
+</tr>
+</table>
+<br/><br/><br/>
+
+<h3><p align="RIGHT">Signature</p></h3>
+<CENTER><apex:commandbutton value="Print" onclick="Javascript:window.print()"/></CENTER>
+</apex:pageBlock>
+
+</apex:form>
+</apex:page>

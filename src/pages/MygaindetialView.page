@@ -1,0 +1,339 @@
+<!--
+    Description: This is Mygain detial view page 
+    @Created by: Shruti Nikam
+    @Created Date: 10/03/2015
+    
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+    -->
+
+<apex:page controller="mygaincontroller" docType="html-5.0" showHeader="false">
+    <head>
+        <apex:param name="mygainCRN" assignTo="{!mygainCRN}" value=""/>
+        <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/bootstrap.min.css')}"/>
+        <!--     Latest compiled JavaScript --> 
+        <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/datatablescript/bootstrap.min.js')}"></script>
+        <apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery-1.11.1.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery.dataTables.min.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery.dataTables.css')}"/>
+        <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/font-awesome.min.css')}" rel="stylesheet" media="screen" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+        <!-----------start css DataTable Loyalty point and other Detail view Formual in profile Indicator popup---------->
+        <style>
+            .Loyaltyheader{
+            text-align: center !important;
+            background-color: #1797C0;
+            white-space: pre-wrap; /* css-3 */
+            white-space: pre-line; /* Mozilla, since 1999 */
+            white-space: -pre-wrap; /* Opera 4-6 */
+            white-space: -o-pre-wrap; /* Opera 7 */
+            word-wrap: break-word; /* Internet Explorer 5.5+ */
+            padding:0px !important;
+            border: #000 solid 1px;
+            color: #fff;
+            line-height: 1 !important;
+            }
+            .Loyaltyheader tbody{background:#fff}
+            .dataTables_paginate {font-size:14px !important}
+            .dataTables_info{font-size:14px !important}
+            .datePicker{z-index:9999999999999}
+            .black_overlay{
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            //background-color: black;
+            z-index:1001;
+            -moz-opacity: 0.8;
+            opacity:.80;
+            filter: alpha(opacity=80);
+            }
+            .white_content {
+            display: none;
+            position: absolute;
+            top: 5%;
+            left: 61%;
+            width: 37%;
+            height: 60%;
+            padding: 16px;
+            //border: 1px solid orange;
+            background-color: white;
+            border-radius: 3%;
+            box-shadow: 5px 5px 8px 8px #CCC;
+            z-index:1002;
+            overflow: auto;
+            }
+        </style>
+        <style>
+            .well{border:none; background:none;   box-shadow: none;   margin-top: 6px;}
+            .dataTables_filter{display:none }
+            .sorting_desc {   background-image: none;}
+            .maindiv_left {
+            width: 609px;
+            height: 200px;
+            padding: 1%;
+            padding-bottom :0%;
+            display:block;
+            }
+            .maindiv_right {
+            width:392px;
+            height:180px;
+            display:block;
+            font-size: 12px;
+            }
+            .CSSTableGenerator {
+            width:575px;
+            height:150px;
+            border: 1px solid #C0C0C0;
+            border-top:none;
+            overflow: auto;
+            }
+            .CSSTableGenerator th {
+            font-size: 12px;
+            min-width:10%;
+            }    
+            .CSSTableGenerator td {
+            font-size: 11px;
+            }  
+            .CSSTableGenerator table {
+            min-width: 2500px;
+            }  
+            .CSSTableGenerator-new table {
+            min-width: 100% !important;
+            }                      
+            .table_heading{
+            width:575px; 
+            background-color:#1797C0;
+            color:#fff;    padding:4px;
+            border:1px solid #C0C0C0;   
+            }
+            .CSSTable {
+            margin-bottom: 2%;
+            margin-top: 1%;
+            }
+            .CSSTable th {
+            font-size: 12px;
+            }    
+            .CSSTable td {
+            font-size: 11px;
+            padding:2px;    
+            } 
+            .CSSTable tr {                      
+            background-color: #1797C0; color:#fff; border:solid 1px #ffff
+            }
+            .CSSTable table {
+            }      
+            .sorting { background: none !important;}
+            .sorting_desc {background-image: none !important;}
+            .sorting_asc {background-image: none !important;}
+            .table-heading {  background: #1797C0;  color: #fff;  font-size: 12px;}
+            .table-heading a{color:#fff}
+            .table-heading a:hover {  background: #1797C0;  color: #fff;  font-size: 12px;}
+            .table>thead>tr>th, 
+            .table>tbody>tr>th, 
+            .table>tfoot>tr>th, 
+            .table>thead>tr>td, 
+            .table>tbody>tr>td, 
+            .table>tfoot>tr>td 
+               {   padding: 4px 2px; font-size: 12px;}
+            .dataTables_wrapper .dataTables_paginate .paginate_button{  padding: 0.2em 0.4em;}
+            .tableborderImportant{
+            box-sizing: border-box !important;
+            }
+            .heading_style {
+            font-size: 17px;
+            font-weight: bold;
+            color: black;
+            }
+        </style>
+        <!---------Script and css to prevent page from scrolling when popup open ----------->
+        <style>
+            body.modal-open {
+            //overflow: hidden;
+            }
+            element.style {
+            font-size: 80%;
+            }
+        </style>
+        <!-----------------------------END------------------------------------------>
+    </head>
+    <apex:form >
+        <div class="bs">
+            <h4 class="heading_style">MyGain Details</h4>
+            <div class="CSSTable table-responsive" >
+                <table id="mygainD" class="table table-striped table-bordered tableborderImportant" >
+                    <thead>
+                        <tr>
+                            <th class="sorting Loyaltyheader">
+                                Instrument Number
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Bank Details
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Instrument Date
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Instrument Received Date
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Instrument Posting Date
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Mygain Amount Received {!$Label.Currency_INR_notation_RM_CSS}
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Mygain Already Adjusted {!$Label.Currency_INR_notation_RM_CSS}
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Mygain Balance As On Date {!$Label.Currency_INR_notation_RM_CSS}
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Benefit From
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Benefit Till
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Benefit Days
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Rebate Calculated {!$Label.Currency_INR_notation_RM_CSS}
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Text
+                            </th>
+                            <th class="sorting Loyaltyheader">
+                                Interest Rate 
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!rcMygain.MygaincompleteRecords}" var="myc">
+                            <tr>
+                                <td >
+                                    <apex:outputText value="{!myc.Instrument_Number}" />
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Bank_Details}" />
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Instrument_Date}"/>
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Instrument_Receive_Date}"/>
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Instrument_Posting_Date}"/>
+                                </td>
+                                <td >
+                                    <c:FormatCurrencyComponent currency_value="{!myc.My_Gain_Amt_Receive}"/>
+                                
+                                </td>
+                                <td >
+                                    <c:FormatCurrencyComponent currency_value="{!myc.My_Gain_Already_Adjusted}"/>
+                                
+                                </td>
+                                <td >
+                                    <c:FormatCurrencyComponent currency_value="{!myc.My_Gain_Balance_as_on_Date}"/>
+                                
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Benefit_From}"/>
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Benefit_Till}"/>
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Benefit_Days}"/>
+                                </td>
+                                <td >
+                                    <c:FormatCurrencyComponent currency_value="{!myc.Rebate_Calculated}"/>
+                                
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Text}"/>
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myc.Intrest_Rate}%" rendered="{!AND(myc.Intrest_Rate!=null,myc.Intrest_Rate!='')}"/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear"></div>
+            <h4 class="heading_style">Mygain Rebate Details </h4>
+            <div class="CSSTable table-responsive" >
+                <table id="mygainR" class="table table-striped table-bordered tableborderImportant">
+                    <thead>
+                        <tr>
+                            <th class="sorting">
+                                Amount For Rebate Calculated {!$Label.Currency_INR_notation_RM_CSS}
+                            </th>
+                            <th class="sorting">
+                                Rebate Posted {!$Label.Currency_INR_notation_RM_CSS}
+                            </th>
+                            <th class="sorting">
+                                Rebate Calculated From
+                            </th>
+                            <th class="sorting">
+                                Rebate Calculated Till
+                            </th>
+                            <th class="sorting">
+                                Benefit Days
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!rcMygain.MygainBasicRecords}" var="myb">
+                            <tr>
+                                <td >
+                                    <c:FormatCurrencyComponent currency_value="{!myb.Amt_For_Rebate_Calculated}"/>
+                                  
+                                </td>
+                                <td >
+                                    <c:FormatCurrencyComponent currency_value="{!myb.Rebate_Posted}"/>
+                                  
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myb.Rebate_Calculated_From}"/>
+                                </td>
+                                <td >
+                                    <apex:outputText value="{!myb.Rebate_Calculated_Till}"/>
+                                </td>
+                                <td >
+                                    {!myb.Benefit_Days}
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!---------div bs close-------------->
+        <script type="text/javascript" >
+            $(document).ready(function() {
+                 $('#mygainD').dataTable( {
+                     "order": [[ 0, "desc" ]],
+                     "iDisplayLength": 50
+                } ); 
+                 $('#mygainR').dataTable( {
+                    "order": [[ 0, "desc" ]],
+                    "iDisplayLength": 50
+                } ); 
+                
+            } );
+            
+            
+            
+        </script> 
+    </apex:form>
+</apex:page>

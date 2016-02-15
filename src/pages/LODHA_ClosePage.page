@@ -1,0 +1,6 @@
+<apex:page showHeader="false">
+    <script type="text/javascript">
+       <!--parent.window.opener.location.reload();-->
+       parent.window.close();   
+    </script>
+</apex:page>

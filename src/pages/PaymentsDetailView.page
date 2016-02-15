@@ -1,0 +1,941 @@
+<!--
+    Description: This is Payments Detail View page
+    @Created by: Shruti Nikam
+    @Created Date: 11/03/2015
+    
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+    -->
+
+<apex:page controller="PaymentsReceivedRMController" docType="html-5.0" showHeader="false">
+    <apex:form >
+        <apex:param name="CRN" assignTo="{!CRN}" value=""/>
+        <head>
+            <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/bootstrap.min.css')}"/>
+            <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/datatablescript/bootstrap.min.js')}"></script>
+            <apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery-1.11.1.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery.dataTables.min.js')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/bootstrap/datatablescript/jquery.dataTables.css')}"/>
+            <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/font-awesome.min.css')}" rel="stylesheet" media="screen" />
+            <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+            <script src="{!$Resource.YearRangeIncr}"></script> 
+            <style>
+                .nav-tabs>li>a{
+                    border:none!important;   
+                    outline: none!important;
+                }
+                .nav-tabs>li>a:hover {
+                    border-bottom-color: #ddd!important;
+                    border-top-color:#fff!important;
+                    border-right-color:#fff!important;
+                    border-left-color:#fff!important;
+                } 
+                .nav>li>a:hover, .nav>li>a:focus {
+                    background-color: #fff!important;
+                    border-bottom-color: #f00!important;
+                    text-decoration: underline;
+                } 
+                .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{   
+                    border-top: 1px solid #ddd !important;
+                    border-left: 1px solid #ddd !important;
+                    border-right: 1px solid #ddd !important;
+                    border-bottom: none !important; 
+                }
+                .sorting { 
+                    background: none !important;
+                }
+                .sorting_desc {
+                    background-image: none !important;
+                }
+                .sorting_asc {
+                    background-image: none !important;
+                }
+                .link_style{
+                    text-decoration: underline;
+                }
+                a {
+                    color: black;
+                }
+                .indicator_section {
+                    height: 30px;
+                    width: 54%;
+                    margin-left: 37%;
+                    margin-top: 1%;
+                }
+                .indicator_div{
+                    height: 18px;
+                    width: 17%;
+                    margin: 1%;
+                    float: left;
+                    margin-right: 4%;
+                }
+                .indicator_label{
+                    float: left;
+                    margin-top: 3px;
+                    width: 30%;
+                }
+                .Loyaltyheader{
+                    text-align: left !important;
+                    background-color: #1797C0 !important;
+                    white-space: pre-wrap; /* css-3 */
+                    white-space: pre-line; /* Mozilla, since 1999 */
+                    white-space: -pre-wrap; /* Opera 4-6 */
+                    white-space: -o-pre-wrap; /* Opera 7 */
+                    word-wrap: break-word; /* Internet Explorer 5.5+ */
+                    padding:0px !important;
+                    border: #000 solid 1px;
+                    color: #fff;
+                    line-height: 1 !important;
+                    font-size:13px;
+                    vertical-align: middle !important;
+                }
+                .table>thead>tr>th, 
+                .table>tbody>tr>th, 
+                .table>tfoot>tr>th, 
+                .table>thead>tr>td, 
+                .table>tbody>tr>td, 
+                .table>tfoot>tr>td{   
+                    padding: 4px 2px; 
+                    font-size: 12px;
+                }
+                
+                .dataTables_wrapper .dataTables_paginate .paginate_button{  
+                    padding: 0.2em 0.4em;
+                }
+                .tableborderImportant{
+                    box-sizing: border-box !important;
+                }
+                .dataTables_filter{
+                    display:none 
+                }
+                .table-heading {
+                    background-color: #1797C0 !important;
+                    color: #FFF;
+                }
+                .modal{  
+                    -webkit-box-sizing: border-box;  
+                    -moz-box-sizing: border-box;  
+                    box-sizing: border-box;  
+                    max-height: 100%;  
+                    width:100%;  
+                    overflow:hidden;
+                }  
+                .modal-dialog{  
+                    width:100%; 
+                    padding-top: 0px; 
+                    overflow: hidden;
+                    height: initial;
+                }  
+                .modal-screen {
+                    position: fixed;
+                    overflow: hidden;
+                    height: 100%;
+                }
+                h5{
+                    font-weight: bold;
+                }
+                .dataTables_length{
+                    margin-top:1%;
+                }
+                .black_overlay{
+                    display: none;
+                    position: absolute;
+                    top: 0%;
+                    left: 0%;
+                    width: 100%;
+                    height: 100%;
+                    //background-color: black;
+                    z-index:1001;
+                    -moz-opacity: 0.8;
+                    opacity:.80;
+                    filter: alpha(opacity=80);
+                }
+                .white_content {
+                    display: none;
+                    position: fixed;
+                    top: 25%;
+                    left: 59%;
+                    width: 32%;
+                    height: 62%;
+                    padding: 16px;
+                    background-color: white;
+                    border-radius: 3%;
+                    box-shadow: 5px 5px 8px 8px #CCC;
+                    z-index: 1002;
+                    overflow: auto;
+                }
+                .datePicker{
+                    z-index:9999999999999;
+                     position: fixed;
+                }  
+                .popup_table_style {
+                    font-size: 13px;
+                    background-color: white; 
+                    margin:0%
+                }
+                .table_title {
+                    background-color:#1797C0;
+                    color:#fff;
+                    padding:4px;
+                }
+                .modal-header {
+                    text-align: center;
+                }
+                .dateFormat {
+                    display:none;
+                }
+            </style>
+        </head>
+        <body>
+            <apex:actionFunction name="populateData" action="{!autoPopulateMyGainVar}" rerender="outputID,err"
+                status="Loading">
+                <apex:param name="dueDate" value="" />
+                <apex:param name="amt" value=""/>
+            </apex:actionFunction>
+            <apex:actionFunction name="clearVal" action="{!clearValues}" rerender="outputID,err"
+                >
+            </apex:actionFunction>
+            <apex:actionFunction name="clearVal_totalvirtualcal" action="{!totalvirtualcal_clearValues}" rerender="outputID1,err1"
+                >
+            </apex:actionFunction>
+            <div role="tabpanel">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#Payments" aria-controls="home" role="tab" data-toggle="tab">Payments Details</a></li>
+                    <li role="presentation"><a href="#account" aria-controls="profile" role="tab" data-toggle="tab">Account Ledger</a></li>
+                    <li role="presentation"><a href="#schedule" aria-controls="messages" role="tab" data-toggle="tab">Payments Schedule</a></li>
+                    <li role="presentation"><a class="link_style" href="#" data-toggle="modal" data-target="#mygain"  data-backdrop="static" data-keyboard="false" >MyGain Statement</a></li>
+                    <li role="presentation"><a class="link_style" href="#" data-toggle="modal" data-target="#loan"  data-backdrop="static" data-keyboard="false" >Loan Details</a></li>
+                    <li role="presentation">
+                        <a class="link_style" href="#" data-toggle="modal" data-target="#reminder" data-backdrop="static" data-keyboard="false" >
+                            <div style="float:left;   text-decoration: underline;"> Reminders</div>
+                            <div class="notification-icon" style="float: left; ">
+                                <div class="badge" style="background-color: rgb(242, 5, 5);">{!reminder_count}</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="Payments">
+                        <!-- Indicator section started -->
+                        <div class="indicator_section">
+                            <div class="indicator_label" style="width:25%">
+                                <div class="indicator_div" style="background-color:{!RestAPICalloutPayment_obj.Milestones_Paid_color}"></div>
+                                Milestones Paid
+                            </div>
+                            <div class="indicator_label" style="width:23%">
+                                <div class="indicator_div" style="background-color:{!RestAPICalloutPayment_obj.Milestones_Outstanding_color}"></div>
+                                Milestones O/S
+                            </div>
+                            <div class="indicator_label">
+                                <div class="indicator_div" style="width: 14%;background-color:{!RestAPICalloutPayment_obj.Milestones_Upcoming_color}"></div>
+                                Milestones Upcoming
+                            </div>
+                        </div>
+                        <!-----Total virtual interest calculator ----------->
+                        
+                        <button type="button" href = "javascript:void(0)" onclick = "document.getElementById('totalvirtual').style.display='block';document.getElementById('totalvirtualfade').style.display='block';" style="float: right;margin-right: 2%; margin-top: -26px; height: 23px;" reRender="outputID1"> 
+                            <img src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/Calculator.png')}" style="width:18px; float:Left;height: 16px;"/>
+                            <apex:outputLabel value="Total Virtual Interest Calculator"/>
+                        </button>
+                        
+                        
+                        <div id="totalvirtual" class="white_content" style="" >
+                            <a href = "javascript:void(0)" onclick = "document.getElementById('totalvirtual').style.display='none';document.getElementById('totalvirtualfade').style.display='none'; clearVal_totalvirtualcal();" style=" font-size: 20px; float: right;" >&times;</a>
+                            <div style=" height:20%; width:100%">
+                                <h4 class="modal-title" id="myModalLabel">
+                                    Total Virtual Interest Calculator
+                                    <apex:actionStatus id="Loading1" >
+                                        <apex:facet name="start">
+                                            <apex:image url="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}" 
+                                                height="25px" width="25px" 
+                                                />
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                                </h4>
+                            </div>
+                            <div  style=" height:80%; width:100%">
+                                <apex:outputPanel id="outputID1">
+                                    <div style="display:block;   height: 50px;">
+                                         <apex:outputText id="err1" value="{!errorMsg1}"  style="color:red;"/>
+                                        <div style="float:left;   width: 42%;">
+                                            <apex:outputLabel value="Date of Payment Received By Lodha " />
+                                        </div>
+                                        <div style="float:left;  margin-left: 10px;width: 45%;">
+                                            <apex:inputField value="{!receiveddate.PersonBirthdate}"/>
+                                        </div>
+                                    </div>
+                                    <div style="display:block;   height: 50px;">
+                                        <div style="float:left;   width: 42%;">
+                                            <apex:outputLabel value="Total Outstanding Amount" />
+                                        </div>
+                                        <div >INR&nbsp;
+                                            <c:FormatCurrencyComponent currency_value="{!Text(RestAPICalloutPayment_obj.TotalDue)}"/>
+                                            <!--<apex:outputText value="INR {!virtualInterest_obj.outstandingamt}"  style="margin-left: 10px;width: 40%;display:none"/>-->
+                                        </div>
+                                    </div>
+                                    <div style="display:block;height: 50px;">
+                                        <apex:commandButton value="Calculate" 
+                                            style="float:right;
+                                            padding: 3px 10px 3px 10px;
+                                            background-color:skyblue;  
+                                            margin-right: 41%;" 
+                                            status="Loading1"
+                                            action="{!calculateTotal_VirtualInterest}"   
+                                            reRender="outputID1,err1"/>
+                                    </div>
+                                    <div style="display:block;   height: 50px;">
+                                        <div style="float:left;   width: 42%;">
+                                            <apex:outputLabel value="Total Virtual Interest Amount"
+                                                rendered="{!showtotalamt}" />
+                                        </div>
+                                        <div style="float:left;" >
+                                        <apex:outputPanel rendered="{!showtotalamt}">INR&nbsp;
+                                        <c:FormatCurrencyComponent currency_value="{!total_virtual_interest_obj.totalamt}"/>
+                                        <!--    <apex:outputtext value="INR {!total_virtual_interest_obj.totalamt}" style="margin-left: 10px;width: 45%;" 
+                                                rendered="{!showtotalamt}"/> -->
+                                        </apex:outputPanel>
+                                        </div>
+                                    </div>
+                                </apex:outputPanel>
+                            </div>
+                        </div>
+                        <div id="totalvirtualfade" class="black_overlay"></div>
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!-- Indicator section End -->
+                        <table id="outstandingtableRM" class="table table-striped table-bordered" style="width:98%">
+                            <thead>
+                                <tr>
+                                    <th class="sorting Loyaltyheader">
+                                        Payment Milestone 
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Bill Date
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Due Date
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Princ Amt Due {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Princ Amt Rcvd {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Princ Outs{!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        ST Due {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader"> 
+                                        ST Rcvd {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        ST Outs {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Interest Due (Charged/As) Ondate {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Total Due {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Payments Rcvd {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Balance Due {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Rcvd Date
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Mode of Payment
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Source Bank
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Status
+                                    </th>
+                                    <th class="sorting Loyaltyheader">
+                                        Reference
+                                    </th>  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!RestAPICalloutPayment_obj.paymentInfoList}" var="PaymentURW">
+                                    <tr>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <apex:outputText value="{!PaymentURW.payment_milestone}"/>
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <apex:outputText value="{!PaymentURW.bill_date}"/>
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <apex:outputText value="{!PaymentURW.due_date}"/>
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.principal_amount_due}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.principal_amount_due}" rendered="{!AND(PaymentURW.principal_amount_due!=null, PaymentURW.principal_amount_due!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.principal_amount_received}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.principal_amount_received}" rendered="{!AND(PaymentURW.principal_amount_received!=null, PaymentURW.principal_amount_received!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.principal_outstanding}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.principal_outstanding}" rendered="{!AND(PaymentURW.principal_outstanding!=null, PaymentURW.principal_outstanding!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.service_tax_due}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.service_tax_due}" rendered="{!AND(PaymentURW.service_tax_due!=null, PaymentURW.service_tax_due!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.service_tax_received}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.service_tax_received}" rendered="{!AND(PaymentURW.service_tax_received!=null, PaymentURW.service_tax_received!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.service_tax_outstanding}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.service_tax_outstanding}" rendered="{!AND(PaymentURW.service_tax_outstanding!=null, PaymentURW.service_tax_outstanding!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.interest_due_as_ondate}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.interest_due_as_ondate}" rendered="{!AND(PaymentURW.interest_due_as_ondate!=null, PaymentURW.interest_due_as_ondate!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.total_due}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.total_due}" rendered="{!AND(PaymentURW.total_due!=null, PaymentURW.total_due!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.payments_received}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.payments_received}" rendered="{!AND(PaymentURW.payments_received!=null, PaymentURW.payments_received!=' ')}"/>-->
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <c:FormatCurrencyComponent currency_value="{!PaymentURW.balance_due}"/>
+                                            <!--<apex:outputText value="INR {!PaymentURW.balance_due}" rendered="{!AND(PaymentURW.balance_due!=null, PaymentURW.balance_due!=' ')}"/>-->
+                                            <apex:outputPanel rendered="{!AND(PaymentURW.bill_date!=null,PaymentURW.balance_due!='0.00')}">
+                                                <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'; populateData('{!PaymentURW.due_date}', '{!PaymentURW.principal_outstanding}'); document.getElementById('dateinput').value=' '" reRender="outputID"> 
+                                                <img src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/Calculator.png')}" 
+                                                    style="height:18px; width:18px; float:right"/></a>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <apex:outputText value="{!PaymentURW.received_date}"/>
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <apex:outputText value="{!PaymentURW.mode_of_payment}"/>
+                                        </td>
+                                         <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <apex:outputText value="{!PaymentURW.bank_details}"/>
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <apex:outputText value="{!PaymentURW.status}"/>
+                                        </td>
+                                        <td style="color:{!PaymentURW.text_color}; background-color:{!PaymentURW.bg_color}">
+                                            <apex:outputText value="{!PaymentURW.reference}"/>
+                                        </td>
+                                       
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="account">
+                        <table id="accountLedger" class="table table-striped table-bordered" style="width:98%">
+                            <thead>
+                                <tr>
+                                    <th class="sorting table-heading">
+                                        Instrument No.
+                                    </th>
+                                    <th class="sorting table-heading">
+                                        Instrument Date
+                                    </th>
+                                    <th class="sorting table-heading">
+                                        Instrument Received Date
+                                    </th>
+                                    <th class="sorting table-heading">
+                                        Customer Bank Name
+                                    </th>
+                                    <th class="sorting table-heading">
+                                        Amount {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                    <th class="sorting table-heading">
+                                        Milestone
+                                    </th>
+                                    <th class="sorting table-heading">
+                                        Receipt No.
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!RestAPICalloutPayment_obj.AccountLedgerList}" var="AccLeg">
+                                    <tr>
+                                        <td >
+                                            <apex:outputText value="{!AccLeg.reference}"/>
+                                        </td>
+                                        <td >
+                                            <apex:outputText value="{!AccLeg.Instrument_Date}"/>
+                                        </td>
+                                        <td >
+                                            <apex:outputText value="{!AccLeg.received_date}"/>
+                                        </td>
+                                        <td >
+                                            <apex:outputText value="{!AccLeg.bank_details}"/>
+                                        </td>
+                                        <td >
+                                            <c:FormatCurrencyComponent currency_value="{!AccLeg.principal_amount_received}"/>
+                                            <!--<apex:outputText value="INR {!AccLeg.principal_amount_received}" rendered="{!AND(AccLeg.principal_amount_received!=null, AccLeg.principal_amount_received!='')}" />-->
+                                        </td>
+                                        <td >
+                                            <apex:outputText value="{!AccLeg.payment_mileStone}"/>
+                                        </td>
+                                        <td >
+                                            <apex:outputText value="{!AccLeg.receipt_no}"/>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="schedule">
+                        <table id="scheduletableRM" class="table table-striped table-bordered" style="width:98%">
+                            <thead>
+                                <tr>
+                                    <!--<th class="table-heading" >
+                                        Sr.No
+                                    </th>-->
+                                    <th class="sorting table-heading">
+                                        Milestone 
+                                    </th>
+                                    
+                                   <!-- <th class="sorting table-heading">
+                                        Service Tax Due {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>-->
+                                    <th class="sorting table-heading">
+                                        Amount as % of CV
+                                    </th>
+                                    <th class="sorting table-heading">
+                                        Principal Amount Due {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th>
+                                   <!-- <th class="sorting table-heading">
+                                        Total Due {!$Label.Currency_INR_notation_RM_CSS}
+                                    </th> -->
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <apex:variable var="Srno" value="1" /> -->
+                                <apex:repeat value="{!RestAPICalloutPayment_obj.PaymentScheduleList}" var="Payment">
+                                    <tr>
+                                       <!-- <td>
+                                            {!Srno}
+                                            <apex:variable var="Srno" value="{!Value(Srno)+1}"/>
+                                        </td> -->
+                                        <td>
+                                            <apex:outputText value="{!Payment.payment_milestone}"/>
+                                        </td>
+                                        
+                                       <!-- <td>
+                                            <c:FormatCurrencyComponent currency_value="{!Payment.service_tax_due}"/>
+                                            <!--<apex:outputText value="INR {!Payment.service_tax_due}" rendered="{!AND(Payment.service_tax_due!=null, Payment.service_tax_due!=' ')}"/>-->
+                                        <!--</td> -->
+                                         <td>
+                                            <apex:outputText value="{!Payment.percent_cv}%" rendered="{!(Payment.percent_cv!=null)}"/>
+                                        </td>
+                                        <td>
+                                            <c:FormatCurrencyComponent currency_value="{!Payment.principal_amount_due}"/>
+                                            <!--<apex:outputText value="INR {!Payment.principal_amount_due}" rendered="{!AND(Payment.principal_amount_due!=null, Payment.principal_amount_due!=' ')}"/>-->
+                                        </td>
+                                        <!--<td>
+                                            <c:FormatCurrencyComponent currency_value="{!Payment.total_due}"/>
+                                            <!--<apex:outputText value="INR {!Payment.total_due}" rendered="{!AND(Payment.total_due!=null, Payment.total_due!=' ')}"/>-->
+                                        <!--</td>-->
+                                       
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 1%;">*Service tax as applicable at the time of billing/raising of slab will be applicable on the amount due, as levied by the government.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade"  id="mygain">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" >
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">MyGain Statement</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div >
+                                <h5>MyGain Details</h5>
+                                <table id="mygainD" class="table table-striped table-bordered tableborderImportant">
+                                    <thead>
+                                        <tr>
+                                            <th class="sorting Loyaltyheader">
+                                                Instrument Number
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Bank Details
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Instrument Date
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Instrument Received Date
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Instrument Posting Date
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Mygain Amount Received {!$Label.Currency_INR_notation_RM_CSS}
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Mygain Already Adjusted {!$Label.Currency_INR_notation_RM_CSS}
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Mygain Balance As On Date {!$Label.Currency_INR_notation_RM_CSS}
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Benefit From
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Benefit Till
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Benefit Days
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Rebate Calculated {!$Label.Currency_INR_notation_RM_CSS}
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Text
+                                            </th>
+                                            <th class="sorting Loyaltyheader">
+                                                Interest Rate
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!rcMygain.MygaincompleteRecords}" var="myc">
+                                            <tr>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Instrument_Number}" />
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Bank_Details}" />
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Instrument_Date}"/>
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Instrument_Receive_Date}"/>
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Instrument_Posting_Date}"/>
+                                                </td>
+                                                <td >
+                                                    <c:FormatCurrencyComponent currency_value="{!myc.My_Gain_Amt_Receive}"/>
+                                                    <!--<apex:outputText value="INR {!myc.My_Gain_Amt_Receive}" rendered="{!AND(myc.My_Gain_Amt_Receive!=null,myc.My_Gain_Amt_Receive!='') }"/>-->
+                                                </td>
+                                                <td >
+                                                    <c:FormatCurrencyComponent currency_value="{!myc.My_Gain_Already_Adjusted}"/>
+                                                    <!--<apex:outputText value="INR {!myc.My_Gain_Already_Adjusted}" rendered="{!AND(myc.My_Gain_Already_Adjusted!=null,myc.My_Gain_Already_Adjusted!='') }"/>-->
+                                                </td>
+                                                <td >
+                                                    <c:FormatCurrencyComponent currency_value="{!myc.My_Gain_Balance_as_on_Date}"/>
+                                                    <!--<apex:outputText value="INR {!myc.My_Gain_Balance_as_on_Date}" rendered="{!AND(myc.My_Gain_Balance_as_on_Date!=null,myc.My_Gain_Balance_as_on_Date!='') }"/>-->
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Benefit_From}"/>
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Benefit_Till}"/>
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Benefit_Days}"/>
+                                                </td>
+                                                <td >
+                                                    <c:FormatCurrencyComponent currency_value="{!myc.Rebate_Calculated}"/>
+                                                    <!--<apex:outputText value="INR {!myc.Rebate_Calculated}" rendered="{!AND(myc.Rebate_Calculated!=null,myc.Rebate_Calculated!='') }"/>-->
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Text}"/>
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myc.Intrest_Rate}%" rendered="{!AND(myc.Intrest_Rate!=null,myc.Intrest_Rate!='')}"/>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="margin-top:2%">
+                                <h5>MyGain Rebate Details</h5>
+                                <table id="mygainR" class="table table-striped table-bordered tableborderImportant">
+                                    <thead>
+                                        <tr>
+                                            <th class="sorting table-heading">
+                                                Amount For Rebate Calculated {!$Label.Currency_INR_notation_RM_CSS}
+                                            </th>
+                                            <th class="sorting table-heading">
+                                                Rebate Posted {!$Label.Currency_INR_notation_RM_CSS}
+                                            </th>
+                                            <th class="sorting table-heading">
+                                                Rebate Calculated From
+                                            </th>
+                                            <th class="sorting table-heading">
+                                                Rebate Calculated Till
+                                            </th>
+                                            <th class="sorting table-heading">
+                                                Benefit Days
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!rcMygain.MygainBasicRecords}" var="myb">
+                                            <tr>
+                                                <td >
+                                                    <c:FormatCurrencyComponent currency_value="{!myb.Amt_For_Rebate_Calculated}"/>
+                                                    <!--<apex:outputText value="INR {!myb.Amt_For_Rebate_Calculated}" rendered="{!AND(myb.Amt_For_Rebate_Calculated!=null,myb.Amt_For_Rebate_Calculated!='')}"/>-->
+                                                </td>
+                                                <td >
+                                                    <c:FormatCurrencyComponent currency_value="{!myb.Rebate_Posted}"/>
+                                                    <!--<apex:outputText value="INR {!myb.Rebate_Posted}" rendered="{!AND(myb.Rebate_Posted!=null,myb.Rebate_Posted!='')}"/>-->
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myb.Rebate_Calculated_From}"/>
+                                                </td>
+                                                <td >
+                                                    <apex:outputText value="{!myb.Rebate_Calculated_Till}"/>
+                                                </td>
+                                                <td >
+                                                    {!myb.Benefit_Days}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+            <div class="modal fade"  id="loan">
+                <div class="modal-dialog" style="width: 42%;margin-top: 3%;">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="table_title">
+                                <span class="fa fa-university  " style="color:#fff;"></span>
+                                <h5>Customer's Bank Details </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <table class="table table-bordered popup_table_style" >
+                                <thead>
+                                    <tr>
+                                        <th>Bank Name
+                                        </th>
+                                        <th>Amount Sanctioned {!$Label.Currency_INR_notation_RM_CSS}
+                                        </th>
+                                        <th>%CV
+                                        </th>
+                                        <th>Sanctioned Date
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <apex:outputText value="{!RestAPICallout_wrapper_obj.bank_name}"/>
+                                        </td>
+                                        <td>
+                                            <c:FormatCurrencyComponent currency_value="{!RestAPICallout_wrapper_obj.amount_sanctioned}"/>
+                                            <!--<apex:outputText value="INR {!RestAPICallout_wrapper_obj.amount_sanctioned}" rendered="{!AND(RestAPICallout_wrapper_obj.amount_sanctioned!=null, RestAPICallout_wrapper_obj.amount_sanctioned!=' ')}"/>-->
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{!RestAPICallout_wrapper_obj.cv_sanctioned}"/>
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{!RestAPICallout_wrapper_obj.sanctioned_date}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+            <div class="modal fade"  id="reminder">
+                <div class="modal-dialog" style="width: 42%;margin-top: 3%;">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="table_heading table_title" >
+                                <i class="fa fa fa-bell"></i> 
+                                <h5> Payment Reminders </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div>
+                                <table class="table table-bordered popup_table_style" >
+                                    <thead>
+                                        <tr>
+                                            <th>Reminder Type
+                                            </th>
+                                            <th>Due Date
+                                            </th>
+                                            <th>Milestone
+                                            </th>
+                                            <th>Payment Due Date 
+                                            </th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!ReminderWrapperList}" var="reminder">
+                                            <tr>
+                                                <td> {!reminder.reminder_type}
+                                                </td>
+                                                <td>
+                                                    <apex:outputText value="{0, date, dd MMM yyyy}">
+                                                        <apex:param value="{!reminder.issue_date}" />
+                                                    </apex:outputText>
+                                                </td>
+                                                <td> {!reminder.milestone_name}
+                                                </td>
+                                                <td> {!reminder.due_date}
+                                                </td>
+                                                
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+            <div id="light" class="white_content" style="" >
+                <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'" style=" font-size: 20px; float: right;">&times;</a>
+                <div style=" height:15%; width:100%">
+                    <h4 class="modal-title" id="myModalLabel">
+                        Virtual Interest Calculator
+                        <apex:actionStatus id="Loading" >
+                            <apex:facet name="start">
+                                <apex:image url="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}" 
+                                    height="25px" width="25px" 
+                                    />
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </h4>
+                </div>
+                <div  style=" height:80%; width:100%">
+                    <apex:outputPanel id="outputID">
+                        <div style="display:block;   height: 50px;">
+                            <apex:outputText id="err" value="{!errorMsg}"  style="color:red;"/>
+                            <br/>
+                            <div style="float:left;   width: 42%;">
+                                <apex:outputLabel value="Due Date"/>
+                            </div>
+                            <div style="float:left;  margin-left: 10px;width: 45%;">
+                                <apex:outputText value="{0, date, dd/MM/yyyy}" >
+                                    <apex:param value="{!virtualInterest_obj.duedate}" />
+                                </apex:outputText>
+                            </div>
+                        </div>
+                        <div style="display:block;   height: 50px;">
+                            <div style="float:left;   width: 42%;">
+                                <apex:outputLabel value="Date of Payment Received By Lodha " />
+                            </div>
+                            <div style="float:left;  margin-left: 10px;width: 45%;">
+                                <apex:inputField value="{!acc.PersonBirthdate}" id="dateinput"/>
+                            </div>
+                        </div>
+                        <div style="display:block;   height: 50px;">
+                            <div style="float:left;   width: 42%;">
+                                <apex:outputLabel value="Outstanding Amount" />
+                            </div>
+                            <div >INR&nbsp;
+                                <c:FormatCurrencyComponent currency_value="{!Text(virtualInterest_obj.outstandingamt)}"/>
+                                <!--<apex:outputText value="INR {!virtualInterest_obj.outstandingamt}"  style="margin-left: 10px;width: 40%;display:none"/>-->
+                            </div>
+                        </div>
+                        <div style="display:block;height: 50px;">
+                            <apex:commandButton value="Calculate" 
+                                style="float:right;
+                                padding: 3px 10px 3px 10px;
+                                background-color:skyblue;  
+                                margin-right: 41%;" 
+                                status="Loading"
+                                action="{!InterestAmount}"   
+                                reRender="outputID,err"/>
+                        </div>
+                        <div style="display:block;   height: 50px;">
+                            <div style="float:left;   width: 42%;">
+                                <apex:outputLabel value="Total Virtual Interest Amount"
+                                    rendered="{!virtualInterest_obj.totalamt != null}" />
+                            </div>
+                            <div style="float:left;" >
+                                <apex:outputPanel rendered="{!showamt}">INR&nbsp;
+                                    <c:FormatCurrencyComponent currency_value="{!virtualInterest_obj.totalamt}"/>
+                                    <!--<apex:outputtext value="INR {!virtualInterest_obj.totalamt}" id="amt" style="margin-left: 10px;width: 45%;" 
+                                        rendered="{!showamt}"/>-->
+                                </apex:outputPanel>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <div id="fade" class="black_overlay"></div>
+        </body>
+        <script type="text/javascript" >
+            $(document).ready(function() {
+                $('#outstandingtableRM').dataTable( {
+                "order": [[ 0, "desc" ]],
+                 "iDisplayLength": 50
+                } );
+                 $('#accountLedger').dataTable( {
+                 
+                "order": [[ 0, "desc" ]],
+                 "iDisplayLength": 50
+                } );
+                $('#scheduletableRM').dataTable( {
+                "order": [[ 0, "desc" ]],
+                 "iDisplayLength": 50
+                } );
+                $('#mygainD').dataTable( {
+                "order": [[ 0, "desc" ]],
+                 "iDisplayLength": 50
+                } );
+                $('#mygainR').dataTable( {
+                "order": [[ 0, "desc" ]],
+                 "iDisplayLength": 50
+                } );
+                
+            } );
+            
+            $(window).load(function(){
+                        yearIncr();<!-- This function is used for showing more values in year in datepicker-->
+                   });
+            
+        </script> 
+    </apex:form>
+</apex:page>

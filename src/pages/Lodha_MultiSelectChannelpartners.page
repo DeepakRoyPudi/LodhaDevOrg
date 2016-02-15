@@ -1,0 +1,49 @@
+<apex:page tabstyle="Channel_Partner__c" showheader="false" Standardcontroller="Lead" extensions="Lodha_MultiSelectChannelPartners">
+  <apex:form >
+    <apex:pageblock rendered="{!if(Lead.LeadSource=='Channel Partner','true','false')}">
+        
+        <apex:pageBlockButtons >
+                 <apex:commandbutton action="{!processSelected}" value="Select"/>
+        </apex:pageBlockButtons>
+
+        <apex:pageblocktable value="{!ChannelPartners}" var="CAccount">
+            <apex:column >
+                 <apex:facet name="header"><apex:inputCheckbox onclick="checkAll(this)"/> </apex:facet>
+                 <apex:inputCheckbox value="{!CAccount.selected}" id="selectLine1"/> 
+            </apex:column>
+            <apex:column > 
+                <apex:facet name="header">Channel partner Name</apex:facet>
+                <apex:outputfield value="{!CAccount.con.Name}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Channel Partner RefNo</apex:facet>
+                <apex:outputfield value="{!CAccount.con.Channel_Partner_RefNo__c}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Email</apex:facet>
+                <apex:outputfield value="{!CAccount.con.Email__c}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Type of Channel Partner</apex:facet>
+                <apex:outputfield value="{!CAccount.con.Type_of_Channel_Partner__c}"/>
+            </apex:column>
+        </apex:pageblocktable>        
+        <script>
+           function checkAll(cb)
+           {
+               var inputElem = document.getElementsByTagName("input");
+               for(var i=0;i<inputElem.length;i++) 
+                 {
+                         if(inputElem[i].id.indexOf("selectLine1")!=-1)  
+                               inputElem[i].checked = cb.checked;
+                  }
+            }
+        </script>
+  
+    </apex:pageblock>  
+    <apex:pageblock rendered="{!if(Lead.LeadSource=='Channel Partner','false','true')}"> 
+        <apex:pageMessage strength="3" severity="Error" title="Error" detail="You cannot add Channel Partners to this Lead"/>
+       <a href="/{!Lead.ID}" >Click here to return to the previous page..</a> 
+    </apex:pageblock> 
+  </apex:form>     
+</apex:page>

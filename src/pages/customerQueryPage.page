@@ -1,0 +1,164 @@
+<apex:page id="thePage" controller="CustQueryContrl" standardStylesheets="true" showHeader="false" title="Customer Query" tabStyle="STDesc__c">
+  <style>
+		.locationError { color: red; font-weight: bold; font-size: 14pt;}
+		</style>
+  <apex:messages styleClass="locationError" />
+    <script language="javascript" type="text/javascript">
+        function clickSubmit(){
+        try{        
+            if(document.getElementById('thePage:theForm:theBlock:theSection1:fn').value==''){
+                alert('First Name is required before you Submit');
+                return false;
+                }
+            else if(document.getElementById('thePage:theForm:theBlock:theSection1:ln').value==''){
+                alert('Last Name is required before you Submit');
+                return false;
+                }
+            else if(document.getElementById('thePage:theForm:theBlock:theSection1:mob').value==''){
+                alert('10 Digit Mobile is required before you Submit');
+                return false;
+                }
+            else if(document.getElementById('thePage:theForm:theBlock:theSection2:prj').value==''){
+                alert('Project is required before you Submit');
+                return false;
+                }
+            else if(document.getElementById('thePage:theForm:theBlock:theSection2:bn').value==''){
+                alert('Building Name is required before you Submit');
+                return false;
+                }
+            else if(document.getElementById('thePage:theForm:theBlock:theSection2:wng').value==''){
+                alert('Wing is required before you Submit');
+                return false;
+                }
+            else if(document.getElementById('thePage:theForm:theBlock:theSection2:fln').value==''){
+                alert('Flat Number is required before you Submit');
+                return false;
+                }                   
+            else if(document.getElementById('thePage:theForm:theBlock:theSection3:qt').value==''){
+                alert('Query Type is required before you Submit');
+                return false;}
+         
+           } catch (e) {
+               return false;
+           }
+           }
+           
+           
+          function checkFn(){
+                if(document.getElementById('thePage:theForm:theBlock:theSection1:fn').value!=''){
+                var patt = /[^A-Z]/i;
+                if (patt.test(document.getElementById('thePage:theForm:theBlock:theSection1:fn').value)){
+                document.getElementById('thePage:theForm:theBlock:theSection1:fn').value = '';
+                alert('First Name should only contain letters');
+                return false;}                
+                }}
+                
+          function checkLn(){
+                if(document.getElementById('thePage:theForm:theBlock:theSection1:ln').value!=''){
+                var patt = /[^A-Z]/i;
+                if (patt.test(document.getElementById('thePage:theForm:theBlock:theSection1:ln').value)){
+                document.getElementById('thePage:theForm:theBlock:theSection1:ln').value = '';
+                alert('Last Name should only contain letters');
+                return false;}                
+                }}
+                
+          function checkMob(){
+                if(document.getElementById('thePage:theForm:theBlock:theSection1:mob').value!=''){
+                if(isNaN(document.getElementById('thePage:theForm:theBlock:theSection1:mob').value)){
+                document.getElementById('thePage:theForm:theBlock:theSection1:mob').value = '';
+                alert('Please enter only numerics in 10 Digit Mobile');
+                return false;
+                }
+                else if(document.getElementById('thePage:theForm:theBlock:theSection1:mob').value.indexOf(".")!= -1){
+                document.getElementById('thePage:theForm:theBlock:theSection1:mob').value = '';
+                alert('Please enter only numerics in 10 Digit Mobile');
+                return false;
+                }
+                else if(document.getElementById('thePage:theForm:theBlock:theSection1:mob').value.length != 10){
+                document.getElementById('thePage:theForm:theBlock:theSection1:mob').value = '';
+                alert('Please enter a valid 10 Digit Mobile');
+                return false;
+                }}}
+                
+          function checkEml(){
+                if(document.getElementById('thePage:theForm:theBlock:theSection1:eml').value!=''){
+                var x = document.getElementById('thePage:theForm:theBlock:theSection1:eml').value;
+                var atpos=x.indexOf("@");
+                var dotpos=x.lastIndexOf(".");
+                if (atpos == -1 || dotpos == -1){
+                document.getElementById('thePage:theForm:theBlock:theSection1:eml').value = '';
+                alert("Please enter a valid e-mail address");
+                return false;}
+                else if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length){
+                document.getElementById('thePage:theForm:theBlock:theSection1:eml').value = '';
+                alert("Please enter a valid e-mail address");
+                return false; 
+                }}}
+                   
+          function checkWng(){
+                if(document.getElementById('thePage:theForm:theBlock:theSection2:wng').value!=''){
+                var patt = /[^A-Z]/i;
+                if (patt.test(document.getElementById('thePage:theForm:theBlock:theSection2:wng').value)){
+                document.getElementById('thePage:theForm:theBlock:theSection2:wng').value = '';
+                alert('Wing should only contain a single letter');
+                return false;}                
+                }}
+                
+          function checkFln(){
+                if(document.getElementById('thePage:theForm:theBlock:theSection2:fln').value!=''){           
+                if(document.getElementById('thePage:theForm:theBlock:theSection2:fln').value.indexOf(".")!= -1 ){    
+                    document.getElementById('thePage:theForm:theBlock:theSection2:fln').value = '';
+                    alert('Please enter the numeric flat number only');
+                    return false; }
+                    else if(isNaN(document.getElementById('thePage:theForm:theBlock:theSection2:fln').value)){    
+                    document.getElementById('thePage:theForm:theBlock:theSection2:fln').value = '';
+                    alert('Please enter the numeric flat number only');
+                    return false; }
+                }}
+                
+          function checkAcmt(){
+                if(document.getElementById('thePage:theForm:theBlock:theSection3:acmt').value!=''){
+                if(document.getElementById('thePage:theForm:theBlock:theSection3:acmt').value.length > 350){
+                var subStr = document.getElementById('thePage:theForm:theBlock:theSection3:acmt').value.substr(0,349);
+                document.getElementById('thePage:theForm:theBlock:theSection3:acmt').value = subStr;                
+                alert('Additional Comments cannot be longer than 350 characters');
+                return false;
+                }}}                    
+</script>
+
+    <apex:image url="{!$Resource.Casa}"/>
+    <apex:sectionHeader title="Online Query Form" />
+    <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:outputText value="Dear Lodha Customer,"/>
+    <apex:outputText ><br/></apex:outputText>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:outputText value="Sharing your query was never so simple. You only need to fill the following fields, click on 'Submit' and secure your query number."/></b>
+    <div class="pbSubheader first tertiaryPalette" style="background-color:white"><span class="pbSubExtra"><span class="requiredLegend"><span class="requiredExampleOuter"><span class="requiredExample">&nbsp;</span></span><span class="requiredText"> = Mandatory Fields</span></span></span></div>
+    <apex:form id="theForm" >
+	    
+        <apex:pageBlock id="theBlock" mode="maindetail">
+        <apex:pageBlockButtons location="bottom">
+            <apex:commandButton id="btnSubmit" onclick="return clickSubmit()" action="{!submit}" value="Submit" />            
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection id="theSection1" title="Applicant Details" columns="2" collapsible="false">
+                <apex:inputField required="false" id="saln" value="{!newCase.Salutation__c}"/>
+                <apex:inputHidden />
+                <apex:inputField required="true" id="fn" onblur="checkFn()" value="{!newCase.First_Name__c}"/>
+                <apex:inputField required="true" id="ln" onblur="checkLn()" value="{!newCase.Last_Name__c}"/>
+                <apex:inputField required="true" id="mob" onblur="checkMob()" value="{!newCase.Mobile__c}"/>  
+                <apex:inputField required="false" id="eml" onblur="checkEml()" value="{!newCase.Email__c}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection id="theSection2" title="Residence Details" columns="2" collapsible="false">
+                <apex:inputField required="true" id="prj" value="{!newCase.Project__c}"/>
+                <apex:inputField required="true" id="bn" value="{!newCase.Buildings_Name__c}"/>
+                <apex:inputField required="true" id="wng" onblur="checkWng()" value="{!newCase.Wing__c}"/>
+                <apex:inputField required="true" id="fln" onblur="checkFln()" value="{!newCase.Flat_No__c}"/>               
+        </apex:pageBlockSection>
+        <apex:pageBlockSection id="theSection3" title="Query Details" columns="1" collapsible="false">
+                <apex:inputField required="true" id="qt" value="{!newCase.Query_Type__c}"/>
+                <apex:inputField required="false" id="sqt" value="{!newCase.Sub_Type__c}"/>
+                <apex:inputField required="false" id="acmt" style="width:350px" onkeypress="checkAcmt()" value="{!newCase.Additional_Comments__c}"/>
+        </apex:pageBlockSection>
+     <p />
+    </apex:pageBlock>
+   </apex:form>
+   <div align="right">&copy;&nbsp;Copyright 2011, Casa By Lodha. All rights reserved.&nbsp;&nbsp;&nbsp;&nbsp;</div><br/>
+</apex:page>

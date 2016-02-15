@@ -1,0 +1,1007 @@
+<!---------------------------------------------------------------------------------
+Name:  CM_ChildCaseCreatePage
+Copyright © 2013  Lodha Group
+===================================================================================
+===================================================================================
+Purpose:
+-------
+VF page For Creating Parent & Child Case 
+===================================================================================
+===================================================================================
+History
+-------
+VERSION    AUTHOR                DATE             DETAIL              
+1.0 -   CG Dev Team          13/11/2013      INITIAL DEVELOPMENT
+1.1 -   Asmita               06/10/2014      IT HD - 45471 - L1,L2,L3 Refactoring
+---------------------------------------------------------------------------------->
+<apex:page standardController="Case" extensions="CM_ChildCaseCreatePageController"  tabStyle="Case" id="pageid">
+	<apex:messages style="color:red;"/> 
+	<script>
+	    
+	    //Function to clear L3
+	    function clearl3(sectionNo){
+	        var l3B1 = document.getElementById('pageid:mainform:blkActionItem:Request_Details:secL3B1:secItemL3B1:RequestForL3b_selected');
+	        var l3A1 = document.getElementById('pageid:mainform:blkActionItem:Request_Details:secL3A1:secItemL3A1:RequestForL3a_selected');
+	        var l3B2 = document.getElementById('pageid:mainform:blkChildCase:Request_Details2:secL3B2:secItemL3B2:RequestForL3b2_selected');
+	        var l3A2 = document.getElementById('pageid:mainform:blkChildCase:Request_Details2:secL3A2:secItemL3A2:RequestForL3a2_selected');
+	        
+	        if(l3B1 !== null)
+	        {	
+	        	var l3Blenght = l3B1.length;
+		      	for (var i = 0; i < l3Blenght; i++) 
+		          	l3B1.options.remove(0);
+		     }
+		     	
+	     	if(l3A1 !== null)
+	     	{
+	     		var l3Alenght = l3A1.length;
+		      	for (var i = 0; i < l3Alenght; i++) 
+					l3A1.options.remove(0);
+		    }
+		    
+		    if(l3B2 !== null)
+	        {	
+	        	var l3B2length = l3B2.length;
+		      	for (var i = 0; i < l3B2length; i++) 
+		          	l3B2.options.remove(0);
+		     }
+		     	
+	     	if(l3A2 !== null)
+	     	{
+	     		var l3A2length = l3A2.length;
+		      	for (var i = 0; i < l3A2length; i++) 
+					l3A2.options.remove(0);
+		    }
+		    
+		    if(sectionNo == 1)
+				callonchange();
+			else if(sectionNo == 2)
+				callonchange2();
+	    }
+	    
+	    //Added by Anupam: 
+	    var L2Id;
+	    function sendCombinationB()
+	    {
+	    	var select = document.getElementById('pageid:mainform:blkActionItem:Request_Details:secL3B1:secItemL3B1:RequestForL3b_selected');
+	      	var selected = [ ];
+	      	for (var i = 0; i < select.length; i++) 
+	          selected.push(select.options[i].label);
+	     	
+	     	var l3BValues = "\'" + selected.join("\',\'") + "\'";
+	    	callOnchangeB(document.getElementById(L2Id).value, l3BValues);
+	    }
+	    
+	    function sendCombinationA()
+	    {
+	    	var select = document.getElementById('pageid:mainform:blkActionItem:Request_Details:secL3A1:secItemL3A1:RequestForL3a_selected');
+	      	var selected = [ ];
+	      	for (var i = 0; i < select.length; i++)
+	          selected.push(select.options[i].label);
+	     	
+	     	var l3AValues = "\'" + selected.join("\',\'") + "\'";
+	    	callOnchangeA(document.getElementById(L2Id).value, l3AValues);
+	    }
+	    
+	    var L2Id2;
+	    function sendCombinationB2()
+	    {
+	    	var select = document.getElementById('pageid:mainform:blkChildCase:Request_Details2:secL3B2:secItemL3B2:RequestForL3b2_selected');
+	      	var selected = [ ];
+	      	for (var i = 0; i < select.length; i++) 
+	          selected.push(select.options[i].label);
+	     	
+	     	var l3BValues = "\'" + selected.join("\',\'") + "\'";
+	    	callOnchangeB2(document.getElementById(L2Id2).value, l3BValues);
+	    }
+	    
+	    function sendCombinationA2()
+	    {
+	    	var select = document.getElementById('pageid:mainform:blkChildCase:Request_Details2:secL3A2:secItemL3A2:RequestForL3a2_selected');
+	      	var selected = [ ];
+	      	for (var i = 0; i < select.length; i++) 
+	          selected.push(select.options[i].label);
+	     	
+	     	var l3AValues = "\'" + selected.join("\',\'") + "\'";
+	    	callOnchangeA2(document.getElementById(L2Id2).value, l3AValues);
+	    }
+	</script>
+
+	<apex:form id="mainform">
+		<apex:actionRegion > 
+			<apex:actionfunction name="callonchange" action="{!OnL2Change}" status="displaystatus" 
+		                    	reRender="Additional_Information" /> 
+		                    	
+		    <apex:actionfunction name="callOnchangeB" action="{!OnChange}" reRender="Additional_Information" status="displaystatusB" >
+		  		<apex:param name="L2B" value=""/>
+		  		<apex:param name="L3Bvalues" value=""/>
+		  	</apex:actionfunction>
+		  	
+		  	<apex:actionfunction name="callOnchangeA" action="{!OnChange}" reRender="Additional_Information" status="displaystatusA" >
+	            <apex:param name="L2A" value=""/>
+	            <apex:param name="L3Avalues" value=""/>
+	        </apex:actionfunction>
+	        
+	        <apex:actionfunction name="callonchange2" action="{!OnL2Change}" status="displaystatusL22" 
+		                    	reRender="Additional_Information2" /> 
+		                    	
+		    <apex:actionfunction name="callOnchangeB2" action="{!OnChange}" reRender="Additional_Information2" status="displaystatusB2" >
+		  		<apex:param name="L2B" value=""/>
+		  		<apex:param name="L3Bvalues" value=""/>
+		  	</apex:actionfunction>
+		  	
+		  	<apex:actionfunction name="callOnchangeA2" action="{!OnChange}" reRender="Additional_Information2" status="displaystatusA2" >
+	            <apex:param name="L2A" value=""/>
+	            <apex:param name="L3Avalues" value=""/>
+	        </apex:actionfunction>
+	        
+		</apex:actionRegion>
+    	<apex:inputHidden value="{!ptype}" id="ptype"/>
+    	
+		<apex:pageBlock title="Sub Case" rendered="{!secChild}">
+       		<apex:pageBlockSection title="Sub Case Type Selection" collapsible="false" columns="1"> 
+	            <p/><h1> Please Select Sub Case Type - based on Parent Case Type : </h1>
+	            <apex:selectRadio value="{!subCaseType}">
+	                <apex:selectOptions value="{!ccTypes}"/><p/>
+	            </apex:selectRadio><p/>
+            	<apex:commandButton value="Create Sub Case" action="{!ChildCase}"/>
+        	</apex:pageBlockSection>
+    	</apex:pageBlock>
+    
+    	<apex:pageBlock id="blkActionItem" title="Action Item" rendered="{!secCtype1}" > 
+ 
+	        <apex:pageBlockButtons >
+	            <apex:commandButton value="Back" action="{!Back}"/>
+	            <apex:commandButton value="Save" action="{!SaveActionItem}"/>
+	            <apex:commandButton value="Cancel" action="{!CancelReq}"/>
+	            <apex:actionStatus id="displaystatus" startText="Please wait..." />
+	        </apex:pageBlockButtons>
+        
+        	<apex:pageBlockSection id="Case_Information" title="Action Item Information" columns="2" collapsible="false">
+            
+	            <!--for Welcome call Oppty-->
+	            <apex:outputField label="Account Name" value="{!caseCreate.AccountId}" rendered="{!IsforOppty=false}"/>            
+	            <apex:outputField label="Opportunity Name" value="{!caseCreate.Opportunity__c}" rendered="{!IsforOppty}"/>
+	            <apex:outputtext label="Related Flat" value="{!flatNo}" rendered="{!IsforOppty}"/>
+	            <apex:outputField label="Priority" value="{!caseCreate.Priority}"/>
+	            <apex:outputField label="Interaction Mode" value="{!caseCreate.Interaction_Mode__c}"/>
+	            <apex:outputField label="Communication Type" value="{!caseCreate.Communication_Type__c}"/>
+	            <apex:outputField label="Nature of Request" value="{!caseCreate.Nature_of_Request__c}"/>
+            
+            
+	            <apex:selectList label="Assigned to" value="{!spocQueueId}" required="true" size="1">
+	                <apex:selectOptions value="{!sQueue}"/>
+	            </apex:selectList><p/>
+            
+            	<!--<apex:inputField label="Case Owner" value="{!caseCreate.OwnerId}"/>-->
+        	</apex:pageblockSection>
+        
+        	<apex:pageBlockSection id="Request_Details" title="Request Details" columns="1" collapsible="false">
+            
+	            <apex:pageBlockSection columns="1">
+	                <apex:pageBlockSectionitem >
+	                
+	                    <apex:outputLabel value="Request for L1"></apex:outputLabel>
+	                    
+	                    <apex:actionRegion immediate="false"> 
+	                        <apex:inputField label="Request for L1" value="{!caseCreate.Request_for_L1__c}">
+	                            <apex:actionSupport event="onchange" action="{!OnL1Change}" status="displaystatus" 
+	                            					oncomplete="clearl3(1);" reRender="Request_Details"/>               
+	                        </apex:inputField>&nbsp;
+		                    <apex:actionStatus id="displaystatus" startText="Please wait..." />
+	                    </apex:actionRegion>
+	                
+	                </apex:pageBlockSectionitem>
+	            </apex:pageblockSection>
+           
+	            <apex:pageBlockSection columns="1">
+	                <apex:pageBlockSectionitem >
+	                    <apex:outputLabel value="Request for L2"/>
+	                    <apex:actionRegion >
+	                        <apex:inputField value="{!caseCreate.Request_for_L2__c}" id="requestForL2" onchange="clearl3(1);"/>
+	                        <script>
+	                        	L2Id = '{!$Component.requestForL2}';
+	                        </script>
+	                        <apex:actionStatus id="displaystatus" startText="Please wait..." />
+	                    </apex:actionRegion>
+	                </apex:pageBlockSectionitem>
+	            </apex:pageBlockSection>
+            
+            
+	            <apex:pageBlockSection id="secL3A1" rendered="{!isL3a}" columns="1"> 
+	                <apex:pageBlockSectionitem id="secItemL3A1">
+	                    <apex:outputLabel value="Request for L3(a)"></apex:outputLabel>
+	                    <apex:actionRegion immediate="false">
+	                        <apex:inputField value="{!caseCreate.Request_for_L3_a__c}" id="RequestForL3a" onchange="sendCombinationA()"/>
+	                        <apex:actionStatus id="displaystatusA" startText="Please wait..." />
+	                    </apex:actionRegion>
+	                </apex:pageBlockSectionitem>
+				</apex:pageblockSection> 
+            
+	            <apex:pageBlockSection id="secL3B1" rendered="{!isL3b}" columns="1">
+	                <apex:pageBlockSectionitem id="secItemL3B1">
+	                    <apex:outputLabel value="Request for L3(b)"></apex:outputLabel>
+	                    <apex:actionRegion immediate="false"> 
+	                        <apex:inputField value="{!caseCreate.Request_for_L3__c}" id="RequestForL3b" onchange="sendCombinationB()"/>   
+	                        <apex:actionStatus id="displaystatusB" startText="Please wait..." /> 
+	                    </apex:actionRegion>
+	                </apex:pageBlockSectionitem> 
+	            </apex:pageblockSection> 
+	            
+	        </apex:pageblockSection> 
+        
+	        <apex:pageBlockSection id="Additional_Information" title="Additional Informations" columns="1" collapsible="false">
+	            
+	            <apex:pageBlockSection rendered="{!isArranging_for_a_home_loan}" columns="2">
+	                <apex:inputField label="Cancel Init Arranging For Home Loan" value="{!caseCreate.Cancel_Init_Arranging_for_a_home_loan__c}"  required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isBeyond_CC_process_policy}" columns="2">
+	                <apex:inputField label="Cancel Init Beyond CC Process Policy" value="{!caseCreate.Cancel_Init_Beyond_CC_process_policy__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isCC_Process_deviation_required}" columns="2">
+	                <apex:inputField label="Cancel Init CC Process Deviation Reqd" value="{!caseCreate.Cancel_Init_CC_Process_deviation_require__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDemise_in_the_family}" columns="2">
+	                <apex:inputField label="Cancel Init For Demise in Family" value="{!caseCreate.Cancel_Init_Demise_In_Family__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDue_to_possession_timelines}" columns="2">
+	                <apex:inputField label="Cancel Init Possession Timelines" value="{!caseCreate.Cancel_Init_Due_to_possession_timelines__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isFinancial_constraints}" columns="2">
+	                <apex:inputField label="Cancel Init Financial constraints" value="{!caseCreate.Cancel_Init_Financial_constraints__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isFinds_competitor_property_attractive}" columns="2">
+	                <apex:inputField label="Cancel Init CompetitorPropertyAttractive" value="{!caseCreate.Cancel_Init_Finds_competitor_property_at__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isInventory_change_required}" columns="2">
+	                <apex:inputField label="Cancel Init Inventory Change Reqd" value="{!caseCreate.Cancel_Init_Inventory_change_required__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isLack_of_Approvals}" columns="2">
+	                <apex:inputField label="Cancel Init Lack of Approvals" value="{!caseCreate.Cancel_Init_Lack_of_Approvals__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isManagement_deviation_required}" columns="2">
+	                <apex:inputField label="Cancel Init Management Deviation Reqd" value="{!caseCreate.Cancel_Init_Management_deviation_require__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isMedical_reasons}" columns="2">
+	                <apex:inputField label="Cancel Init Medical reasons" value="{!caseCreate.Cancel_Init_Medical_reasons__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isMiscommunication_at_the_time_of_sale}" columns="2">
+	                <apex:inputField label="Cancel Init Miscommunication at Saletime" value="{!caseCreate.Cancel_Init_Miscomm_at_sale_time__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isPayment_deviation_required}" columns="2">
+	                <apex:inputField label="Cancel Init Payment Deviation Reqd" value="{!caseCreate.Cancel_Init_Payment_deviation_required__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isProduct_deviation_required}" columns="2">
+	                <apex:inputField label="Cancel Init Product Deviation Reqd" value="{!caseCreate.Cancel_Init_Product_deviation_required__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isProduct_issue_client_in_disagreement}" columns="2">
+	                <apex:inputField label="Cancel Init Product Issue" value="{!caseCreate.Cancel_Init_Product_issue_client_in_di__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isSelf_funding_needs_more_time}" columns="2">
+	                <apex:inputField label="Cancel Init Self Funding" value="{!caseCreate.Cancel_Init_Self_funding_needs_more_ti__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isApprovals}" columns="2">
+	                <apex:inputField label="Investigation required Approvals" value="{!caseCreate.Investigation_required_Approvals__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isInventory}" columns="2">
+	                <apex:inputField label="Investigation required Inventory" value="{!caseCreate.Investigation_required_Inventory__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isLoan_eligibility}" columns="2">
+	                <apex:inputField label="Investigation required Loan Eligibility" value="{!caseCreate.Investigation_required_Loan_eligibility__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isLocation_Product}" columns="2">
+	                <apex:inputField label="Investigation required Location/Product" value="{!caseCreate.Investigation_required_Location_Product__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOffers}" columns="2">
+	                <apex:inputField label="Investigation required Offers" value="{!caseCreate.Investigation_required_Offers__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPayment_schedule}" columns="2">
+	                <apex:inputField label="Investigation required Payment schedule" value="{!caseCreate.Investigation_required_Payment_schedule__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPossession_timelines}" columns="2">
+	                <apex:inputField label="Investigation Reqd Possession Timelines" value="{!caseCreate.Investigation_required_Possession_timeli__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPricing}" columns="2">
+	                <apex:inputField label="Investigation required Pricing" value="{!caseCreate.Investigation_required_Pricing__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isVehicle_slots}" columns="2">
+	                <apex:inputField label="Investigation required Vehicle slots" value="{!caseCreate.Investigation_required_Vehicle_slots__c}"/>
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isCSS_or_CES}" columns="2">
+	                <apex:inputField label="Customer Response CSS CES" value="{!caseCreate.Customer_response_CSS_or_CES__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isAny_other_product}" columns="2">
+	                <apex:inputField label="Customer Response Other Product" value="{!caseCreate.Customer_response_Any_other_product__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isAlready_onboard}" columns="2">
+	                <apex:inputField label="Customer response Already onboard" value="{!caseCreate.Customer_response_Already_onboard__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_will_pay_by_self}" columns="2">
+	                <apex:inputField label="Date of Payment" value="{!caseCreate.Date_of_payment_Client_will_pay_by_self__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_will_pay_by_self}" columns="2">
+	                <apex:inputField label="Amount Client will pay by self" value="{!caseCreate.Amount_Client_will_pay_by_self__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_will_pay_by_self}" columns="2">
+	                <apex:inputField label="Mode of Payment" value="{!caseCreate.Mode_of_payment_Client_will_pay_by_self__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDropped_at_site}" columns="2">
+	                <apex:inputField label="Site Location" value="{!caseCreate.Site_Location_Dropped_at_site__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDropped_at_site}" columns="2">
+	                <apex:inputField label="Amount for Dropped at Site" value="{!caseCreate.Amount_Dropped_at_site__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDropped_at_site}" columns="2">
+	                <apex:inputField label="Date for Dropped at Site" value="{!caseCreate.Date_Dropped_at_site__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isHanded_over_to_Channel_Partner}" columns="2">
+	                <apex:inputField label="Name of Channel Partner" value="{!caseCreate.Name_Handed_over_to_Channel_Partner__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isHanded_over_to_Channel_Partner}" columns="2">
+	                <apex:inputField label="Mobile no of Channel Partner" value="{!caseCreate.Mobile_no_Handed_over_to_Channel_Partner__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isHanded_over_to_Channel_Partner}" columns="2">
+	                <apex:inputField label="Amount Handed over to Channel Partner" value="{!caseCreate.Amount_Handed_over_to_Channel_Partner__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isHanded_over_to_Channel_Partner}" columns="2">
+	                <apex:inputField label="Date Handed over to Channel Partner" value="{!caseCreate.Date_Handed_over_to_Channel_Partner__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isIn_transit_courier}" columns="2">
+	                <apex:inputField label="AirwayBillNo / TrackingNo" value="{!caseCreate.AirwayBillNo_TrackingNo_in_transit_couri__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isIn_transit_courier}" columns="2">
+	                <apex:inputField label="PIT-Courier company name" value="{!caseCreate.PIT_Courier_company_name_In_transit_co__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isIn_transit_courier}" columns="2">
+	                <apex:inputField label="Date For in-transit Courier" value="{!caseCreate.Date_In_transit_courier__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isIn_transit_courier}" columns="2">
+	                <apex:inputField label="Amount For in-transit Courier" value="{!caseCreate.Amount_In_transit_courier__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOnline_payment_not_reflecting}" columns="2">
+	                <apex:inputField label="UTR Code" value="{!caseCreate.UTR_Code_Online_payment_not_reflecting__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOnline_payment_not_reflecting}" columns="2">
+	                <apex:inputField label="Amount for Online Payment Not Reflecting" value="{!caseCreate.Amount_Online_payment_not_reflecting__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOnline_payment_not_reflecting}" columns="2">
+	                <apex:inputField label="Date for Online Payment Not Reflecting" value="{!caseCreate.Date_Online_payment_not_reflecting__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOnline_payment_not_reflecting}" columns="2">
+	                <apex:inputField label="BankName for OnlinePayment NotReflecting" value="{!caseCreate.Bank_Name_Online_payment_not_reflecting__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPayment_will_come_from_bank}" columns="2">
+	                <apex:inputField label="Bank Name Payment will come from bank" value="{!caseCreate.Bank_Name_Payment_will_come_from_bank__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPayment_will_come_from_bank}" columns="2">
+	                <apex:inputField label="Amount when Payment Will Come From Bank" value="{!caseCreate.Amount_Payment_will_come_from_bank__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPayment_will_come_from_bank}" columns="2">
+	                <apex:inputField label="Date Payment will come from bank" value="{!caseCreate.Date_Payment_will_come_from_bank__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPick_up_to_be_arranged}" columns="2">
+	                <apex:inputField label="Date for pick up to be arranged" value="{!caseCreate.Date_for_pick_up_to_be_arranged__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPick_up_to_be_arranged}" columns="2">
+	                <apex:inputField label="Amount for pick up to be arranged" value="{!caseCreate.Amount_for_pick_up_to_be_arranged__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isReasons}" columns="2">
+	                <apex:inputField label="Reasons" value="{!caseCreate.Reasons__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDenial_of_site_visit}" columns="2">
+	                <apex:inputField label=" for site visit denial" value="{!caseCreate.Reason_for_site_visit_denial__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPermitted_for_Site_Visit}" columns="2">
+	                <apex:inputField label="Date Permitted for Site Visit" value="{!caseCreate.Date_Permitted_for_Site_Visit__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isRescheduled_Site_Visit}" columns="2">
+	                <apex:inputField label="Date for Rescheduled Site Visit" value="{!caseCreate.Date_Rescheduled_Site_Visit__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isBanker_site_visit_allowed}" columns="2">
+	                <apex:inputField label="Date for Banker Site Visit" value="{!caseCreate.Date_Banker_site_visit_allowed__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isCustomer_contesting_a_clause}" columns="2">
+	                <apex:inputField label="Registration - Clause contest result" value="{!caseCreate.Registration_Clause_contest_result__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isConfirm_Time_place_of_Registration}" columns="2">
+	                <apex:inputField label="Date Confirm Registration" value="{!caseCreate.Date_Confirm_Time_place_of_Registratio__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isAccepted_Date_of_payment_Amount}" columns="2">
+	                <apex:inputField label="Accepted Date of Payment" value="{!caseCreate.Date_Accepted_Date_of_payment_Amount__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isAccepted_Date_of_payment_Amount}" columns="2">
+	                <apex:inputField label="Accepted Amount" value="{!caseCreate.Amount_Accepted_Date_of_payment_Amount__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isRejected_Reason}" columns="2">
+	                <apex:inputField label="Reasons" value="{!caseCreate.Reasons__c}" required="true"/> 
+	            </apex:pageBlockSection> 
+	            
+	            <apex:pageBlockSection rendered="{!isGiven_another_reference}" columns="2">
+	                <apex:inputField label="Name of Another Reference" value="{!caseCreate.Name_Given_another_reference__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isGiven_another_reference}" columns="2">
+	                <apex:inputField label="Mobile No of Another Reference" value="{!caseCreate.Mobile_No_Given_another_reference__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isCustomer_does_not_wish_to_be_contacted}" columns="2">
+	                <apex:inputField label="Customer Wishes To Be Contacted" value="{!caseCreate.Customer_Wishes_To_Be_Contacted__c}" /> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWants_for_self_Date_of_visit_to_site}" columns="2">
+	                <apex:inputField label="Amount for Self Date of Site Visit" value="{!caseCreate.Amount_Wants_for_self_Date_of_site_visit__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWants_for_self_Date_of_visit_to_site}" columns="2">
+	                <apex:inputField label="Date for Self Date of Site Visit" value="{!caseCreate.Date_Wants_for_self_Date_of_visit_to_s__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWelcome_Call_reject}" columns="2">
+	                <apex:inputField label="Reasons for Rejection" value="{!caseCreate.Reasons__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isNo_Bank_loan_due_to_poor_eligibility}" columns="2">
+	                <apex:inputField label="Cancel Init loan not getting sanctioned" value="{!caseCreate.Cancel_Init_loan_not_getting_sanctioned__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_wants_to_read_draft_AFS_at_HO }" columns="2">
+	                <apex:inputField label="Date Read Draft Agreement at HO" value="{!caseCreate.Date_Customer_wants_to_read_draft_agreem__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_wants_draft_agreement_to_be_sent}" columns="2">
+	                <apex:inputField label="Date Draft Agreement Sent" value="{!caseCreate.Date_Customer_wants_draft_agreement_sent__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isRequest_for_delay_in_registration}" columns="2">
+	                <apex:inputField label="Date Request for delay in Registration" value="{!caseCreate.Date_Request_for_delay_in_registration__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	              <!-- Deepak 1.1 Accepted date functionality-->
+	             <apex:pageBlockSection rendered="{!isaccepted_DateOfInvitation_Dateof_visit}" columns="2">
+	                <apex:inputField label="Date of visit" value="{!caseCreate.Date_Accepted_the_invitation_Date_of_vi__c}" required="true"/> 
+	            </apex:pageBlockSection> 
+	            
+	            <apex:pageBlockSection rendered="{!isRequest_for_rescheduling_of_registration}" columns="2">
+	                <apex:inputField label="Date Request for Rescheduing registration" value="{!caseCreate.Date_Request_for_rescheduling_the_regist__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	              <apex:pageBlockSection rendered="{!isReasonForNonPayment }" columns="2">
+	                <apex:inputField label="Reasons for Non-Payment" value="{!caseCreate.Reason_for_non_payment__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	             <apex:pageBlockSection rendered="{!isReasonForRejectionOfMyGainFacility }" columns="2">
+	                <apex:inputField label="Reason for Rejection" value="{!caseCreate.Reason_for_Rejection_of_MyGain_Facility__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWelcomeCallReject }" columns="2">
+	                <apex:inputField label="Reason for welcome call rejection" value="{!caseCreate.Reason_for_welcome_call_rejection__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	
+	            <apex:pageBlockSection rendered="{!isReasonForRejectionOfLoyaltyReferrals }" columns="2">
+	                <apex:inputField label="Reason for Rejection" value="{!caseCreate.Reason_for_Rejection_of_Loyalty_Referr__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	
+	
+	            <apex:pageBlockSection rendered="{!isReasonForRejectionOfCustomerCareMarketingEvent }" columns="2">
+	                <apex:inputField label="Reason for Rejection" value="{!caseCreate.Reason_for_Customer_Care_Marketing_Event__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            
+	            <apex:pageBlockSection rendered="{!isCustomer_asked_for_more_time_to_confirm}" columns="2">
+	                <apex:inputField label="Date" value="{!caseCreate.Date_Customer_has_asked_for_more_time_to__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <!--  1.1 Asmita  -->
+	            <apex:pageBlockSection rendered="{!isCall_Back_Later}" columns="2">
+	                <apex:inputField value="{!caseCreate.Date_of_Call__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWants_More_Info_from_Sales}" columns="2">
+	                <apex:inputField value="{!caseCreate.SM_to_Call_Back__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <!-- Siddharth 1.2 -->
+	            <apex:pageBlockSection rendered="{!isCampaign}" columns="2">
+	                <apex:inputField value="{!caseCreate.Campaign__c}" required="true"/> 
+	            </apex:pageBlockSection>            
+	            
+	        </apex:pageblockSection>
+		</apex:pageBlock>
+    
+    	<apex:pageBlock id="blkChildCase" title="Child Case" rendered="{!secCtype2}" > 
+ 
+	        <apex:pageBlockButtons >
+	            <apex:commandButton value="Back" action="{!Back}"/>
+	            <apex:commandButton value="Save" action="{!SaveChildCase}"/>
+	            <apex:commandButton value="Save & New Sub Case" action="{!CreateSubCase}"/>
+	            <apex:commandButton value="Cancel" action="{!CancelReq}"/>
+	            <apex:actionStatus id="displaystatus" startText="Please wait..." />
+	        </apex:pageBlockButtons>
+        
+	        <apex:pageBlockSection id="Case_Information" title="Case Information" columns="2" collapsible="false">
+	            
+	            <!--for Welcome call Oppty-->
+	            <apex:outputField label="Account Name" value="{!caseCreate.AccountId}" rendered="{!IsforOppty=false}"/>            
+	            <apex:outputField label="Opportunity Name" value="{!caseCreate.Opportunity__c}" rendered="{!IsforOppty}"/>
+	            <apex:outputtext label="Related Flat" value="{!flatNo}" rendered="{!IsforOppty}"/>
+	            <apex:outputField label="Priority" value="{!caseCreate.Priority}"/>
+	            <apex:outputField label="Interaction Mode" value="{!caseCreate.Interaction_Mode__c}"/>
+	            <apex:outputField label="Communication Type" value="{!caseCreate.Communication_Type__c}"/>
+	            <apex:outputField label="Nature of Request" value="{!caseCreate.Nature_of_Request__c}"/>
+	             <!-- Requirement No 12 Comments is mandatory-->
+	           <!-- <apex:inputField label="Comments" value="{!caseCreate.CM_Comments__c }" required="true"/>-->
+	            
+	            <apex:selectList label="Assigned to" value="{!ftQueueId}" required="true" size="1">
+	                <apex:selectOptions value="{!fQueue}"/>
+	            </apex:selectList><p/>
+	            
+	            <!--<apex:inputField label="Case Owner" value="{!caseCreate.OwnerId}"/>-->
+	            
+	            
+	            
+	        </apex:pageblockSection>
+        
+        	<apex:pageBlockSection id="Request_Details2" title="Request Details" columns="1" collapsible="false">
+            
+	            <apex:pageBlockSection columns="1">
+	                <apex:pageBlockSectionitem >
+	                
+	                    <apex:outputLabel value="Request for L1"></apex:outputLabel>
+	                    
+	                    <apex:actionRegion immediate="false"> 
+	                        <apex:inputField label="Request for L1" value="{!caseCreate.Request_for_L1__c}">
+	                            <apex:actionSupport event="onchange" action="{!OnL1Change}"  status="displaystatusL12" 
+	                            					oncomplete="clearl3(2);" reRender="Request_Details2"/>               
+	                        </apex:inputField>&nbsp;
+		                    <apex:actionStatus id="displaystatusL12" startText="Please wait..." />
+	                    </apex:actionRegion>
+	                
+	                </apex:pageBlockSectionitem>
+	            </apex:pageblockSection>
+            
+	            <apex:pageBlockSection columns="1">
+                   <apex:pageBlockSectionitem >
+                       <apex:outputLabel value="Request for L2"></apex:outputLabel>
+                       <apex:actionRegion >
+                           <apex:inputField value="{!caseCreate.Request_for_L2__c}" id="requestForL22" onchange="clearl3(2);">
+                           </apex:inputField>
+                           <script>
+                           	L2Id2 = '{!$Component.requestForL22}';
+                           </script>
+                           <apex:actionStatus id="displaystatusL22" startText="Please wait..." />
+                       </apex:actionRegion>                    
+                   </apex:pageBlockSectionitem> 
+	            </apex:pageBlockSection>
+            
+	            <apex:pageBlockSection id="secL3A2" rendered="{!isL3a}" columns="1"> 
+	                <apex:pageBlockSectionitem id="secItemL3A2">
+	                    <apex:outputLabel value="Request for L3(a)"></apex:outputLabel>
+	                    <apex:actionRegion immediate="false">
+	                        <apex:inputField value="{!caseCreate.Request_for_L3_a__c}" id="RequestForL3a2" onchange="sendCombinationA2()">
+	                        </apex:inputField>
+	                        <apex:actionStatus id="displaystatusA2" startText="Please wait..." />
+	                    </apex:actionRegion>
+	                </apex:pageBlockSectionitem>
+	              </apex:pageblockSection> 
+	            
+	            <apex:pageBlockSection id="secL3B2" rendered="{!isL3b}" columns="1">
+	                <apex:pageBlockSectionitem id="secItemL3B2">
+	                    <apex:outputLabel value="Request for L3(b)"></apex:outputLabel>
+	                    <apex:actionRegion immediate="false"> 
+	                        <apex:inputField value="{!caseCreate.Request_for_L3__c}" id="RequestForL3b2" onchange="sendCombinationB2()">   
+	                        </apex:inputField>
+	                        <apex:actionStatus id="displaystatusB2" startText="Please wait..." />
+	                    </apex:actionRegion>
+	                </apex:pageBlockSectionitem> 
+	            </apex:pageblockSection> 
+	            
+	        </apex:pageblockSection>
+        
+			<!-- Additional Values -->
+	       <apex:pageBlockSection id="Additional_Information2" title="Additional Informations" columns="1" collapsible="false">
+	            
+	            <apex:pageBlockSection rendered="{!isArranging_for_a_home_loan}" columns="2">
+	                <apex:inputField label="Cancel Init Arranging For Home Loan" value="{!caseCreate.Cancel_Init_Arranging_for_a_home_loan__c}"  required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isBeyond_CC_process_policy}" columns="2">
+	                <apex:inputField label="Cancel Init Beyond CC Process Policy" value="{!caseCreate.Cancel_Init_Beyond_CC_process_policy__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isCC_Process_deviation_required}" columns="2">
+	                <apex:inputField label="Cancel Init CC Process Deviation Reqd" value="{!caseCreate.Cancel_Init_CC_Process_deviation_require__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDemise_in_the_family}" columns="2">
+	                <apex:inputField label="Cancel Init For Demise in Family" value="{!caseCreate.Cancel_Init_Demise_In_Family__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDue_to_possession_timelines}" columns="2">
+	                <apex:inputField label="Cancel Init Possession Timelines" value="{!caseCreate.Cancel_Init_Due_to_possession_timelines__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isFinancial_constraints}" columns="2">
+	                <apex:inputField label="Cancel Init Financial constraints" value="{!caseCreate.Cancel_Init_Financial_constraints__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isFinds_competitor_property_attractive}" columns="2">
+	                <apex:inputField label="Cancel Init CompetitorPropertyAttractive" value="{!caseCreate.Cancel_Init_Finds_competitor_property_at__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isInventory_change_required}" columns="2">
+	                <apex:inputField label="Cancel Init Inventory Change Reqd" value="{!caseCreate.Cancel_Init_Inventory_change_required__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isLack_of_Approvals}" columns="2">
+	                <apex:inputField label="Cancel Init Lack of Approvals" value="{!caseCreate.Cancel_Init_Lack_of_Approvals__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isManagement_deviation_required}" columns="2">
+	                <apex:inputField label="Cancel Init Management Deviation Reqd" value="{!caseCreate.Cancel_Init_Management_deviation_require__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isMedical_reasons}" columns="2">
+	                <apex:inputField label="Cancel Init Medical reasons" value="{!caseCreate.Cancel_Init_Medical_reasons__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isMiscommunication_at_the_time_of_sale}" columns="2">
+	                <apex:inputField label="Cancel Init Miscommunication at Saletime" value="{!caseCreate.Cancel_Init_Miscomm_at_sale_time__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isPayment_deviation_required}" columns="2">
+	                <apex:inputField label="Cancel Init Payment Deviation Reqd" value="{!caseCreate.Cancel_Init_Payment_deviation_required__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isProduct_deviation_required}" columns="2">
+	                <apex:inputField label="Cancel Init Product Deviation Reqd" value="{!caseCreate.Cancel_Init_Product_deviation_required__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isProduct_issue_client_in_disagreement}" columns="2">
+	                <apex:inputField label="Cancel Init Product Issue" value="{!caseCreate.Cancel_Init_Product_issue_client_in_di__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            <apex:pageBlockSection rendered="{!isSelf_funding_needs_more_time}" columns="2">
+	                <apex:inputField label="Cancel Init Self Funding" value="{!caseCreate.Cancel_Init_Self_funding_needs_more_ti__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isApprovals}" columns="2">
+	                <apex:inputField label="Investigation required Approvals" value="{!caseCreate.Investigation_required_Approvals__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isInventory}" columns="2">
+	                <apex:inputField label="Investigation required Inventory" value="{!caseCreate.Investigation_required_Inventory__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isLoan_eligibility}" columns="2">
+	                <apex:inputField label="Investigation required Loan Eligibility" value="{!caseCreate.Investigation_required_Loan_eligibility__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isLocation_Product}" columns="2">
+	                <apex:inputField label="Investigation required Location/Product" value="{!caseCreate.Investigation_required_Location_Product__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOffers}" columns="2">
+	                <apex:inputField label="Investigation required Offers" value="{!caseCreate.Investigation_required_Offers__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPayment_schedule}" columns="2">
+	                <apex:inputField label="Investigation required Payment schedule" value="{!caseCreate.Investigation_required_Payment_schedule__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPossession_timelines}" columns="2">
+	                <apex:inputField label="Investigation Reqd Possession Timelines" value="{!caseCreate.Investigation_required_Possession_timeli__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPricing}" columns="2">
+	                <apex:inputField label="Investigation required Pricing" value="{!caseCreate.Investigation_required_Pricing__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isVehicle_slots}" columns="2">
+	                <apex:inputField label="Investigation required Vehicle slots" value="{!caseCreate.Investigation_required_Vehicle_slots__c}"/>
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isCSS_or_CES}" columns="2">
+	                <apex:inputField label="Customer Response CSS CES" value="{!caseCreate.Customer_response_CSS_or_CES__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isAny_other_product}" columns="2">
+	                <apex:inputField label="Customer Response Other Product" value="{!caseCreate.Customer_response_Any_other_product__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isAlready_onboard}" columns="2">
+	                <apex:inputField label="Customer response Already onboard" value="{!caseCreate.Customer_response_Already_onboard__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_will_pay_by_self}" columns="2">
+	                <apex:inputField label="Date of Payment" value="{!caseCreate.Date_of_payment_Client_will_pay_by_self__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_will_pay_by_self}" columns="2">
+	                <apex:inputField label="Amount Client will pay by self" value="{!caseCreate.Amount_Client_will_pay_by_self__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_will_pay_by_self}" columns="2">
+	                <apex:inputField label="Mode of Payment" value="{!caseCreate.Mode_of_payment_Client_will_pay_by_self__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDropped_at_site}" columns="2">
+	                <apex:inputField label="Site Location" value="{!caseCreate.Site_Location_Dropped_at_site__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDropped_at_site}" columns="2">
+	                <apex:inputField label="Amount for Dropped at Site" value="{!caseCreate.Amount_Dropped_at_site__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDropped_at_site}" columns="2">
+	                <apex:inputField label="Date for Dropped at Site" value="{!caseCreate.Date_Dropped_at_site__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isHanded_over_to_Channel_Partner}" columns="2">
+	                <apex:inputField label="Name of Channel Partner" value="{!caseCreate.Name_Handed_over_to_Channel_Partner__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isHanded_over_to_Channel_Partner}" columns="2">
+	                <apex:inputField label="Mobile no of Channel Partner" value="{!caseCreate.Mobile_no_Handed_over_to_Channel_Partner__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isHanded_over_to_Channel_Partner}" columns="2">
+	                <apex:inputField label="Amount Handed over to Channel Partner" value="{!caseCreate.Amount_Handed_over_to_Channel_Partner__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isHanded_over_to_Channel_Partner}" columns="2">
+	                <apex:inputField label="Date Handed over to Channel Partner" value="{!caseCreate.Date_Handed_over_to_Channel_Partner__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isIn_transit_courier}" columns="2">
+	                <apex:inputField label="AirwayBillNo / TrackingNo" value="{!caseCreate.AirwayBillNo_TrackingNo_in_transit_couri__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isIn_transit_courier}" columns="2">
+	                <apex:inputField label="PIT-Courier company name" value="{!caseCreate.PIT_Courier_company_name_In_transit_co__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isIn_transit_courier}" columns="2">
+	                <apex:inputField label="Date For in-transit Courier" value="{!caseCreate.Date_In_transit_courier__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isIn_transit_courier}" columns="2">
+	                <apex:inputField label="Amount For in-transit Courier" value="{!caseCreate.Amount_In_transit_courier__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOnline_payment_not_reflecting}" columns="2">
+	                <apex:inputField label="UTR Code" value="{!caseCreate.UTR_Code_Online_payment_not_reflecting__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOnline_payment_not_reflecting}" columns="2">
+	                <apex:inputField label="Amount for Online Payment Not Reflecting" value="{!caseCreate.Amount_Online_payment_not_reflecting__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOnline_payment_not_reflecting}" columns="2">
+	                <apex:inputField label="Date for Online Payment Not Reflecting" value="{!caseCreate.Date_Online_payment_not_reflecting__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isOnline_payment_not_reflecting}" columns="2">
+	                <apex:inputField label="BankName for OnlinePayment NotReflecting" value="{!caseCreate.Bank_Name_Online_payment_not_reflecting__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPayment_will_come_from_bank}" columns="2">
+	                <apex:inputField label="Bank Name Payment will come from bank" value="{!caseCreate.Bank_Name_Payment_will_come_from_bank__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPayment_will_come_from_bank}" columns="2">
+	                <apex:inputField label="Amount when Payment Will Come From Bank" value="{!caseCreate.Amount_Payment_will_come_from_bank__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPayment_will_come_from_bank}" columns="2">
+	                <apex:inputField label="Date Payment will come from bank" value="{!caseCreate.Date_Payment_will_come_from_bank__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPick_up_to_be_arranged}" columns="2">
+	                <apex:inputField label="Date for pick up to be arranged" value="{!caseCreate.Date_for_pick_up_to_be_arranged__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPick_up_to_be_arranged}" columns="2">
+	                <apex:inputField label="Amount for pick up to be arranged" value="{!caseCreate.Amount_for_pick_up_to_be_arranged__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isReasons}" columns="2">
+	                <apex:inputField label="Reasons" value="{!caseCreate.Reasons__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isDenial_of_site_visit}" columns="2">
+	                <apex:inputField label=" for site visit denial" value="{!caseCreate.Reason_for_site_visit_denial__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isPermitted_for_Site_Visit}" columns="2">
+	                <apex:inputField label="Date Permitted for Site Visit" value="{!caseCreate.Date_Permitted_for_Site_Visit__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isRescheduled_Site_Visit}" columns="2">
+	                <apex:inputField label="Date for Rescheduled Site Visit" value="{!caseCreate.Date_Rescheduled_Site_Visit__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isBanker_site_visit_allowed}" columns="2">
+	                <apex:inputField label="Date for Banker Site Visit" value="{!caseCreate.Date_Banker_site_visit_allowed__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isCustomer_contesting_a_clause}" columns="2">
+	                <apex:inputField label="Registration - Clause contest result" value="{!caseCreate.Registration_Clause_contest_result__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isConfirm_Time_place_of_Registration}" columns="2">
+	                <apex:inputField label="Date Confirm Registration" value="{!caseCreate.Date_Confirm_Time_place_of_Registratio__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isAccepted_Date_of_payment_Amount}" columns="2">
+	                <apex:inputField label="Accepted Date of Payment" value="{!caseCreate.Date_Accepted_Date_of_payment_Amount__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isAccepted_Date_of_payment_Amount}" columns="2">
+	                <apex:inputField label="Accepted Amount" value="{!caseCreate.Amount_Accepted_Date_of_payment_Amount__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isRejected_Reason}" columns="2">
+	                <apex:inputField label="Reasons" value="{!caseCreate.Reasons__c}" required="true"/> 
+	            </apex:pageBlockSection> 
+	            
+	            <apex:pageBlockSection rendered="{!isGiven_another_reference}" columns="2">
+	                <apex:inputField label="Name of Another Reference" value="{!caseCreate.Name_Given_another_reference__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isGiven_another_reference}" columns="2">
+	                <apex:inputField label="Mobile No of Another Reference" value="{!caseCreate.Mobile_No_Given_another_reference__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isCustomer_does_not_wish_to_be_contacted}" columns="2">
+	                <apex:inputField label="Customer Wishes To Be Contacted" value="{!caseCreate.Customer_Wishes_To_Be_Contacted__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWants_for_self_Date_of_visit_to_site}" columns="2">
+	                <apex:inputField label="Amount for Self Date of Site Visit" value="{!caseCreate.Amount_Wants_for_self_Date_of_site_visit__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWants_for_self_Date_of_visit_to_site}" columns="2">
+	                <apex:inputField label="Date for Self Date of Site Visit" value="{!caseCreate.Date_Wants_for_self_Date_of_visit_to_s__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWelcome_Call_reject}" columns="2">
+	                <apex:inputField label="Reasons for Rejection" value="{!caseCreate.Reasons__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isNo_Bank_loan_due_to_poor_eligibility}" columns="2">
+	                <apex:inputField label="Cancel Init loan not getting sanctioned" value="{!caseCreate.Cancel_Init_loan_not_getting_sanctioned__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_wants_to_read_draft_AFS_at_HO }" columns="2">
+	                <apex:inputField label="Date Read Draft Agreement at HO" value="{!caseCreate.Date_Customer_wants_to_read_draft_agreem__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isClient_wants_draft_agreement_to_be_sent}" columns="2">
+	                <apex:inputField label="Date Draft Agreement Sent" value="{!caseCreate.Date_Customer_wants_draft_agreement_sent__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isRequest_for_delay_in_registration}" columns="2">
+	                <apex:inputField label="Date Request for delay in Registration" value="{!caseCreate.Date_Request_for_delay_in_registration__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	              <!-- Deepak 1.1 Accepted date functionality-->
+	             <apex:pageBlockSection rendered="{!isaccepted_DateOfInvitation_Dateof_visit}" columns="2">
+	                <apex:inputField label="Date of visit" value="{!caseCreate.Date_Accepted_the_invitation_Date_of_vi__c}" required="true"/> 
+	            </apex:pageBlockSection> 
+	            
+	            <apex:pageBlockSection rendered="{!isRequest_for_rescheduling_of_registration}" columns="2">
+	                <apex:inputField label="Date Request for Rescheduing registration" value="{!caseCreate.Date_Request_for_rescheduling_the_regist__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	              <apex:pageBlockSection rendered="{!isReasonForNonPayment }" columns="2">
+	                <apex:inputField label="Reasons for Non-Payment" value="{!caseCreate.Reason_for_non_payment__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	             <apex:pageBlockSection rendered="{!isReasonForRejectionOfMyGainFacility }" columns="2">
+	                <apex:inputField label="Reason for Rejection" value="{!caseCreate.Reason_for_Rejection_of_MyGain_Facility__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWelcomeCallReject }" columns="2">
+	                <apex:inputField label="Reason for welcome call rejection" value="{!caseCreate.Reason_for_welcome_call_rejection__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	
+	            <apex:pageBlockSection rendered="{!isReasonForRejectionOfLoyaltyReferrals }" columns="2">
+	                <apex:inputField label="Reason for Rejection" value="{!caseCreate.Reason_for_Rejection_of_Loyalty_Referr__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	
+	
+	            <apex:pageBlockSection rendered="{!isReasonForRejectionOfCustomerCareMarketingEvent }" columns="2">
+	                <apex:inputField label="Reason for Rejection" value="{!caseCreate.Reason_for_Customer_Care_Marketing_Event__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	
+	            
+	            <apex:pageBlockSection rendered="{!isCustomer_asked_for_more_time_to_confirm}" columns="2">
+	                <apex:inputField label="Date" value="{!caseCreate.Date_Customer_has_asked_for_more_time_to__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <!--  1.1 Asmita  -->
+	            <apex:pageBlockSection rendered="{!isCall_Back_Later}" columns="2">
+	                <apex:inputField value="{!caseCreate.Date_of_Call__c}" required="true"/> 
+	            </apex:pageBlockSection>
+	            
+	            <apex:pageBlockSection rendered="{!isWants_More_Info_from_Sales}" columns="2">
+	                <apex:inputField value="{!caseCreate.SM_to_Call_Back__c}"/> 
+	            </apex:pageBlockSection>
+	            
+	            <!-- Siddharth 1.2 -->
+	            <apex:pageBlockSection rendered="{!isCampaign}" columns="2">
+	                <apex:inputField value="{!caseCreate.Campaign__c}" required="true"/> 
+	            </apex:pageBlockSection>            
+	            
+	        </apex:pageBlockSection>
+	    </apex:pageBlock>
+	</apex:form>
+	<script>
+	var myTextField = document.getElementById('{!$Component.pageid.mainform.ptype}').value;
+	if(myTextField != 'Multiple Request'){
+	
+	}
+	</script> 
+</apex:page>

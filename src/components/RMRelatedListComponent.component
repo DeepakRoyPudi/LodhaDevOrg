@@ -1,0 +1,60 @@
+<!-- VisualForce Component for Related List for RM (Customer 360) page. 1. Opportunities 2. Notes Attachment
+ @Created by: Sudeep Dube
+ @Created Date: 10/march/2015
+ @Input Parameter: CRN No as String.
+ --------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+-->
+
+<apex:component >
+<apex:attribute name="Acc" type="Account" description="Account Record of the customer" />
+
+<!--------------Opportunities---------------->
+<div id="OpportunitiesID">
+<apex:relatedList list="Opportunities" subject="{!Acc.id}" />
+<a href="#relaListLinksID">
+<apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/GoUp.png')}" width="26" height="20" style="float:right"/>
+</a>
+</div>
+
+<!--------------Notes and Attachment ----------------->
+<div id="CombinedAttachmentsID">  
+<apex:relatedList subject="{!Acc.id}" list="CombinedAttachments" />
+<a href="#relaListLinksID">
+<apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/GoUp.png')}" width="26" height="20" style="float:right"/>
+</a>
+</div>  
+
+<!--------------Service Tax--------------->
+<div id="Service_Tax_Details__rID"> 
+   
+<apex:relatedList subject="{!Acc.id}" list="Service_Tax_Details__r"  />   
+<a href="#relaListLinksID">
+<apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/GoUp.png')}" width="26" height="20" style="float:right"/>
+</a>
+</div> 
+                                        
+<!-----------Activity History ----------------->
+<div id="ActivityHistoriesID"> 
+<apex:relatedList subject="{!Acc.id}" list="ActivityHistories" /> 
+<a href="#relaListLinksID">
+<apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/GoUp.png')}" width="26" height="20" style="float:right"/>
+</a>
+</div> 
+
+<!-------------My gain Statement------------->
+<div id="MygainStatementID"> 
+<apex:pageBlock >
+<apex:iframe src="/apex/MygaindetialView?mygainCRN={!Acc.CRN__c}" scrolling="true" height="500"  />   
+</apex:pageBlock>
+<a href="#relaListLinksID">
+<apex:image url="{!URLFOR($Resource.RMImages2, 'RMImages2/GoUp.png')}" width="26" height="20" style="float:right"/>
+</a>
+</div> 
+
+</apex:component>

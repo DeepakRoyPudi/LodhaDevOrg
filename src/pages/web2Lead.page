@@ -1,0 +1,2206 @@
+<apex:page standardController="Lead" extensions="Web2LeadExtension" title="Enquire With Us" showHeader="false" StandardStylesheets="false">
+
+<!--dependency : returl mustbe specified in the URL-->
+    <apex:includeScript value="{!URLFOR($Resource.jQuery)}"/>  
+    <apex:includeScript value="{!URLFOR($Resource.JQueryTestUI)}"/> 
+    <apex:stylesheet value="{!URLFOR($Resource.w2l, "innerCSS")}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.w2l, "lodha.css")}"/>
+
+    <style>
+        .errorText{
+         background-color: #e46c6d;
+       } 
+      
+         .tab_bg {
+          -webkit-border-radius: 3px;
+          border: none;
+         }
+       
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+          .tab_bg.tab_bg1{
+           border: 1px solid #ccc;
+          }
+        }
+        
+/** ENQUIRE BUTTON IMAGE **/
+.btnEnquire {border: 0; text-align: center; display: block;; background: url({!URLFOR($Resource.w2l, "images/enquire.jpg")}) left top no-repeat; height: 23px; width: 63px;}  
+    #processing_msg{
+    padding: 6px 0 6px 24px;
+    font-family: Arial,Tahoma,Verdana,Helvetica,Sans-serif; 
+    background: url({!$Resource.ajaxloader}) left center no-repeat;
+    display: none;
+    color: #9a9a9a;    
+    font-size: 12px;
+    text-align: left;
+  } 
+  #processing_msg_code{
+    padding: 6px 0 6px 24px;
+    font-family: Arial,Tahoma,Verdana,Helvetica,Sans-serif; 
+    background: url({!$Resource.ajaxloader}) left center no-repeat;
+    display: none;
+    color: #9a9a9a;    
+    font-size: 12px;
+    text-align: left;
+  }
+  
+  /** use only two images for input backgrounds **/
+.dropEnquire{background: none;padding-left: 0; padding-right: 0;}
+span.inputBG {background: url({!URLFOR($Resource.inputbg_left)}) left top no-repeat; display: inline-block; padding-left: 3px;}
+span.inputBG input{background: url({!URLFOR($Resource.inputbg_right)}) right top no-repeat;}
+span.inputBG input.mb{margin-left: 0;}
+span.inputBG input.phonecode{margin-right: 0;}
+
+
+ /** SUBMIT BUTTON **/
+a.lodha_submit_btn {border: 0; display: inline-block; margin: 0 auto; background: url({!$Resource.lbl_submit_btn_lbg}) left top no-repeat; padding-left: 7px; color: #ccc; font-size: 11px; font-family: Arial, Helvetica, Sans-serif;}
+a.lodha_submit_btn:hover{background: url({!$Resource.lbl_submit_btn_lbg_hvr}) left top no-repeat;}
+a.lodha_submit_btn span{border: 0; background: url({!$Resource.lbl_submit_btn_rbg}) right top no-repeat;display: inline-block; padding: 5px 10px 5px 5px;}
+a.lodha_submit_btn:hover span{background: url({!$Resource.lbl_submit_btn_rbg_hvr}) right top no-repeat; color: #f3f3f3;}
+#VerificationBlock{color: #999999; font-size: 12px;}
+.contactsEnquire{width: 170px;}
+    </style>
+    <script>
+
+        var j$=jQuery.noConflict(); 
+ 
+        j$(document).ready(function()
+        {
+           
+                                
+               /*
+                * Sarissa for IE-9 compatibility
+                */
+               
+               
+               if(Sarissa._SARISSA_IS_IE && parseFloat(navigator.appVersion.substring(navigator.appVersion.indexOf("MSIE")+5)) >=8)
+                     {    
+                          window.XMLSerializer = function(){};      
+                          window.XMLSerializer.prototype.serializeToString=function(oNode){return oNode.xml;}    
+                    
+                      }
+              
+
+            j$(function() 
+            {
+                
+                  j$("#dvAccommodationType").show();
+                if(j$(jq(tProjectType)).val()=="COMMERCIAL")
+                {
+                    j$("#dvAccommodationType").hide();
+                }      
+            });    
+            var ErrorMessage='';
+            
+            
+           
+                function isSpecialCharacter(s) {
+            
+                  var iChars = "!@#$%^&*()+=-_[]\\\';,/{}|\":<>?0123456789";
+                  var flag = false;
+                      for (var i = 0; i < s.length; i++)
+                      {
+                          if (iChars.indexOf(s.charAt(i)) != -1)
+                          {
+                            flag = true;
+                          }
+                      }
+                  return flag;
+                }
+            
+           function validateName()
+            {
+                              
+                j$("#uname_err").hide();
+                j$("#uname_err1").hide();
+                
+                if(j$(jq(tfirstName)).val().length==0)
+                {
+                    j$("#uname_err").show();
+                                return false;
+                }
+                
+                if(j$(jq(tfirstName)).val().length<=0|| j$(jq(tfirstName)).val().substr(0,1)==" "|| isSpecialCharacter(j$(jq(tfirstName)).val())||j$(jq(tfirstName)).val().substr(0,1)==".")
+                {                                       
+ 
+                              j$("#uname_err1").show();
+                                return false;                                            
+                }
+                else
+                {
+                    j$("#ErrorMessage").text("");
+                    return true;
+                }
+                return true;            
+            }
+            
+           
+            
+              
+            
+            function validateEmailID()
+            {          
+                j$("#emailid_err").hide();
+                j$("#emailid1_err").hide();    
+                if(j$(jq(temailID)).val().length<=0)
+                {                        
+                    
+                     j$("#emailid_err").show();          
+                    return false;
+                }
+                else
+                {
+                    var stremail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/).test(j$(jq(temailID)).val());
+                    if(stremail == false)
+                    {                        
+                       
+                        j$("#emailid1_err").show();    
+                        return false;
+                    }
+                }            
+                return true;
+            }
+            function validateCountry()
+            {
+                j$("#country_err").hide();
+                if(j$(jq(tCountryList)).val()=="None")
+                {
+                    
+                    j$("#country_err").show();
+                    return false;
+                }
+                return true;
+            }
+            function validateCity()
+            {
+                j$("#city_err1").hide();
+                j$("#state_err").hide();
+                if((j$(jq(tCountryList)).val()=="India" && j$(jq(tCity)).val()=="None"))
+                {
+                    
+                    j$("#city_err1").show();
+                    return false;
+                    
+                    
+                } 
+                
+                if((j$(jq(tCountryList)).val()=="United States" && j$(jq(tState)).val()=="None") && (j$(jq(trecvalue)).val()=="Residential") )
+                      {
+                    
+                    j$("#state_err").show();
+                    return false;
+                    
+                    
+                } 
+                return true;
+            }
+            
+              function isSpecialCharactercity(s) {
+            
+                  var iChars = "!@#$%^&*()+=-_[]\\\';,./{}|\":<>?0123456789";
+                  var flag = false;
+                      for (var i = 0; i < s.length; i++)
+                      {
+                          if (iChars.indexOf(s.charAt(i)) != -1)
+                          {
+                            flag = true;
+                          }
+                      }
+                  return flag;
+                }
+            
+            
+            
+            
+            
+            function validateCity_Text()
+            {
+                j$("#city_err").hide();
+                j$("#city_err2").hide();
+               
+                if(j$(jq(tCountryList)).val()!="India" && j$(jq(tCountryList)).val()!="United States" && (j$(jq(tCityText)).val().length==0) )
+                {
+                    
+                    j$("#city_err").show();
+                    return false;
+                } 
+                
+                if(j$(jq(tCountryList)).val()!="India" && j$(jq(tCountryList)).val()!="United States" && (j$(jq(tCityText)).val().length==0) && j$(jq(trecvalue)).val()!="Residential")
+                {
+                    
+                    j$("#city_err").show();
+                    return false;
+                } 
+                
+                if(j$(jq(tCountryList)).val()!="India" && j$(jq(tCountryList)).val()=="United States" && (j$(jq(tCityText)).val().length==0) && j$(jq(trecvalue)).val()!="Residential")
+                {
+                    
+                    j$("#city_err").show();
+                    return false;
+                } 
+                
+                if(j$(jq(tCountryList)).val()!="India"&&(isSpecialCharactercity(j$(jq(tCityText)).val())||j$(jq(tCityText)).val().substr(0,1)==" "))
+                {
+                    
+                    j$("#city_err2").show();
+                    return false;
+                }
+                return true;
+            }
+            
+            
+            /*
+             *  Validate Choice of residence
+             *
+             */
+            
+            
+            function validatechoiceofresidence()
+            
+                {
+                    j$("#Accommodation_err").hide();
+                
+                
+                    var choiceofRec=document.getElementById("{!$Component.enq_frm.pageblock1.Mandatorychoiceofresidence}");
+                    
+                       
+                     if(choiceofRec.value==1 && j$(jq(tchoiceofresidence)).val()=='')                    
+                     {
+                         j$("#Accommodation_err").show();
+                         return false;
+                     }
+                    return true;
+                }
+        
+            
+            /*
+             *  Validate Designation
+             *
+             */
+             
+             function validatedesignation()
+             
+             {
+                 j$("#Designation_err").hide();
+                 j$("#Designation_err1").hide();
+                  var objCompanyDesignation=document.getElementById("{!$Component.enq_frm.pageblock1.DesCompanyMandatory}");
+                 
+                   if(objCompanyDesignation.value==1)
+                   {
+                       if(j$(jq(tDesignation)).val().length==0)
+                         {                     
+                             j$("#Designation_err").show();
+                             return false;
+                         }
+                         if(j$(jq(tDesignation)).val().substr(0,1)==" ")
+                         {
+                              j$("#Designation_err1").show();
+                               return false;
+                         }
+                   } 
+                         return true;
+             }
+            
+             function validatecompany()
+             
+             {
+                    j$("#CompanyName_err").hide();
+                    j$("#CompanyName_err1").hide();
+                    var objCompanyDesignation=document.getElementById("{!$Component.enq_frm.pageblock1.DesCompanyMandatory}");
+                 
+                   if(objCompanyDesignation.value==1)
+                   {
+                       if(j$(jq(tCompanyName)).val().length==0)
+                         {                     
+                             j$("#CompanyName_err").show();
+                             return false;
+                         }
+                         
+                         if(j$(jq(tCompanyName)).val().substr(0,1)==" ")
+                         {
+                             j$("#CompanyName_err1").show();
+                             return false;
+                         }
+                   }
+                         return true;
+             }
+            
+           function isSpecialCharactermobile(s) {
+            
+                  var iChars = "!@#$%^&*()+=-_[]\\\';,./{}|\":<>?";
+                  var flag = false;
+                      for (var i = 0; i < s.length; i++)
+                      {
+                          if (iChars.indexOf(s.charAt(i)) != -1)
+                          {
+                            flag = true;
+                          }
+                      }
+                  return flag;
+                }
+            
+            function validateMobileLandLine()
+            {  
+                 j$("#mobile_err").hide();
+                 j$("#mobile_zero").hide();
+                 j$("#mobile_max").hide();
+                 j$("#mobile_err1").hide();
+                if(j$(jq(tMobileNumber)).val().length<=0)
+                {
+                    j$("#mobile_err").show();
+                   
+                    return false;
+                }
+                if (j$(jq(tMobileNumber)).val().substr(0, 1) == "0")
+                {
+                    
+                    j$("#mobile_zero").show();
+                    return false;
+                }
+                
+                if(isSpecialCharactermobile(j$(jq(tMobileNumber)).val())||isNaN(j$(jq(tMobileNumber)).val())||j$(jq(tMobileNumber)).val().substr(0, 1) == " "){
+               
+                        j$("#mobile_err1").show();
+                       return false;
+                   } 
+                if(j$(jq(tCountryList)).val()=="India")
+                {
+
+                    if (j$(jq(tMobileNumber)).val().length!=10)
+                    {
+                        
+                        j$("#mobile_max").show();
+                        return false;
+                    }
+                }   
+                                                                        
+                return true;            
+                
+            }
+         
+            
+           function validateLandLine()
+            {
+                    j$("#landline_err").hide();
+                    j$("#landline_err1").hide();
+                    j$("#landline_code_err").hide();
+                    j$("#landlinenull_err").hide();
+                    j$("#stdnull_err").hide();
+                     j$("#std_not_zero").hide();
+                     
+            
+                if(j$(jq(tPhoneNumber1)).val().length>0||j$(jq(tPhoneNumber2)).val().length>0)
+                {
+                
+                   if(j$(jq(tCountryList)).val()=="India")
+                     {  
+                                  
+                     if(j$(jq(tPhoneNumber1)).val().length>0)
+                     {
+           
+                          if (j$(jq(tPhoneNumber1)).val().substr(0, 1) != "0")
+                            {
+                               
+                                j$("#std_not_zero").show();
+                                return false;
+                               
+                            }if(isNaN(j$(jq(tPhoneNumber1)).val())||j$(jq(tPhoneNumber1)).val().substr(0, 1) == " ")
+                            {
+                               
+                                j$("#landline_code_err").show();
+                                return false;
+                            }
+                    
+                     }
+                     if(j$(jq(tPhoneNumber1)).val().length>0 && j$(jq(tPhoneNumber2)).val().length==0)
+                     {
+                            
+                          j$("#landlinenull_err").show();
+                           return false;
+                      }
+                      if(j$(jq(tPhoneNumber2)).val().length>0 && (isNaN(j$(jq(tPhoneNumber2)).val())||(j$(jq(tPhoneNumber2)).val().substr(0, 1) == " ")||(j$(jq(tPhoneNumber2)).val().substr(0, 1) ==0)))                      
+                      {
+                          
+                           j$("#landline_err1").show();
+                           return false;
+                      }
+                      if(j$(jq(tPhoneNumber2)).val().length>0 && j$(jq(tPhoneNumber1)).val().length==0)
+                      {
+                          
+                           j$("#stdnull_err").show();
+                           return false;
+                      }
+                     if(j$(jq(tPhoneNumber1)).val().length+j$(jq(tPhoneNumber2)).val().length!=11)
+                            {
+                           
+                            j$("#landline_err1").show();
+                            return false;
+                            }
+                            
+                         return true;
+                                          
+                     }  
+                           
+                     else 
+                     {                     
+                             
+                     if(j$(jq(tPhoneNumber1)).val().length>0)
+                     {
+                         
+                         if(j$(jq(tPhoneNumber1)).val().substr(0, 1) == "0"){
+                       
+                              j$("#landline_err").show();
+                                 return false;
+                             }
+                             
+                             if(isNaN(j$(jq(tPhoneNumber1)).val())||j$(jq(tPhoneNumber1)).val().substr(0, 1) == " ")
+                             {
+                                  j$("#landline_code_err").show();
+                                   return false;
+                             }
+                     }
+                     if(j$(jq(tPhoneNumber1)).val().length>0 && j$(jq(tPhoneNumber2)).val().length==0)
+                     {
+                        
+                          j$("#landlinenull_err").show();
+                           return false;
+                      }
+                      if(j$(jq(tPhoneNumber2)).val().length>0 && (isNaN(j$(jq(tPhoneNumber2)).val())||(j$(jq(tPhoneNumber2)).val().substr(0, 1) == " ")||(j$(jq(tPhoneNumber2)).val().substr(0, 1) ==0)))
+                      
+                      {
+                           j$("#landline_err1").show();
+                           return false;
+                      }
+                      if(j$(jq(tPhoneNumber2)).val().length>0 && j$(jq(tPhoneNumber1)).val().length==0)
+                      {
+                           j$("#stdnull_err").show();
+                           return false;
+                      }
+                         return true;                             
+                     
+                     }
+                       return true;  
+                     }
+                     
+                     
+                return true;
+            }
+            
+            /*
+             *  validateLandLine NON India
+             */
+            
+       
+   
+            
+             function IsNumeric(keyCode,e)
+                    {
+                      // alert(keyCode);
+                       if(keyCode==9)
+                       {
+                       }
+                       else
+                       {
+                                e.preventDefault ? e.preventDefault() : e.returnValue = false;
+                                return false;  
+                       }              
+                    } 
+                    
+                   
+                    
+            function RestrictPeriod(keyCode,e)
+                    {
+                      
+                       if(keyCode!=190)
+                       {
+                       }
+                       else
+                       {
+                                e.preventDefault ? e.preventDefault() : e.returnValue = false;
+                                return false;  
+                       }              
+                    }
+                    
+                    j$(jq(tMobileNumber)).keydown(function(event) {
+                          RestrictPeriod(event.keyCode,event);   
+                    });
+                    
+                    j$(jq(tPhoneNumber1)).keydown(function(event) {
+                          RestrictPeriod(event.keyCode,event);   
+                    });
+                    j$(jq(tPhoneNumber2)).keydown(function(event) {
+                          RestrictPeriod(event.keyCode,event);   
+                    });
+                    
+                    
+                    
+                       j$(jq(tMobileNumber)).keyup(function(){
+               
+                            j$.fn.checkNumber(j$(this)[0]);
+                 
+                            
+                        });
+                        
+                        j$(jq(tMobileNumber)).keydown(function(){
+                            j$.fn.checkNumber(j$(this)[0]);
+                        });
+                        
+                        // Preventing user from entering special characters
+                       j$.fn.checkNumber = function(val){
+                            function CalcKeyCode(aChar) {
+                                  var character = aChar.substring(0,1);
+                                  var code = aChar.charCodeAt(0);
+                                  return code;
+                            }
+                
+                
+                              var strPass = val.value;
+                              var strLength = strPass.length;
+                              var lchar = val.value.charAt((strLength) - 1);
+                              var cCode = CalcKeyCode(lchar);
+                              if (cCode < 48 || cCode > 57 ) {
+                                var myNumber = val.value.substring(0, (strLength) - 1);
+                                val.value = myNumber;
+                              }
+                              return false;
+                
+                
+                        }
+                        
+                        
+                        j$(jq(tPhoneNumber1)).keyup(function(){
+               
+                            j$.fn.checkNumber(j$(this)[0]);
+                 
+                            
+                        });
+                        
+                        j$(jq(tPhoneNumber1)).keydown(function(){
+                            j$.fn.checkNumber(j$(this)[0]);
+                        });
+                        
+                        // Preventing user from entering special characters
+                       j$.fn.checkNumber = function(val){
+                            function CalcKeyCode(aChar) {
+                                  var character = aChar.substring(0,1);
+                                  var code = aChar.charCodeAt(0);
+                                  return code;
+                            }
+                
+                
+                              var strPass = val.value;
+                              var strLength = strPass.length;
+                              var lchar = val.value.charAt((strLength) - 1);
+                              var cCode = CalcKeyCode(lchar);
+                              if (cCode < 48 || cCode > 57 ) {
+                                var myNumber = val.value.substring(0, (strLength) - 1);
+                                val.value = myNumber;
+                              }
+                              return false;
+                
+                
+                        }
+                        
+                        
+                        j$(jq(tPhoneNumber2)).keyup(function(){
+               
+                            j$.fn.checkNumber(j$(this)[0]);
+                 
+                            
+                        });
+                        
+                        j$(jq(tPhoneNumber2)).keydown(function(){
+                            j$.fn.checkNumber(j$(this)[0]);
+                        });
+                        
+                        // Preventing user from entering special characters
+                       j$.fn.checkNumber = function(val){
+                            function CalcKeyCode(aChar) {
+                                  var character = aChar.substring(0,1);
+                                  var code = aChar.charCodeAt(0);
+                                  return code;
+                            }
+                
+                
+                              var strPass = val.value;
+                              var strLength = strPass.length;
+                              var lchar = val.value.charAt((strLength) - 1);
+                              var cCode = CalcKeyCode(lchar);
+                              if (cCode < 48 || cCode > 57 ) {
+                                var myNumber = val.value.substring(0, (strLength) - 1);
+                                val.value = myNumber;
+                              }
+                              return false;
+                
+                
+                        }
+           
+               j$(jq(tCountryMobileCode)).keydown(function(event) {
+                          IsNumeric(event.keyCode,event);   
+                    });
+               j$(jq(tCountryPhoneCode)).keydown(function(event) {
+                      IsNumeric(event.keyCode,event); 
+                    });
+                
+                function getRandomNumber(){
+                    return Math.floor(Math.random() * 9000) + 1000;
+                }
+                    
+                  function SendvarificationSMS(mobilenumber,varcode){
+               
+                      var msgurl= null;                      
+                                                                                            
+                      msgurl="http://203.122.58.130:8080/OTP_ACL_Web/OtpRequestListener?enterpriseid=lodha&subEnterpriseid=lodha&pusheid=lodha&pushepwd=lodha&msisdn=91"+mobilenumber+"&sender=LODHAD&msgtext=Dear Customer, Please enter the verification code "+ varcode +" to submit your web enquiry";
+                           try{
+                            j$.ajax({
+                                type: "POST",                               
+                                url:msgurl,                                                                
+                                dataType: "jsonp",
+                                data: {},
+                                success: function(data) {
+                                        
+                                    }
+                            }); 
+                            }catch(err){                            
+                            }                                                   
+                       
+                        return true;
+                        
+                    } 
+                    
+                  j$("#verify_msg").hide();
+               j$("#GenCodeLink").click(function(){                       
+                        if(validateMobileLandLine()){
+                            varCode =getRandomNumber();
+                            j$(jq(tConfCode)).val('');
+                            
+                            var mobilenumber=j$(jq(tMobileNumber)).val();                            
+                            SendvarificationSMS(mobilenumber,varCode);
+                            
+                            j$('#verificationdiv input').css('background','#ffc').focus();
+                            j$("#verify_msg").show();
+                            
+                            j$('a.lodha_submit_btn').css('display','none');
+                            
+                            j$('#processing_msg_code').css('display','inline-block');
+                            setTimeout("j$('#processing_msg_code').css('display','none');j$('a.lodha_submit_btn').css('display','inline-block');",5000);
+                            
+                            
+                        }else
+                        {
+                            //alert(j$("#mobile_max").text());
+                        }
+                     return false;
+                    });   
+                 function validateConfCode(){
+            
+                         j$("#mobile_empty_err").hide();
+                         j$("#confirmationcode_err").hide();
+                        
+                        if((j$(jq(tCountryList)).val()=="India")&&j$(jq(tallowmobileverification)).val()=="true"){
+                        
+                          if((j$(jq(tCountryList)).val()=="India")&&(!validateMobileLandLine()||j$(jq(tConfCode)).val().length==0))
+                            {                              
+                                 j$("#mobile_empty_err").show();
+                                 return false;    
+                             }
+                           else if(j$(jq(tCountryList)).val()=="India" && validateMobileLandLine() && j$(jq(tConfCode)).val()!= varCode)
+                            {
+                                
+                                 j$("#confirmationcode_err").show();
+                                 return false;    
+                             }
+                           }
+                             
+                                 return true;                                                                
+                    }
+                 
+               
+                    
+            
+                       
+                j$('#SubmitLeadLink').click(function(){  
+                    //j$("#ErrorMessage").text("");
+                    
+                                      if(validateName()  & validateEmailID()& validateCountry() & validateCity() & validatechoiceofresidence() & validatedesignation()&validatecompany() 
+                    & validateMobileLandLine() & validateLandLine()&validateCity_Text()&validateConfCode())
+                    {
+                        // show processing image
+                       j$('a.btnEnquire').css('display','none');
+                       j$('#processing_msg').css('display','block');
+                                                                             
+                        valid =true;
+                        submitLead();
+                        return true;
+                    }
+                    else
+                    {
+                       
+                        return false;
+                    }
+                   
+                    
+            });  
+            
+        });
+
+        
+        // populate country codes ;default to India
+
+        function getCountryValue()
+        {        
+            var countrycode="";
+            var InitialCountryName = document.getElementById("{!$Component.enq_frm.pageblock1.countrylist}").value;
+            var ParameterCountryName  =document.getElementById("{!$Component.enq_frm.pageblock1.CompanyName1}").value;
+            var CheckCode=document.getElementById("{!$Component.enq_frm.pageblock1.CheckCode}").value;     
+            if((InitialCountryName != ParameterCountryName) && CheckCode=='0')
+            {              
+                
+                var countryname = document.getElementById("{!$Component.enq_frm.pageblock1.countrylist}").value="India";
+                document.getElementById("{!$Component.enq_frm.pageblock1.CheckCode}").value='1';
+            }
+            else if((InitialCountryName == ParameterCountryName)&& CheckCode=='0')
+            {            
+                
+                var countryname = document.getElementById("{!$Component.enq_frm.pageblock1.countrylist}").value;
+                document.getElementById("{!$Component.enq_frm.pageblock1.CheckCode}").value='1';
+            }
+            else
+            {
+                var countryname = document.getElementById("{!$Component.enq_frm.pageblock1.countrylist}").value;
+            }
+
+            if(countryname == "India" && j$(jq(tallowmobileverification)).val()=="true")
+            {
+            document.getElementById("{!$Component.enq_frm.pageblock1.div_city_dropdown}").style.display = "inline-block";
+            document.getElementById("{!$Component.enq_frm.pageblock1.statelist_id}").style.display = "none";
+            document.getElementById("{!$Component.enq_frm.pageblock1.div_city}").style.display = "none"; 
+            document.getElementById("VerificationBlock").style.display = "block";
+            document.getElementById("verificationdiv").style.display = "inline-block";
+            
+            }else if(countryname == "India" && j$(jq(tallowmobileverification)).val()=="false")
+            {
+                document.getElementById("{!$Component.enq_frm.pageblock1.div_city_dropdown}").style.display = "inline-block";
+                document.getElementById("{!$Component.enq_frm.pageblock1.statelist_id}").style.display = "none";
+                document.getElementById("{!$Component.enq_frm.pageblock1.div_city}").style.display = "none"; 
+                document.getElementById("VerificationBlock").style.display = "none";
+                document.getElementById("verificationdiv").style.display = "none";
+            }                        
+            else if(countryname == "United States" && j$(jq(trecvalue)).val()=="Residential")
+            {
+            document.getElementById("{!$Component.enq_frm.pageblock1.div_city_dropdown}").style.display = "none";
+            document.getElementById("{!$Component.enq_frm.pageblock1.statelist_id}").style.display = "inline-block";
+            document.getElementById("{!$Component.enq_frm.pageblock1.div_city}").style.display = "none"; 
+            document.getElementById("VerificationBlock").style.display = "none";
+            document.getElementById("verificationdiv").style.display = "none";
+            
+            }      
+            else {
+            document.getElementById("{!$Component.enq_frm.pageblock1.div_city_dropdown}").style.display = "none";
+            document.getElementById("{!$Component.enq_frm.pageblock1.statelist_id}").style.display = "none";
+            document.getElementById("{!$Component.enq_frm.pageblock1.div_city}").style.display = "inline-block";            
+            document.getElementById("VerificationBlock").style.display = "none";
+            document.getElementById("verificationdiv").style.display = "none";
+            }
+            
+            
+            if(countryname=="United States")countrycode = "001";
+            if(countryname=="Albania")countrycode = "00355";
+            if(countryname=="Algeria")countrycode = "00213";
+            if(countryname=="Angola")countrycode = "00244";
+            if(countryname=="Argentina")countrycode = "0054";
+            if(countryname=="Armenia")countrycode = "00374";
+            if(countryname=="Australia")countrycode = "0061";
+            if(countryname=="Austria")countrycode = "0043";
+            if(countryname=="Azerbaijan")countrycode = "00994";
+            if(countryname=="Bahamas")countrycode = "001242";
+            if(countryname=="Bahrain")countrycode = "001973";
+            if(countryname=="Bangladesh")countrycode = "00880";
+            if(countryname=="Belarus")countrycode = "00375";
+            if(countryname=="Belgium")countrycode = "0032";
+            if(countryname=="Benin")countrycode = "00229";
+            if(countryname=="Bermuda")countrycode = "001441";
+            if(countryname=="Bolivia")countrycode = "00591";
+            if(countryname=="Bosnia and Herzegovina")countrycode = "00387";
+            if(countryname=="Botswana")countrycode = "00267";
+            if(countryname=="Brazil")countrycode = "0055";
+            if(countryname=="Bulgaria")countrycode = "00359";
+            if(countryname=="Canada")countrycode = "001";
+            if(countryname=="Chile")countrycode = "0056";
+            if(countryname=="China")countrycode = "0086";
+            if(countryname=="Colombia")countrycode = "0057";
+            if(countryname=="Cook Islands")countrycode = "00682";
+            if(countryname=="Costa Rica")countrycode = "00506";
+            if(countryname=="Croatia")countrycode = "00385";
+            if(countryname=="Cyprus")countrycode = "00357";
+            if(countryname=="Czech Republic")countrycode = "00420";
+            if(countryname=="Denmark")countrycode = "0045";
+            if(countryname=="Dominican Republic")countrycode = "001809";
+            if(countryname=="Ecuador")countrycode = "00593";
+            if(countryname=="Egypt")countrycode = "0020";
+            if(countryname=="El Salvador")countrycode = "00503";
+            if(countryname=="Equatorial Guinea")countrycode = "00240";
+            if(countryname=="Estonia")countrycode = "00372";
+            if(countryname=="Ethiopia")countrycode = "00251";
+            if(countryname=="Faroe Islands")countrycode = "00298";
+            if(countryname=="Finland")countrycode = "00358";
+            if(countryname=="France")countrycode = "0033";
+            if(countryname=="French Polynesia")countrycode = "00689";
+            if(countryname=="Gabon")countrycode = "00241";
+            if(countryname=="Gambia")countrycode = "00220";
+            if(countryname=="Georgia")countrycode = "00995";
+            if(countryname=="Germany")countrycode = "0049";
+            if(countryname=="Ghana")countrycode = "00233";
+            if(countryname=="Gibraltar")countrycode = "00350";
+            if(countryname=="Greece")countrycode = "0030";
+            if(countryname=="Greenland")countrycode = "00299";
+            if(countryname=="Guatemala")countrycode = "00502";
+            if(countryname=="Honduras")countrycode = "00504";
+            if(countryname=="Hong Kong")countrycode = "00852";
+            if(countryname=="Hungary")countrycode = "0036";
+            if(countryname=="Iceland")countrycode = "00354";
+            if(countryname=="India")countrycode = "0091";
+            if(countryname=="Indonesia")countrycode = "0062";
+            if(countryname=="Iran")countrycode = "0098";
+            if(countryname=="Iraq")countrycode = "00964";
+            if(countryname=="Ireland")countrycode = "00353";
+            if(countryname=="Israel")countrycode = "00972";
+            if(countryname=="Italy")countrycode = "0039";
+            if(countryname=="Japan")countrycode = "0081";
+            if(countryname=="Jordan")countrycode = "00962";
+            if(countryname=="Kazakhstan")countrycode = "007";
+            if(countryname=="Kenya")countrycode = "00254";
+            if(countryname=="South Korea")countrycode = "00182";
+            if(countryname=="North Korea")countrycode = "00850";
+            if(countryname=="Kuwait")countrycode = "00965";
+            if(countryname=="Kyrgyzstan")countrycode = "00965";
+            if(countryname=="Latvia")countrycode = "00371";
+            if(countryname=="Lebanon")countrycode = "00961";
+            if(countryname=="Liechtenstein")countrycode = "00423";
+            if(countryname=="Lithuania")countrycode = "00370";
+            if(countryname=="Luxembourg")countrycode = "00352";
+            if(countryname=="Macedonia")countrycode = "00389";
+            if(countryname=="Madagascar")countrycode = "00261";
+            if(countryname=="Malaysia")countrycode = "0060";
+            if(countryname=="Malta")countrycode = "00353";
+            if(countryname=="Mauritius")countrycode = "0020230";
+            if(countryname=="Mexico")countrycode = "0052";
+            if(countryname=="Moldova")countrycode = "00373";
+            if(countryname=="Morocco")countrycode = "00212";
+            if(countryname=="Namibia")countrycode = "00264";
+            if(countryname=="Nepal")countrycode = "00977";
+            if(countryname=="Netherlands")countrycode = "0031";
+            if(countryname=="Netherlands Antilles")countrycode = "00599";
+            if(countryname=="New Zealand")countrycode = "0064";
+            if(countryname=="Nicaragua")countrycode = "00505";
+            if(countryname=="Nigeria")countrycode = "00234";
+            if(countryname=="Norway")countrycode = "0047";
+            if(countryname=="Pakistan")countrycode = "0092";
+            if(countryname=="Panama")countrycode = "00507";
+            if(countryname=="Peru")countrycode = "0051";
+            if(countryname=="Philippines")countrycode = "0063";
+            if(countryname=="Poland")countrycode = "0048";
+            if(countryname=="Portugal")countrycode = "00351";
+            if(countryname=="Qatar")countrycode = "00974";
+            if(countryname=="Romania")countrycode = "0040";
+            if(countryname=="Russian Federation")countrycode = "007";
+            if(countryname=="Saudi Arabia")countrycode = "00966";
+            if(countryname=="Singapore")countrycode = "0065";
+            if(countryname=="Slovak Republic")countrycode = "00421";
+            if(countryname=="Slovenia")countrycode = "00386";
+            if(countryname=="South Africa")countrycode = "0027";
+            if(countryname=="Spain")countrycode = "0034";
+            if(countryname=="Sri Lanka")countrycode = "0094";
+            if(countryname=="Sultanate of Oman")countrycode = "00968";
+            if(countryname=="Sweden")countrycode = "0046";
+            if(countryname=="Switzerland")countrycode = "0041";
+            if(countryname=="Syria")countrycode = "00963";
+            if(countryname=="Taiwan")countrycode = "00886";
+            if(countryname=="Tanzania")countrycode = "00256";
+            if(countryname=="Thailand")countrycode = "0066";
+            if(countryname=="Timor-Leste")countrycode = "00670";
+            if(countryname=="Togo")countrycode = "00228";
+            if(countryname=="Trinidad and Tobago")countrycode = "001868";
+            if(countryname=="Tunisia")countrycode = "00216";
+            if(countryname=="Turkey")countrycode = "0090";
+            if(countryname=="Uganda")countrycode = "00256";
+            if(countryname=="Ukraine")countrycode = "00380";
+            if(countryname=="United Arab Emirates")countrycode = "00971";
+            if(countryname=="United Kingdom")countrycode = "0044";
+            if(countryname=="Uruguay")countrycode = "00598";
+            if(countryname=="Uzbekistan")countrycode = "00998";
+            if(countryname=="Venezuela")countrycode = "0058";
+            if(countryname=="Viet Nam")countrycode = "0084";
+            if(countryname=="Yemen")countrycode = "00967";
+            if(countryname=="Yugoslavia")countrycode = "00967";
+            if(countryname=="Zimbabwe")countrycode = "00263";          
+            if(countryname=="American Samoa")countrycode = "001684";
+            if(countryname=="Andorra")countrycode = "00376";
+            if(countryname=="Anguilla")countrycode = "001264";
+            if(countryname=="Antarctica")countrycode = "00672";
+            if(countryname=="Antigua and Barbuda")countrycode = "001268";
+            if(countryname=="Aruba")countrycode = "00297";
+            if(countryname=="Barbados")countrycode = "001246";
+            if(countryname=="Belize")countrycode = "00501";
+            if(countryname=="Bhutan")countrycode = "00975";
+            if(countryname=="Bouvet Island")countrycode = "0047";
+            if(countryname=="British Indian Ocean Territory")countrycode = "001284";
+            if(countryname=="British Virgin Islands")countrycode = "001284";
+            if(countryname=="Brunei")countrycode = "00673";
+            if(countryname=="Burkina Faso")countrycode = "00226";
+            if(countryname=="Burundi")countrycode = "00257";
+            if(countryname=="Cambodia")countrycode = "00855";
+            if(countryname=="Cameroon")countrycode = "00238";
+            if(countryname=="Cape Verde")countrycode = "00238";
+            if(countryname=="Cayman Islands")countrycode = "001";
+            if(countryname=="Central African Republic")countrycode = "00236";
+            if(countryname=="Chad")countrycode = "00235";
+            if(countryname=="Christmas Island")countrycode = "006189";
+            if(countryname=="Cocos Islands")countrycode = "001161";
+            if(countryname=="Comoros")countrycode = "00269";
+            if(countryname=="Congo")countrycode = "00242";
+            if(countryname=="Cuba")countrycode = "0053";
+            if(countryname=="Djibouti")countrycode = "00253";
+            if(countryname=="Dominica")countrycode = "001767";
+            if(countryname=="Eritrea")countrycode = "00291";
+            if(countryname=="Falkland Islands")countrycode = "00500";
+            if(countryname=="Fiji")countrycode = "00679";
+            if(countryname=="French Guiana")countrycode = "00594";
+            if(countryname=="French Southern Territories")countrycode = "00689";
+            if(countryname=="Grenada")countrycode = "001473";
+            if(countryname=="Guadeloupe")countrycode = "00590";
+            if(countryname=="Guam")countrycode = "001671";
+            if(countryname=="Guinea")countrycode = "00224";
+            if(countryname=="Guinea-Bissau")countrycode = "00245";
+            if(countryname=="Guyana")countrycode = "00592";
+            if(countryname=="Haiti")countrycode = "00509";
+            if(countryname=="Heard and McDonald Islands")countrycode = "00509";
+            if(countryname=="Afghanistan")countrycode = "0093";
+            if(countryname=="Ivory Coast")countrycode = "00225";
+            if(countryname=="Jamaica")countrycode = "001876";
+            if(countryname=="Kiribati")countrycode = "00686";
+            if(countryname=="Laos")countrycode = "00856";
+            if(countryname=="Lesotho")countrycode = "00266";
+            if(countryname=="Liberia")countrycode = "00231";
+            if(countryname=="Libya")countrycode = "00218";
+            if(countryname=="Macau")countrycode = "00853";
+            if(countryname=="Malawi")countrycode = "00265";
+            if(countryname=="Maldives")countrycode = "00960";
+            if(countryname=="Mali")countrycode = "00223";
+            if(countryname=="Marshall Islands")countrycode = "00692";
+            if(countryname=="Martinique")countrycode = "00596";
+            if(countryname=="Mauritania")countrycode = "00222";
+            if(countryname=="Mayotte")countrycode = "00269";
+            if(countryname=="Micronesia")countrycode = "00691";
+            if(countryname=="Monaco")countrycode = "00377";
+            if(countryname=="Mongolia")countrycode = "00976";
+            if(countryname=="Montserrat")countrycode = "001664";
+            if(countryname=="Mozambique")countrycode = "00258";
+            if(countryname=="Myanmar")countrycode = "0095";
+            if(countryname=="Nauru")countrycode = "00674";
+            if(countryname=="New Caledonia")countrycode = "00687";
+            if(countryname=="Niger")countrycode = "00227";
+            if(countryname=="Niue")countrycode = "00683";
+            if(countryname=="Norfolk Island")countrycode = "006723";
+            if(countryname=="Northern Mariana Islands")countrycode = "001";
+            if(countryname=="Palau")countrycode = "00680";
+            if(countryname=="Papua New Guinea")countrycode = "00675";
+            if(countryname=="Paraguay")countrycode = "002595";
+            if(countryname=="Pitcairn Island")countrycode = "0063";
+            if(countryname=="Puerto Rico")countrycode = "001939";
+            if(countryname=="Reunion")countrycode = "00262";
+            if(countryname=="Rwanda")countrycode = "00250";
+            if(countryname=="S. Georgia and S. Sandwich Isls.")countrycode = "007";
+            if(countryname=="Saint Kitts and Nevis")countrycode = "001869";
+            if(countryname=="Saint Lucia")countrycode = "001758";
+            if(countryname=="Saint Vincent and The Grenadines")countrycode = "001";
+            if(countryname=="Samoa")countrycode = "00685";
+            if(countryname=="San Marino")countrycode = "00378";
+            if(countryname=="Sao Tome and Principe")countrycode = "00378";
+            if(countryname=="Senegal")countrycode = "00221";
+            if(countryname=="Seychelles")countrycode = "00248";
+            if(countryname=="Sierra Leone")countrycode = "00232";
+            if(countryname=="Slovakia")countrycode = "00421";
+            if(countryname=="Somalia")countrycode = "00252";
+            if(countryname=="St. Helena")countrycode = "00290";
+            if(countryname=="St. Pierre and Miquelon")countrycode = "00508";
+            if(countryname=="Sudan")countrycode = "00249";
+            if(countryname=="Suriname")countrycode = "00597";
+            if(countryname=="Svalbard and Jan Mayen Islands")countrycode = "00597";
+            if(countryname=="Swaziland")countrycode = "00268";
+            if(countryname=="Tajikistan")countrycode = "00992";
+            if(countryname=="Tokelau")countrycode = "00690";
+            if(countryname=="Tonga")countrycode = "00676";
+            if(countryname=="Turkmenistan")countrycode = "00993";
+            if(countryname=="Turks and Caicos Islands")countrycode = "001649";
+            if(countryname=="Tuvalu")countrycode = "00688";
+            if(countryname=="Vanuatu")countrycode = "00678";
+            if(countryname=="Vatican City")countrycode = "0039";
+            if(countryname=="Virgin Islands")countrycode = "001";
+            if(countryname=="Wallis and Futuna Islands")countrycode = "00681";
+            if(countryname=="Western Sahara")countrycode = "00681";
+            if(countryname=="Zaire")countrycode = "00243";
+            if(countryname=="Zambia")countrycode = "00260";
+            document.getElementById("{!$Component.enq_frm.pageblock1.mobile1}").value = countrycode;
+            document.getElementById("{!$Component.enq_frm.pageblock1.phone1}").value = countrycode;
+        }
+               
+ 
+    </script>
+
+    <style>
+        .ErrorMessageStyle{
+            background-image: url("images/dropdown_bg0new2.gif");
+            background-position: 0 0;
+                background-repeat: no-repeat;
+                border: medium none;
+                clear: both;
+                color: #FF0000;         
+                display: block;
+                font-family: Arial,Helvetica,sans-serif;
+                font-size: 11px;
+                height: 14px;
+                margin: 0;
+                padding: 5px;           
+        }
+         body{ background: #fff; margin: 0; padding: 0;}
+         
+    </style>
+
+    <div style="background-color:#FFFFFF">
+        <apex:define name="body">
+            <apex:form id="enq_frm">
+                <script>
+                   
+                    var tMobileNumber="{!$Component.enq_frm.pageblock1.mobile2}";
+                    var tPhoneNumber1="{!$Component.enq_frm.pageblock1.phone2}";
+                    var tPhoneNumber2="{!$Component.enq_frm.pageblock1.phone3}";
+                    var tfirstName="{!$Component.enq_frm.pageblock1.firstname}";
+                    var temailID="{!$Component.enq_frm.pageblock1.email}";
+                    var tCountryList="{!$Component.enq_frm.pageblock1.countrylist}";
+                    var tCity="{!$Component.enq_frm.pageblock1.div_city_dropdown}";
+                    var tState="{!$Component.enq_frm.pageblock1.statelist_id}";
+                    var tchoiceofresidence="{!$Component.enq_frm.pageblock1.accommodationType}";
+                    var tDesignation="{!$Component.enq_frm.pageblock1.Designation}";
+                    var tCompanyName="{!$Component.enq_frm.pageblock1.CompanyName}";
+                    var tSubmitData="{!$Component.enq_frm.pageblock1.SubmitData}";
+                    //
+    
+                    
+                    var tCityText="{!$Component.enq_frm.pageblock1.div_city}";
+                    var tLastName="{!$Component.enq_frm.pageblock1.lastName}";
+                    var tCountryMobileCode="{!$Component.enq_frm.pageblock1.mobile1}";
+                    var tCountryPhoneCode="{!$Component.enq_frm.pageblock1.phone1}";
+                    var tProjectType="{!$Component.enq_frm.pageblock1.ProjectType}";
+                    var treturl="{!$CurrentPage.parameters.returl}";
+                    var tConfCode="{!$Component.enq_frm.pageblock1.ConfirmationCode}"; 
+                    var tallowmobileverification="{!$Component.enq_frm.pageblock1.allowmobileverification}";
+                    var trecvalue="{!$Component.enq_frm.pageblock1.recvalue}";
+                    var tallowcallpatching="{!$Component.enq_frm.pageblock1.allowcallpatching}"; 
+                    var tcallcenterno="{!$Component.enq_frm.pageblock1.callcenterno}";
+                    var tcurrenttime="{!$Component.enq_frm.pageblock1.currenttime}";
+                    var valid=false; 
+                   
+
+                      
+            </script>
+                <apex:messages id="error"
+                   styleClass="ErrorMessageStyle"
+                   layout="table"
+                   style="margin-top:1em;"/>
+                    <apex:pageBlock id="pageblock1" title="" mode="edit">                   
+                    <apex:image id="theImage1" value="{!$Resource.enquireHeading}"/>
+                    <br/>
+                    <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2><apex:outputText value="*" style="color: #FF0000;"/><apex:image id="theImage2" value="{!$Resource.name}"/></h2>
+                                <span class="inputBG">
+                                     <apex:inputText value="{!leadname}" id="firstname" styleClass="dropEnquire" style="width: 155px;"/> 
+                                </span>
+                                <div class="error" id="uname_err">Enter your name</div>
+                                 <div class="error" id="uname_err1">Please enter a valid name</div>
+                            </div>
+                     </div>
+                     <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2><apex:outputText value="*" style="color: #FF0000;"/><apex:image id="theImage4" value="{!$Resource.email}"/></h2>
+                         
+                                <span class="inputBG"> <apex:inputText value="{!leadEmail}" id="email" styleClass="dropEnquire" style="width: 160px"/></span>
+                             
+                                <div class="error" id="emailid_err">Email id should not be blank </div>
+                                <div class="error" id="emailid1_err">Please enter valid Email ID </div>
+
+                            </div>
+                     </div>
+                     <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2><apex:outputText value="*" style="color: #FF0000;"/><apex:image id="theImage5" value="{!$Resource.country}"/></h2> 
+                                <span>
+                                        <apex:selectList size="1" value="{!Countries}" id="countrylist" multiselect="false" styleClass="tab_bg tab_bg1" onchange="return getCountryValue()" >
+                                            <apex:selectOption itemValue="None" itemlabel="Select Country"/>
+                                            <apex:selectOption itemValue="Afghanistan" itemlabel="Afghanistan"/>
+                                            <apex:selectOption itemValue="Albania" itemlabel="Albania"/>
+                                            <apex:selectOption itemValue="Algeria" itemlabel="Algeria"/>
+                                            <apex:selectOption itemValue="American Samoa" itemlabel="American Samoa"/>
+                                            <apex:selectOption itemValue="Andorra" itemlabel="Andorra"/>
+                                            <apex:selectOption itemValue="Angola" itemlabel="Angola"/>
+                                            <apex:selectOption itemValue="Anguilla" itemlabel="Anguilla"/>
+                                            <apex:selectOption itemValue="Antarctica" itemlabel="Antarctica"/>
+                                            <apex:selectOption itemValue="Antigua and Barbuda" itemlabel="Antigua and Barbuda"/>
+                                            <apex:selectOption itemValue="Argentina" itemlabel="Argentina"/>
+                                            <apex:selectOption itemValue="Armenia" itemlabel="Armenia"/>
+                                            <apex:selectOption itemValue="Aruba" itemlabel="Aruba"/>
+                                            <apex:selectOption itemValue="Australia" itemlabel="Australia"/>
+                                            <apex:selectOption itemValue="Austria" itemlabel="Austria"/>
+                                            <apex:selectOption itemValue="Azerbaijan" itemlabel="Azerbaijan"/>
+                                            <apex:selectOption itemValue="Bahamas" itemlabel="Bahamas"/>
+                                            <apex:selectOption itemValue="Bahrain" itemlabel="Bahrain"/>
+                                            <apex:selectOption itemValue="Bangladesh" itemlabel="Bangladesh"/>
+                                            <apex:selectOption itemValue="Barbados" itemlabel="Barbados"/>
+                                            <apex:selectOption itemValue="Belarus" itemlabel="Belarus"/>
+                                            <apex:selectOption itemValue="Belgium" itemlabel="Belgium"/>
+                                            <apex:selectOption itemValue="Belize" itemlabel="Belize"/>
+                                            <apex:selectOption itemValue="Benin" itemlabel="Benin"/>
+                                            <apex:selectOption itemValue="Bermuda" itemlabel="Bermuda"/>
+                                            <apex:selectOption itemValue="Bhutan" itemlabel="Bhutan"/>
+                                            <apex:selectOption itemValue="Bolivia" itemlabel="Bolivia"/>
+                                            <apex:selectOption itemValue="Bosnia and Herzegovina" itemlabel="Bosnia and Herzegovina"/>
+                                            <apex:selectOption itemValue="Botswana" itemlabel="Botswana"/>
+                                            <apex:selectOption itemValue="Bouvet Island" itemlabel="Bouvet Island"/>
+                                            <apex:selectOption itemValue="Brazil" itemlabel="Brazil"/>
+                                            <apex:selectOption itemValue="British Indian Ocean Territory" itemlabel="British Indian Ocean Territory"/>
+                                            <apex:selectOption itemValue="British Virgin Islands" itemlabel="British Virgin Islands"/>
+                                            <apex:selectOption itemValue="Brunei" itemlabel="Brunei"/>
+                                            <apex:selectOption itemValue="Bulgaria" itemlabel="Bulgaria"/>
+                                            <apex:selectOption itemValue="Burkina Faso" itemlabel="Burkina Faso"/>
+                                            <apex:selectOption itemValue="Burundi" itemlabel="Burundi"/>
+                                            <apex:selectOption itemValue="Cambodia" itemlabel="Cambodia"/>
+                                            <apex:selectOption itemValue="Cameroon" itemlabel="Cameroon"/>
+                                            <apex:selectOption itemValue="Canada" itemlabel="Canada"/>
+                                            <apex:selectOption itemValue="Cape Verde" itemlabel="Cape Verde"/>
+                                            <apex:selectOption itemValue="Cayman Islands" itemlabel="Cayman Islands"/>
+                                            <apex:selectOption itemValue="Central African Republic" itemlabel="Central African Republic"/>
+                                            <apex:selectOption itemValue="Chad" itemlabel="Chad"/>
+                                            <apex:selectOption itemValue="Chile" itemlabel="Chile"/>
+                                            <apex:selectOption itemValue="China" itemlabel="China"/>
+                                            <apex:selectOption itemValue="Christmas Island" itemlabel="Christmas Island"/>
+                                            <apex:selectOption itemValue="Cocos Islands" itemlabel="Cocos Islands"/>
+                                            <apex:selectOption itemValue="Colombia" itemlabel="Colombia"/>
+                                            <apex:selectOption itemValue="Comoros" itemlabel="Comoros"/>
+                                            <apex:selectOption itemValue="Congo" itemlabel="Congo"/>
+                                            <apex:selectOption itemValue="Cook Islands" itemlabel="Cook Islands"/>
+                                            <apex:selectOption itemValue="Costa Rica" itemlabel="Costa Rica"/>
+                                            <apex:selectOption itemValue="Croatia" itemlabel="Croatia"/>
+                                            <apex:selectOption itemValue="Cuba" itemlabel="Cuba"/>
+                                            <apex:selectOption itemValue="Cyprus" itemlabel="Cyprus"/>
+                                            <apex:selectOption itemValue="Czech Republic" itemlabel="Czech Republic"/>
+                                            <apex:selectOption itemValue="Denmark" itemlabel="Denmark"/>
+                                            <apex:selectOption itemValue="Djibouti" itemlabel="Djibouti"/>
+                                            <apex:selectOption itemValue="Dominica" itemlabel="Dominica"/>
+                                            <apex:selectOption itemValue="Dominican Republic" itemlabel="Dominican Republic"/>
+                                            <apex:selectOption itemValue="Ecuador" itemlabel="Ecuador"/>
+                                            <apex:selectOption itemValue="Egypt" itemlabel="Egypt"/>
+                                            <apex:selectOption itemValue="El Salvador" itemlabel="El Salvador"/>
+                                            <apex:selectOption itemValue="Equatorial Guinea" itemlabel="Equatorial Guinea"/>
+                                            <apex:selectOption itemValue="Eritrea" itemlabel="Eritrea"/>
+                                            <apex:selectOption itemValue="Estonia" itemlabel="Estonia"/>
+                                            <apex:selectOption itemValue="Ethiopia" itemlabel="Ethiopia"/>
+                                            <apex:selectOption itemValue="Falkland Islands" itemlabel="Falkland Islands"/>
+                                            <apex:selectOption itemValue="Faroe Islands" itemlabel="Faroe Islands"/>
+                                            <apex:selectOption itemValue="Fiji" itemlabel="Fiji"/>
+                                            <apex:selectOption itemValue="Finland" itemlabel="Finland"/>
+                                            <apex:selectOption itemValue="France" itemlabel="France"/>
+                                            <apex:selectOption itemValue="French Guiana" itemlabel="French Guiana"/>
+                                            <apex:selectOption itemValue="French Polynesia" itemlabel="French Polynesia"/>
+                                            <apex:selectOption itemValue="French Southern Territories" itemlabel="French Southern Territories"/>
+                                            <apex:selectOption itemValue="Gabon" itemlabel="Gabon"/>
+                                            <apex:selectOption itemValue="Gambia" itemlabel="Gambia"/>
+                                            <apex:selectOption itemValue="Georgia" itemlabel="Georgia"/>
+                                            <apex:selectOption itemValue="Germany" itemlabel="Germany"/>
+                                            <apex:selectOption itemValue="Ghana" itemlabel="Ghana"/>
+                                            <apex:selectOption itemValue="Gibraltar" itemlabel="Gibraltar"/>
+                                            <apex:selectOption itemValue="Greece" itemlabel="Greece"/>
+                                            <apex:selectOption itemValue="Greenland" itemlabel="Greenland"/>
+                                            <apex:selectOption itemValue="Grenada" itemlabel="Grenada"/>    
+                                            <apex:selectOption itemValue="Guadeloupe" itemlabel="Guadeloupe"/>  
+                                            <apex:selectOption itemValue="Guam" itemlabel="Guam"/>
+                                            <apex:selectOption itemValue="Guatemala" itemlabel="Guatemala"/>
+                                            <apex:selectOption itemValue="Guinea" itemlabel="Guinea"/>
+                                            <apex:selectOption itemValue="Guinea-Bissau" itemlabel="Guinea-Bissau"/>
+                                            <apex:selectOption itemValue="Guyana" itemlabel="Guyana"/>
+                                            <apex:selectOption itemValue="Haiti" itemlabel="Haiti"/>
+                                            <apex:selectOption itemValue="Heard and McDonald Islands" itemlabel="Heard and McDonald Islands"/>
+                                            <apex:selectOption itemValue="Honduras" itemlabel="Honduras"/>
+                                            <apex:selectOption itemValue="Hong Kong" itemlabel="Hong Kong"/>
+                                            <apex:selectOption itemValue="Hungary" itemlabel="Hungary"/>
+                                            <apex:selectOption itemValue="Iceland" itemlabel="Iceland"/>
+                                            <apex:selectOption itemValue="India" itemlabel="India"/>
+                                            <apex:selectOption itemValue="Indonesia" itemlabel="Indonesia"/>
+                                            <apex:selectOption itemValue="Iran" itemlabel="Iran"/>
+                                            <apex:selectOption itemValue="Iraq" itemlabel="Iraq"/>
+                                            <apex:selectOption itemValue="Ireland" itemlabel="Ireland"/>
+                                            <apex:selectOption itemValue="Israel" itemlabel="Israel"/>
+                                            <apex:selectOption itemValue="Italy" itemlabel="Italy"/>
+                                            <apex:selectOption itemValue="Ivory Coast" itemlabel="Ivory Coast"/>
+                                            <apex:selectOption itemValue="Jamaica" itemlabel="Jamaica"/>
+                                            <apex:selectOption itemValue="Japan" itemlabel="Japan"/>
+                                            <apex:selectOption itemValue="Jordan" itemlabel="Jordan"/>
+                                            <apex:selectOption itemValue="Kazakhstan" itemlabel="Kazakhstan"/>
+                                            <apex:selectOption itemValue="Kenya" itemlabel="Kenya"/>
+                                            <apex:selectOption itemValue="Kiribati" itemlabel="Kiribati"/>
+                                            <apex:selectOption itemValue="Kuwait" itemlabel="Kuwait"/>
+                                            <apex:selectOption itemValue="Kyrgyzstan" itemlabel="Kyrgyzstan"/>
+                                            <apex:selectOption itemValue="Laos" itemlabel="Laos"/>
+                                            <apex:selectOption itemValue="Latvia" itemlabel="Latvia"/>
+                                            <apex:selectOption itemValue="Lebanon" itemlabel="Lebanon"/>
+                                            <apex:selectOption itemValue="Lesotho" itemlabel="Lesotho"/>
+                                            <apex:selectOption itemValue="Liberia" itemlabel="Liberia"/>
+                                            <apex:selectOption itemValue="Libya" itemlabel="Libya"/>
+                                            <apex:selectOption itemValue="Liechtenstein" itemlabel="Liechtenstein"/>
+                                            <apex:selectOption itemValue="Lithuania" itemlabel="Lithuania"/>
+                                            <apex:selectOption itemValue="Luxembourg" itemlabel="Luxembourg"/>
+                                            <apex:selectOption itemValue="Macau" itemlabel="Macau"/>
+                                            <apex:selectOption itemValue="Macedonia" itemlabel="Macedonia"/>
+                                            <apex:selectOption itemValue="Madagascar" itemlabel="Madagascar"/>
+                                            <apex:selectOption itemValue="Malawi" itemlabel="Malawi"/>
+                                            <apex:selectOption itemValue="Malaysia" itemlabel="Malaysia"/>
+                                            <apex:selectOption itemValue="Maldives" itemlabel="Maldives"/>
+                                            <apex:selectOption itemValue="Mali" itemlabel="Mali"/>
+                                            <apex:selectOption itemValue="Malta" itemlabel="Malta"/>
+                                            <apex:selectOption itemValue="Marshall Islands" itemlabel="Marshall Islands"/>  
+                                            <apex:selectOption itemValue="Martinique" itemlabel="Martinique"/>
+                                            <apex:selectOption itemValue="Mauritania" itemlabel="Mauritania"/>
+                                            <apex:selectOption itemValue="Mauritius" itemlabel="Mauritius"/>
+                                            <apex:selectOption itemValue="Mayotte" itemlabel="Mayotte"/>
+                                            <apex:selectOption itemValue="Mexico" itemlabel="Mexico"/>
+                                            <apex:selectOption itemValue="Micronesia" itemlabel="Micronesia"/>
+                                            <apex:selectOption itemValue="Moldova" itemlabel="Moldova"/>
+                                            <apex:selectOption itemValue="Monaco" itemlabel="Monaco"/>
+                                            <apex:selectOption itemValue="Mongolia" itemlabel="Mongolia"/>
+                                            <apex:selectOption itemValue="Montserrat" itemlabel="Montserrat"/>
+                                            <apex:selectOption itemValue="Morocco" itemlabel="Morocco"/>
+                                            <apex:selectOption itemValue="Mozambique" itemlabel="Mozambique"/>
+                                            <apex:selectOption itemValue="Myanmar" itemlabel="Myanmar"/>
+                                            <apex:selectOption itemValue="Namibia" itemlabel="Namibia"/>
+                                            <apex:selectOption itemValue="Nauruq" itemlabel="Nauruq"/>
+                                            <apex:selectOption itemValue="Nepal" itemlabel="Nepal"/>
+                                            <apex:selectOption itemValue="Netherlands Antilles" itemlabel="Netherlands Antilles"/>
+                                            <apex:selectOption itemValue="Netherlands" itemlabel="Netherlands"/>
+                                            <apex:selectOption itemValue="New Caledonia" itemlabel="New Caledonia"/>
+                                            <apex:selectOption itemValue="New Zealand" itemlabel="New Zealand"/>
+                                            <apex:selectOption itemValue="Nicaragua" itemlabel="Nicaragua"/>
+                                            <apex:selectOption itemValue="Niger" itemlabel="Niger"/>
+                                            <apex:selectOption itemValue="Nigeria" itemlabel="Nigeria"/>
+                                            <apex:selectOption itemValue="Niue" itemlabel="Niue"/>
+                                            <apex:selectOption itemValue="Norfolk Island" itemlabel="Norfolk Island"/>
+                                            <apex:selectOption itemValue="North Korea" itemlabel="North Korea"/>
+                                            <apex:selectOption itemValue="Northern Mariana Islands" itemlabel="Northern Mariana Islands"/>
+                                            <apex:selectOption itemValue="Norway" itemlabel="Norway"/>
+                                            <apex:selectOption itemValue="Pakistan" itemlabel="Pakistan"/>
+                                            <apex:selectOption itemValue="Palau" itemlabel="Palau"/>
+                                            <apex:selectOption itemValue="Panama" itemlabel="Panama"/>
+                                            <apex:selectOption itemValue="Papua New Guinea" itemlabel="Papua New Guinea"/>
+                                            <apex:selectOption itemValue="Paraguay" itemlabel="Paraguay"/>
+                                            <apex:selectOption itemValue="Peru" itemlabel="Peru"/>
+                                            <apex:selectOption itemValue="Philippines" itemlabel="Philippines"/>
+                                            <apex:selectOption itemValue="Pitcairn Island" itemlabel="Pitcairn Island"/>
+                                            <apex:selectOption itemValue="Poland" itemlabel="Poland"/>
+                                            <apex:selectOption itemValue="Portugal" itemlabel="Portugal"/>
+                                            <apex:selectOption itemValue="Puerto Rico" itemlabel="Puerto Rico"/>
+                                            <apex:selectOption itemValue="Qatar" itemlabel="Qatar"/>
+                                            <apex:selectOption itemValue="Reunion" itemlabel="Reunion"/>
+                                            <apex:selectOption itemValue="Romania" itemlabel="Romania"/>
+                                            <apex:selectOption itemValue="Russian Federation" itemlabel="Russian Federation"/>
+                                            <apex:selectOption itemValue="Rwanda" itemlabel="Rwanda"/>
+                                            <apex:selectOption itemValue="S. Georgia and S. Sandwich Isls." itemlabel="S. Georgia and S. Sandwich Isls."/>
+                                            <apex:selectOption itemValue="Saint Kitts and Nevis" itemlabel="Saint Kitts and Nevis"/>
+                                            <apex:selectOption itemValue="Saint Lucia" itemlabel="Saint Lucia"/>
+                                            <apex:selectOption itemValue="Saint Vincent and The Grenadines" itemlabel="Saint Vincent and The Grenadines"/>
+                                            <apex:selectOption itemValue="Samoa" itemlabel="Samoa"/>
+                                            <apex:selectOption itemValue="San Marino" itemlabel="San Marino"/>
+                                            <apex:selectOption itemValue="Sao Tome and Principe" itemlabel="Sao Tome and Principe"/>
+                                            <apex:selectOption itemValue="Saudi Arabia" itemlabel="Saudi Arabia"/>
+                                            <apex:selectOption itemValue="Senegal" itemlabel="Senegal"/>
+                                            <apex:selectOption itemValue="Seychelles" itemlabel="Seychelles"/>
+                                            <apex:selectOption itemValue="Sierra Leone" itemlabel="Sierra Leone"/>
+                                            <apex:selectOption itemValue="Singapore" itemlabel="Singapore"/>
+                                            <apex:selectOption itemValue="Slovak Republic" itemlabel="Slovak Republic"/>
+                                            <apex:selectOption itemValue="Slovakia" itemlabel="Slovakia"/>
+                                            <apex:selectOption itemValue="Slovenia" itemlabel="Slovenia"/>
+                                            <apex:selectOption itemValue="Somalia" itemlabel="Somalia"/>
+                                            <apex:selectOption itemValue="South Africa" itemlabel="South Africa"/>
+                                            <apex:selectOption itemValue="South Korea" itemlabel="South Korea"/>
+                                            <apex:selectOption itemValue="Spain" itemlabel="Spain"/>
+                                            <apex:selectOption itemValue="Sri Lanka" itemlabel="Sri Lanka"/>
+                                            <apex:selectOption itemValue="St. Helena" itemlabel="St. Helena"/>
+                                            <apex:selectOption itemValue="Sudan" itemlabel="Sudan"/>
+                                            <apex:selectOption itemValue="Sultanate of Oman" itemlabel="Sultanate of Oman"/>
+                                            <apex:selectOption itemValue="Suriname" itemlabel="Suriname"/>
+                                            <apex:selectOption itemValue="Swaziland" itemlabel="Swaziland"/>
+                                            <apex:selectOption itemValue="Sweden" itemlabel="Sweden"/>
+                                            <apex:selectOption itemValue="Syria" itemlabel="Syria"/>
+                                            <apex:selectOption itemValue="Taiwan" itemlabel="Taiwan"/>
+                                            <apex:selectOption itemValue="Tajikistan" itemlabel="Tajikistan"/>
+                                            <apex:selectOption itemValue="Tanzania" itemlabel="Tanzania"/>
+                                            <apex:selectOption itemValue="Thailand" itemlabel="Thailand"/>
+                                            <apex:selectOption itemValue="Timor-Leste" itemlabel="Timor-Leste"/>
+                                            <apex:selectOption itemValue="Togo" itemlabel="Togo"/>
+                                            <apex:selectOption itemValue="Tokelau" itemlabel="Tokelau"/>
+                                            <apex:selectOption itemValue="Tonga" itemlabel="Tonga"/>
+                                            <apex:selectOption itemValue="Trinidad and Tobago" itemlabel="Trinidad and Tobago"/>
+                                            <apex:selectOption itemValue="Tunisia" itemlabel="Tunisia"/>
+                                            <apex:selectOption itemValue="Turkey" itemlabel="Turkey"/>
+                                            <apex:selectOption itemValue="Turkmenistan" itemlabel="Turkmenistan"/>
+                                            <apex:selectOption itemValue="Turks and Caicos Islands" itemlabel="Turks and Caicos Islands"/>
+                                            <apex:selectOption itemValue="Tuvalu" itemlabel="Tuvalu"/>
+                                            <apex:selectOption itemValue="Uganda" itemlabel="Uganda"/>
+                                            <apex:selectOption itemValue="Ukraine" itemlabel="Ukraine"/>
+                                            <apex:selectOption itemValue="United Arab Emirates" itemlabel="United Arab Emirates"/>
+                                            <apex:selectOption itemValue="United Kingdom" itemlabel="United Kingdom"/>
+                                            <apex:selectOption itemValue="United States" itemlabel="United States"/>
+                                            <apex:selectOption itemValue="Uruguay" itemlabel="Uruguay"/>
+                                            <apex:selectOption itemValue="Uzbekistan" itemlabel="Uzbekistan"/>
+                                            <apex:selectOption itemValue="Vanuatu" itemlabel="Vanuatu"/>
+                                            <apex:selectOption itemValue="Vatican City" itemlabel="Vatican City"/>
+                                            <apex:selectOption itemValue="Venezuela" itemlabel="Venezuela"/>
+                                            <apex:selectOption itemValue="Viet Nam" itemlabel="Viet Nam"/>
+                                            <apex:selectOption itemValue="Virgin Islands" itemlabel="Virgin Islands"/>
+                                            <apex:selectOption itemValue="Wallis and Futuna Islands" itemlabel="Wallis and Futuna Islands"/>
+                                            <apex:selectOption itemValue="Western Sahara" itemlabel="Western Sahara"/>
+                                            <apex:selectOption itemValue="Yemen" itemlabel="Yemen"/>
+                                            <apex:selectOption itemValue="Yugoslavia" itemlabel="Yugoslavia"/>
+                                            <apex:selectOption itemValue="Zaire" itemlabel="Zaire"/>
+                                            <apex:selectOption itemValue="Zambia" itemlabel="Zambia"/> 
+                                            <apex:selectOption itemValue="Zimbabwe" itemlabel="Zimbabwe"/>          
+                                        </apex:selectList>
+                                    </span> 
+                                    <div class="error" id="country_err">Select Country</div>
+                                </div>
+                        </div>
+                        <div class="clearBoth"></div>
+                        <div class="contactsEnquire">
+                            <div class="enquHight">
+                                    <h2><apex:outputText value="*" style="color: #FF0000;"/><apex:image id="theImage7" value="{!$Resource.mobile}"/></h2>
+                                    <span class="inputBG">
+                                       <apex:inputText id="mobile1" styleClass="phone" value="{!CountryCode}" ></apex:inputText>  
+                                   </span>
+                                   <span class="inputBG">    
+                                        <apex:inputText value="{!leadMobile}" styleClass="mb" id="mobile2" />
+                                    </span>
+                                    <div class="error" id="mobile_err">Please enter your Mobile number</div>
+                                    <div class="error" id="mobile_err1">Please enter valid mobile no.</div>
+                                    <div class="error" id="mobile_zero"> Mobile number should not begin with zero.</div>
+                                    <div class="error" id="mobile_max">Mobile number must be a 10 digit number.</div>    
+                                <div class="clearBoth"  id="mobile_eg" >Ex: 0091x - 1111111111</div>
+                            </div>
+                        </div>
+                        <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2><apex:outputText value="*" style="color: #FF0000;" rendered="false"/><span>&nbsp;</span><apex:image value="{!$Resource.landline}" /></h2>
+                                <span class="inputBG">
+                                    <apex:inputText id="phone1" styleClass="phonecode" />
+                                </span>
+                                 <span class="inputBG">
+                                    <apex:inputText value="{!leadstdCode}" id="phone2" styleClass="phonecode" />
+                                </span>
+                                 <span class="inputBG">
+                                    <apex:inputText value="{!leadPhone}" id="phone3" styleClass="phone" />
+                                </span>
+                                <div class="error" id="landline_err">STD code should not start with 0</div>
+                                <div class="error" id="std_not_zero">STD code should begin with 0</div>
+                                <div class="error" id="stdnull_err">Please enter a STD code</div>
+                                <div class="error" id="landlinenull_err">Please enter a Landline number</div>
+                                <div class="error" id="landline_code_err">Please enter a valid STD code</div>
+                               
+                                <div class="error" id="landline_err1">Please enter a valid Landline number </div>
+                                <div class="clearBoth" id="landline_eg" >Ex: 0091x - 022x - 1111111</div>
+                            </div>
+
+                        </div>
+                        <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2><apex:outputText value="*" style="color: #FF0000;"/><apex:image id="theImage6" value="{!$Resource.city}" /></h2>
+                                <div>
+                                    <apex:selectList id="div_city_dropdown" size="1" value="{!city1}" multiselect="false" styleClass="tab_bg tab_bg1" style="display:block">
+                                        <apex:selectOption itemValue="None" itemlabel="Select City"/> 
+                                        <apex:selectOption itemValue="Adilabad" itemlabel="Adilabad"/>
+                                        <apex:selectOption itemValue="Agartala" itemlabel="Agartala"/>
+                                        <apex:selectOption itemValue="Agra" itemlabel="Agra"/>
+                                        <apex:selectOption itemValue="Ahmadnagar" itemlabel="Ahmadnagar"/>
+                                        <apex:selectOption itemValue="Ahmedabad" itemlabel="Ahmedabad"/>
+                                        <apex:selectOption itemValue="Aizawl" itemlabel="Aizawl"/>
+                                        <apex:selectOption itemValue="Ajmer" itemlabel="Ajmer"/>
+                                        <apex:selectOption itemValue="Akola" itemlabel="Akola"/>
+                                        <apex:selectOption itemValue="Alappuzha" itemlabel="Alappuzha"/>
+                                        <apex:selectOption itemValue="Aldona" itemlabel="Aldona"/>
+                                        <apex:selectOption itemValue="Alibag" itemlabel="Alibag"/>
+                                        <apex:selectOption itemValue="Aligarh" itemlabel="Aligarh"/>
+                                        <apex:selectOption itemValue="Allahabad" itemlabel="Allahabad"/>
+                                        <apex:selectOption itemValue="Almora" itemlabel="Almora"/>
+                                        <apex:selectOption itemValue="Alwar" itemlabel="Alwar"/>
+                                        <apex:selectOption itemValue="Ambala" itemlabel="Ambala"/>
+                                        <apex:selectOption itemValue="Amli" itemlabel="Amli"/>
+                                        <apex:selectOption itemValue="Amravati" itemlabel="Amravati"/>
+                                        <apex:selectOption itemValue="Amreli" itemlabel="Amreli"/>
+                                        <apex:selectOption itemValue="Amritsar" itemlabel="Amritsar"/>
+                                        <apex:selectOption itemValue="Anand" itemlabel="Anand"/>
+                                        <apex:selectOption itemValue="Anantapur" itemlabel="Anantapur"/>
+                                        <apex:selectOption itemValue="Anugul" itemlabel="Anugul"/>
+                                        <apex:selectOption itemValue="Aquem" itemlabel="Aquem"/>
+                                        <apex:selectOption itemValue="Ariyalur" itemlabel="Ariyalur"/>
+                                        <apex:selectOption itemValue="Auraiya" itemlabel="Auraiya"/>
+                                        <apex:selectOption itemValue="Aurangabad" itemlabel="Aurangabad"/>
+                                        <apex:selectOption itemValue="Azamgarh" itemlabel="Azamgarh"/>
+                                        <apex:selectOption itemValue="Baddi" itemlabel="Baddi"/>
+                                        <apex:selectOption itemValue="Badgam" itemlabel="Badgam"/>
+                                        <apex:selectOption itemValue="Bagalkot" itemlabel="Bagalkot"/>
+                                        <apex:selectOption itemValue="Bahadurgarh" itemlabel="Bahadurgarh"/>
+                                        <apex:selectOption itemValue="Balaghat" itemlabel="Balaghat"/>
+                                        <apex:selectOption itemValue="Balangir" itemlabel="Balangir"/>
+                                        <apex:selectOption itemValue="Baleshwar" itemlabel="Baleshwar"/>
+                                        <apex:selectOption itemValue="Baltana" itemlabel="Baltana"/>
+                                        <apex:selectOption itemValue="Bambolim" itemlabel="Bambolim"/>
+                                        <apex:selectOption itemValue="Bandora" itemlabel="Bandora"/>
+                                        <apex:selectOption itemValue="Bangalore" itemlabel="Bangalore"/>
+                                        <apex:selectOption itemValue="Banka" itemlabel="Banka"/>
+                                        <apex:selectOption itemValue="Bankura" itemlabel="Bankura"/>
+                                        <apex:selectOption itemValue="Banswara" itemlabel="Banswara"/>
+                                        <apex:selectOption itemValue="Barabanki" itemlabel="Barabanki"/>
+                                        <apex:selectOption itemValue="Baramula" itemlabel="Baramula"/>
+                                        <apex:selectOption itemValue="Baran" itemlabel="Baran"/>
+                                        <apex:selectOption itemValue="Barddhaman" itemlabel="Barddhaman"/>
+                                        <apex:selectOption itemValue="Bardoli" itemlabel="Bardoli"/>
+                                        <apex:selectOption itemValue="Bareilly" itemlabel="Bareilly"/>
+                                        <apex:selectOption itemValue="Bargarh" itemlabel="Bargarh"/>
+                                        <apex:selectOption itemValue="Baripada" itemlabel="Baripada"/>
+                                        <apex:selectOption itemValue="Barmer" itemlabel="Barmer"/>
+                                        <apex:selectOption itemValue="Barnala" itemlabel="Barnala"/>
+                                        <apex:selectOption itemValue="Barpeta" itemlabel="Barpeta"/>
+                                        <apex:selectOption itemValue="Barwani" itemlabel="Barwani"/>
+                                        <apex:selectOption itemValue="Begusarai" itemlabel="Begusarai"/>
+                                        <apex:selectOption itemValue="Belgaum" itemlabel="Belgaum"/>
+                                        <apex:selectOption itemValue="Bellary" itemlabel="Bellary"/>
+                                        <apex:selectOption itemValue="Betul" itemlabel="Betul"/>
+                                        <apex:selectOption itemValue="Bhandara" itemlabel="Bhandara"/>
+                                        <apex:selectOption itemValue="Bharatpur" itemlabel="Bharatpur"/>
+                                        <apex:selectOption itemValue="Bharuch" itemlabel="Bharuch"/>
+                                        <apex:selectOption itemValue="Bhavnagar" itemlabel="Bhavnagar"/>
+                                        <apex:selectOption itemValue="Bhilwara" itemlabel="Bhilwara"/>
+                                        <apex:selectOption itemValue="Bhind" itemlabel="Bhind"/>
+                                        <apex:selectOption itemValue="Bhiwadi" itemlabel="Bhiwadi"/>
+                                        <apex:selectOption itemValue="Bhiwani" itemlabel="Bhiwani"/>
+                                        <apex:selectOption itemValue="Bhopal" itemlabel="Bhopal"/>
+                                        <apex:selectOption itemValue="Bhubaneswar" itemlabel="Bhubaneswar"/>
+                                        <apex:selectOption itemValue="Bicholim" itemlabel="Bicholim"/>
+                                        <apex:selectOption itemValue="Bid" itemlabel="Bid"/>
+                                        <apex:selectOption itemValue="Bidar" itemlabel="Bidar"/>
+                                        <apex:selectOption itemValue="Bijapur" itemlabel="Bijapur"/>
+                                        <apex:selectOption itemValue="Bikaner" itemlabel="Bikaner"/>
+                                        <apex:selectOption itemValue="Bilaspur" itemlabel="Bilaspur"/>
+                                        <apex:selectOption itemValue="Bishnupur" itemlabel="Bishnupur"/>
+                                        <apex:selectOption itemValue="BokaroSteelCity" itemlabel="BokaroSteelCity"/>
+                                        <apex:selectOption itemValue="Bongaigaon" itemlabel="Bongaigaon"/>
+                                        <apex:selectOption itemValue="Buldana" itemlabel="Buldana"/>
+                                        <apex:selectOption itemValue="Bundi" itemlabel="Bundi"/>
+                                        <apex:selectOption itemValue="Buxar" itemlabel="Buxar"/>
+                                        <apex:selectOption itemValue="Calangute" itemlabel="Calangute"/>
+                                        <apex:selectOption itemValue="Chamba" itemlabel="Chamba"/>
+                                        <apex:selectOption itemValue="Champhai" itemlabel="Champhai"/>
+                                        <apex:selectOption itemValue="Chandigarh" itemlabel="Chandigarh"/>
+                                        <apex:selectOption itemValue="Chandrapur" itemlabel="Chandrapur"/>
+                                        <apex:selectOption itemValue="Changlang" itemlabel="Changlang"/>
+                                        <apex:selectOption itemValue="Chatra" itemlabel="Chatra"/>
+                                        <apex:selectOption itemValue="Chennai" itemlabel="Chennai"/>
+                                        <apex:selectOption itemValue="Chhatarpur" itemlabel="Chhatarpur"/>
+                                        <apex:selectOption itemValue="Chhindwara" itemlabel="Chhindwara"/>
+                                        <apex:selectOption itemValue="Chikmagalur" itemlabel="Chikmagalur"/>
+                                        <apex:selectOption itemValue="Chitradurga" itemlabel="Chitradurga"/>
+                                        <apex:selectOption itemValue="Chittaurgarh" itemlabel="Chittaurgarh"/>
+                                        <apex:selectOption itemValue="Chittoor" itemlabel="Chittoor"/>
+                                        <apex:selectOption itemValue="Churu" itemlabel="Churu"/>
+                                        <apex:selectOption itemValue="Coimbatore" itemlabel="Coimbatore"/>
+                                        <apex:selectOption itemValue="Colvale" itemlabel="Colvale"/>
+                                        <apex:selectOption itemValue="Cuddalore" itemlabel="Cuddalore"/>
+                                        <apex:selectOption itemValue="Cuddapah" itemlabel="Cuddapah"/>
+                                        <apex:selectOption itemValue="Cuttack" itemlabel="Cuttack"/>
+                                        <apex:selectOption itemValue="Dalhousie" itemlabel="Dalhousie"/>
+                                        <apex:selectOption itemValue="Daman" itemlabel="Daman"/>
+                                        <apex:selectOption itemValue="Damoh" itemlabel="Damoh"/>
+                                        <apex:selectOption itemValue="Dantewada" itemlabel="Dantewada"/>
+                                        <apex:selectOption itemValue="Darbhanga" itemlabel="Darbhanga"/>
+                                        <apex:selectOption itemValue="Darjeeling" itemlabel="Darjeeling"/>
+                                        <apex:selectOption itemValue="Datia" itemlabel="Datia"/>
+                                        <apex:selectOption itemValue="Dausa" itemlabel="Dausa"/>
+                                        <apex:selectOption itemValue="Davanagere" itemlabel="Davanagere"/>
+                                        <apex:selectOption itemValue="Debagarh" itemlabel="Debagarh"/>
+                                        <apex:selectOption itemValue="Dehradun" itemlabel="Dehradun"/>
+                                        <apex:selectOption itemValue="Deoghar" itemlabel="Deoghar"/>
+                                        <apex:selectOption itemValue="Deoria" itemlabel="Deoria"/>
+                                        <apex:selectOption itemValue="Dewas" itemlabel="Dewas"/>
+                                        <apex:selectOption itemValue="Dhamtari" itemlabel="Dhamtari"/>
+                                        <apex:selectOption itemValue="Dhanbad" itemlabel="Dhanbad"/>
+                                        <apex:selectOption itemValue="Dhar" itemlabel="Dhar"/>
+                                        <apex:selectOption itemValue="Dharamshala" itemlabel="Dharamshala"/>
+                                        <apex:selectOption itemValue="Dharmapuri" itemlabel="Dharmapuri"/>
+                                        <apex:selectOption itemValue="Dhauhera" itemlabel="Dhauhera"/>
+                                        <apex:selectOption itemValue="Dhaulpur" itemlabel="Dhaulpur"/>
+                                        <apex:selectOption itemValue="Dhemaji" itemlabel="Dhemaji"/>
+                                        <apex:selectOption itemValue="Dhenkanal" itemlabel="Dhenkanal"/>
+                                        <apex:selectOption itemValue="Dhubri" itemlabel="Dhubri"/>
+                                        <apex:selectOption itemValue="Dhule" itemlabel="Dhule"/>
+                                        <apex:selectOption itemValue="Dibrugarh" itemlabel="Dibrugarh"/>
+                                        <apex:selectOption itemValue="Dimapur" itemlabel="Dimapur"/>
+                                        <apex:selectOption itemValue="Dindigul" itemlabel="Dindigul"/>
+                                        <apex:selectOption itemValue="Dindori" itemlabel="Dindori"/>
+                                        <apex:selectOption itemValue="Diu" itemlabel="Diu"/>
+                                        <apex:selectOption itemValue="Doda" itemlabel="Doda"/>
+                                        <apex:selectOption itemValue="Dohad" itemlabel="Dohad"/>
+                                        <apex:selectOption itemValue="Dumka" itemlabel="Dumka"/>
+                                        <apex:selectOption itemValue="Dungarpur" itemlabel="Dungarpur"/>
+                                        <apex:selectOption itemValue="Durg" itemlabel="Durg"/>
+                                        <apex:selectOption itemValue="Dwarka" itemlabel="Dwarka"/>
+                                        <apex:selectOption itemValue="Ernakulam" itemlabel="Ernakulam"/>
+                                        <apex:selectOption itemValue="Erode" itemlabel="Erode"/>
+                                        <apex:selectOption itemValue="Etah" itemlabel="Etah"/>
+                                        <apex:selectOption itemValue="Etawah" itemlabel="Etawah"/>
+                                        <apex:selectOption itemValue="Faizabad" itemlabel="Faizabad"/>
+                                        <apex:selectOption itemValue="Faridabad" itemlabel="Faridabad"/>
+                                        <apex:selectOption itemValue="Faridkot" itemlabel="Faridkot"/>
+                                        <apex:selectOption itemValue="Farrukhabad" itemlabel="Farrukhabad"/>
+                                        <apex:selectOption itemValue="Fatehabad" itemlabel="Fatehabad"/>
+                                        <apex:selectOption itemValue="Firozabad" itemlabel="Firozabad"/>
+                                        <apex:selectOption itemValue="Firozpur" itemlabel="Firozpur"/>
+                                        <apex:selectOption itemValue="Gadchiroli" itemlabel="Gadchiroli"/>
+                                        <apex:selectOption itemValue="Gandhidham" itemlabel="Gandhidham"/>
+                                        <apex:selectOption itemValue="Gandhinagar" itemlabel="Gandhinagar"/>
+                                        <apex:selectOption itemValue="Ganganagar" itemlabel="Ganganagar"/>
+                                        <apex:selectOption itemValue="Gangtok" itemlabel="Gangtok"/>
+                                        <apex:selectOption itemValue="Ganjam" itemlabel="Ganjam"/>
+                                        <apex:selectOption itemValue="Garhwa" itemlabel="Garhwa"/>
+                                        <apex:selectOption itemValue="Gaya" itemlabel="Gaya"/>
+                                        <apex:selectOption itemValue="Ghaziabad" itemlabel="Ghaziabad"/>
+                                        <apex:selectOption itemValue="Ghazipur" itemlabel="Ghazipur"/>
+                                        <apex:selectOption itemValue="Giridih" itemlabel="Giridih"/>
+                                        <apex:selectOption itemValue="Goalpara" itemlabel="Goalpara"/>
+                                        <apex:selectOption itemValue="Godda" itemlabel="Godda"/>
+                                        <apex:selectOption itemValue="Golaghat" itemlabel="Golaghat"/>
+                                        <apex:selectOption itemValue="Gonda" itemlabel="Gonda"/>
+                                        <apex:selectOption itemValue="Gondiya" itemlabel="Gondiya"/>
+                                        <apex:selectOption itemValue="Gopalganj" itemlabel="Gopalganj"/>
+                                        <apex:selectOption itemValue="Gorakhpur" itemlabel="Gorakhpur"/>
+                                        <apex:selectOption itemValue="GreaterNoida" itemlabel="GreaterNoida"/>
+                                        <apex:selectOption itemValue="Gulbarga" itemlabel="Gulbarga"/>
+                                        <apex:selectOption itemValue="Guna" itemlabel="Guna"/>
+                                        <apex:selectOption itemValue="Guntur" itemlabel="Guntur"/>
+                                        <apex:selectOption itemValue="Gurgaon" itemlabel="Gurgaon"/>
+                                        <apex:selectOption itemValue="Guwahati" itemlabel="Guwahati"/>
+                                        <apex:selectOption itemValue="Gwalior" itemlabel="Gwalior"/>
+                                        <apex:selectOption itemValue="Hailakandi" itemlabel="Hailakandi"/>
+                                        <apex:selectOption itemValue="Hamirpur" itemlabel="Hamirpur"/>
+                                        <apex:selectOption itemValue="Hanumangarh" itemlabel="Hanumangarh"/>
+                                        <apex:selectOption itemValue="Harda" itemlabel="Harda"/>
+                                        <apex:selectOption itemValue="Hardoi" itemlabel="Hardoi"/>
+                                        <apex:selectOption itemValue="Haridwar" itemlabel="Haridwar"/>
+                                        <apex:selectOption itemValue="Hassan" itemlabel="Hassan"/>
+                                        <apex:selectOption itemValue="Hathras" itemlabel="Hathras"/>
+                                        <apex:selectOption itemValue="Hatinda" itemlabel="Hatinda"/>
+                                        <apex:selectOption itemValue="Haveri" itemlabel="Haveri"/>
+                                        <apex:selectOption itemValue="Hazaribag" itemlabel="Hazaribag"/>
+                                        <apex:selectOption itemValue="Hingoli" itemlabel="Hingoli"/>
+                                        <apex:selectOption itemValue="Hisar" itemlabel="Hisar"/>
+                                        <apex:selectOption itemValue="Hoogly" itemlabel="Hoogly"/>
+                                        <apex:selectOption itemValue="Hoshiarpur" itemlabel="Hoshiarpur"/>
+                                        <apex:selectOption itemValue="Hosur" itemlabel="Hosur"/>
+                                        <apex:selectOption itemValue="Howrah" itemlabel="Howrah"/>
+                                        <apex:selectOption itemValue="Hyderabad" itemlabel="Hyderabad"/>
+                                        <apex:selectOption itemValue="Imphal" itemlabel="Imphal"/>
+                                        <apex:selectOption itemValue="Indore" itemlabel="Indore"/>
+                                        <apex:selectOption itemValue="Itanagar" itemlabel="Itanagar"/>
+                                        <apex:selectOption itemValue="Jabalpur" itemlabel="Jabalpur"/>
+                                        <apex:selectOption itemValue="Jagadhri" itemlabel="Jagadhri"/>
+                                        <apex:selectOption itemValue="Jagatsinghapur" itemlabel="Jagatsinghapur"/>
+                                        <apex:selectOption itemValue="Jaipur" itemlabel="Jaipur"/>
+                                        <apex:selectOption itemValue="Jaisalmer" itemlabel="Jaisalmer"/>
+                                        <apex:selectOption itemValue="Jajapur" itemlabel="Jajapur"/>
+                                        <apex:selectOption itemValue="Jalandhar" itemlabel="Jalandhar"/>
+                                        <apex:selectOption itemValue="Jalaun" itemlabel="Jalaun"/>
+                                        <apex:selectOption itemValue="Jalgaon" itemlabel="Jalgaon"/>
+                                        <apex:selectOption itemValue="Jalna" itemlabel="Jalna"/>
+                                        <apex:selectOption itemValue="Jalor" itemlabel="Jalor"/>
+                                        <apex:selectOption itemValue="Jalpaiguri" itemlabel="Jalpaiguri"/>
+                                        <apex:selectOption itemValue="Jammu" itemlabel="Jammu"/>
+                                        <apex:selectOption itemValue="Jamnagar" itemlabel="Jamnagar"/>
+                                        <apex:selectOption itemValue="Jamshedpur" itemlabel="Jamshedpur"/>
+                                        <apex:selectOption itemValue="Jamui" itemlabel="Jamui"/>
+                                        <apex:selectOption itemValue="Jasidih" itemlabel="Jasidih"/>
+                                        <apex:selectOption itemValue="Jaunpur" itemlabel="Jaunpur"/>
+                                        <apex:selectOption itemValue="Jehanabad" itemlabel="Jehanabad"/>
+                                        <apex:selectOption itemValue="Jhabua" itemlabel="Jhabua"/>
+                                        <apex:selectOption itemValue="Jhajjar" itemlabel="Jhajjar"/>
+                                        <apex:selectOption itemValue="Jhalawar" itemlabel="Jhalawar"/>
+                                        <apex:selectOption itemValue="Jhansi" itemlabel="Jhansi"/>
+                                        <apex:selectOption itemValue="Jharsuguda" itemlabel="Jharsuguda"/>
+                                        <apex:selectOption itemValue="Jhunjhunun" itemlabel="Jhunjhunun"/>
+                                        <apex:selectOption itemValue="Jind" itemlabel="Jind"/>
+                                        <apex:selectOption itemValue="Jodhpur" itemlabel="Jodhpur"/>
+                                        <apex:selectOption itemValue="Jorhat" itemlabel="Jorhat"/>
+                                        <apex:selectOption itemValue="Junagadh" itemlabel="Junagadh"/>
+                                        <apex:selectOption itemValue="Kaithal" itemlabel="Kaithal"/>
+                                        <apex:selectOption itemValue="Kancheepuram" itemlabel="Kancheepuram"/>
+                                        <apex:selectOption itemValue="Kanker" itemlabel="Kanker"/>
+                                        <apex:selectOption itemValue="Kannauj" itemlabel="Kannauj"/>
+                                        <apex:selectOption itemValue="Kanniyakumari" itemlabel="Kanniyakumari"/>
+                                        <apex:selectOption itemValue="Kannur" itemlabel="Kannur"/>
+                                        <apex:selectOption itemValue="Kanpur" itemlabel="Kanpur"/>
+                                        <apex:selectOption itemValue="Kapurthala" itemlabel="Kapurthala"/>
+                                        <apex:selectOption itemValue="Karaikal" itemlabel="Karaikal"/>
+                                        <apex:selectOption itemValue="Karauli" itemlabel="Karauli"/>
+                                        <apex:selectOption itemValue="Kargil" itemlabel="Kargil"/>
+                                        <apex:selectOption itemValue="Karimganj" itemlabel="Karimganj"/>
+                                        <apex:selectOption itemValue="Karimnagar" itemlabel="Karimnagar"/>
+                                        <apex:selectOption itemValue="Karnal" itemlabel="Karnal"/>
+                                        <apex:selectOption itemValue="Karwar" itemlabel="Karwar"/>
+                                        <apex:selectOption itemValue="Kasauli" itemlabel="Kasauli"/>
+                                        <apex:selectOption itemValue="Kashipur" itemlabel="Kashipur"/>
+                                        <apex:selectOption itemValue="Kathua" itemlabel="Kathua"/>
+                                        <apex:selectOption itemValue="Katihar" itemlabel="Katihar"/>
+                                        <apex:selectOption itemValue="Kavaratti" itemlabel="Kavaratti"/>
+                                        <apex:selectOption itemValue="Kawardha" itemlabel="Kawardha"/>
+                                        <apex:selectOption itemValue="Kendrapara" itemlabel="Kendrapara"/>
+                                        <apex:selectOption itemValue="Kendujhar" itemlabel="Kendujhar"/>
+                                        <apex:selectOption itemValue="Khagaria" itemlabel="Khagaria"/>
+                                        <apex:selectOption itemValue="Khajuraho" itemlabel="Khajuraho"/>
+                                        <apex:selectOption itemValue="Khammam" itemlabel="Khammam"/>
+                                        <apex:selectOption itemValue="Khandala" itemlabel="Khandala"/>
+                                        <apex:selectOption itemValue="Kheda" itemlabel="Kheda"/>
+                                        <apex:selectOption itemValue="Kheri" itemlabel="Kheri"/>
+                                        <apex:selectOption itemValue="Khordha" itemlabel="Khordha"/>
+                                        <apex:selectOption itemValue="Kishanganj" itemlabel="Kishanganj"/>
+                                        <apex:selectOption itemValue="KochBihar" itemlabel="KochBihar"/>
+                                        <apex:selectOption itemValue="Kochi" itemlabel="Kochi"/>
+                                        <apex:selectOption itemValue="Kodaikanal" itemlabel="Kodaikanal"/>
+                                        <apex:selectOption itemValue="Kodarma" itemlabel="Kodarma"/>
+                                        <apex:selectOption itemValue="Kohima" itemlabel="Kohima"/>
+                                        <apex:selectOption itemValue="Kokrajhar" itemlabel="Kokrajhar"/>
+                                        <apex:selectOption itemValue="Kolar" itemlabel="Kolar"/>
+                                        <apex:selectOption itemValue="Kolasib" itemlabel="Kolasib"/>
+                                        <apex:selectOption itemValue="Kolhapur" itemlabel="Kolhapur"/>
+                                        <apex:selectOption itemValue="Kolkata" itemlabel="Kolkata"/>
+                                        <apex:selectOption itemValue="Koppal" itemlabel="Koppal"/>
+                                        <apex:selectOption itemValue="Koraput" itemlabel="Koraput"/>
+                                        <apex:selectOption itemValue="Korba" itemlabel="Korba"/>
+                                        <apex:selectOption itemValue="Kota" itemlabel="Kota"/>
+                                        <apex:selectOption itemValue="Kottayam" itemlabel="Kottayam"/>
+                                        <apex:selectOption itemValue="Kozhikode" itemlabel="Kozhikode"/>
+                                        <apex:selectOption itemValue="Kullu" itemlabel="Kullu"/>
+                                        <apex:selectOption itemValue="Kupwara" itemlabel="Kupwara"/>
+                                        <apex:selectOption itemValue="Kurnool" itemlabel="Kurnool"/>
+                                        <apex:selectOption itemValue="Kurukshetra" itemlabel="Kurukshetra"/>
+                                        <apex:selectOption itemValue="Kushinagar" itemlabel="Kushinagar"/>
+                                        <apex:selectOption itemValue="Lakhisarai" itemlabel="Lakhisarai"/>
+                                        <apex:selectOption itemValue="Lalitpur" itemlabel="Lalitpur"/>
+                                        <apex:selectOption itemValue="Latur" itemlabel="Latur"/>
+                                        <apex:selectOption itemValue="Leh" itemlabel="Leh"/>
+                                        <apex:selectOption itemValue="Lohardaga" itemlabel="Lohardaga"/>
+                                        <apex:selectOption itemValue="Lonavala" itemlabel="Lonavala"/>
+                                        <apex:selectOption itemValue="Lucknow" itemlabel="Lucknow"/>
+                                        <apex:selectOption itemValue="Ludhiana" itemlabel="Ludhiana"/>
+                                        <apex:selectOption itemValue="Lunglei" itemlabel="Lunglei"/>
+                                        <apex:selectOption itemValue="Madhepura" itemlabel="Madhepura"/>
+                                        <apex:selectOption itemValue="Madhubani" itemlabel="Madhubani"/>
+                                        <apex:selectOption itemValue="Madikeri" itemlabel="Madikeri"/>
+                                        <apex:selectOption itemValue="Madurai" itemlabel="Madurai"/>
+                                        <apex:selectOption itemValue="Mahabaleshwar" itemlabel="Mahabaleshwar"/>
+                                        <apex:selectOption itemValue="Mahasamund" itemlabel="Mahasamund"/>
+                                        <apex:selectOption itemValue="Mahbubnagar" itemlabel="Mahbubnagar"/>
+                                        <apex:selectOption itemValue="Mahe" itemlabel="Mahe"/>
+                                        <apex:selectOption itemValue="Mahendragarh" itemlabel="Mahendragarh"/>
+                                        <apex:selectOption itemValue="Mahesana" itemlabel="Mahesana"/>
+                                        <apex:selectOption itemValue="Mahoba" itemlabel="Mahoba"/>
+                                        <apex:selectOption itemValue="Mahona" itemlabel="Mahona"/>
+                                        <apex:selectOption itemValue="Mainpuri" itemlabel="Mainpuri"/>
+                                        <apex:selectOption itemValue="Mamallapuram" itemlabel="Mamallapuram"/>
+                                        <apex:selectOption itemValue="Mamit" itemlabel="Mamit"/>
+                                        <apex:selectOption itemValue="Manali" itemlabel="Manali"/>
+                                        <apex:selectOption itemValue="Mandawa" itemlabel="Mandawa"/>
+                                        <apex:selectOption itemValue="Mandi" itemlabel="Mandi"/>
+                                        <apex:selectOption itemValue="Mandla" itemlabel="Mandla"/>
+                                        <apex:selectOption itemValue="Mandsaur" itemlabel="Mandsaur"/>
+                                        <apex:selectOption itemValue="Mandya" itemlabel="Mandya"/>
+                                        <apex:selectOption itemValue="Mangalore" itemlabel="Mangalore"/>
+                                        <apex:selectOption itemValue="Mansa" itemlabel="Mansa"/>
+                                        <apex:selectOption itemValue="Mapusa" itemlabel="Mapusa"/>
+                                        <apex:selectOption itemValue="Margao" itemlabel="Margao"/>
+                                        <apex:selectOption itemValue="Marigaon" itemlabel="Marigaon"/>
+                                        <apex:selectOption itemValue="Mathura" itemlabel="Mathura"/>
+                                        <apex:selectOption itemValue="Matli" itemlabel="Matli"/>
+                                        <apex:selectOption itemValue="Medinipur" itemlabel="Medinipur"/>
+                                        <apex:selectOption itemValue="Meerut" itemlabel="Meerut"/>
+                                        <apex:selectOption itemValue="Moga" itemlabel="Moga"/>
+                                        <apex:selectOption itemValue="Mohali" itemlabel="Mohali"/>
+                                        <apex:selectOption itemValue="Mokokchung" itemlabel="Mokokchung"/>
+                                        <apex:selectOption itemValue="Moradabad" itemlabel="Moradabad"/>
+                                        <apex:selectOption itemValue="Morena" itemlabel="Morena"/>
+                                        <apex:selectOption itemValue="Mormugao" itemlabel="Mormugao"/>
+                                        <apex:selectOption itemValue="Muktsar" itemlabel="Muktsar"/>
+                                        <apex:selectOption itemValue="Mumbai" itemlabel="Mumbai"/>
+                                        <apex:selectOption itemValue="Munger" itemlabel="Munger"/>
+                                        <apex:selectOption itemValue="Murshidabad" itemlabel="Murshidabad"/>
+                                        <apex:selectOption itemValue="Mussoorie" itemlabel="Mussoorie"/>
+                                        <apex:selectOption itemValue="Muzaffarnagar" itemlabel="Muzaffarnagar"/>
+                                        <apex:selectOption itemValue="Muzaffarpur" itemlabel="Muzaffarpur"/>
+                                        <apex:selectOption itemValue="Mysore" itemlabel="Mysore"/>
+                                        <apex:selectOption itemValue="Nabarangapur" itemlabel="Nabarangapur"/>
+                                        <apex:selectOption itemValue="Nagaon" itemlabel="Nagaon"/>
+                                        <apex:selectOption itemValue="Nagapattinam" itemlabel="Nagapattinam"/>
+                                        <apex:selectOption itemValue="Nagaur" itemlabel="Nagaur"/>
+                                        <apex:selectOption itemValue="Nagpur" itemlabel="Nagpur"/>
+                                        <apex:selectOption itemValue="Nainital" itemlabel="Nainital"/>
+                                        <apex:selectOption itemValue="Nalbari" itemlabel="Nalbari"/>
+                                        <apex:selectOption itemValue="Nalgonda" itemlabel="Nalgonda"/>
+                                        <apex:selectOption itemValue="Namakkal" itemlabel="Namakkal"/>
+                                        <apex:selectOption itemValue="Nandurbar" itemlabel="Nandurbar"/>
+                                        <apex:selectOption itemValue="Narsimhapur" itemlabel="Narsimhapur"/>
+                                        <apex:selectOption itemValue="Narwana" itemlabel="Narwana"/>
+                                        <apex:selectOption itemValue="Nashik" itemlabel="Nashik"/>
+                                        <apex:selectOption itemValue="NaviMumbai" itemlabel="NaviMumbai"/>
+                                        <apex:selectOption itemValue="Navsari" itemlabel="Navsari"/>
+                                        <apex:selectOption itemValue="Nawada" itemlabel="Nawada"/>
+                                        <apex:selectOption itemValue="Nawalgarh" itemlabel="Nawalgarh"/>
+                                        <apex:selectOption itemValue="Nawanshahr" itemlabel="Nawanshahr"/>
+                                        <apex:selectOption itemValue="Nayagarh" itemlabel="Nayagarh"/>
+                                        <apex:selectOption itemValue="Neemuch" itemlabel="Neemuch"/>
+                                        <apex:selectOption itemValue="Nellore" itemlabel="Nellore"/>
+                                        <apex:selectOption itemValue="NewDelhi" itemlabel="NewDelhi"/>
+                                        <apex:selectOption itemValue="Nizamabad" itemlabel="Nizamabad"/>
+                                        <apex:selectOption itemValue="Noida" itemlabel="Noida"/>
+                                        <apex:selectOption itemValue="Ooty" itemlabel="Ooty"/>
+                                        <apex:selectOption itemValue="Orchha" itemlabel="Orchha"/>
+                                        <apex:selectOption itemValue="Osmanabad" itemlabel="Osmanabad"/>
+                                        <apex:selectOption itemValue="Pakaur" itemlabel="Pakaur"/>
+                                        <apex:selectOption itemValue="Palakkad" itemlabel="Palakkad"/>
+                                        <apex:selectOption itemValue="Pali" itemlabel="Pali"/>
+                                        <apex:selectOption itemValue="Palwal" itemlabel="Palwal"/>
+                                        <apex:selectOption itemValue="Panaji" itemlabel="Panaji"/>
+                                        <apex:selectOption itemValue="Panchkula" itemlabel="Panchkula"/>
+                                        <apex:selectOption itemValue="Panipat" itemlabel="Panipat"/>
+                                        <apex:selectOption itemValue="Panna" itemlabel="Panna"/>
+                                        <apex:selectOption itemValue="Parbhani" itemlabel="Parbhani"/>
+                                        <apex:selectOption itemValue="Patan" itemlabel="Patan"/>
+                                        <apex:selectOption itemValue="Pathanamthitta" itemlabel="Pathanamthitta"/>
+                                        <apex:selectOption itemValue="Pathankot" itemlabel="Pathankot"/>
+                                        <apex:selectOption itemValue="Patiala" itemlabel="Patiala"/>
+                                        <apex:selectOption itemValue="Patna" itemlabel="Patna"/>
+                                        <apex:selectOption itemValue="Perambalur" itemlabel="Perambalur"/>
+                                        <apex:selectOption itemValue="PernemTaluka" itemlabel="PernemTaluka"/>
+                                        <apex:selectOption itemValue="Phek" itemlabel="Phek"/>
+                                        <apex:selectOption itemValue="Pilibhit" itemlabel="Pilibhit"/>
+                                        <apex:selectOption itemValue="Pinjore" itemlabel="Pinjore"/>
+                                        <apex:selectOption itemValue="Pithoragarh" itemlabel="Pithoragarh"/>
+                                        <apex:selectOption itemValue="Pondicherry" itemlabel="Pondicherry"/>
+                                        <apex:selectOption itemValue="Porbandar" itemlabel="Porbandar"/>
+                                        <apex:selectOption itemValue="PortBlair" itemlabel="PortBlair"/>
+                                        <apex:selectOption itemValue="Pudukkottai" itemlabel="Pudukkottai"/>
+                                        <apex:selectOption itemValue="Pune" itemlabel="Pune"/>
+                                        <apex:selectOption itemValue="Puri" itemlabel="Puri"/>
+                                        <apex:selectOption itemValue="Purnia" itemlabel="Purnia"/>
+                                        <apex:selectOption itemValue="Puruliya" itemlabel="Puruliya"/>
+                                        <apex:selectOption itemValue="Pushkar" itemlabel="Pushkar"/>
+                                        <apex:selectOption itemValue="RaeBareli" itemlabel="RaeBareli"/>
+                                        <apex:selectOption itemValue="Raichur" itemlabel="Raichur"/>
+                                        <apex:selectOption itemValue="Raigarh" itemlabel="Raigarh"/>
+                                        <apex:selectOption itemValue="Raipur" itemlabel="Raipur"/>
+                                        <apex:selectOption itemValue="Raisen" itemlabel="Raisen"/>
+                                        <apex:selectOption itemValue="Rajahmundry" itemlabel="Rajahmundry"/>
+                                        <apex:selectOption itemValue="Rajauri" itemlabel="Rajauri"/>
+                                        <apex:selectOption itemValue="Rajgarh" itemlabel="Rajgarh"/>
+                                        <apex:selectOption itemValue="Rajkot" itemlabel="Rajkot"/>
+                                        <apex:selectOption itemValue="Rajnandgaon" itemlabel="Rajnandgaon"/>
+                                        <apex:selectOption itemValue="Rajpura" itemlabel="Rajpura"/>
+                                        <apex:selectOption itemValue="Rajsamand" itemlabel="Rajsamand"/>
+                                        <apex:selectOption itemValue="Ramanathapuram" itemlabel="Ramanathapuram"/>
+                                        <apex:selectOption itemValue="Rampur" itemlabel="Rampur"/>
+                                        <apex:selectOption itemValue="Ranchi" itemlabel="Ranchi"/>
+                                        <apex:selectOption itemValue="Ranikhet" itemlabel="Ranikhet"/>
+                                        <apex:selectOption itemValue="Ratlam" itemlabel="Ratlam"/>
+                                        <apex:selectOption itemValue="Ratnagiri" itemlabel="Ratnagiri"/>
+                                        <apex:selectOption itemValue="Raurkela" itemlabel="Raurkela"/>
+                                        <apex:selectOption itemValue="Rayagada" itemlabel="Rayagada"/>
+                                        <apex:selectOption itemValue="Rewa" itemlabel="Rewa"/>
+                                        <apex:selectOption itemValue="Rewari" itemlabel="Rewari"/>
+                                        <apex:selectOption itemValue="Rohtak" itemlabel="Rohtak"/>
+                                        <apex:selectOption itemValue="Roorkee" itemlabel="Roorkee"/>
+                                        <apex:selectOption itemValue="Ropar/Rupnager" itemlabel="Ropar/Rupnager"/>
+                                        <apex:selectOption itemValue="Rudrapur" itemlabel="Rudrapur"/>
+                                        <apex:selectOption itemValue="Sagar" itemlabel="Sagar"/>
+                                        <apex:selectOption itemValue="Saharanpur" itemlabel="Saharanpur"/>
+                                        <apex:selectOption itemValue="Saharsa" itemlabel="Saharsa"/>
+                                        <apex:selectOption itemValue="Sahibganj" itemlabel="Sahibganj"/>
+                                        <apex:selectOption itemValue="Saiha" itemlabel="Saiha"/>
+                                        <apex:selectOption itemValue="Salem" itemlabel="Salem"/>
+                                        <apex:selectOption itemValue="Sancoale" itemlabel="Sancoale"/>
+                                        <apex:selectOption itemValue="Sangli" itemlabel="Sangli"/>
+                                        <apex:selectOption itemValue="Sangrur" itemlabel="Sangrur"/>
+                                        <apex:selectOption itemValue="Satara" itemlabel="Satara"/>
+                                        <apex:selectOption itemValue="Satna" itemlabel="Satna"/>
+                                        <apex:selectOption itemValue="SawaiMadhopur" itemlabel="SawaiMadhopur"/>
+                                        <apex:selectOption itemValue="Sehore" itemlabel="Sehore"/>
+                                        <apex:selectOption itemValue="Seoni" itemlabel="Seoni"/>
+                                        <apex:selectOption itemValue="Serchhip" itemlabel="Serchhip"/>
+                                        <apex:selectOption itemValue="Shahjahanpur" itemlabel="Shahjahanpur"/>
+                                        <apex:selectOption itemValue="Shillong" itemlabel="Shillong"/>
+                                        <apex:selectOption itemValue="Shimla" itemlabel="Shimla"/>
+                                        <apex:selectOption itemValue="Shimoga" itemlabel="Shimoga"/>
+                                        <apex:selectOption itemValue="Shivpuri" itemlabel="Shivpuri"/>
+                                        <apex:selectOption itemValue="Sibsagar" itemlabel="Sibsagar"/>
+                                        <apex:selectOption itemValue="Sidhi" itemlabel="Sidhi"/>
+                                        <apex:selectOption itemValue="Sikar" itemlabel="Sikar"/>
+                                        <apex:selectOption itemValue="Silchar" itemlabel="Silchar"/>
+                                        <apex:selectOption itemValue="Siliguri" itemlabel="Siliguri"/>
+                                        <apex:selectOption itemValue="Silvassa" itemlabel="Silvassa"/>
+                                        <apex:selectOption itemValue="Sirohi" itemlabel="Sirohi"/>
+                                        <apex:selectOption itemValue="Sirsa" itemlabel="Sirsa"/>
+                                        <apex:selectOption itemValue="Sitapur" itemlabel="Sitapur"/>
+                                        <apex:selectOption itemValue="Sivaganga" itemlabel="Sivaganga"/>
+                                        <apex:selectOption itemValue="Solan" itemlabel="Solan"/>
+                                        <apex:selectOption itemValue="Solapur" itemlabel="Solapur"/>
+                                        <apex:selectOption itemValue="Somvarpet" itemlabel="Somvarpet"/>
+                                        <apex:selectOption itemValue="Sonipat" itemlabel="Sonipat"/>
+                                        <apex:selectOption itemValue="Srikakulam" itemlabel="Srikakulam"/>
+                                        <apex:selectOption itemValue="Srinagar" itemlabel="Srinagar"/>
+                                        <apex:selectOption itemValue="Sultanpur" itemlabel="Sultanpur"/>
+                                        <apex:selectOption itemValue="Sundargarh" itemlabel="Sundargarh"/>
+                                        <apex:selectOption itemValue="Surat" itemlabel="Surat"/>
+                                        <apex:selectOption itemValue="Tawang" itemlabel="Tawang"/>
+                                        <apex:selectOption itemValue="Tezpur" itemlabel="Tezpur"/>
+                                        <apex:selectOption itemValue="Thane" itemlabel="Thane"/>
+                                        <apex:selectOption itemValue="Thanjavur" itemlabel="Thanjavur"/>
+                                        <apex:selectOption itemValue="Thiruvallur" itemlabel="Thiruvallur"/>
+                                        <apex:selectOption itemValue="Thiruvarur" itemlabel="Thiruvarur"/>
+                                        <apex:selectOption itemValue="Thoubal" itemlabel="Thoubal"/>
+                                        <apex:selectOption itemValue="Thrissur" itemlabel="Thrissur"/>
+                                        <apex:selectOption itemValue="Tikamgarh" itemlabel="Tikamgarh"/>
+                                        <apex:selectOption itemValue="Tinsukia" itemlabel="Tinsukia"/>
+                                        <apex:selectOption itemValue="Tiruchirapalli" itemlabel="Tiruchirapalli"/>
+                                        <apex:selectOption itemValue="Tirunelveli" itemlabel="Tirunelveli"/>
+                                        <apex:selectOption itemValue="Tirupathi" itemlabel="Tirupathi"/>
+                                        <apex:selectOption itemValue="Tonk" itemlabel="Tonk"/>
+                                        <apex:selectOption itemValue="Trivandrum" itemlabel="Trivandrum"/>
+                                        <apex:selectOption itemValue="Tuensang" itemlabel="Tuensang"/>
+                                        <apex:selectOption itemValue="Tumkur" itemlabel="Tumkur"/>
+                                        <apex:selectOption itemValue="Udaipur" itemlabel="Udaipur"/>
+                                        <apex:selectOption itemValue="Udhampur" itemlabel="Udhampur"/>
+                                        <apex:selectOption itemValue="Udupi" itemlabel="Udupi"/>
+                                        <apex:selectOption itemValue="Ujjain" itemlabel="Ujjain"/>
+                                        <apex:selectOption itemValue="Umaria" itemlabel="Umaria"/>
+                                        <apex:selectOption itemValue="Una" itemlabel="Una"/>
+                                        <apex:selectOption itemValue="Unnao" itemlabel="Unnao"/>
+                                        <apex:selectOption itemValue="Uttarkashi" itemlabel="Uttarkashi"/>
+                                        <apex:selectOption itemValue="Vadodara" itemlabel="Vadodara"/>
+                                        <apex:selectOption itemValue="Valsad" itemlabel="Valsad"/>
+                                        <apex:selectOption itemValue="Vapi" itemlabel="Vapi"/>
+                                        <apex:selectOption itemValue="Varanasi" itemlabel="Varanasi"/>
+                                        <apex:selectOption itemValue="Varca" itemlabel="Varca"/>
+                                        <apex:selectOption itemValue="Vellore" itemlabel="Vellore"/>
+                                        <apex:selectOption itemValue="Vidisha" itemlabel="Vidisha"/>
+                                        <apex:selectOption itemValue="Vijayawada" itemlabel="Vijayawada"/>
+                                        <apex:selectOption itemValue="Viluppuram" itemlabel="Viluppuram"/>
+                                        <apex:selectOption itemValue="Virar" itemlabel="Virar"/>
+                                        <apex:selectOption itemValue="Virudhunagar" itemlabel="Virudhunagar"/>
+                                        <apex:selectOption itemValue="Visakhapatnam" itemlabel="Visakhapatnam"/>
+                                        <apex:selectOption itemValue="Vizianagaram" itemlabel="Vizianagaram"/>
+                                        <apex:selectOption itemValue="Vyara" itemlabel="Vyara"/>
+                                        <apex:selectOption itemValue="Warangal" itemlabel="Warangal"/>
+                                        <apex:selectOption itemValue="Wardha" itemlabel="Wardha"/>
+                                        <apex:selectOption itemValue="Washim" itemlabel="Washim"/>
+                                        <apex:selectOption itemValue="Wokha" itemlabel="Wokha"/>
+                                        <apex:selectOption itemValue="Yamunanagar" itemlabel="Yamunanagar"/>
+                                        <apex:selectOption itemValue="Yanam" itemlabel="Yanam"/>
+                                        <apex:selectOption itemValue="Yavatmal" itemlabel="Yavatmal"/>
+                                        <apex:selectOption itemValue="Zirakhpur" itemlabel="Zirakhpur"/>
+                                        <apex:selectOption itemValue="Zunheboto" itemlabel="Zunheboto"/>
+      
+                                    </apex:selectList>
+                                   
+                                   <span>   
+                                      <apex:selectList id="statelist_id" value="{!state}" size="1"  multiselect="false" styleClass="tab_bg tab_bg1" style="display: none;">
+        
+                                            <apex:selectOption itemValue="None" itemlabel="Select State"/> 
+                                            <apex:selectOption itemValue="ALABAMA" itemlabel="ALABAMA"/>
+                                            <apex:selectOption itemValue="ALASKA" itemlabel="ALASKA"/>
+                                            <apex:selectOption itemValue="ARIZONA" itemlabel="ARIZONA"/>
+                                            <apex:selectOption itemValue="ARKANSAS" itemlabel="ARKANSAS"/>
+                                            <apex:selectOption itemValue="CALIFORNIA" itemlabel="CALIFORNIA"/>
+                                            <apex:selectOption itemValue="COLORADO" itemlabel="COLORADO"/>
+                                            <apex:selectOption itemValue="CONNECTICUT" itemlabel="CONNECTICUT"/>
+                                            <apex:selectOption itemValue="DELAWARE" itemlabel="DELAWARE"/>
+                                            <apex:selectOption itemValue="FLORIDA" itemlabel="FLORIDA"/>
+                                            <apex:selectOption itemValue="GEORGIA" itemlabel="GEORGIA"/>
+                                            <apex:selectOption itemValue="HAWAII" itemlabel="HAWAII"/>
+                                            <apex:selectOption itemValue="IDAHO" itemlabel="IDAHO"/>
+                                            <apex:selectOption itemValue="ILLINOIS" itemlabel="ILLINOIS"/>
+                                            <apex:selectOption itemValue="INDIANA" itemlabel="INDIANA"/>
+                                            <apex:selectOption itemValue="IOWA" itemlabel="IOWA"/>
+                                            <apex:selectOption itemValue="KANSAS" itemlabel="KANSAS"/>
+                                            <apex:selectOption itemValue="KENTUCKY" itemlabel="KENTUCKY"/>
+                                            <apex:selectOption itemValue="LOUISIANA" itemlabel="LOUISIANA"/>
+                                            <apex:selectOption itemValue="MAINE" itemlabel="MAINE"/>
+                                            <apex:selectOption itemValue="MARYLAND" itemlabel="MARYLAND"/>
+                                            <apex:selectOption itemValue="MASSACHUSETTS" itemlabel="MASSACHUSETTS"/>
+                                            <apex:selectOption itemValue="MICHIGAN" itemlabel="MICHIGAN"/>
+                                            <apex:selectOption itemValue="MINNESOTA" itemlabel="MINNESOTA"/>
+                                            <apex:selectOption itemValue="MISSISSIPPI" itemlabel="MISSISSIPPI"/>
+                                            <apex:selectOption itemValue="MISSOURI" itemlabel="MISSOURI"/>
+                                            <apex:selectOption itemValue="MONTANA" itemlabel="MONTANA"/>
+                                            <apex:selectOption itemValue="NEBRASKA" itemlabel="NEBRASKA"/>
+                                            <apex:selectOption itemValue="NEVADA" itemlabel="NEVADA"/>
+                                            <apex:selectOption itemValue="NEW HAMPSHIRE" itemlabel="NEW HAMPSHIRE"/>
+                                            <apex:selectOption itemValue="NEW JERSEY" itemlabel="NEW JERSEY"/>
+                                            <apex:selectOption itemValue="NEW MEXICO" itemlabel="NEW MEXICO"/>
+                                            <apex:selectOption itemValue="NEW YORK" itemlabel="NEW YORK"/>
+                                            <apex:selectOption itemValue="NORTH CAROLINA" itemlabel="NORTH CAROLINA"/>
+                                            <apex:selectOption itemValue="NORTH DAKOTA" itemlabel="NORTH DAKOTA"/>
+                                            <apex:selectOption itemValue="OHIO" itemlabel="OHIO"/>
+                                            <apex:selectOption itemValue="OKLAHOMA" itemlabel="OKLAHOMA"/>
+                                            <apex:selectOption itemValue="OREGON" itemlabel="OREGON"/>
+                                            <apex:selectOption itemValue="PENNSYLVANIA" itemlabel="PENNSYLVANIA"/>
+                                            <apex:selectOption itemValue="RHODE ISLAND" itemlabel="RHODE ISLAND"/>
+                                            <apex:selectOption itemValue="SOUTH CAROLINA" itemlabel="SOUTH CAROLINA"/>
+                                            <apex:selectOption itemValue="SOUTH DAKOTA" itemlabel="SOUTH DAKOTA"/>
+                                            <apex:selectOption itemValue="TENNESSEE" itemlabel="TENNESSEE"/>
+                                            <apex:selectOption itemValue="TEXAS" itemlabel="TEXAS"/>
+                                            <apex:selectOption itemValue="UTAH" itemlabel="UTAH"/>
+                                            <apex:selectOption itemValue="VERMONT" itemlabel="VERMONT"/>
+                                            <apex:selectOption itemValue="VIRGINIA" itemlabel="VIRGINIA"/>
+                                            <apex:selectOption itemValue="WASHINGTON" itemlabel="WASHINGTON"/>
+                                            <apex:selectOption itemValue="WEST VIRGINIA" itemlabel="WEST VIRGINIA"/>
+                                            <apex:selectOption itemValue="WISCONSIN" itemlabel="WISCONSIN"/>
+                                            <apex:selectOption itemValue="WYOMING" itemlabel="WYOMING"/>
+                                            
+                                        </apex:selectList>
+                                   </span> 
+                                    
+                                    
+                                   <span class="inputBG">   
+                                     <apex:inputText value="{!city}" id="div_city" styleClass="dropEnquire" style="display: none;"/> 
+                                   </span>                                      
+                                </div> 
+                              <div class="error" id="city_err">Enter City</div>
+                              <div class="error" id="city_err1">Select City</div>
+                              <div class="error" id="state_err">Select State</div>
+                               <div class="error" id="city_err2">Please enter valid city</div>
+                            </div>                  
+                        </div>
+                        <div class="clearBoth"></div>  
+                                                                  
+                         <div id="VerificationBlock">
+                         <apex:outputText value="*" style="color: #FF0000;"/>       
+                            <apex:image id="lmobileverify" value="{!$Resource.lmobile_verify}"/>
+                            <span id="verificationdiv">
+                            <apex:inputText id="ConfirmationCode"  size="4" maxlength="4"/>
+                            &nbsp;&nbsp;
+                            <a href="#" id="GenCodeLink" class="lodha_submit_btn"><span>Get Verification Code</span></a>
+                            <span id="processing_msg_code">Sending code...</span>
+                            <span class="error" id="confirmationcode_err">Invalid verification code.</span>
+                            <span class="error" id="mobile_empty_err">Please validate your mobile number</span>
+                            </span>
+                            <div class="error" id="verify_msg">Please enter the 4-digit verification code sent on your mobile into the highlighted field and submit your enquiry.</div>
+                        </div>
+                        
+                       <apex:outputPanel rendered="{!showAccommodationType}">
+                        <div class="contactsEnquire" id="dvAccommodationType" >
+                            <div class="enquHight"><!--CG Dev team 16/11/2011 changed project type from CASA to ASPIRATIONAL-->
+                                <h2><apex:outputText value="*" style="color: #FF0000;" rendered="{!if(ProjectName=='LODHA BELLEZZA',true,false)}" />
+                                <apex:image id="theImageResidenceType" value="{!$Resource.ResidenceType}" rendered="{!showAccommodationType}"/></h2>
+                                <span>
+                                    <apex:selectList id="accommodationType"  value="{!AccommodationValue}" multiselect="false" size="1" styleClass="tab_bg tab_bg1" rendered="{!showAccommodationType}">
+                                       <apex:selectOptions value="{!AccommodationType }"  rendered="true"/>  
+                                    </apex:selectList>
+                                </span>
+                                    <div class="error" id="Accommodation_err">Select choice of Residence</div>
+                            </div>
+                        </div>
+                        </apex:outputPanel>
+                        <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2>
+                                    <apex:outputText value="*" style="color: #FF0000;" rendered="{!if(ProjectType=='ASPIRATIONAL',false,true)}"/><!--CG Dev team 16/11/2011 changed project type from CASA to ASPIRATIONAL-->
+                                    <apex:image rendered="{!if(ProjectType=='CASA',false,true)}" id="theImage12" value="{!$Resource.Designation}"/>
+                                </h2>
+                                <span class="inputBG">
+                                   <apex:inputText value="{!Designation}" rendered="{!if(ProjectType=='CASA',false,true)}" id="Designation"  styleClass="dropEnquire" style="width: 160px"/>
+                                </span>
+                                    <div class="error" id="Designation_err">Enter Designation </div>
+                                    <div class="error" id="Designation_err1">Please enter valid designation</div>
+                            </div>
+                        </div>
+                       <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2><!--CG Dev team 16/11/2011 changed project type from CASA to ASPIRATIONAL-->
+                                    <apex:outputText value="*" style="color: #FF0000;" rendered="{!if(ProjectType=='ASPIRATIONAL',false,true)}"/><!--CG Dev team 16/11/2011 changed project type from CASA to ASPIRATIONAL-->
+                                    <apex:image id="theImage13" value="{!$Resource.Company}" rendered="{!if(ProjectType=='CASA',false,true)}"/>
+                                </h2>
+                                 <span class="inputBG">
+                                   <apex:inputText value="{!CompanyName}"  styleClass="dropEnquire" id="CompanyName" rendered="{!if(ProjectType=='CASA',false,true)}"/>
+                                </span>
+                                    <div class="error" id="CompanyName_err">Enter Company Name </div>
+                                    <div class="error" id="CompanyName_err1">Please enter valid Company name </div>
+                            </div>
+                        </div>
+                        <div class="clearBoth"></div>
+                         <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2>
+                                    <apex:outputText value="* Mandatory fields" style="color:#FF0000;" />
+                                </h2>
+                                
+                            </div>
+                        </div>
+                        <div class="clearBoth"></div>
+                         <div class="contactsEnquire">
+                            <div class="enquHight">
+                                <h2>
+                                     
+                                     <!-- command link is replaced by href and action function-->
+                                     <a href="#" id="SubmitLeadLink" class="btnEnquire"></a>
+                                    
+                           <apex:actionFunction action="{!SaveLead}" name="submitLead" oncomplete="if({!Success}){callpatch();redirect();}else{sendmessage();}"/>
+                                <apex:actionFunction name="redirect" oncomplete="window.parent.location.href =treturl"/>                                            
+                             <apex:actionFunction action="{!senderrmsg}" immediate="true" name="sendmessage" oncomplete="alert('Due to some technical issue, your enquiry could not be submitted. Please resubmit your details.');
+                              window.location.reload(true);"/> <!--CG Dev team added to send error mails to admins-->
+                                                            
+                                </h2>
+                                        
+                            </div>
+                          
+                        </div>
+                        <div class="clearBoth"></div>
+                     <br/>
+                       <div id="processing_msg">Your enquiry is being submitted ...</div>
+                       
+                <table id="table" width="50%" border="0" cellspacing="0" style="text-align:center;margin-top:1px;font-size:8pt;font-family:Arial Unicode MS;">
+                    <tr>
+                        <td colspan="2" align="left">
+                            <div id="ErrorMessage" class="error" style="display: inline;"></div>
+                             <apex:outputtext id="uname_err" styleclass="error" style="display: none;" value="Enter your name" />
+                                                      
+                            <div id="emailid_err" class="error" style="display: none;">Enter email ID</div>
+                            <div id="emailid1_err" class="error" style="display: none;">Please enter valid E-Mail Id </div>
+                            <div id="country_err" class="error" style="display: none;">Select Country</div>
+                            <div id="city_err" class="error" style="display: none;">Enter City</div>
+                            <div id="mobile_err_null" class="error" style="display: none;">Enter mobile number</div>
+                            <!--  -->
+                            <div id="mobile_err" class="error" style="display: none;">Enter your Mobile / Landline number</div>
+                            <div id="mobile_err1" class="error" style="display: none;"> Mobile number should be in proper format.</div>
+                            <div id="mobile_zero" class="error" style="display: none;"> Mobile number should not begin with zero.</div>
+                            <div id="landline_err" class="error" style="display: none;">Enter your Landline number</div>
+                            <div id="landline_err1" class="error" style="display: none;"> Landline number should be in proper format.</div>
+
+                             <div id="Designation_err" class="error" style="display: none;">Enter Designation</div>
+                            <div id="CompanyName_err" class="error" style="display: none;">Enter Company Name</div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="2">
+                            <apex:inputHidden value="{!ProjectType}" id="ProjectType"/>
+                  
+                        </td>
+                    </tr>         
+             
+                    <tr>
+                        <td>&nbsp;
+                         <apex:inputHidden value="{!recType}" id="recvalue"/>
+                         <apex:inputHidden value="{!MandatoryDeCompany}" id="DesCompanyMandatory"/>
+                         <apex:inputHidden value="{!Mandatorychoiceofresidence}" id="Mandatorychoiceofresidence"/>
+                         <apex:inputhidden value="{!allowmobileverification}" id="allowmobileverification"/>
+                         <apex:inputhidden value="{!allowcallpatching}" id="allowcallpatching"/>
+                         <apex:inputhidden value="{!callcenterno}" id="callcenterno"/>
+                         <apex:inputhidden value="{!currenttime}" id="currenttime" />
+                         <apex:inputhidden value="{!CountryName}" id="CompanyName1"/>
+                          <apex:inputhidden value="{!CheckCode}" id="CheckCode"/>
+                        </td>
+                    </tr>
+                    
+                   
+                    
+                   
+                   
+                </table>
+            </apex:pageBlock>
+            
+          
+            
+            
+            
+            
+        </apex:form>
+    </apex:define>   
+    </div>
+     <!--  -->
+        <script>
+            window.onload = getCountryValue;
+        </script>
+    <!--  -->
+     <script>
+  
+    function jq(myid) 
+    { 
+    /* This function handles the colon in VisualForce Ids */
+                   
+           return '#' + myid.replace(/(:|\.)/g,'\\\$1');
+
+      }
+         
+                 function callpatch(){
+                 
+                       var mobilenumber=j$(jq(tMobileNumber)).val();
+                       var callpatchtime=j$(jq(tcurrenttime)).val();
+                       var allowcallpatching=j$(jq(tallowcallpatching)).val();
+                       var callcenterno=j$(jq(tcallcenterno)).val();
+                
+                var currentDate = new Date();
+                       
+                                           
+                                 
+                     if(currentDate.getHours() >=10&& currentDate.getHours() <=18&&(j$(jq(tallowcallpatching)).val()=="true")){     
+                      
+              
+                                    
+                       var callpatchurl= null; 
+                       
+                       callpatchurl="http://203.122.58.253:8686/Lodha/clicktocall?mno=91"+mobilenumber+"&uid=lodha&pwd=lodha123&bridge=91"+callcenterno+"";
+                                                                                                                
+                       try{
+                       j$.ajax({ 
+                                type: "POST",                   
+                                url:callpatchurl,
+                                dataType: "jsonp",
+                                data: {},
+                                success: function(data) {
+                                        
+                                    }
+                                                         
+                            });   
+                            }catch(err){
+                            }
+                      }  
+                      
+                      return false;
+                 }
+      
+   </script>
+   
+   <!-- Google Analytics tracking code -->
+        <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        
+        ga('create', 'UA-40840059-1', 'force.com');
+        ga('send', 'pageview');
+        
+        </script>
+
+
+</apex:page>

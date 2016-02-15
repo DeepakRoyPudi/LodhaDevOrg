@@ -1,0 +1,79 @@
+<apex:page controller="ComprehensiveInfoReportController" sidebar="false" showHeader="false">
+    <apex:form id="formid">
+        <apex:pageBlock title="Customer Reports">
+               <!-- <apex:commandButton value="Comprehensive Info" id="CompButtonID"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <apex:commandButton value="Profile Info" id="ProfileButtonID"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <apex:commandButton value="Cases Info" id="CasesINfoButtonID"/>-->
+        
+         <apex:pageBlockSection >
+            <!-- <apex:pageBlockTable value="{!mAccounts}" Var="CRN">
+                 <apex:column headerValue="CRN">
+                 {!CRN}
+                 </apex:column>
+                 
+                 <apex:column headerValue="Co Applicant">
+                 {!mAccounts[CRN].Co_Applicant__c}
+                 </apex:column>
+                 
+                 <apex:column headerValue="Loyalty ID">
+                 {!mAccounts[CRN].LoyaltyID__c}
+                 </apex:column>-->
+                 
+                 <!-- <apex:column headerValue="Consideration_Value">
+                 {!mAccounts[CRN].Consideration_Value__c}
+                 </apex:column>-->
+                 
+               <!-- <apex:column headerValue="Consideration Value">
+                
+                <apex:outputtext value="{!mBooking[CRN].Consideration_Value__c}" rendered="{!mBooking[CRN]}"/>
+                 
+                 </apex:column>-->
+                 
+                <!-- <apex:column headerValue="Preferred Mode of Communication">
+                 {!mAccounts[CRN].Preferred_mode_of_Contact__c}
+                 </apex:column>
+                 
+                  <apex:column headerValue="No. Of Compalints">
+                 {!mCase[CRN]}
+                 </apex:column>
+                 
+                 <apex:column headerValue="OwnerId">
+                 {!mAccounts[CRN].OwnerId}
+                 </apex:column>
+                 
+                 
+                 <apex:column headerValue="Ethinicity">
+                 {!mAccounts[CRN].Ethinicity__c}
+                 </apex:column>
+                 
+                 <apex:column headerValue="Age">
+                 {!mAccounts[CRN].Age__c }
+                 </apex:column>
+                 
+                 <apex:column headerValue="Marital_Status">
+                 {!mAccounts[CRN].Marital_Status__c }
+                 </apex:column>
+                 
+                 <apex:column headerValue="No of children">
+                 {!mAccounts[CRN].No_of_children__c }
+                 </apex:column>
+                 
+                 <apex:column headerValue="Purpose of Purchase">
+                 {!mAccounts[CRN].Purpose_of_purchase_of_existing_property__c }
+                 </apex:column>
+                 
+                 <apex:column headerValue="Industry of Profession">
+                 {!mAccounts[CRN].Industry }
+                 </apex:column>
+
+
+                 
+                 
+                 
+             </apex:pageBlockTable>-->
+         </apex:pageBlockSection>
+         </apex:pageBlock>
+         
+    </apex:form>
+
+</apex:page>

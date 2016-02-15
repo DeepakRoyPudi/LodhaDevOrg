@@ -1,0 +1,749 @@
+<!-- Version            Modified By       Modified Date       Description
+ *
+ *  Initial Draft       Sneha P.         26/02/2015         Detail page for Recent Docs/SMS/Dispatch. 
+ *                                                          It will display all Docs/SMS/Dispatch for 
+ * 															users CRN.
+ *
+ *      1.1           Aditi Mulmule        5/05/2015        Track Button Logic
+                                                            for Way Bill No in 
+                                                            Dispatch Tab. 
+ -->
+<apex:page sidebar="false" showHeader="false" controller="RecentDocsSMSDispatchDetailRMController" >
+
+<apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="{!$Resource.YearRangeIncr}"></script>
+
+<apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js"/>
+ <style> 
+ 
+    #assign-action-spinner-main {position: fixed;left: 0;top: 0;background-color:rgba(0,0,0,.4);
+    							 height: 100%;width: 100%;z-index: 999;align: center;
+    							 vertical-align: middle;}
+    #assign-action-spinner-content {position: absolute; top: 50%;left: 45%;z-index: 1000;
+    								background-color:none;width: 40px;height: 40px;}
+    #assign-action-spinner-content img {width: 40px;height: 40px;align: center;vertical-align: middle;}
+    
+    
+    .h{
+    font-weight: bold;
+    font-size: x-large;
+    }  
+    .header{
+    word-spacing: 50px;
+    padding-left:70px;
+    padding:7px 11px 8px 21px;
+    } 
+    .alert {
+    padding: 5px !important;  
+    margin-bottom: 0px !important; 
+    border: 1px solid transparent !important;
+    border-radius: 4px;
+    }
+    
+    a {
+    color: Black;
+    }
+    .container {
+    width: 100%; 
+    }
+    
+    .paginationBtn {
+         font-size: 11px !important;
+    }
+    .pagination_td {
+           width: 54px;
+     }
+    .trackBtn {
+    padding: 4px;
+    align: right;
+    background-color: #f39c12;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    float: right;
+  } 
+    
+.table-heading {  background: #1797C0;  color: #fff;  font-size: 12px;}
+.table-heading a{color:#fff}
+.table-heading a:hover {  background: #1797C0;  color: #fff;  font-size: 12px;}
+.table>thead>tr>th, .table>tbody>tr>th,
+.table>tfoot>tr>th, .table>thead>tr>td,
+.table>tbody>tr>td, .table>tfoot>tr>td{   padding: 4px 8px; font-size: 12px;} 
+  
+  .mt10{margin-top:10px}
+   .nav>li>a{padding: 4px 15px;} 
+    
+  </style>
+  
+  
+  <body style="display:none;">
+<apex:form >
+    
+    <apex:actionStatus id="statusMsg" layout="block" style="align:center">
+        <apex:facet name="start">
+            <div id="assign-action-spinner-main" style="align:center">
+                <div id="assign-action-spinner-content" style="align:center"> 
+                    <img  style="align:center" 
+                    	  src="{!URLFOR($Resource.Bootstrap, 
+                    				  '/bootstrap/images/loadimage.gif')}"/>  
+                </div>
+            </div>
+        </apex:facet>
+    </apex:actionStatus> 
+    
+    <apex:actionFunction name="resetValues" action="{!resetOnTabChange}" 
+    					 rerender="documentPanel,msg"
+                         status="statusMsg">
+        <apex:param name="currTab" value="Documents"/>
+    </apex:actionFunction>
+    <apex:actionFunction name="resetValuesSMS" action="{!resetOnTabChange}" 
+    					 rerender="smsPanel,msg"
+                         status="statusMsg">
+        <apex:param name="currTab" value="SMS"/>
+    </apex:actionFunction>
+    <apex:actionFunction name="resetValuesDispatch" action="{!resetOnTabChange}" 
+    					 rerender="dispatchPanel,msg"
+                         status="statusMsg">
+        <apex:param name="currTab" value="Dispatch"/>
+    </apex:actionFunction>
+    
+    <apex:actionFunction name="deleteDocument" action="{!deleteDetailDocument}" 
+    					 rerender="documentPanel,msg"
+                         status="statusMsg">
+        <apex:param name="docId" value=""/>
+    </apex:actionFunction>
+    
+    
+    <div class="container">
+        <div id="content">
+            <apex:outputPanel id="dummyPanel"/>
+            
+            <apex:pageMessages id="msg"/>
+            
+            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                <li class="active" style="margin-left:0px">
+                    <a onclick="loadOnChnage('Documents'); return false;" 
+                       href="#Documents" data-toggle="tab">
+                    	Documents
+                    </a>
+                </li>
+                <li style="margin-left:0px">
+                	<a onclick="loadOnChnage('SMS');return false;" href="#SMS" data-toggle="tab">
+                		SMS
+                	</a>
+                </li>
+                <li style="margin-left:0px">
+                	<a onclick="loadOnChnage('Dispatch');return false;" 
+                	   href="#Dispatch" data-toggle="tab">
+                		Dispatch
+                	</a>
+                </li>
+            </ul>
+            <apex:outputPanel id="documentPanel">
+            <div id="my-tab-content" class="tab-content mt10">
+                <!-- Document Detail View -->
+                <div class="tab-pane active" id="Documents">
+                    <apex:outputPanel id="docTable">
+                        <div align="center">
+                        <apex:commandButton value="Generate Doc. (Cordys)" 
+                        					action="{!generateDocuments}" 
+                                            oncomplete="generateDoc('{!doc_generate_page}');"/>
+                        <apex:commandButton value="ISS" action="{!displayIss}" 
+                        					oncomplete="generateIss('{!iss_Link}');"/>
+                        <apex:commandButton value="Document Report" action="{!displayReport}"
+                                            oncomplete="generateReport('{!doc_report_page}');"/> 
+                        
+                        </div>
+                        <br/>
+                        <table width="100%">
+                           
+                            <tr>
+                            
+                                <td>
+                                	<apex:outputText style="padding-right: 7px">
+                                		From Date 
+                                	</apex:outputText>
+                                </td>
+                                <td>
+                                	<apex:inputField value="{!fromDateSearch.Date_of_Generation__c}"/>
+                                </td>
+                                <td>
+                                	<apex:outputText style="padding-right: 7px">
+                                		To Date 
+                                	</apex:outputText>
+                               	</td>
+                                <td>
+                                	<apex:inputField value="{!toDateSearch.Date_of_Generation__c}"/>
+                                </td>
+                                
+                                <td><apex:commandButton value="Go" action="{!searchDocs}" 
+                                						oncomplete="resetDoc()" 
+                                                        rerender="documentPanel,msg"
+                                                        status="statusMsg" /></td>
+                                <td> <apex:actionStatus id="searchDocument" style="align:center;" > 
+                                          <apex:facet name="start">
+                                                <apex:image url="{!URLFOR($Resource.Bootstrap, 
+                                             					 '/bootstrap/images/loadimage.gif')}" 
+                                                            height="30px" width="30px" 
+                                                            style="align-items: center;"/>
+                                         </apex:facet>
+                                     </apex:actionStatus><br/><br/> 
+                                </td>
+                            </tr>
+                        </table> 
+                        <table id="tableId" class="table table-striped table-bordered mt10"
+                               cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="sorting table-heading" 
+                                    	style="{!If(AND(isEditLink == false,isDeleteLink == false) , 
+                                    							 'display:none',
+                                    									'' )}">
+                                    Action
+                                    </th>
+                                    <apex:repeat value="{!$ObjectType.Documents__c.FieldSets.DocumentDetailView_RM}"
+                                        var="f">
+                                        <th class="sorting table-heading">
+                                            <apex:commandLink value="{!f.Label}" 
+                                                             action="{!toggleSortDoc}" 
+                                                             rerender="docTable,msg"
+                                                              status="statusMsg">    
+                                            <apex:param name="sortField" value="{!f}" 
+                                            			assignTo="{!sortField}"/>
+                                           </apex:commandLink>
+                                        </th>
+                                    </apex:repeat>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!docList}" var="c">
+                                    <tr>
+                                        <td style="{!If(AND(isEditLink == false,isDeleteLink == false) , 
+                                    							 'display:none',
+                                    									'' )}">
+                                            <apex:outputLink value="/{!c.Id}/e?retURL={!c.Id} " 
+                                            				 target="_blank" 
+                                            				 rendered="{!isEditLink}">
+                                                <apex:outputText value="Edit" />
+                                            </apex:outputLink>
+                                                
+                                            <apex:commandLink id="delDoc" 
+                                            				  action="{!deleteDetailDocument}"   
+                                                              target="_self" 
+                                                              rendered="{!isDeleteLink}">
+<!--                                                               oncomplete="reloadPage()"   -->
+                                                <apex:outputText value=" | Del" />
+                                                <apex:param name="docId" value="{!c.Id}"/>
+                                            </apex:commandLink>
+                                        </td>
+                                        <apex:repeat value="{!$ObjectType.Documents__c.FieldSets.DocumentDetailView_RM}"
+                                            var="f">
+                                            <td>
+                                                <apex:outputLink value="/{!c.Id}" 
+                                                				 target="_blank" 
+                                                                 rendered="{!f.Label == 'Document Name'}">
+                                                    <apex:outputField value="{!c[f]}" />
+                                                </apex:outputLink>
+                                                <apex:outputField value="{!c[f]}" 
+                                                	rendered="{!AND(f.Label != 'Document Name',
+                                                					f.type != 'datetime',
+                                                					f.type != 'date')}"/>
+                                                 <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                                 	<c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                                                 </apex:outputPanel> 
+                                                 <apex:outputPanel rendered="{!f.type == 'date'}">
+                                                 	<c:FormatDateComponent date_value="{!c[f]}"/>
+                                                 </apex:outputPanel>
+                                            </td>
+                                        </apex:repeat>
+                                    </tr>
+                                </apex:repeat>
+                                 <tr style="{!If(docList.size > 0, 'display:none','text-align: center;' )}">  
+                                   <td 
+                                   	colspan="{!$ObjectType.Documents__c.FieldSets.DocumentDetailView_RM.size+1}">
+                                        No records to display
+                                   </td>
+                                 </tr>
+                            </tbody>
+                        </table>
+                        
+                        <table align="center" style="padding-left:4px;">
+                          <tr>
+                            <td class="pagination_td"><apex:commandButton styleClass="paginationBtn"
+                                                    value="First Page" 
+                                                    action="{!FirstPage}" 
+                                                    rerender="documentPanel,msg"
+                                                    status="statusMsg"
+                                                    disabled="{!prev}"/></td>
+                            <td/>
+                            <td class="pagination_td"><apex:commandButton value="Previous Page" 
+                                                    action="{!previous}" 
+                                                    styleClass="paginationBtn"
+                                                    rerender="documentPanel,msg"
+                                                    status="statusMsg"
+                                                    disabled="{!prev}"/></td>
+                            <td/>
+                            <td class="pagination_td">
+                                <apex:commandButton value="Next Page" 
+                                                    action="{!next}" 
+                                                     styleClass="paginationBtn"
+                                                    rerender="documentPanel,msg"
+                                                    status="statusMsg"
+                                                    disabled="{!nxtDoc}"/></td>
+                            <td/>
+                            <td class="pagination_td">
+                                <apex:commandButton value="Last Page"
+                                                    styleClass="paginationBtn" 
+                                                    rerender="documentPanel,msg"
+                                                    status="statusMsg"
+                                                    action="{!LastPageDoc}" 
+                                                    disabled="{!nxtDoc}"/></td>
+                          </tr>
+                        </table>
+                    </apex:outputPanel>
+                </div>
+                
+                <div class="tab-pane" id="SMS">
+                    <br/>
+                     <apex:outputPanel id="smsPanel">
+                     <table width="100%">
+                        <tr>
+                            <td>
+                                <apex:outputText style="padding-right: 7px">
+                                	SMS Type 
+                                </apex:outputText>
+<!--                                 <apex:inputField value="{!sms.SMS_Type__c}"/> -->
+								<apex:selectList value="{!selectedSmsType}" size="1" multiselect="false">
+						            <apex:selectOptions value="{!smsType}"/>
+						        </apex:selectList>
+
+                            </td>
+                               
+                            <td>
+                                <apex:outputText style="padding-right: 7px">
+                                	Date From
+                                </apex:outputText>
+                                <apex:inputField value="{!sms.Created_Date__c}"/>
+                            </td>
+                            
+                            <td>
+                                <apex:outputText style="padding-right: 7px">
+                                	Date To 
+                                </apex:outputText>
+                                <apex:inputField value="{!smsDateTo.Created_Date__c}"/>
+                            </td>
+                            
+                            <td>
+                                <apex:commandButton value="Go" action="{!searchSms}" 
+                                                    rerender="smsPanel,msg" 
+                                                    oncomplete="resetSMS()" 
+                                                    status="statusMsg"/>
+                            </td>
+                            <td>
+                                <apex:actionStatus id="searchSMS" style="align:center;" > 
+                                     <apex:facet name="start">
+                                           <apex:image url="{!URLFOR($Resource.Bootstrap, 
+                                           							 '/bootstrap/images/loadimage.gif')}" 
+                                                height="30px" width="30px" 
+                                                style="align-items: center;"/>
+                                    </apex:facet>
+                                </apex:actionStatus>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                   <br/>
+                   <table id="sms" class="table table-striped table-bordered"
+                       cellspacing="0" width="100%" >
+                       <thead>
+                           <tr>
+                               <th style="display:none">    
+                                  Created Date
+                              </th>
+                               <apex:repeat value="{!$ObjectType.SMS_History__c.FieldSets.SMSDetailView_RM}"
+                                   			var="f">
+                                   <th class="table-heading">
+                                      <apex:commandLink value="{!f.Label}" 
+                                                        action="{!toggleSortSMS}" 
+                                                        rerender="smsPanel,msg"
+                                                        status="statusMsg"
+                                                        rendered="{!AND(f.Label != 'Created Date',
+                                                        				f.Label != 'SMS Text')}">    
+                                       <apex:param name="smsSortField" value="{!f}" 
+                                       								   assignTo="{!smsSortField}"/>
+                                      </apex:commandLink>
+                                      
+                                      <apex:commandLink value="Sent Date" 
+                                                        action="{!toggleSortSMS}" 
+                                                        rerender="smsPanel,msg"
+                                                        status="statusMsg"
+                                                        rendered="{!f.Label == 'Created Date'}">     
+                                       <apex:param name="smsSortField" value="{!f}" 
+                                       			   assignTo="{!smsSortField}"/>
+                                      </apex:commandLink>
+                                      
+                                      <apex:outputText value="{!f.Label}" 
+                                      				   rendered="{!f.Label == 'SMS Text'}"/>
+                                   </th>
+                               </apex:repeat>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <apex:repeat value="{!smsList}" var="c">
+                               <tr>
+                                   <apex:repeat value="{!$ObjectType.SMS_History__c.FieldSets.SMSDetailView_RM}"
+                                       var="f">
+                                       <td>  
+                                       <apex:outputLink value="/{!c.Id}" target="_blank" 
+                                                     	rendered="{!f.Label == 'SMS History Number'}">
+                                           <apex:outputField value="{!c[f]}" />
+                                       </apex:outputLink>
+                                       
+                                       <apex:outputField value="{!c[f]}" 
+                                       		rendered="{!AND(f.Label != 'SMS History Number', 
+                                       						f.Label != 'Mobile Number',
+                                       						f.type != 'datetime', 
+                                       						f.type != 'date')}"/> 
+                                       
+                                       <apex:outputText value="{!c[f]}" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) <= 4)}"/>   
+                                       									
+                                       
+                                       <apex:outputText value="{!LEFT(c[f], 2)}" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) > 4)}"/>   
+                                       
+                                        <apex:outputText value="XXXXXXXX" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 13)}"/> 
+                                       									
+                                       <apex:outputText value="XXXXXXX" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 12)}"/> 
+                                       <apex:outputText value="XXXXXXX" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 11)}"/> 
+                                       									
+                                       <apex:outputText value="XXXXXX" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 10)}"/>   
+                                       									
+                                        <apex:outputText value="XXXXX" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 9)}"/> 
+                                       	<apex:outputText value="XXXX" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 8)}"/> 
+                                       	<apex:outputText value="XXX" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 7)}"/>  
+                                        <apex:outputText value="XX" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 6)}"/>  
+                                        <apex:outputText value="X" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) == 5)}"/>  
+                                       
+                                       
+                                       <apex:outputText value="{!RIGHT(c[f], 2)}" 
+                                       					rendered="{!AND(f.Label == 'Mobile Number',
+                                       									LEN(c[f]) > 4)}"/>    
+                                       						                                  
+                                       <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                       	<c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                                       </apex:outputPanel> 
+                                       <apex:outputPanel rendered="{!f.type == 'date'}">
+                                       	<c:FormatDateComponent date_value="{!c[f]}"/>
+                             			 </apex:outputPanel>
+                                        </td>
+                                   </apex:repeat>
+                               </tr>
+                           </apex:repeat>
+                           
+                           <tr style="{!If(smsList.size > 0, 'display:none','text-align: center;' )}">  
+                               <td colspan="{!$ObjectType.SMS_History__c.FieldSets.SMSDetailView_RM.size}" 
+                                       >
+                                   No records to display
+                                </td>
+                            </tr>
+                       </tbody>
+                   </table>
+                   
+                   <table align="center" style="padding-left:4px;">
+                     <tr>
+                       <td class="pagination_td"><apex:commandButton value="First Page " 
+                                               action="{!FirstPage}" 
+                                               rerender="smsPanel,msg"
+                                               status="statusMsg"
+                                               styleClass="paginationBtn"
+                                               disabled="{!prev}"/></td>
+                       <td/>
+                       <td class="pagination_td"><apex:commandButton value="Previous Page" 
+                                               action="{!previous}" 
+                                               rerender="smsPanel,msg"
+                                               status="statusMsg"
+                                               styleClass="paginationBtn"
+                                               disabled="{!prev}"/></td>
+                       <td/>
+                       <td class="pagination_td"><apex:commandButton value="Next Page"  
+                                               action="{!next}" 
+                                               rerender="smsPanel,msg"
+                                               status="statusMsg"
+                                               styleClass="paginationBtn"
+                                               disabled="{!nxt}"/></td>
+                       <td/>
+                       <td class="pagination_td"><apex:commandButton value="Last Page" 
+                                               action="{!LastPage}" 
+                                               rerender="smsPanel,msg"
+                                               status="statusMsg"
+                                               styleClass="paginationBtn"
+                                               disabled="{!nxt}"/></td>
+                     </tr>
+                   </table>
+                    
+                    </apex:outputPanel>
+                </div>
+            
+                <div class="tab-pane" id="Dispatch">
+                    <br/>
+                    <apex:outputPanel id="dispatchPanel">
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <apex:outputText >Name of Document </apex:outputText>
+                                </td>
+                                <td>
+                                    <apex:inputField value="{!dispatch.Contents__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText >Last Delivery Status</apex:outputText>
+                                </td>
+                                <td>
+                                    <apex:inputField value="{!dispatch.Last_Delivery_Status__c}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:outputText >Dispatch Date From </apex:outputText>
+                                </td>
+                                <td>
+                                    <apex:inputField value="{!dispatchDateFrom.Despatch_Date__c}"/>
+                                </td>
+                                
+                                <td>
+                                    <apex:outputText >Dispatch Date To </apex:outputText>
+                                </td>
+                                <td>
+                                    <apex:inputField value="{!dispatchDateTo.Despatch_Date__c}"/>
+                                </td>
+                                
+                                <td>
+                                    <apex:commandButton value="Go" action="{!searchDispatch}" 
+                                    					rerender="dispatchPanel,msg" 
+                                    					oncomplete="resetDispatch()"
+                                                        status="statusMsg"/>
+                                </td>
+                               <td>
+                                    <apex:actionStatus id="searchDispatch" style="align:center;" > 
+                                         <apex:facet name="start">
+                                               <apex:image url="{!URLFOR($Resource.Bootstrap, 
+                                               					'/bootstrap/images/loadimage.gif')}" 
+                                                    height="30px" width="30px" 
+                                                    style="align-items: center;"/>
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                                </td>
+                            </tr>
+                        </table> 
+                        <br/>
+                        <table id="dispatchTable" class="table table-striped table-bordered"
+                            cellspacing="0" width="100%" >
+                            <thead>
+                                <tr>
+                                    <th style="display:none">    
+                                       Created Date
+                                    </th>
+                                    <apex:repeat value="{!$ObjectType.Despatch__c.FieldSets.DispatchDetailViewRM}"
+                                        var="f">
+                                        <th class="table-heading">
+                                        
+                                        <apex:commandLink action="{!toggleSortDispatch}" 
+                                                             rerender="dispatchPanel,msg"
+                                                             status="statusMsg">    
+                                            
+                                             <apex:outputText value="Doc. Name" 
+                                             				  rendered="{!f.Label == 'Contents'}"/>
+                                             <apex:outputText value="Dispatch Date" 
+                                             				  rendered="{!f.Label == 'Despatch Date'}"/>
+                                             <apex:outputText value="Sent Address" 
+                                                              rendered="{!f.Label == 'Area'}"/>
+                                             <apex:outputText value="{!f.Label}" 
+                                                              rendered="{!AND(f.Label != 'Despatch Date',
+                                                                             f.Label != 'Contents',
+                                                                             f.Label != 'Area')
+                                                                             }"/>
+                                            <apex:param name="dispatchSortField" value="{!f}" 
+                                            			assignTo="{!dispatchSortField}"/>
+                                        </apex:commandLink> 
+                                                                             
+                                        </th>
+                                    </apex:repeat>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!dispatchList}" var="c">
+                                    <tr>
+                                        <apex:repeat value="{!$ObjectType.Despatch__c.FieldSets.DispatchDetailViewRM}"
+                                            var="f">
+                                            <td>
+                                                <apex:outputLink value="/{!c.Id}" 
+                                                			     target="_blank" 
+                                                                 rendered="{!f.Label == 'Contents'}">
+                                                    <apex:outputField value="{!c[f]}" 
+                                                    				  rendered="{!f.Label == 'Contents'}"/>
+                                                </apex:outputLink>
+                                                 
+                                                 <!-- new Way Bill No -->
+                                                 <apex:outputField value="{!c[f]}"  id="no" 
+                                                 				   rendered="{!(f.label == 'Waybill No') && 
+                                                 				   				(c[f] != null)}" >
+                                                 <!--   <a class="pull-right" style="font-size: small;" 
+                                                        data-backdrop="static" 
+                                                        data-keyboard="false" href="https://track.aftership.com/{!c[f]}" 
+                                                        data-toggle="modal" 
+                                                       
+                                                      >View All</a> -->
+                                                    <apex:outputLink value="https://track.aftership.com/{!c[f]}" 
+                                                    				 styleClass="trackBtn"  target="_blank">
+                                                        <apex:image id="theImage" value="{!$Resource.TrackIcon}" 
+                                                        			width="21" height="21"/>
+                                                        Track
+                                                     </apex:outputLink>
+                                                 </apex:outputField>
+                                                   
+                                                 <apex:outputField value="{!c[f]}" 
+                                                 				   rendered="{!(f.label == 'Waybill No') && 
+                                                 				   			   (c[f] == null)}" >
+                                                     <apex:inputText id="way"/>
+                                                        <apex:outputLink value="#" styleClass="trackBtn" 
+                                                        				 onclick="trackWayBillNo();" >
+                                                            <apex:image id="img" value="{!$Resource.TrackIcon}" 
+                                                            			width="21" height="21"/>
+                                                             Track
+                                                        </apex:outputLink>
+                                                 </apex:outputField>                                         
+                                                <apex:outputField value="{!c[f]}" 
+                                                				  rendered="{!(f.Label != 'Contents')&&
+                                                				  			  (f.label != 'Waybill No') && 
+                                                				  			  (f.type != 'datetime') && 
+                                                				  			  (f.type != 'date') }"/>   
+                                                   <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                                   	<c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                                                   </apex:outputPanel> 
+                                                 <apex:outputPanel rendered="{!f.type == 'date'}">
+                                                 	<c:FormatDateComponent date_value="{!c[f]}"/>
+                                   				  </apex:outputPanel>               
+                                            </td>
+                                        </apex:repeat>
+                                    </tr>
+                                </apex:repeat>
+                                <tr style="{!If(dispatchList.size > 0, 'display:none','text-align: center;' )}">  
+                                    <td colspan="{!$ObjectType.Despatch__c.FieldSets.DispatchDetailViewRM.size}">
+                                        No records to display
+                                     </td>
+                                 </tr>
+                                 
+                            </tbody>
+                        </table>
+                        
+                        <table align="center" style="padding-left:4px;">
+                          <tr>
+                            <td class="pagination_td"><apex:commandButton value="First Page" 
+                                                    action="{!FirstPage}" 
+                                                    rerender="dispatchPanel,msg"
+                                                    styleClass="paginationBtn"
+                                                    status="statusMsg"
+                                                    disabled="{!prev}"/></td>
+                            <td/>
+                            <td class="pagination_td"><apex:commandButton value="Previous Page" 
+                                                    action="{!previous}" 
+                                                    rerender="dispatchPanel,msg"
+                                                    styleClass="paginationBtn"
+                                                    status="statusMsg"
+                                                    disabled="{!prev}"/></td>
+                            <td/>
+                            <td class="pagination_td"><apex:commandButton value="Next Page"  
+                                                    action="{!next}" 
+                                                    rerender="dispatchPanel,msg"
+                                                    status="statusMsg"
+                                                    styleClass="paginationBtn"
+                                                    disabled="{!nxtDispatch}"/></td>
+                            <td/>
+                            <td class="pagination_td"><apex:commandButton value="Last Page" 
+                                                    rerender="dispatchPanel,msg"
+                                                    status="statusMsg"
+                                                    styleClass="paginationBtn"
+                                                    action="{!LastPageDispatch}"
+                                                    disabled="{!nxtDispatch}"/></td>
+                          </tr>
+                        </table>
+                    </apex:outputPanel>
+                </div>
+            </div></apex:outputPanel>
+        </div>
+    </div>
+</apex:form>
+</body>
+<script>
+    
+   $(window).load(function(){
+           $("body").hide();
+           yearIncr();
+           var str2= "{!currentTab}";
+           var tab= "#".concat(str2);
+           
+           if(str2) {
+            $('[href="'+tab+'"]').trigger("click");
+           }
+           $("body").show();
+     });
+    
+    function reloadPage() {
+        document.location.reload(true);
+    }
+    
+    function loadOnChnage(tab) {
+        $("body").show();
+        if(tab == 'Documents')
+            resetValues();
+        else if(tab == 'SMS')
+            resetValuesSMS();
+        else if(tab == 'Dispatch')
+            resetValuesDispatch();
+    }
+                 
+    function generateDoc(page){
+        window.open(page);
+    }
+    
+    function generateReport(reportPage){
+        window.open(reportPage);
+    }
+    function generateIss(issPage){
+        window.open(issPage);
+    }
+    
+    function trackWayBillNo() {
+      
+       var theValue = jQuery('[id$=way]').val().trim();
+       
+       if(theValue!=null && theValue!='' ){
+       var url = 'https://track.aftership.com/'+theValue;
+       window.open(url,'_blank');
+       } 
+   }
+</script>
+    
+</apex:page>

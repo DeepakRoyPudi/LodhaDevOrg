@@ -1,0 +1,45 @@
+<apex:page tabstyle="Campaign" showheader="false" standardcontroller="Campaign" extensions="Lodha_MultiSelectCorporateAccounts">
+  <apex:form >
+    <apex:pageblock >
+        
+        <apex:pageBlockButtons >
+                 <apex:commandbutton action="{!processSelected}" value="Select"/>
+        </apex:pageBlockButtons>
+
+        <apex:pageblocktable value="{!CorporateAccounts}" var="CAccount">
+            <apex:column >
+                 <apex:facet name="header"><apex:inputCheckbox onclick="checkAll(this)"/> </apex:facet>
+                 <apex:inputCheckbox value="{!CAccount.selected}" id="selectLine1"/> 
+            </apex:column>
+            <apex:column > 
+                <apex:facet name="header">Corporate Account Name</apex:facet>
+                <apex:outputfield value="{!CAccount.con.Name}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Corporate Group</apex:facet>
+                <apex:outputfield value="{!CAccount.con.Corporate_Group__c}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Industry Type</apex:facet>
+                <apex:outputfield value="{!CAccount.con.Industry_Types__c}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Annual Turnover</apex:facet>
+                <apex:outputfield value="{!CAccount.con.Annual_Turnover__c}"/>
+            </apex:column>
+        </apex:pageblocktable>        
+        <script>
+           function checkAll(cb)
+           {
+               var inputElem = document.getElementsByTagName("input");
+               for(var i=0;i<inputElem.length;i++) 
+                 {
+                         if(inputElem[i].id.indexOf("selectLine1")!=-1)  
+                               inputElem[i].checked = cb.checked;
+                  }
+            }
+        </script>
+  
+    </apex:pageblock>   
+  </apex:form>     
+</apex:page>

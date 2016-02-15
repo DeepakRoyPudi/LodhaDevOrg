@@ -1,0 +1,28 @@
+<apex:page standardController="Booking_Details__c" extensions="InterestCalculatorController" sidebar="false" standardStylesheets="true" tabstyle="Demands__c" > 
+    
+    <script>
+      function setFocusOnLoad() {}
+      function setFocusonClick(){
+      document.getElementById('form.pageBlock2.pageBlockSection1.outstandingAmt').focus();
+      }
+    </script>
+      
+    <apex:stylesheet value="{!URLFOR($Resource.w2l, "innerCSS")}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.w2l, "lodha.css")}"/>
+    <!--<apex:sectionHeader title="Know your Interest Amount" subtitle="Interest Calculator"/>-->
+    <apex:form id="form">    
+        <apex:pageblock id="pageBlock2">  
+        
+        <apex:pageblocksection columns="7" id="pageBlockSection1">
+        <apex:inputField value="{!proxyobject.Demand_Date__c}" style="border:1;color: #6D7B8D;font-weight: bold" styleClass="dropEnquire" />
+        <apex:inputField value="{!proxyobject.Payment_Date__c}" style="border:1;color: #6D7B8D;font-weight: bold" styleClass="dropEnquire"/>    
+        <apex:outputText value="Outstanding Amount" style="font-weight: medium"/>
+        <apex:inputText value="{!outstandingAmount}" style="border:0;" styleClass="dropEnquire" id="outstandingAmt"/> 
+        <apex:commandButton value="Calculate" id="theButton" rerender="interestAmt"/>
+        <apex:outputText value="Total Interest"/>
+        <apex:outputText value="{!InterestAmount}" style="border:0;" styleClass="dropEnquire" id="interestAmt"/>
+        </apex:pageblocksection>
+        </apex:pageblock>   
+    </apex:form>
+   
+</apex:page>

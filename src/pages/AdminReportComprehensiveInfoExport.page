@@ -1,0 +1,85 @@
+<!--@Created by: Deepak Pudi 
+     @Created Date: 31/3/2015 -->
+ 
+ <!-- ------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |Deepak Pudi           24/4/2015              1.0           Comphrensive Information
+ 															 of all Customers
+ --------------------------------------------------------------------------------
+ |
+ ------------------------------------------------------------------------------ -->
+<apex:page controller="AdminReportComprehensiveInfo" contentType="application/vnd.ms-excel#SalesForceExport.xls" showHeader="false" sidebar="false">
+    <apex:form >
+    
+    <!-- contentType="application/vnd.ms-excel#SalesForceExport.xls" -->
+        
+    
+    <table  style="cellspacing:0">
+        
+        <caption><b style="float: left;font-size:large">Comprehensive Information Report </b></caption>
+            <tr >
+                <td>CRN</td>
+                <td>Co-Applicant Name</td>
+                <td>Loyalty Id</td>
+                <td>CV</td>
+                <td>% of CV Paid</td>
+                <td>Project Name</td>
+               <td>Loyalty Index</td>
+                <td>Collection Index</td>
+                <td>Service Index</td>
+                <td>Legal Alert</td>
+                <td>Is CIP</td>
+                <td> Is NRI</td>
+                <td>Communication</td>
+                
+                <td>No. of Complaints</td>
+                 <td>No. of Grievances</td>
+                  <td>No. of Cases</td>
+                <td>Account Owner</td>
+                
+                 <td>Ethnicity</td>
+                  <td>Age</td>
+                   <td>Marital Status</td>
+                    <td>No. of Children</td>
+                     <td>Purpose of Purchase</td>
+                     <td>Industry of Profession</td>
+                    
+            </tr>
+            
+            <apex:repeat value="{!lstWrapper}" var="w">
+                <tr>
+                    <td>{!w.crn}</td>
+                    <td>{!w.MapAccount.Co_Applicant__c}</td>
+                    <td>{!w.MapAccount.LoyaltyID__c}</td>
+                    <td>{!w.MapBooking.Consideration_Value__c}</td>
+                    <td>{!w.MapBooking.CV_paid__c }</td>
+                    <td>{!w.MapAccount.Project_Name__c}</td>
+                    <td>{!w.loyalty_points}</td>
+                   <td>{!w.MapAccount.Collection_Index__c}</td>
+
+                    <td>{!w.Service_Index}</td>
+                    <td>{!w.MapAccount.Legal_Alert__c}</td>
+                    <td>{!w.MapAccount.CIP__c}</td>
+                    <td>{!w.IsNRI}</td>
+                    <td>{!w.MapAccount.Preferred_Mode_of_Contact__c}</td>
+                    <td>{!w.no_of_complaints}</td>
+                    <td>{!w.no_of_grivances}</td>
+                    <td>{!w.no_of_cases}</td>
+                   <td>{!w.MapAccount.Owner.name}</td>
+                    <td>{!w.MapAccount.Ethinicity__c}</td>
+                    <td>{!w.MapAccount.Age__c }</td>
+                    <td>{!w.MapAccount.Marital_Status__c}</td>
+                    <td>{!w.MapAccount.No_of_children__c}</td>
+                    <td>{!w.MapAccount.Purpose_of_Purchase__c}</td>
+                    <td>{!w.MapAccount.Industry}</td>
+                </tr>
+            </apex:repeat>
+       </table>
+    
+        
+        
+      
+    </apex:form>
+  
+</apex:page>

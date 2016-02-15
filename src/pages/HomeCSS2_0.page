@@ -1,0 +1,162 @@
+<!-- VisualForce page for Referral tab CSS
+@Created by: Trupti Dhoka
+@Created Date: 04/03/2015
+
+--------------------------------------------------------------------------------
+| Modified By      | Modified Date       | Version        | Description         |
+--------------------------------------------------------------------------------
+|Trupti Dhoka         18/03/2015             1.1            Added components Of  
+                                                            Crisp Views
+--------------------------------------------------------------------------------
+
+-->
+
+<apex:page sidebar="false" showHeader="false" docType="html-5.0" controller="HomeCSS2_0Controller" 
+    title="Home" id="Home" action="{!forwardToCustomAuthPage}">
+    <apex:composition template="LandingPageCSS2_0">
+        <apex:define name="body">
+            <head>
+                <style>
+                    .table_align {
+                        margin-top: -3.5%;
+                    }
+                    
+                     <!--Responsiveness of crisp view headers -->
+                  @media screen and (min-width: 960px)  
+                  { 
+                    .col-md-6 {
+                         width: 49.2%;
+                     }
+                  }
+                    .smallstat {
+                        background: none repeat scroll 0% 0% #f5f3f3;
+                        padding-bottom: 0%;
+                        padding-bottom: px;
+                        position: relative;
+                    }
+                    .panel-Half {
+                        width: 50%;
+                        margin-bottom: -2%;
+                        margin-top: -2%;
+                    }
+                    .tab-content {
+                        padding: 0%;
+                        margin-bottom: 1%;
+                    }
+                    .btn-default:hover,
+                    .btn-default:focus,
+                    .btn-default:active,
+                    .btn-default.active,
+                    .open .dropdown-toggle.btn-default {
+                        outline: none;
+                    }
+                    .background_customerlifecycle{
+                    background:#fff; 
+                    min-height:200px;
+                    width:98%;
+                    overflow-x :auto;
+                    border : 1px solid #c2c2c2;
+                    }
+                    
+                    body {
+                        background-image: url({!IF(isProjectWise,imageUrl,($Resource.CSS_Background_Image))}) !important;
+                    background-position: center center;
+                    background-repeat: no-repeat;
+                    background-attachment: fixed;
+                    background-size: cover;
+                }
+                </style>
+                <script>
+                    $(document).ready(function() {
+                        $('.collapse').on('shown.bs.collapse', function() {
+                              $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+                            }).on('hidden.bs.collapse', function() {
+                            $(this).parent().find(".glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+                        });
+                    });
+                    
+                   
+                </script>
+            </head>
+            
+            <apex:outputPanel >
+        
+            <body>
+             
+                    <!-- Google Analtyics component -->
+                    <c:GoogleAnalytics Page="Home" 
+                    User="{!username}" 
+                    Project="{!userProject}" 
+                    Segment="{!userSeqment}" 
+                    CRN="{!userCRN}"
+                    Gender="male" 
+                    LastLogin="{!userLastLogin}" 
+                    TotalLogins="{!userTotallogins}"/>
+                   
+                   
+                    <div class="container">
+                     <!--   <div class="btnLifecycle " data-toggle="collapse" data-target="#demo" 
+                              style="text-align:left;">
+                            <a href="#"><span class="glyphicon glyphicon-chevron-down Customer_lifeCycle">
+                                        </span> 
+                             </a>
+                            <h3><b>Lifecycle</b></h3>
+                        </div>
+    
+                        <div id="demo" class="collapse out">
+                            <div class="background_customerlifecycle">
+                                <c:CustomerLifeCycleCSS2_0 CRN="{!CRN}"/>
+                            </div>
+                        </div> -->
+    
+    
+                        <!-- Start Of Tables -->
+    
+                        <div style="width:100%; margin-top:10px;">
+                            <!-- Main Div with width -->
+                            <c:MilestoneOutstandingCSS2_0 CRN="{!CRN}" rendered="{!firstDiv == 'Upcoming/Due Payments'}" />
+                            <c:RecentMilstonesPaidCSS2_0 CRN="{!CRN}" rendered="{!firstDiv == 'Payments Received'}" />
+                            <c:RecentDocSmsDispatchCSS2_0 CRN="{!CRN}" 
+                                   rendered="{!firstDiv == 'Recent Documents/SMS/Dispatch'}" />
+                            <c:RecentActivityCSS CRN="{!CRN}" rendered="{!firstDiv == 'Recent Activity'}" />
+    
+                            <!-- Recent Payments Table -->
+                            <!--                        <c:RecentMilstonesPaidCSS2_0 /> -->
+                            <c:MilestoneOutstandingCSS2_0 CRN="{!CRN}" rendered="{!secondDiv == 'Upcoming/Due Payments'}" />
+                            <c:RecentMilstonesPaidCSS2_0 CRN="{!CRN}" rendered="{!secondDiv == 'Payments Received'}" />
+                            <c:RecentDocSmsDispatchCSS2_0 CRN="{!CRN}" 
+                                 rendered="{!secondDiv == 'Recent Documents/SMS/Dispatch'}" />
+                            <c:RecentActivityCSS CRN="{!CRN}" rendered="{!secondDiv == 'Recent Activity'}" />
+    
+                        </div>
+                        <!-- EOF  Main div with width -->
+    
+                        <div class="clear"></div>
+    
+                        <div style="width:100%;">
+                            <!-- Crisp View For Documents/SMS Dispatch -->
+                            <c:MilestoneOutstandingCSS2_0 CRN="{!CRN}" rendered="{!thirdDiv == 'Upcoming/Due Payments'}" />
+                            <c:RecentMilstonesPaidCSS2_0 CRN="{!CRN}" rendered="{!thirdDiv == 'Payments Received'}" />
+                            <c:RecentDocSmsDispatchCSS2_0 CRN="{!CRN}" 
+                                 rendered="{!thirdDiv == 'Recent Documents/SMS/Dispatch'}" />
+                            <c:RecentActivityCSS CRN="{!CRN}" rendered="{!thirdDiv == 'Recent Activity'}" />
+    
+    
+                            <!-- Recent Activity  Crisp View-->
+                            <c:MilestoneOutstandingCSS2_0 CRN="{!CRN}" rendered="{!fourthDiv == 'Upcoming/Due Payments'}" />
+                            <c:RecentMilstonesPaidCSS2_0 CRN="{!CRN}" rendered="{!fourthDiv == 'Payments Received'}" />
+                            <c:RecentDocSmsDispatchCSS2_0 CRN="{!CRN}" 
+                                 rendered="{!fourthDiv == 'Recent Documents/SMS/Dispatch'}" />
+                            <c:RecentActivityCSS CRN="{!CRN}" rendered="{!fourthDiv == 'Recent Activity'}" />
+                        </div>
+                        <!-- End Of Tables -->
+    
+                    </div>
+                    <!-- End Of Container -->
+                    <div class="foorterdiv"></div>
+                    
+            </body>
+             </apex:outputPanel>
+        </apex:define>
+    </apex:composition>
+</apex:page>

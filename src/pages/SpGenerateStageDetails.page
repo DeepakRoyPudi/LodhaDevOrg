@@ -1,0 +1,65 @@
+<apex:page standardController="Stage_Details__c" extensions="SpGenerateStageDetails" sidebar="false">
+      <apex:form id="stForm">
+        <apex:pageMessages />
+        <apex:pageblock id="stPageBlock">         
+          <apex:sectionHeader title="Payment Stage Details"/> 
+            <apex:pageBlockSection title="Stage Details">
+              <apex:outPutPanel id="stOpView">
+                <div align="center">
+                  <apex:pageBlockTable value="{!stgDetList}" var="stgd" columns="5" title="Stage Details" align="center">
+                      <apex:column headerValue="StageNo">
+                        <apex:outputField value="{!stgd.Name}"/>
+                      </apex:column>
+                      <apex:column headerValue="Description" width="60%">
+                        <apex:outputField value="{!stgd.Description__c}">
+                        <apex:inlineEditSupport /></apex:outputField>
+                      </apex:column>
+                      <apex:column headerValue="Slab%">
+                        <apex:outputField value="{!stgd.Slab__c}" > 
+                        <apex:inlineEditSupport /></apex:outputField>
+                      </apex:column>
+                      <apex:column headerValue="Expected Completion Date">
+                        <apex:outputField value="{!stgd.Expected_Completion_Date__c}">
+                        <apex:inlineEditSupport /></apex:outputField>
+                      </apex:column> 
+                      
+                       <apex:column headerValue="Actual Completion Date">
+                        <apex:outputField value="{!stgd.Actual_Completion_Date__c}">
+                        <apex:inlineEditSupport /></apex:outputField>
+                      </apex:column>
+                                  
+                  </apex:pageBlockTable>            
+                  <b>Total Slabs% </b><apex:outputText value="{!total}" />
+                  <b>Short/Excess </b><apex:outputText value="{!short_excess}"/>
+                  <br/>
+                  <apex:commandbutton Title="Save" value="Save Stage Details" action="{!saveStageDetails}"/>
+                </div>
+              </apex:outPutPanel> 
+            </apex:pageBlockSection>
+           <!-- <apex:pageBlockSection title="Booking Stage Details">
+              <apex:outPutPanel id="bookingstgeview">
+                <div align="center">
+                  <apex:pageBlockTable value="{!bookingstgdet}" var="stgd" columns="3" title=" Booking Stage Details" align="center">
+                      <apex:column headerValue="StageNo">
+                        <apex:outputField value="{!stgd.Name}"/>
+                      </apex:column>
+                      <apex:column headerValue="Description">
+                        <apex:outputField value="{!stgd.Booking_Description__c}">
+                        <apex:inlineEditSupport /></apex:outputField>
+                      </apex:column>
+                      <apex:column headerValue="Slab%">
+                        <apex:outputField value="{!stgd.Booking_Slab__c}" > 
+                        <apex:inlineEditSupport /></apex:outputField>
+                      </apex:column>          
+                  </apex:pageBlockTable>            
+                  <b>Total Slabs% </b><apex:outputText value="{!b_total}" />
+                  <b>Short/Excess </b><apex:outputText value="{!b_short_excess}"/>
+                  <br/>
+                  <apex:commandbutton Title="Save" value="Save Booking Stage Details" action="{!saveBookingStageDetails}"/>
+                </div>
+              </apex:outPutPanel> 
+            </apex:pageBlockSection>-->
+          <apex:commandButton value="Back" action="{!goBack}"/>
+        </apex:pageblock>
+      </apex:form>
+    </apex:page>

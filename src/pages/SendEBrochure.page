@@ -1,0 +1,33 @@
+<apex:page controller="sendEBrochure" sidebar="false" showHeader="false">
+<apex:form > 
+<apex:includeScript value="{!URLFOR($Resource.jQuery)}"/>  
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function()
+        {
+            sendMail();       
+        });
+     function cancel()
+{
+     document.close();   
+}
+    </script>
+    <apex:actionFunction name="sendMail" action="{!sendmail}" rerender="emailform"/>
+<apex:outputPanel id="emailform">
+<apex:outputPanel id="checkMailStatus" rendered="{!sendingStatus}">
+<h1>Sending Mail....</h1>
+</apex:outputPanel>
+<br/>
+<apex:outputPanel id="showStatus" rendered="{!mailStatus}">
+<h1> E-Brochure Mail has been successfully sent to {!email}</h1>
+</apex:outputPanel>
+<apex:outputPanel id="errorStatus" rendered="{!errorStatus }">
+<h1> Email not Sent. No E-Brochure Content available in the respective project.</h1>
+</apex:outputPanel>
+</apex:outputPanel>
+<br/>
+<span style="padding-left:150px"> </span>
+
+<apex:commandButton onClick="window.top.close();"  value="OK" />
+
+  </apex:form>
+</apex:page>

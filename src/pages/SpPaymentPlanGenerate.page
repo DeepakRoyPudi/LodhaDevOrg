@@ -1,0 +1,111 @@
+<apex:page standardController="Stage_Details__c" extensions="SpPaymentPlanGenerate" renderAs="pdf">
+<apex:stylesheet value="{!URLFOR($Resource.Payment_plan_style)}"/>
+<apex:form >
+  <table width="100%" border="0">
+    <tr>
+      <td></td>
+      <td></td>
+      <td colspan="2" align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">{!today}</td>
+    </tr>
+     <tr>
+      <td width="30%" align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">Company:</td>
+      <td align="left" style="font-family: Arial, Helvetica, sans-serif;">{!flat.Wing__r.Company__c}</td>  
+      <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">Wing:</td>
+      <td align="left" style="font-family: Arial, Helvetica, sans-serif;">{!wing_name}</td>
+    </tr>
+    <tr>
+      <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">Project:</td>
+      <td align="left" style="font-family: Arial, Helvetica, sans-serif;">{!project}</td>     
+      <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">Flat No:</td>
+      <td align="left" style="font-family: Arial, Helvetica, sans-serif;">{!flat_no}</td>
+    </tr>
+    <tr>
+      <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">Cluster:</td>
+      <td align="left" style="font-family: Arial, Helvetica, sans-serif;">{!cluster_name}</td>     
+      <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">Carpet Area (Sq.Ft):</td>    
+      <td align="left" style="font-family: Arial, Helvetica, sans-serif;">{!flat.Carpet_Area__c}</td>    
+    </tr>
+    <tr>
+      <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">Consideration Value (Rs.):</td>
+      <td align="left" style="font-family: Arial, Helvetica, sans-serif;"><apex:outputText value="{0, number, ###,###,###,##0}"><apex:param value="{!cost}"/></apex:outputText>/-</td>      
+      <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">Token Amount (Rs.):</td> 
+      <td align="left" style="font-family: Arial, Helvetica, sans-serif;"><apex:outputText value="{0, number, ###,###,###,##0}"><apex:param value="{!token_amt}"/></apex:outputText>/-</td>     
+    </tr>
+  </table>
+  <br/>
+  <br/>
+  <table border="1" cellpadding="5" cellspacing="0" width="100%" id="payment_plan">
+     <tr>
+       <th colspan="5" style="text-decoration:underline; font-family: Arial, Helvetica, sans-serif;">Payment Schedule</th>
+     </tr>
+     <tr>
+       <!--<apex:repeat value="{!headers}" var="h">
+         <td align="center">{!h}</td>  
+       </apex:repeat>-->
+       <td align="center">Stage#</td>  
+       <td align="center">Description</td>  
+       <td align="center">Slab%</td>  
+       <td align="center">Amount(Rs.)</td>
+       <td align="center" width="8%"></td>  
+     </tr>
+     <apex:repeat value="{!stgdet}" var="tr">
+       <tr>       
+        <td align="center"><apex:outputField value="{!tr.Name}"/></td>
+        <td><apex:outputField value="{!tr.Description__c}"/></td>
+        <td  align="right"><apex:outputField value="{!tr.Slab__c}"/></td>
+        <td align="right"><apex:outputField value="{!tr.Amount__c}"/></td>
+        <td><apex:outputField value="{!tr.due_status__c}"/></td>
+       </tr>
+     </apex:repeat>
+      <tr>
+       <td colspan="3" align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+         Total:
+       </td>
+       <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+         <apex:outputText value="{0, number, ###,###,###,##0}"><apex:param value="{!cost}"/></apex:outputText>
+       </td>
+       <td rowspan="2"></td>
+     </tr>
+     <tr>
+       <td colspan="3" align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+         Total Due:
+       </td>
+       <td align="right" style="font-family: Arial, Helvetica, sans-serif; font-weight: bold;">
+         <apex:outputText value="{0, number, ###,###,###,##0}"><apex:param value="{!due_amt}"/></apex:outputText>
+       </td>
+     </tr>
+   </table>
+   <br/>
+   <apex:pageBlock rendered="{!display_booking_payment_block}" > 
+   <table border="1" cellpadding="5" cellspacing="0" width="100%" id="payment_plan" class="test-class">
+     <tr>
+       <th colspan="2" style="text-decoration:underline; font-family: Arial, Helvetica, sans-serif;">Amount Due On Booking</th>
+     </tr>
+     <tr>
+       <apex:repeat value="{!bookingheaders}" var="h">
+         <td align="center">{!h}</td>  
+       </apex:repeat>
+     </tr>
+     <tr>      
+       <td>Token Amount</td>
+       <td align="right"><apex:outputText value="{0, number, ###,###,###,##0}"><apex:param value="{!token_amt}"/></apex:outputText></td>
+     </tr>
+     <tr>       
+      <td><apex:outputText value="{!desc1}"/></td>
+      <td align="right"><apex:outputText value="{0, number, ###,###,###,##0}"><apex:param value="{!instal_1}"/></apex:outputText></td>
+     </tr>     
+     <tr>       
+      <td><apex:outputText value="{!desc2}"/></td>
+      <td align="right"><apex:outputText value="{0, number, ###,###,###,##0}"><apex:param value="{!instal_2}"/></apex:outputText></td>
+     </tr>
+   </table>
+   </apex:pageBlock>
+   <div style="font-family: Arial, Helvetica, sans-serif;">
+     <p><b>Note :</b></p>
+     <p>Prices are subject to revision at the sole discretion of the Company.
+        Registration charges, Stamp Duty, VAT and other statutory duties payable at actual rates at the time of registration or as applicable.
+        Society charges and other charges will be payable at the time of possession.
+     </p>  
+   </div>
+ </apex:form>
+</apex:page>

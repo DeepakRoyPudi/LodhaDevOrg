@@ -1,0 +1,43 @@
+<apex:page controller="DespatchController">    
+
+    <div style="margin:20px;">   
+    
+        <b>MY DESPATCHES (in descending order) </b><br/><br/>
+           
+        <apex:pageBlock >
+        
+            <apex:pageBlockTable value="{!despatchlist}" var="item">
+            
+                <apex:column value="{!item.Waybill_No__c}"  headerValue="Waybill No" />
+                <apex:column value="{!item.Courier_Name_For__c}"  headerValue="Courier Name" />
+                <apex:column value="{!item.Area__c}"  headerValue="Area" />
+                <apex:column value="{!item.Contents__c}" headerValue="Contents" /> 
+            
+            </apex:pageBlockTable> 
+            
+        </apex:pageBlock><br/> 
+
+    
+        <b>Important to Note:</b>
+        <ul>
+            <li>The information and contents of this websites/portal are for reference purposes only. It does not constitute legal tender or contractual obligations between the Lodha Group and the customers. </li>
+            <li>Although the contents on this website have been uploaded with reasonable care and diligence, the Lodha Group does not guarantee and shall not be liable in respect of the accuracy of the information and/or for any delay in delivery of the documents by the concerned courier company. </li>
+            <li>The information is updated on best efforts basis and hence may not always necessarily contain the latest or accurate status/ updates of the documents. </li>
+            <li>Some of the hyperlinks contained in this site may lead to resources outside the site. The Lodha Group cannot give any authenticity or accuracy of information contained in any site linked from its site. The Lodha Group is not responsible for the content of any such external hyperlinks and for any consequences arising out of it, whatsoever.</li>
+            <li>Errors and Omissions excepted.</li>
+            <li>Data available for despatches sent after 15th March 2013</li>
+        </ul>
+        
+    </div>
+     <!-- For Tracking using google analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-41070804-1', 'force.com');
+      ga('send', 'pageview');
+    
+    </script>
+</apex:page>

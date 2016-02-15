@@ -1,0 +1,35 @@
+<apex:page standardController="Project_Name__c" extensions="ProjectMappingController">
+<apex:form >
+   <apex:actionFunction action="{!SaveMap}" name="savemap" oncomplete="window.top.location='/{!Project_Name__c.id}';"/>
+    <apex:pageBlock >
+        <apex:pageBlockButtons location="bottom">
+            <button class="btn" onclick="savemap();">Save</button>         
+        </apex:pageBlockButtons>
+        
+        <apex:pageBlockSection >
+
+            <apex:pageBlockTable value="{!leadSourceMapList}" var="leadSourceMap" >
+                <apex:column headerValue="LeadSource Value" width="10" value="{!leadSourceMap.leadSourceLabel}"/>
+                <apex:column headerValue="LeadSource Label" width="10"><apex:inputText value="{!leadSourceMap.leadSourceValue}" /></apex:column>
+                <apex:facet name="footer"> 
+                   <apex:outputPanel rendered="false">
+                       <button class="btn" onclick="window.top.location='/00NL0000000KNV5';">change</button> 
+                   </apex:outputPanel>
+                </apex:facet>
+            </apex:pageBlockTable>
+    
+            <apex:pageBlockTable value="{!accomodationMapList}" var="accomodationMap">
+                <apex:column headerValue="Accomodation Value" value="{!accomodationMap.accomodationLabel}"/>
+                <apex:column headerValue="Accomodation Label"><apex:inputText value="{!accomodationMap.accomodationValue}" /></apex:column>
+                <apex:facet name="footer">
+                    <apex:outputText rendered="{!isAccomodationEmpty}">No Accomodation Types entered</apex:outputText> 
+                </apex:facet>
+            </apex:pageBlockTable>
+        
+        </apex:pageBlockSection>
+        
+    </apex:pageBlock>
+
+
+</apex:form>
+</apex:page>

@@ -1,0 +1,28 @@
+<apex:page >
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+ <style>
+ .leftLength{
+      color:red;
+ }
+ .smsTextArea{
+     background-color:rgba(236, 229, 233, 0.45);
+     border-color: turquoise;
+ }
+ </style>
+  <!-- Begin Default Content REMOVE THIS -->
+  <strong>Message</strong>
+  
+  <apex:form >
+  <apex:inputTextarea styleClass="smsTextArea" cols="50" rows="5" id="newDesc" html-maxlength="10" onkeyup="countCharacter(this);" html-placeholder="Type Your Message Here"/><p/>
+ </apex:form>
+ <div id='usedLengthID'>
+ <Strong>Left : <Span class="leftLength">0</span></strong>
+ </div>
+ <script>
+ function countCharacter (tArea){
+ console.log('hi'+tArea.value.length);
+ $('#usedLengthID').empty();
+ $('#usedLengthID').append('<Strong>Left : <Span class=leftLength>'+tArea.value.length+'</span></strong>')
+ } 
+ </script>
+</apex:page>

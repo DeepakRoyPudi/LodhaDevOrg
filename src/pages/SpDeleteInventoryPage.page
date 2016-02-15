@@ -1,0 +1,2 @@
+<apex:page standardController="Wing__c" extensions="SpDeleteInventory" action="{!DelRecords}">
+</apex:page>

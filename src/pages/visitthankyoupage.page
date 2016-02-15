@@ -1,0 +1,48 @@
+<apex:page sidebar="false" title="Thank You" showHeader="false" controller="VisitThankyouExtension">
+<apex:pageMessages />
+
+<apex:form rendered="{!UserAccess}" styleclass="lodha_form_style" >
+<style>
+{!usermap.ThankYouCSS__c}
+
+</style>
+<apex:stylesheet value="{!Usermap.CSS_URL__c}" />
+
+ <div id="lodha_form_wrapper" class="thank_you_block">
+     
+   <div class="thank_you_message">Thank you</div>
+
+   <div class="action_btn" style="margin-top: 20px;">
+        <apex:commandButton styleClass="lodha_btn" style="margin-right: 0;" value="Home Page" action="{!redirectToHomePage}"/>
+   </div>
+   <div class="wadala_bottom_logo" style="margin-top: 35px;">&nbsp;</div>
+ </div>
+ 
+    
+</apex:form>
+<script type = "text/javascript">
+
+function closeWindow()
+{    
+       parent.window.open('','_self','');
+       parent.window.close(); 
+}
+</script>
+<script type="text/javascript">
+
+
+ var screenHeight;
+ 
+ // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+ 
+ if (typeof window.innerWidth != 'undefined')
+ {
+
+      screenHeight = screen.height;
+      var x = document.getElementById('lodha_form_wrapper');
+      x.style.height = screenHeight -250 +'px';
+ }
+
+
+</script>
+</apex:page>

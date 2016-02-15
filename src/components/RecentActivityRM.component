@@ -1,0 +1,199 @@
+<!-- Version            Created By       Created Date       Description
+ *
+ *  Initial Draft       Sneha P.         26/02/2015       Component for crisp view of Recent Activity. It will display all 
+ *                                                        recent cases for users CRN.
+ *
+ -->
+<apex:component controller="RecentActivityRMController">
+    <style>
+    .tab-heading{text-align: center;}
+    .bs .modal-header{padding: 10px;}
+/*     body.modal-open { */
+/*                 overflow: hidden; */
+/*                 overflow-y: hidden !important; */
+/*                } */
+     .Loyaltyheader1{
+/*                   text-align: center !important; */
+                  padding: 1px;
+                  white-space: normal; /* css-3 */
+                  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+                  white-space: -pre-wrap; /* Opera 4-6 */
+                  white-space: -o-pre-wrap; /* Opera 7 */
+                  word-wrap: break-word; /* Internet Explorer 5.5+ */
+                  }
+           
+      .viewAll{color:#000 !important; text-decoration: underline!important;}            
+    </style>
+    
+    <apex:attribute name="CRN" description="This is the CRN value for the User" 
+                    type="String" 
+                    assignTo="{!customerCRN}" 
+                    required="true"/>
+    <apex:attribute name="NoOfRecrd" description="No of records to be displayed in widgets crisp view" 
+                    type="Integer" 
+                    assignTo="{!noOfRecords}" 
+                    required="true"/>
+    
+    <div class="panel-heading widgetHeaderBGColor"
+        style="padding: 5px 15px;">
+        <a class="viewAll-link pull-right view-all viewAll" href="#" 
+            onclick="disableScroll()"
+           data-toggle="modal" data-target="#RecentActivityDetail">
+<!--                      onclick="ReloadRecentActivityDetailView()" -->
+            View All
+        </a>
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        <h4
+            style="margin-top: 0px; margin-bottom: 0px; font-size: 100%; font-weight: bold">Recent
+            Activity (Cases)</h4>
+    </div>
+
+
+    <div class="panel-body" style="padding: 5px">
+     <div style="width:100%; text-align:center;">
+       <button type="button" class="btn btn-primary center-block"
+                  onclick="window.open('/apex/CM_ParentCaseCreatePage?acctId={!accId}')"
+                    style=" margin:auto; font-size: 100%; padding: 0px 3px; margin-bottom: 14px;">
+              New Parent Case
+       </button>  
+       </div>
+       <div class="{!If(noOfRecords==3, 'small_widget_tbody','large_widget_tbody' )}">
+        <table class="table" style="font-size:90%" >
+             <thead>
+                <tr>
+                    <th class="Loyaltyheader1"> Case No.</th>
+                    <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityCrispView_RM}" var="f" rows="{!noOfRecords - 1}">
+                        <th class="Loyaltyheader1">
+                            <apex:outputText value="{!f.Label}" 
+                                             rendered="{!AND(f.Label != 'Created Date',f.Label != 'Interaction Mode')}"/>
+                            <apex:outputText value="Date Opened" rendered="{!f.Label == 'Created Date'}"/>
+                            <apex:outputText value="Mode" rendered="{!f.Label == 'Interaction Mode'}"/>
+<!--                             <apex:outputText value="Type" rendered="{!f.Label == 'Nature of Request'}"/> -->
+                        </th>
+                    </apex:repeat>
+                </tr>
+             </thead>
+             <tbody > 
+                 <apex:repeat value="{!lstCase}" var="c" rows="{!noOfRecords }">
+                     <tr>
+                        <td><apex:outputLink value="/{!c.Id}" target="_blank">{!c.CaseNumber} </apex:outputLink> </td>
+                        <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityCrispView_RM}" var="f" rows="{!noOfRecords -1}">
+                        <td>
+<!--                                <apex:outputfield value="{!c[f]}" rendered="{!AND (f.type != 'datetime',f.Label != 'Status' )}"/> -->
+                            
+                            <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                              <c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                            </apex:outputPanel>
+                              <apex:outputPanel rendered="{!f.type == 'date'}">
+                             <c:FormatDateComponent date_value="{!c[f]}"/>
+                            </apex:outputPanel>
+                            <apex:outputfield value="{!c[f]}" rendered="{!AND(f.Label != 'Status', f.type != 'datetime', f.type != 'date')}"/>
+                            
+                            <apex:outputField value=" {!c[f]} " rendered="{!AND(f.Label == 'Status' , c[f] == 'Open')}" 
+                                             style="background: #FD0000; width:40px;"/>
+                                             
+                            <apex:outputField value=" {!c[f]} " rendered="{!AND(f.Label == 'Status' , c[f] == 'Closed Satisfied' )}" 
+                                             style="background: #11CE03;"/>
+                                             
+                            <apex:outputField value=" {!c[f]} " 
+                                rendered="{!AND(f.Label == 'Status' , c[f] != 'Closed Satisfied',c[f] != 'Open')}"/>
+                             
+                            
+                                             
+    <!-- <!--                       background: #FD0000; --> 
+                        </td>
+                        </apex:repeat>
+                    </tr>
+                </apex:repeat>
+                
+                 <tr style="{!If(lstCase.size > 0, 'display:none','text-align: center;' )}">  
+                     <td colspan="{!$ObjectType.Case.FieldSets.RecentActivityCrispView_RM.size}" 
+                    >
+                    No records to display
+               </td>
+            </tr>
+            
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="RecentActivityDetail" tabindex="-1"
+        role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+        <div class="modal-dialog" style="height:initial;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" 
+                            onclick="ReloadRecentActivityDetailView(),scrollBodyOnClose();">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true" style="top:0px !important;"></span>
+                    
+                    <h4 class="modal-title" id="myModalLabel">Recent Activity</h4>
+                </div>
+            
+                <div class="modal-body">
+                    <div class="container">
+
+                      <table width="100%" class="tab-heading">
+                        <tr >
+                       
+                        <td>
+                        <a type="button"  data-dismiss="modal" href="#" onclick="ReloadRecentActivityDetailView()"
+                            data-toggle="modal" data-target="#PaymentsReceivedDetail">
+                            <span style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-ok-circle">
+                            </span> Payments Information </span>
+                        </a>
+                        </td>
+                        <td>
+                        <a type="button"  href="#" onclick="ReloadRecentActivityDetailView()"
+                            data-dismiss="modal" data-toggle="modal"
+                            data-target="#RecentDocumentsSmsDispatchDetail"> <span
+                            style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-folder-open">
+                            </span>&nbsp; Recent Documents/SMS/Dispatch </span>
+                        </a> 
+                        </td>
+                        <td style="border-right:solid 1px #fff !important;">
+                        <a type="button"  href="#" onclick="ReloadRecentActivityDetailView()"
+                            data-dismiss="modal" data-toggle="modal"
+                            data-target="#favouringDetail"> 
+                            <span style="font-size: 12px;">
+                                <span aria-hidden="true" class="glyphicon glyphicon-list">
+                                </span> 
+                                {!'Favoring Details & Payment Transactions'}
+                            </span>
+                        </a>
+                        </td>
+                        </tr>
+                    </table>
+                    <br/>
+                        <!-- Component for Recent Activity detail View -->
+                        <apex:iframe src="/apex/RecentActivityDetailRM?CRN={!CRN}" scrolling="true" 
+                                        id="recentActivityIframe" height="500"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function scrollBodyOnClose() {
+            $('html, body').css({
+                          'overflow': 'auto'
+                           });
+        }
+        
+        function ReloadRecentActivityDetailView () {
+            var f = document.getElementById('recentActivityIframe');
+            f.src = f.src;
+            
+            disableScroll();
+        }
+        function disableScroll() {
+             $('html, body').css({
+                     'overflow': 'hidden'
+                      });
+        }
+    </script>    
+</apex:component>

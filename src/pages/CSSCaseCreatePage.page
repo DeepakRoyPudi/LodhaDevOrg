@@ -1,0 +1,65 @@
+<apex:page id="thePage" controller="CSSCaseCreateController"
+    standardStylesheets="true" showHeader="true" sidebar="false"
+    title="Customer Query">
+    <style>
+.locationError {
+    color: red;
+    font-weight: bold;
+    font-size: 14pt;
+}
+</style>
+    <apex:messages styleClass="locationError" />
+    <script language="javascript" type="text/javascript">
+        function clickSubmit(){
+        try{        
+                if(document.getElementById('thePage:theForm:theBlock:theSection3:qt').value==''){
+                alert('Query Type is required before you Submit');
+                return false;}
+         
+           } catch (e) {
+               return false;
+           }
+           }
+                
+          function checkAcmt(){
+                if(document.getElementById('thePage:theForm:theBlock:theSection3:acmt').value!=''){
+                if(document.getElementById('thePage:theForm:theBlock:theSection3:acmt').value.length > 350){
+                var subStr = document.getElementById('thePage:theForm:theBlock:theSection3:acmt').value.substr(0,349);
+                document.getElementById('thePage:theForm:theBlock:theSection3:acmt').value = subStr;                
+                alert('Additional Comments cannot be longer than 350 characters');
+                return false;
+                }}}                    
+</script>
+    <apex:sectionHeader title="Online Query Form" />
+    <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:outputText value="Dear Lodha Customer," /> <apex:outputText >
+        <br />
+    </apex:outputText>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:outputText value="Sharing your query was never so simple. You only need to fill the following fields, click on 'Submit' and secure your query number." /></b>
+    <div class="pbSubheader first tertiaryPalette"
+        style="background-color: white"><span class="pbSubExtra"><span
+        class="requiredLegend"><span class="requiredExampleOuter"><span
+        class="requiredExample">&nbsp;</span></span><span class="requiredText">
+    = Mandatory Fields</span></span></span></div>
+    <apex:form id="theForm">
+
+        <apex:pageBlock id="theBlock" mode="maindetail">
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton id="btnSubmit" onclick="return clickSubmit()"
+                    action="{!submit}" value="Submit" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection id="theSection3" title="Query Details"
+                columns="1" collapsible="false">
+                <apex:inputField required="true" id="qt"
+                    value="{!newCase.Query_Type__c}" />
+                <apex:inputField required="false" id="sqt"
+                    value="{!newCase.Sub_Type__c}" />
+                <apex:inputField required="false" id="acmt" style="width:350px"
+                    onkeypress="checkAcmt()" value="{!newCase.Additional_Comments__c}" />
+            </apex:pageBlockSection>
+            <p />
+        </apex:pageBlock>
+    </apex:form>
+    <div align="right">&copy;&nbsp;Copyright 2011, Casa By Lodha. All
+    rights reserved.&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <br />
+</apex:page>

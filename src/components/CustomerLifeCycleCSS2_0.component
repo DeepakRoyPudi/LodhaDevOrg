@@ -1,0 +1,511 @@
+<!--/*Description:
+Component that exposes the Construction lifecycle functionality
+
+ @Created by: Trupti Dhoka
+ @Created Date:18/04/2015
+ 
+ --------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ | 
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+*/-->
+
+<apex:component controller="RMCustomerLifeCycleController">
+<apex:attribute name="CRN" assignTo="{!PARAM_CRN}" description="This is the CRN value for the User" type="String"   default="12"/>
+<apex:outputLabel value="{!PreInitialize}" style="display:none"></apex:outputLabel>
+ 
+
+<!----style for color code milestone indicator--->
+<style>
+.milestone_indicator{
+background: #2F76D2;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border:1px solid #04397b;
+    position: absolute;
+    content:'';
+    margin-top:6%;;
+    margin-left:40%;
+
+} 
+.bs p {
+  margin: 0 0 2px;
+}  
+
+</style>
+<!--End Style of Color code milestone indicator --->
+
+     <!------Start Life Cycle CSS--------->
+                      
+                       <style>
+* {
+    margin: 0;
+    padding: 0;
+}
+.parent
+{
+  margin:0px 30px 0;
+  width: 1000px;
+  border-bottom: 2px solid #2F76D2;
+  position: relative;
+  padding-top:67px;
+  
+}
+p {
+  margin: 0px 0 0px !important;
+  line-height: 12px;
+}
+.parent .child {
+  background: #2F76D2;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border:1px solid #04397b;
+    position: absolute;
+    content:'';
+    top: 60px;
+          
+}
+.popover-content {
+  padding: 9px 2px; !important;
+}
+.child {
+    //left: 50%;
+    margin-left: -8px;
+}
+
+.rotate{
+ /* Rotate div */
+                        -ms-transform: rotate(-45deg); /* IE 9 */
+                        -webkit-transform: rotate(-45deg); /* Chrome, Safari, Opera */
+                        transform: rotate(-45deg);  
+                        -moz-transform: rotate(-45deg)
+                        -o-transform: rotate(-45deg)
+                        }
+                        
+.rotate45{
+ /* Rotate div */
+                        -ms-transform: rotate(45deg); /* IE 9 */
+                        -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+                        transform: rotate(45deg);  
+                        -moz-transform: rotate(45deg)
+                        -o-transform: rotate(45deg)
+                        }                       
+</style>
+
+                    
+                    
+                    <!------End Life Cycle CSS--------->
+<style>
+.popover.fade.bottom.in {
+  width: 300px;
+  height:inherit;
+}
+
+img {
+  vertical-align: top !important; 
+}
+.hoverclass{
+}
+
+    .popover_backg{
+        width:100%;
+        height:190%;
+        position:absolute;
+        top:0;
+        left:0;
+        background:rgba(255,255,255,0.3);
+        z-index:99;
+        } 
+</style>
+
+<script>
+
+      
+     
+$(document).ready(function(){
+   //this is script for the on click popover 
+  
+$('.hoverclass').popover();   
+   //this no is less than no of milestone..
+   var No_of_MileStones=13;//this no have to be calculated from controller list of milestone
+ 
+ var count=0;
+ <apex:repeat value="{!finalList}" var="milestoneObject">
+//alert("{!milestoneObject}");
+ count=count+1;
+ </apex:repeat>
+ No_of_MileStones=count-1;
+ 
+ var child_id_prefix='c';
+ var div_id_prefix='d';
+         //var p1_id='p1';
+         //var p2_id='p2';
+
+var i=0;
+
+//for(var i=0;i<=No_of_MileStones;i++){
+<apex:repeat value="{!finalList}" var="obj">
+
+//add anchor tag to the parent class div 
+//the below div is mile stone 
+var anch = $('<div> </div>'); 
+    //$(anch).attr('href', '#');
+
+if("{!obj.hover_data}"!=null && "{!obj.hover_data}"!='' ){
+
+console.debug('bothClass');
+$(anch).attr('class', 'child hoverclass');
+//add hover to milestone..
+$(anch).attr('data-value','first');
+$(anch).attr('data-state','open');
+$(anch).attr('data-content',"{!obj.hover_data}");
+$(anch).attr('data-html','true');
+$(anch).attr('rel','popover');
+$(anch).attr('data-placement','left');
+        //$(img).attr('data-original-title','Title');
+$(anch).attr('data-trigger','hover');
+$(anch).attr('data-toggle','popover');
+
+}else{
+$(anch).attr('class', 'child');
+console.debug('NOTbothClass');
+}
+$(anch).attr('style','Background-Color:{!obj.milestone_color};');
+
+
+
+
+var id_evaluate=child_id_prefix+i;
+$(anch).attr('id',id_evaluate);
+        //$(anch).attr('data-state','open');
+$('.parent').append(anch);
+
+//add div tag to the anchor child tag for the tiltles 
+var div_id_evaluate=div_id_prefix+i;
+
+var titlediv='<div></div>';
+if(i%2==0){
+
+titlediv='<div style="margin-top:-55px;width:99px;height:50px;margin-left:-22px;position: relative;"><span style="font-size:11px"><p>{!obj.milestone_title}</p> <p>{!obj.milestone_date}</p></span></div>';
+        //$(titlediv).attr('id',div_id_evaluate);
+        //$(titlediv).attr('id',div_id_evaluate);
+var child_id='#'+id_evaluate;
+$(child_id).append(titlediv);
+        //var div_id='#'+div_id_evaluate;
+        //$(div_id).css({'margin-top': '-50px','width': '96px','height':'50px'});
+
+//add title values Date to apbove div inside child 
+        //var title_par1='<p></p>';
+        //$(title_par1).html('12 jan 2012');
+        //var div_id='#'+div_id_evaluate;
+        //$(div_id).append(title_par1);
+        //add title values Amount any thing to apbove div inside child 
+        //var title_par2='<p></p>';
+        //$(title_par2).html('125385');
+        //var div_id='#'+div_id_evaluate;
+        //$(div_id).append(title_par2);
+
+//check sublist is contains in milestone means sublist not null
+
+if("{!obj.MileStoneSublist.size}"!=null && "{!obj.MileStoneSublist.size}"!='' )
+{
+if("{!obj.MileStoneSublist.size}">0 )
+{
+
+//add image to mile stone + image
+var anchr='anchr'+i; 
+var anch1 = $('<a id='+anchr+'> </a>'); 
+$(anch1).attr('href', '#');
+$(child_id).append(anch1);
+
+var img=$('<img id=imgid'+i+'></img>'); 
+$(img).attr('src','{!URLFOR($Resource.RMImages2, 'RMImages2/Plus__Orange.png')}');
+$(img).attr('width','14');
+$(img).attr('height','14');
+$(img).attr('data-value','first');
+$(img).attr('data-state','open');
+ $(img).css({"margin-top": "+5px"});
+//This below content a list on the mile stone............................
+
+ 
+content_data='<div class=table-responsive>';          
+content_data=content_data+'<table class=table>';
+content_data=content_data+'<thead>';
+content_data=content_data+'<tr>';
+content_data=content_data+'<th>MileStone Desc.</th>';
+content_data=content_data+'<th>Date</th>'
+content_data=content_data+'</tr></thead><tbody>';
+
+var content_data1='';
+
+<apex:repeat value="{!obj.MileStoneSublist}" var="sub_list">
+if("{!sub_list.hover_data}"!=null && "{!obj.hover_data}"!='' ){
+console.debug('hiverYes');
+content_data1=content_data1+'<tr class=hoverclass rel=popover data-trigger=hover data-toggle=popover data-content=dsadas data-placement=left style="background-color:{!sub_list.milestone_color}"><td>{!sub_list.milestone_title}</td><td>{!sub_list.milestone_date}</td></tr>';
+
+}else{
+console.debug('hiverNO');
+content_data1=content_data1+'<tr style="background-color:{!sub_list.milestone_color}"><td>{!sub_list.milestone_title}</td><td>{!sub_list.milestone_date}</td></tr>';
+}
+</apex:repeat>
+
+content_data=content_data+content_data1;
+content_data=content_data+'</tbody></table></div>';
+      
+$(img).attr('data-content',content_data);
+$(img).attr('data-html','true');
+$(img).attr('rel','popover');
+$(img).attr('data-placement','bottom');
+        //$(img).attr('data-original-title','Title');
+$(img).attr('data-trigger','click');
+$(img).attr('class','popOpenClose');
+
+var anchr_id='#'+anchr;
+$(anchr_id).append(img);
+ }
+ }
+
+}else{
+
+var child_id='#'+id_evaluate;
+
+//check sublist is contains in milestone means sublist not null
+if("{!obj.MileStoneSublist.size}"!=null || "{!obj.MileStoneSublist.size}"!='' )
+{
+if("{!obj.MileStoneSublist.size}">0 )
+{
+
+//add image to mile stone + image
+var anchr='anchr'+i; 
+var anch2 = $('<a id='+anchr+'> </a>'); 
+$(anch2).attr('href', '#');
+$(child_id).append(anch2);
+
+var img=$('<img id=imgid'+i+'></img>'); 
+ $(img).attr('src','{!URLFOR($Resource.RMImages2, 'RMImages2/Plus__Orange.png')}');
+$(img).attr('width','14');
+$(img).attr('height','14');
+$(img).attr('data-value','first');
+$(img).attr('data-state','open');
+
+content_data='<div class=table-responsive>';          
+content_data=content_data+'<table class=table>';
+content_data=content_data+'<thead>';
+content_data=content_data+'<tr>';
+content_data=content_data+'<th>MileStone Desc.</th>';
+content_data=content_data+'<th>Date</th>'
+content_data=content_data+'</tr></thead><tbody>';
+
+var content_data1='';
+
+<apex:repeat value="{!obj.MileStoneSublist}" var="sub_list">
+console.debug("sudeep:::{!sub_list.hover_data}");
+if("{!sub_list.hover_data}"!=null && "{!sub_list.hover_data}"!='' ){
+console.debug('hiverYes');
+content_data1=content_data1+'<tr  class=hoverclass rel=popover data-trigger=hover data-toggle=popover data-content=dsadas data-placement=left style="background-color:{!sub_list.milestone_color}"><td>{!sub_list.milestone_title}</td><td>{!sub_list.milestone_date}</td></tr>';
+
+}else{
+console.debug('hiverNO');
+content_data1=content_data1+'<tr style="background-color:{!sub_list.milestone_color}"><td>{!sub_list.milestone_title}</td><td>{!sub_list.milestone_date}</td></tr>';
+}
+</apex:repeat>
+
+content_data=content_data+content_data1;
+content_data=content_data+'</tbody></table></div>';
+
+$(img).attr('data-content',content_data);
+$(img).attr('data-html','true');
+$(img).attr('rel','popover');
+$(img).attr('data-placement','bottom');
+        //$(img).attr('data-original-title','Title');
+$(img).attr('data-trigger','click');
+
+$(img).attr('class','popOpenClose');
+
+var anchr_id='#'+anchr;
+$(anchr_id).append(img);
+
+}
+}
+
+if("{!obj.MileStoneSublist.size}"!=null || "{!obj.MileStoneSublist.size}"!='' )
+ {
+    if("{!obj.MileStoneSublist.size}">0 )
+   {
+     titlediv='<div style="margin-top:+6px;width:99px;height:76px;margin-left:-22px;position: relative;"><span style="font-size:11px"><p>{!obj.milestone_title}</p> <p>{!obj.milestone_date}</p></span></div>';
+     
+     //titlediv='<div style="margin-top:+12px;width:99px;height:76px;margin-left:-22px;position: relative;">';
+   }
+   else{
+   titlediv='<div style="margin-top:+24px;width:99px;height:76px;margin-left:-22px;position: relative;"><span style="font-size:11px"><p>{!obj.milestone_title}</p> <p>{!obj.milestone_date}</p></span></div>';
+   
+    //titlediv='<div style="margin-top:+24px;width:99px;height:76px;margin-left:-22px;position: relative;">';
+   }
+ }
+//titlediv='<div style="margin-top:+24px;width:99px;height:76px;margin-left:-22px;position: relative;"><span style="font-size:11px"><p>{!obj.milestone_title}</p> <p>{!obj.milestone_date}</p></span></div>';
+        //$(titlediv).attr('id',div_id_evaluate);
+        //$(titlediv).attr('id',div_id_evaluate);
+var child_id='#'+id_evaluate;
+$(child_id).append(titlediv);
+        //var div_id='#'+div_id_evaluate;
+        //$(div_id).css({'margin-top': '-50px','width': '96px','height':'50px'});
+
+        //add title values Date to apbove div inside child 
+        //var title_par1='<p></p>';
+        //$(title_par1).html('12 jan 2012');
+        //var div_id='#'+div_id_evaluate;
+        //$(div_id).append(title_par1);
+        //add title values Amount any thing to apbove div inside child 
+        //var title_par2='<p></p>';
+        //$(title_par2).html('125385');
+        //var div_id='#'+div_id_evaluate;
+        //$(div_id).append(title_par2);
+        
+}
+i=i+1;
+</apex:repeat>
+//}
+ 
+//start of color code indicator  means Legends...
+//for(var i=0;i<=2;i++){
+<apex:repeat value="{!colorList}" var="color_i">
+//console.debug('{!color_i}');
+// var mileStone_stone_indicator=$('<div class=milestone_indicator "></div>');
+// $(mileStone_stone_indicator).attr('style','margin-left:'+(40+(10*i)) +'%;'+'background:"{!color_i}";');
+// var Hello='COLORCODE';
+//  $(mileStone_stone_indicator).append('<strong style="margin-left:23px;font-size: 14px;">'+Hello+'</strong>');
+// $('#lifecyclebodyid').append(mileStone_stone_indicator);
+</apex:repeat>
+//}
+//end of color code indicator 
+
+
+ 
+  var common_margin=(1000/(No_of_MileStones));
+  for(var i=0;i<=No_of_MileStones;i++){
+     var milestone_id='#'+child_id_prefix+i; 
+     milestone_margin_left=(common_margin*(i))+'px';
+     $(milestone_id).css({"margin-left":milestone_margin_left})  ;
+    }
+    
+
+
+   $(".child a img").on("click", function () {
+                              
+                                 var $this = $(this);
+                   
+                                 var id1 = $this.attr("id");
+                                 
+                                 storePooverID=id1;
+                                 
+                                 var action = $this.attr("data-state");
+                                 
+                                 var compleid='#'+id1;//+':first';
+                                 
+                                 storePooverID=compleid;
+                              
+                                 if(action=='open'){
+                                
+                               
+                                 $(compleid).addClass('rotate');
+                                
+                                  $('#popover_backgID').addClass('popover_backg');  
+                                 
+                                  $this.attr({"data-state":"close"});  
+                                    
+                                 }else
+                                 {
+                                 
+                                 $(compleid).removeClass('rotate');                       
+                                
+                                 $this.attr({"data-state":"open"});
+                                 
+                                   
+                                 }
+                                
+                             
+                               }); 
+         
+         $('.popOpenClose').popover();                     
+         $('.hoverclass').popover();    
+             
+         });
+
+ 
+
+</script>
+
+
+
+<div id="lifecyclebodyid" style="height:0px">
+<div style="background:#fff !important">
+    <div class="parent">
+            
+      
+            
+        
+    
+        
+    </div>
+</div>
+ <div class="indicator_div">
+ <div class="milestonediv" style="background:{!colorList[0]}"></div> <div class="labeldiv">Completed </div>
+ <div class="milestonediv" style="background:{!colorList[1]}"></div> <div class="labeldiv">Current</div> 
+ <div class="milestonediv" style="background:{!colorList[2]}"></div> <div class="labeldiv">Upcoming </div>
+ </div> 
+
+</div>
+
+ <div id="popover_backgID">
+   
+ </div>
+   
+   <script>
+        
+         $("#popover_backgID").click(function(e)  {
+        
+                 $('#popover_backgID').removeClass('popover_backg');
+                 
+               
+                 $(storePooverID).removeClass('rotate'); 
+                 
+                 $(".child a img").attr({"data-state":"open"});
+               
+                 $(storePooverID).popover('toggle');
+        
+             
+          });
+            
+   </script>
+   
+   
+<style>
+.indicator_div{  
+   // width: 10%;
+
+ // border: 1px solid;
+  margin-top: 75px;
+  margin-left: 500px;}
+  
+  
+.milestonediv{
+//background: #2F76D2;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border:1px solid #04397b;
+   top: 173px;
+   float:left;
+     margin-left: 60px;
+}
+.labeldiv {float:left;
+  margin-left: 50px;
+  font-size: 13px;}
+</style>
+
+</apex:component>

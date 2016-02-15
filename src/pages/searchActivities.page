@@ -1,0 +1,142 @@
+<apex:page standardcontroller="Task" extensions="ActivitySearchController" sidebar="false">
+ 
+  <apex:form >
+  <apex:pageMessages id="errors" />
+ 
+  <apex:pageBlock title="Search Activity History!" mode="edit">
+ 
+  <table width="100%" border="0">
+  <tr>  
+    <td width="200" valign="top">
+ 
+      <apex:pageBlock title="Parameters" mode="edit" id="criteria">
+ 
+      <script type="text/javascript">
+      function doSearch() {
+        searchServer(
+          document.getElementById("subject").value,
+          document.getElementById('{!$Component.queryType}').value,
+          document.getElementById('{!$Component.querySubtype}').value
+          //document.write(document.getElementById('{!$Component.querySubtype}').value),
+          //document.getElementById("querytype").options[document.getElementById("querytype").selectedIndex].value,
+          //document.getElementById("querySubtype").options[document.getElementById("querySubtype").selectedIndex].value
+          );
+      }
+      </script>
+ 
+      <apex:actionFunction name="searchServer" action="{!runSearch}" rerender="results,debug,errors">
+          <apex:param name="subject" value="" />
+          <apex:param name="queryType" value="" />
+          <apex:param name="querySubtype" value="" />
+      </apex:actionFunction>
+ 
+      <table cellpadding="2" cellspacing="2">
+      <tr>
+        <td style="font-weight:bold;">Interaction Mode<br/>
+        <input type="text" id="subject" onkeyup="doSearch();"/>
+        </td>
+      </tr>
+       <tr>
+        <td style="font-weight:bold;">Query Type<br/>
+         <!-- <input type="text" id="queryType" onkeyup="doSearch();"/>-->
+         <!-- <select id="querytype" onchange="doSearch();">
+            <option value=""></option>
+            <apex:repeat value="{!querytype}" var="type">
+              <option value="{!type}">{!type}</option>
+            </apex:repeat>
+        </select>-->
+         <apex:inputfield id="queryType" onchange="doSearch();" value="{!task.Query_Type__c}"/>
+         <!-- <apex:inputfield id="querytype" value="{!task.Query_Type__c}"/>-->
+        </td>
+      </tr>
+      <tr>
+        <td style="font-weight:bold;">Query Subtype<br/>
+           <!-- <select id="querySubtype" onchange="doSearch();">
+            <option value=""></option>
+            <apex:repeat value="{!querySubtype}" var="tech">
+              <option value="{!tech}">{!tech}</option>
+            </apex:repeat>
+          </select> -->
+          <apex:inputfield id="querySubtype" onchange="doSearch();" value="{!task.Query_Sub_Type__c}"/>`
+        </td>
+      </tr>
+      </table>
+ 
+      </apex:pageBlock>
+ 
+    </td>
+    <td valign="top">
+ 
+    <apex:pageBlock mode="edit" id="results">
+ 
+        <apex:pageBlockTable value="{!tasks}" var="tsk">
+ 
+            <apex:column >
+                <apex:facet name="header">
+                    <apex:commandLink value="Interaction Mode" action="{!toggleSort}" rerender="results,debug">
+                        <apex:param name="sortField" value="subject" assignTo="{!sortField}"/>
+                    </apex:commandLink>
+                </apex:facet>
+                <!--<apex:outputField value="{!tsk.Subject}"/>-->
+                <apex:outputLink value="/{!tsk.id}" target="_blank">{!tsk.Subject}</apex:outputLink>
+                <!-- <apex:commandLink value="{!tsk.Subject}" />-->
+            </apex:column>
+ 
+            <apex:column >
+                <apex:facet name="header">
+                    <apex:commandLink value="Query Type" action="{!toggleSort}" rerender="results,debug">
+                        <apex:param name="sortField" value="query_Type__c" assignTo="{!sortField}"/>
+                    </apex:commandLink>
+                </apex:facet>
+                <apex:outputField value="{!tsk.Query_Type__c}"/>
+            </apex:column>
+ 
+            <apex:column >
+                <apex:facet name="header">
+                    <apex:commandLink value="Query Subtype" action="{!toggleSort}" rerender="results,debug">
+                        <apex:param name="sortField" value="Query_Sub_Type__c" assignTo="{!sortField}"/>
+                    </apex:commandLink>
+                </apex:facet>
+                <apex:outputField value="{!tsk.Query_Sub_Type__c}"/>
+            </apex:column>
+            
+            <apex:column >
+                <apex:facet name="header">
+                    <apex:commandLink value="Due Date" action="{!toggleSort}" rerender="results,debug">
+                        <apex:param name="sortField" value="ActivityDate" assignTo="{!sortField}"/>
+                    </apex:commandLink>
+                </apex:facet>
+                <apex:outputField value="{!tsk.ActivityDate}"/>
+            </apex:column>
+            
+            <apex:column >
+                <apex:facet name="header">
+                    <apex:commandLink value="Created Date" action="{!toggleSort}" rerender="results,debug">
+                        <apex:param name="sortField" value="CreatedDate" assignTo="{!sortField}"/>
+                    </apex:commandLink>
+                </apex:facet>
+                <apex:outputField value="{!tsk.CreatedDate}"/>
+            </apex:column>
+            
+        </apex:pageBlockTable>
+ 
+    </apex:pageBlock>
+ 
+    </td>
+  </tr>
+  </table>
+ 
+    <!--<apex:pageBlock title="Debug - SOQL" id="debug">
+      <apex:outputText value="{!debugSoql}" />           
+  </apex:pageBlock>-->  
+  <center>
+  <apex:pageBlock >
+    <apex:outputLink value="/{!accid}" style="Font-weight:bold;">Back to Account Detail</apex:outputLink>
+  </apex:pageblock>
+  </center>
+  
+  </apex:pageBlock>
+ 
+  </apex:form>
+ 
+</apex:page>

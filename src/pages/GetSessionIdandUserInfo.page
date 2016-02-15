@@ -1,0 +1,7 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" contentType="application/javascript" cache="true">
+
+var sessionId ='{!$Api.Session_ID}';
+var userId ='{!$User.Id}';
+
+
+</apex:page>

@@ -1,0 +1,247 @@
+<apex:component allowDML="true" id="countrycomponent">
+
+<apex:attribute name="value" description="" type="String" required="true"></apex:attribute>
+
+<apex:attribute name="countrylist_id" description="" type="String" required="true"></apex:attribute>
+
+  <apex:selectList value="{!value}" size="1" id="countrylist_id">
+                                            <apex:selectOption itemValue="Afghanistan" itemlabel="Afghanistan"/>
+                                            <apex:selectOption itemValue="Albania" itemlabel="Albania"/>
+                                            <apex:selectOption itemValue="Algeria" itemlabel="Algeria"/>
+                                            <apex:selectOption itemValue="American Samoa" itemlabel="American Samoa"/>
+                                            <apex:selectOption itemValue="Andorra" itemlabel="Andorra"/>
+                                            <apex:selectOption itemValue="Angola" itemlabel="Angola"/>
+                                            <apex:selectOption itemValue="Anguilla" itemlabel="Anguilla"/>
+                                            <apex:selectOption itemValue="Antarctica" itemlabel="Antarctica"/>
+                                            <apex:selectOption itemValue="Antigua and Barbuda" itemlabel="Antigua and Barbuda"/>
+                                            <apex:selectOption itemValue="Argentina" itemlabel="Argentina"/>
+                                            <apex:selectOption itemValue="Armenia" itemlabel="Armenia"/>
+                                            <apex:selectOption itemValue="Aruba" itemlabel="Aruba"/>
+                                            <apex:selectOption itemValue="Australia" itemlabel="Australia"/>
+                                            <apex:selectOption itemValue="Austria" itemlabel="Austria"/>
+                                            <apex:selectOption itemValue="Azerbaijan" itemlabel="Azerbaijan"/>
+                                            <apex:selectOption itemValue="Bahamas" itemlabel="Bahamas"/>
+                                            <apex:selectOption itemValue="Bahrain" itemlabel="Bahrain"/>
+                                            <apex:selectOption itemValue="Bangladesh" itemlabel="Bangladesh"/>
+                                            <apex:selectOption itemValue="Barbados" itemlabel="Barbados"/>
+                                            <apex:selectOption itemValue="Belarus" itemlabel="Belarus"/>
+                                            <apex:selectOption itemValue="Belgium" itemlabel="Belgium"/>
+                                            <apex:selectOption itemValue="Belize" itemlabel="Belize"/>
+                                            <apex:selectOption itemValue="Benin" itemlabel="Benin"/>
+                                            <apex:selectOption itemValue="Bermuda" itemlabel="Bermuda"/>
+                                            <apex:selectOption itemValue="Bhutan" itemlabel="Bhutan"/>
+                                            <apex:selectOption itemValue="Bolivia" itemlabel="Bolivia"/>
+                                            <apex:selectOption itemValue="Bosnia and Herzegovina" itemlabel="Bosnia and Herzegovina"/>
+                                            <apex:selectOption itemValue="Botswana" itemlabel="Botswana"/>
+                                            <apex:selectOption itemValue="Bouvet Island" itemlabel="Bouvet Island"/>
+                                            <apex:selectOption itemValue="Brazil" itemlabel="Brazil"/>
+                                            <apex:selectOption itemValue="British Indian Ocean Territory" itemlabel="British Indian Ocean Territory"/>
+                                            <apex:selectOption itemValue="British Virgin Islands" itemlabel="British Virgin Islands"/>
+                                            <apex:selectOption itemValue="Brunei" itemlabel="Brunei"/>
+                                            <apex:selectOption itemValue="Bulgaria" itemlabel="Bulgaria"/>
+                                            <apex:selectOption itemValue="Burkina Faso" itemlabel="Burkina Faso"/>
+                                            <apex:selectOption itemValue="Burundi" itemlabel="Burundi"/>
+                                            <apex:selectOption itemValue="Cambodia" itemlabel="Cambodia"/>
+                                            <apex:selectOption itemValue="Cameroon" itemlabel="Cameroon"/>
+                                            <apex:selectOption itemValue="Canada" itemlabel="Canada"/>
+                                            <apex:selectOption itemValue="Cape Verde" itemlabel="Cape Verde"/>
+                                            <apex:selectOption itemValue="Cayman Islands" itemlabel="Cayman Islands"/>
+                                            <apex:selectOption itemValue="Central African Republic" itemlabel="Central African Republic"/>
+                                            <apex:selectOption itemValue="Chad" itemlabel="Chad"/>
+                                            <apex:selectOption itemValue="Chile" itemlabel="Chile"/>
+                                            <apex:selectOption itemValue="China" itemlabel="China"/>
+                                            <apex:selectOption itemValue="Christmas Island" itemlabel="Christmas Island"/>
+                                            <apex:selectOption itemValue="Cocos Islands" itemlabel="Cocos Islands"/>
+                                            <apex:selectOption itemValue="Colombia" itemlabel="Colombia"/>
+                                            <apex:selectOption itemValue="Comoros" itemlabel="Comoros"/>
+                                            <apex:selectOption itemValue="Congo" itemlabel="Congo"/>
+                                            <apex:selectOption itemValue="Cook Islands" itemlabel="Cook Islands"/>
+                                            <apex:selectOption itemValue="Costa Rica" itemlabel="Costa Rica"/>
+                                            <apex:selectOption itemValue="Croatia" itemlabel="Croatia"/>
+                                            <apex:selectOption itemValue="Cuba" itemlabel="Cuba"/>
+                                            <apex:selectOption itemValue="Cyprus" itemlabel="Cyprus"/>
+                                            <apex:selectOption itemValue="Czech Republic" itemlabel="Czech Republic"/>
+                                            <apex:selectOption itemValue="Denmark" itemlabel="Denmark"/>
+                                            <apex:selectOption itemValue="Djibouti" itemlabel="Djibouti"/>
+                                            <apex:selectOption itemValue="Dominica" itemlabel="Dominica"/>
+                                            <apex:selectOption itemValue="Dominican Republic" itemlabel="Dominican Republic"/>
+                                            <apex:selectOption itemValue="Ecuador" itemlabel="Ecuador"/>
+                                            <apex:selectOption itemValue="Egypt" itemlabel="Egypt"/>
+                                            <apex:selectOption itemValue="El Salvador" itemlabel="El Salvador"/>
+                                            <apex:selectOption itemValue="Equatorial Guinea" itemlabel="Equatorial Guinea"/>
+                                            <apex:selectOption itemValue="Eritrea" itemlabel="Eritrea"/>
+                                            <apex:selectOption itemValue="Estonia" itemlabel="Estonia"/>
+                                            <apex:selectOption itemValue="Ethiopia" itemlabel="Ethiopia"/>
+                                            <apex:selectOption itemValue="Falkland Islands" itemlabel="Falkland Islands"/>
+                                            <apex:selectOption itemValue="Faroe Islands" itemlabel="Faroe Islands"/>
+                                            <apex:selectOption itemValue="Fiji" itemlabel="Fiji"/>
+                                            <apex:selectOption itemValue="Finland" itemlabel="Finland"/>
+                                            <apex:selectOption itemValue="France" itemlabel="France"/>
+                                            <apex:selectOption itemValue="French Guiana" itemlabel="French Guiana"/>
+                                            <apex:selectOption itemValue="French Polynesia" itemlabel="French Polynesia"/>
+                                            <apex:selectOption itemValue="French Southern Territories" itemlabel="French Southern Territories"/>
+                                            <apex:selectOption itemValue="Gabon" itemlabel="Gabon"/>
+                                            <apex:selectOption itemValue="Gambia" itemlabel="Gambia"/>
+                                            <apex:selectOption itemValue="Georgia" itemlabel="Georgia"/>
+                                            <apex:selectOption itemValue="Germany" itemlabel="Germany"/>
+                                            <apex:selectOption itemValue="Ghana" itemlabel="Ghana"/>
+                                            <apex:selectOption itemValue="Gibraltar" itemlabel="Gibraltar"/>
+                                            <apex:selectOption itemValue="Greece" itemlabel="Greece"/>
+                                            <apex:selectOption itemValue="Greenland" itemlabel="Greenland"/>
+                                            <apex:selectOption itemValue="Grenada" itemlabel="Grenada"/>    
+                                            <apex:selectOption itemValue="Guadeloupe" itemlabel="Guadeloupe"/>  
+                                            <apex:selectOption itemValue="Guam" itemlabel="Guam"/>
+                                            <apex:selectOption itemValue="Guatemala" itemlabel="Guatemala"/>
+                                            <apex:selectOption itemValue="Guinea" itemlabel="Guinea"/>
+                                            <apex:selectOption itemValue="Guinea-Bissau" itemlabel="Guinea-Bissau"/>
+                                            <apex:selectOption itemValue="Guyana" itemlabel="Guyana"/>
+                                            <apex:selectOption itemValue="Haiti" itemlabel="Haiti"/>
+                                            <apex:selectOption itemValue="Heard and McDonald Islands" itemlabel="Heard and McDonald Islands"/>
+                                            <apex:selectOption itemValue="Honduras" itemlabel="Honduras"/>
+                                            <apex:selectOption itemValue="Hong Kong" itemlabel="Hong Kong"/>
+                                            <apex:selectOption itemValue="Hungary" itemlabel="Hungary"/>
+                                            <apex:selectOption itemValue="Iceland" itemlabel="Iceland"/>
+                                            <apex:selectOption itemValue="India" itemlabel="India"/>
+                                            <apex:selectOption itemValue="Indonesia" itemlabel="Indonesia"/>
+                                            <apex:selectOption itemValue="Iran" itemlabel="Iran"/>
+                                            <apex:selectOption itemValue="Iraq" itemlabel="Iraq"/>
+                                            <apex:selectOption itemValue="Ireland" itemlabel="Ireland"/>
+                                            <apex:selectOption itemValue="Israel" itemlabel="Israel"/>
+                                            <apex:selectOption itemValue="Italy" itemlabel="Italy"/>
+                                            <apex:selectOption itemValue="Ivory Coast" itemlabel="Ivory Coast"/>
+                                            <apex:selectOption itemValue="Jamaica" itemlabel="Jamaica"/>
+                                            <apex:selectOption itemValue="Japan" itemlabel="Japan"/>
+                                            <apex:selectOption itemValue="Jordan" itemlabel="Jordan"/>
+                                            <apex:selectOption itemValue="Kazakhstan" itemlabel="Kazakhstan"/>
+                                            <apex:selectOption itemValue="Kenya" itemlabel="Kenya"/>
+                                            <apex:selectOption itemValue="Kiribati" itemlabel="Kiribati"/>
+                                            <apex:selectOption itemValue="Kuwait" itemlabel="Kuwait"/>
+                                            <apex:selectOption itemValue="Kyrgyzstan" itemlabel="Kyrgyzstan"/>
+                                            <apex:selectOption itemValue="Laos" itemlabel="Laos"/>
+                                            <apex:selectOption itemValue="Latvia" itemlabel="Latvia"/>
+                                            <apex:selectOption itemValue="Lebanon" itemlabel="Lebanon"/>
+                                            <apex:selectOption itemValue="Lesotho" itemlabel="Lesotho"/>
+                                            <apex:selectOption itemValue="Liberia" itemlabel="Liberia"/>
+                                            <apex:selectOption itemValue="Libya" itemlabel="Libya"/>
+                                            <apex:selectOption itemValue="Liechtenstein" itemlabel="Liechtenstein"/>
+                                            <apex:selectOption itemValue="Lithuania" itemlabel="Lithuania"/>
+                                            <apex:selectOption itemValue="Luxembourg" itemlabel="Luxembourg"/>
+                                            <apex:selectOption itemValue="Macau" itemlabel="Macau"/>
+                                            <apex:selectOption itemValue="Macedonia" itemlabel="Macedonia"/>
+                                            <apex:selectOption itemValue="Madagascar" itemlabel="Madagascar"/>
+                                            <apex:selectOption itemValue="Malawi" itemlabel="Malawi"/>
+                                            <apex:selectOption itemValue="Malaysia" itemlabel="Malaysia"/>
+                                            <apex:selectOption itemValue="Maldives" itemlabel="Maldives"/>
+                                            <apex:selectOption itemValue="Mali" itemlabel="Mali"/>
+                                            <apex:selectOption itemValue="Malta" itemlabel="Malta"/>
+                                            <apex:selectOption itemValue="Marshall Islands" itemlabel="Marshall Islands"/>  
+                                            <apex:selectOption itemValue="Martinique" itemlabel="Martinique"/>
+                                            <apex:selectOption itemValue="Mauritania" itemlabel="Mauritania"/>
+                                            <apex:selectOption itemValue="Mauritius" itemlabel="Mauritius"/>
+                                            <apex:selectOption itemValue="Mayotte" itemlabel="Mayotte"/>
+                                            <apex:selectOption itemValue="Mexico" itemlabel="Mexico"/>
+                                            <apex:selectOption itemValue="Micronesia" itemlabel="Micronesia"/>
+                                            <apex:selectOption itemValue="Moldova" itemlabel="Moldova"/>
+                                            <apex:selectOption itemValue="Monaco" itemlabel="Monaco"/>
+                                            <apex:selectOption itemValue="Mongolia" itemlabel="Mongolia"/>
+                                            <apex:selectOption itemValue="Montserrat" itemlabel="Montserrat"/>
+                                            <apex:selectOption itemValue="Morocco" itemlabel="Morocco"/>
+                                            <apex:selectOption itemValue="Mozambique" itemlabel="Mozambique"/>
+                                            <apex:selectOption itemValue="Myanmar" itemlabel="Myanmar"/>
+                                            <apex:selectOption itemValue="Namibia" itemlabel="Namibia"/>
+                                            <apex:selectOption itemValue="Nauruq" itemlabel="Nauruq"/>
+                                            <apex:selectOption itemValue="Nepal" itemlabel="Nepal"/>
+                                            <apex:selectOption itemValue="Netherlands Antilles" itemlabel="Netherlands Antilles"/>
+                                            <apex:selectOption itemValue="Netherlands" itemlabel="Netherlands"/>
+                                            <apex:selectOption itemValue="New Caledonia" itemlabel="New Caledonia"/>
+                                            <apex:selectOption itemValue="New Zealand" itemlabel="New Zealand"/>
+                                            <apex:selectOption itemValue="Nicaragua" itemlabel="Nicaragua"/>
+                                            <apex:selectOption itemValue="Niger" itemlabel="Niger"/>
+                                            <apex:selectOption itemValue="Nigeria" itemlabel="Nigeria"/>
+                                            <apex:selectOption itemValue="Niue" itemlabel="Niue"/>
+                                            <apex:selectOption itemValue="Norfolk Island" itemlabel="Norfolk Island"/>
+                                            <apex:selectOption itemValue="North Korea" itemlabel="North Korea"/>
+                                            <apex:selectOption itemValue="Northern Mariana Islands" itemlabel="Northern Mariana Islands"/>
+                                            <apex:selectOption itemValue="Norway" itemlabel="Norway"/>
+                                            <apex:selectOption itemValue="Pakistan" itemlabel="Pakistan"/>
+                                            <apex:selectOption itemValue="Palau" itemlabel="Palau"/>
+                                            <apex:selectOption itemValue="Panama" itemlabel="Panama"/>
+                                            <apex:selectOption itemValue="Papua New Guinea" itemlabel="Papua New Guinea"/>
+                                            <apex:selectOption itemValue="Paraguay" itemlabel="Paraguay"/>
+                                            <apex:selectOption itemValue="Peru" itemlabel="Peru"/>
+                                            <apex:selectOption itemValue="Philippines" itemlabel="Philippines"/>
+                                            <apex:selectOption itemValue="Pitcairn Island" itemlabel="Pitcairn Island"/>
+                                            <apex:selectOption itemValue="Poland" itemlabel="Poland"/>
+                                            <apex:selectOption itemValue="Portugal" itemlabel="Portugal"/>
+                                            <apex:selectOption itemValue="Puerto Rico" itemlabel="Puerto Rico"/>
+                                            <apex:selectOption itemValue="Qatar" itemlabel="Qatar"/>
+                                            <apex:selectOption itemValue="Reunion" itemlabel="Reunion"/>
+                                            <apex:selectOption itemValue="Romania" itemlabel="Romania"/>
+                                            <apex:selectOption itemValue="Russian Federation" itemlabel="Russian Federation"/>
+                                            <apex:selectOption itemValue="Rwanda" itemlabel="Rwanda"/>
+                                            <apex:selectOption itemValue="S. Georgia and S. Sandwich Isls." itemlabel="S. Georgia and S. Sandwich Isls."/>
+                                            <apex:selectOption itemValue="Saint Kitts and Nevis" itemlabel="Saint Kitts and Nevis"/>
+                                            <apex:selectOption itemValue="Saint Lucia" itemlabel="Saint Lucia"/>
+                                            <apex:selectOption itemValue="Saint Vincent and The Grenadines" itemlabel="Saint Vincent and The Grenadines"/>
+                                            <apex:selectOption itemValue="Samoa" itemlabel="Samoa"/>
+                                            <apex:selectOption itemValue="San Marino" itemlabel="San Marino"/>
+                                            <apex:selectOption itemValue="Sao Tome and Principe" itemlabel="Sao Tome and Principe"/>
+                                            <apex:selectOption itemValue="Saudi Arabia" itemlabel="Saudi Arabia"/>
+                                            <apex:selectOption itemValue="Senegal" itemlabel="Senegal"/>
+                                            <apex:selectOption itemValue="Seychelles" itemlabel="Seychelles"/>
+                                            <apex:selectOption itemValue="Sierra Leone" itemlabel="Sierra Leone"/>
+                                            <apex:selectOption itemValue="Singapore" itemlabel="Singapore"/>
+                                            <apex:selectOption itemValue="Slovak Republic" itemlabel="Slovak Republic"/>
+                                            <apex:selectOption itemValue="Slovakia" itemlabel="Slovakia"/>
+                                            <apex:selectOption itemValue="Slovenia" itemlabel="Slovenia"/>
+                                            <apex:selectOption itemValue="Somalia" itemlabel="Somalia"/>
+                                            <apex:selectOption itemValue="South Africa" itemlabel="South Africa"/>
+                                            <apex:selectOption itemValue="South Korea" itemlabel="South Korea"/>
+                                            <apex:selectOption itemValue="Spain" itemlabel="Spain"/>
+                                            <apex:selectOption itemValue="Sri Lanka" itemlabel="Sri Lanka"/>
+                                            <apex:selectOption itemValue="St. Helena" itemlabel="St. Helena"/>
+                                            <apex:selectOption itemValue="Sudan" itemlabel="Sudan"/>
+                                            <apex:selectOption itemValue="Sultanate of Oman" itemlabel="Sultanate of Oman"/>
+                                            <apex:selectOption itemValue="Suriname" itemlabel="Suriname"/>
+                                            <apex:selectOption itemValue="Swaziland" itemlabel="Swaziland"/>
+                                            <apex:selectOption itemValue="Sweden" itemlabel="Sweden"/>
+                                            <apex:selectOption itemValue="Syria" itemlabel="Syria"/>
+                                            <apex:selectOption itemValue="Taiwan" itemlabel="Taiwan"/>
+                                            <apex:selectOption itemValue="Tajikistan" itemlabel="Tajikistan"/>
+                                            <apex:selectOption itemValue="Tanzania" itemlabel="Tanzania"/>
+                                            <apex:selectOption itemValue="Thailand" itemlabel="Thailand"/>
+                                            <apex:selectOption itemValue="Timor-Leste" itemlabel="Timor-Leste"/>
+                                            <apex:selectOption itemValue="Togo" itemlabel="Togo"/>
+                                            <apex:selectOption itemValue="Tokelau" itemlabel="Tokelau"/>
+                                            <apex:selectOption itemValue="Tonga" itemlabel="Tonga"/>
+                                            <apex:selectOption itemValue="Trinidad and Tobago" itemlabel="Trinidad and Tobago"/>
+                                            <apex:selectOption itemValue="Tunisia" itemlabel="Tunisia"/>
+                                            <apex:selectOption itemValue="Turkey" itemlabel="Turkey"/>
+                                            <apex:selectOption itemValue="Turkmenistan" itemlabel="Turkmenistan"/>
+                                            <apex:selectOption itemValue="Turks and Caicos Islands" itemlabel="Turks and Caicos Islands"/>
+                                            <apex:selectOption itemValue="Tuvalu" itemlabel="Tuvalu"/>
+                                            <apex:selectOption itemValue="Uganda" itemlabel="Uganda"/>
+                                            <apex:selectOption itemValue="Ukraine" itemlabel="Ukraine"/>
+                                            <apex:selectOption itemValue="United Arab Emirates" itemlabel="United Arab Emirates"/>
+                                            <apex:selectOption itemValue="United Kingdom" itemlabel="United Kingdom"/>
+                                            <apex:selectOption itemValue="United States" itemlabel="United States"/>
+                                            <apex:selectOption itemValue="Uruguay" itemlabel="Uruguay"/>
+                                            <apex:selectOption itemValue="Uzbekistan" itemlabel="Uzbekistan"/>
+                                            <apex:selectOption itemValue="Vanuatu" itemlabel="Vanuatu"/>
+                                            <apex:selectOption itemValue="Vatican City" itemlabel="Vatican City"/>
+                                            <apex:selectOption itemValue="Venezuela" itemlabel="Venezuela"/>
+                                            <apex:selectOption itemValue="Viet Nam" itemlabel="Viet Nam"/>
+                                            <apex:selectOption itemValue="Virgin Islands" itemlabel="Virgin Islands"/>
+                                            <apex:selectOption itemValue="Wallis and Futuna Islands" itemlabel="Wallis and Futuna Islands"/>
+                                            <apex:selectOption itemValue="Western Sahara" itemlabel="Western Sahara"/>
+                                            <apex:selectOption itemValue="Yemen" itemlabel="Yemen"/>
+                                            <apex:selectOption itemValue="Yugoslavia" itemlabel="Yugoslavia"/>
+                                            <apex:selectOption itemValue="Zaire" itemlabel="Zaire"/>
+                                            <apex:selectOption itemValue="Zambia" itemlabel="Zambia"/> 
+                                            <apex:selectOption itemValue="Zimbabwe" itemlabel="Zimbabwe"/> 
+                                           
+         
+                                            
+                                            </apex:selectList>
+                                       
+</apex:component>

@@ -1,0 +1,211 @@
+<apex:page id="thePage" standardController="Lead" extensions="visitNewSearchDuplicates" tabstyle="Lead" standardStylesheets="true" title="Search Duplicates" showHeader="true" sidebar="false" >
+ <script language="javascript" type="text/javascript">
+  function checkMob(){
+                if(document.getElementById('thePage:theForm1:thePageBlock1:thePBSection1:thePBSItem1:Phone').value!=''){           
+                if(document.getElementById('thePage:theForm1:thePageBlock1:thePBSection1:thePBSItem1:Phone').value.indexOf(".")!= -1 ){    
+                    document.getElementById('thePage:theForm1:thePageBlock1:thePBSection1:thePBSItem1:Phone').value = '';
+                    alert('Please enter only numerics in Mobile/Phone');
+                    return false; }
+                    else if(isNaN(document.getElementById('thePage:theForm1:thePageBlock1:thePBSection1:thePBSItem1:Phone').value)){    
+                    document.getElementById('thePage:theForm1:thePageBlock1:thePBSection1:thePBSItem1:Phone').value = '';
+                    alert('Please enter only numerics in Mobile/Phone');
+                    return false; }
+                }}
+ </script>
+ <apex:sectionHeader id="theSectionHeader1" title="Search Duplicates" />
+ <apex:form id="theForm1">
+  <apex:pageBlock id="thePageBlock1" tabStyle="Lead" >
+   <apex:pageBlockSection id="thePBSection1" collapsible="false" columns="2" >
+    <apex:pageBlockSectionItem id="thePBSItem1" >
+     <apex:outputLabel id="PhoneLabel" for="Phone" value="Mobile/Phone" />
+     <apex:inputText id="Phone" onblur="checkMob()" value="{!Phone}" />
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem id="thePBSItem2" >
+     <apex:outputLabel id="ProjectLabel" for="Project" value="Project Name" />
+     <apex:inputField id="ProjectValue" value="{!Lead.Project_Name__c}"/>
+    </apex:pageBlockSectionItem>
+   </apex:pageBlockSection>
+   <apex:pageBlockButtons location="bottom">
+         <apex:commandButton id="btnSearch" value="Search" action="{!search}"  />            
+   </apex:pageBlockButtons>
+  </apex:pageBlock>
+
+  <apex:outputPanel id="leadList" rendered="{!showLeadList}" >
+            <apex:pageBlock title="Lead Details" tabStyle="Lead" >
+                <apex:pageBlockTable value="{!lstExistingLead}" var="ld" >                
+                    
+                    <apex:column width="16%">
+                        <apex:facet name="header">
+                         Name
+                        </apex:facet>
+                        <apex:outputlink value="/{!ld.id}">{!ld.Name}</apex:outputlink>
+                    </apex:column>
+                    
+                    <apex:column width="16%">
+                        <apex:facet name="header" >
+                         Project Name
+                        </apex:facet>
+                        {!ld.Project_Name__r.Name}
+                    </apex:column> 
+                                   
+                    <apex:column width="16%">
+                        <apex:facet name="header" >
+                         Mobile \ Phone
+                        </apex:facet>
+                        {!ld.Mobile__c}
+                    </apex:column> 
+                    
+                    <apex:column width="16%">
+                        <apex:facet name="header" >
+                         Lead Source
+                        </apex:facet>
+                        {!ld.LeadSource}
+                    </apex:column>
+                    
+                    <apex:column width="16%">
+                        <apex:facet name="header" >
+                         Lead Status
+                        </apex:facet>
+                        {!ld.Status}
+                    </apex:column>
+                    
+                    <apex:column width="20%">
+                        <apex:facet name="header" >
+                         Lead Created On
+                        </apex:facet>
+                        {!ld.LeadCreatedOn__c}
+                    </apex:column>        
+               
+                </apex:pageBlockTable>
+            </apex:pageBlock> 
+        </apex:outputPanel>
+        
+          <apex:outputPanel id="oppList" rendered="{!showOppList}" >
+            <apex:pageBlock title="Opportunity Details" tabStyle="Opportunity" >
+                <apex:pageBlockTable value="{!lstExistingOpp}" var="Opp" >                
+                    
+                    <apex:column width="12%">
+                        <apex:facet name="header" >
+                         Opportunity Name
+                        </apex:facet>
+                        <apex:outputlink value="/{!Opp.Id}">{!Opp.Name}</apex:outputlink>                        
+                    </apex:column>
+                    
+                    <apex:column width="10%">
+                        <apex:facet name="header">
+                         Account Name
+                        </apex:facet>
+                        <apex:outputlink value="/{!Opp.Account.Id}">{!Opp.Account.Name}</apex:outputlink>
+                    </apex:column>
+                                                                      
+                    <apex:column width="10%">
+                        <apex:facet name="header" >
+                         Project Name
+                        </apex:facet>
+                        {!Opp.Project_Name__r.Name}
+                    </apex:column> 
+                    
+                    <apex:column width="9%">
+                        <apex:facet name="header" >
+                         Stage
+                        </apex:facet>
+                        {!Opp.StageName}
+                    </apex:column>
+                    
+                    <apex:column width="10%">
+                        <apex:facet name="header" >
+                         Date of Visit
+                        </apex:facet>
+                        {!Opp.Opportunity_Date_of_Visit__c}
+                    </apex:column>
+                    
+                    <apex:column width="11%">
+                        <apex:facet name="header" >
+                         Name of SM
+                        </apex:facet>
+                        {!Opp.Name_of_SM__c}
+                    </apex:column>
+                    
+                    <apex:column width="12%">
+                        <apex:facet name="header" >
+                         Last Call Date
+                        </apex:facet>
+                        {!Opp.Opportunity_Last_Call_Date__c}
+                    </apex:column>
+                    
+                    <apex:column width="14%">
+                        <apex:facet name="header" >
+                         Last Call Attempt Status
+                        </apex:facet>
+                        {!Opp.Last_Call_Attempt_Status__c}
+                    </apex:column>
+                    
+                    <apex:column width="12%">
+                        <apex:facet name="header" >
+                         Last Attempted By
+                        </apex:facet>
+                        {!Opp.Last_Attempted_By__c}
+                    </apex:column> 
+                    <apex:column width="8%" >
+                    <apex:outputField value="{!Opp.IsActive__c}"/>
+                        <apex:facet name="header" >
+                         Active
+                        </apex:facet>
+                        
+                    </apex:column>                   
+                   
+                </apex:pageBlockTable>
+            </apex:pageBlock> 
+        </apex:outputPanel>
+        
+          <apex:outputPanel id="accList" rendered="{!showAccList}" >
+            <apex:pageBlock title="Account Details" tabStyle="Account" >
+                <apex:pageBlockTable value="{!lstExistingAcc}" var="acc" >                
+                    <apex:column width="25%">
+                        <apex:facet name="header">
+                         Account Name
+                        </apex:facet>
+                        <apex:outputlink value="/{!acc.id}">{!acc.Name}</apex:outputlink>
+                    </apex:column>
+                                   
+                    <apex:column width="25%">
+                        <apex:facet name="header" >
+                         Mobile/Phone
+                        </apex:facet>
+                        {!acc.Mobile_Phone__c}
+                    </apex:column>
+                    
+                    <apex:column width="25%">
+                        <apex:facet name="header" >
+                         Created Date
+                        </apex:facet>
+                        {!acc.CreatedDate_as_String__c}
+                    </apex:column>
+                    
+                    <apex:column width="25%">
+                        <apex:facet name="header">
+                         Last Modified By
+                        </apex:facet>
+                        <apex:outputlink value="/{!acc.LastModifiedById}">{!acc.LastModifiedBy.Name}</apex:outputlink>
+                    </apex:column> 
+                                                                                              
+                </apex:pageBlockTable>
+            </apex:pageBlock> 
+        </apex:outputPanel>
+        
+        <apex:outputpanel id="errMsg" rendered="{!showErrorMsg}">
+          <h1>
+            <apex:messages id="msg" layout="table" style="margin-top:1em;"/>
+          </h1>
+        </apex:outputPanel>
+        
+        <apex:outputpanel id="noRec" rendered="{!(isLeadListNull && isOppListNull && isAccListNull)}">
+            <h1>
+            <apex:messages id="msg1" layout="table" style="margin-top:1em;"/>
+            </h1><br/><br/>
+            <apex:commandButton action="{!NewLead}" value="Create Lead"/>
+            <br/>
+        </apex:outputPanel>
+
+ </apex:form>
+</apex:page>

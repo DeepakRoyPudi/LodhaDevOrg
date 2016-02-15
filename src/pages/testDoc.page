@@ -1,0 +1,153 @@
+<apex:page controller="DocumentsSMSCSS2_0controller">
+          <apex:includeScript value="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"/>
+  <apex:includeScript value="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"/>
+   <script>
+    var j$ = jQuery.noConflict();
+                (function(e,t,n){
+                    var r,i=e.getElementsByTagName(t)[0];
+                    if(e.getElementById(n))return;
+                    r=e.createElement(t);
+                    r.id=n;
+                    r.src="//apps.aftership.com/all.js";
+                    i.parentNode.insertBefore(r,i)
+                })
+                (document,"script","aftership-jssdk")
+
+                window.onload = removeFocus;
+                function removeFocus(){
+                    window.blur();
+                }
+
+   </script>
+   <apex:form >     
+             <div class="tab-pane fade" id="Dispatch">
+                           <apex:outputpanel id="dispatchsection">
+                              <apex:pageMessages id="despatchmsg"/>
+                              <div style="margin-top:11px">
+                                 <div class="col-md-2" align="left">
+                                    <apex:outputText >Document Name</apex:outputText>
+                                 </div>
+                                 <div class="col-md-2" align="left">
+                                    <apex:inputField value="{!dispatch.Contents__c}" id="content"/>
+                                 </div>
+                                 <div class="col-md-1">
+                                 </div>
+                                 <div class="col-md-2" align="left">
+                                    <apex:outputText >Last Delivery Status</apex:outputText>
+                                 </div>
+                                 <div class="col-md-2" align="left">
+                                    <apex:inputField value="{!dispatch.Last_Delivery_Status__c}" id="Delivery_status"/>
+                                 </div>
+                                 <div class="col-md-3">
+                                 </div>
+                                 <div class="clear">
+                                 </div>
+                                 <br/> 
+                                 <div class="col-md-2" align="left">
+                                    <apex:outputText >Dispatch Date From&nbsp; </apex:outputText>
+                                    &nbsp;&nbsp;
+                                 </div>
+                                 <div class="col-md-2" align="left">
+                                    <apex:inputField value="{!dispatchDateFrom.Despatch_Date__c}" id="fromdate1"/>
+                                 </div>
+                                 <div class="col-md-1">
+                                 </div>
+                                 <div class="col-md-2" align="left">
+                                    <apex:outputText >Dispatch Date To&nbsp; </apex:outputText>
+                                    &nbsp;&nbsp;
+                                 </div>
+                                 <div class="col-md-2" align="left">
+                                    <apex:inputField value="{!dispatchDateTo.Despatch_Date__c}" id="todate1"/>
+                                 </div>
+                                 <div class="col-md-3" align="center" >
+                                    <apex:commandButton value="Go" action="{!searchDispatch}"  rerender="dispatchdetail,despatchmsg" styleclass="btn" status="msg"/>
+                                 </div>
+                                 <br/> <br/>
+                              </div>
+                              <apex:outputpanel id="dispatchdetail">
+                                 <table id="dispatch1" class="table table-striped table-bordered docsmsdispatch_table" >
+                                    <thead>
+                                       <tr>
+                                          <apex:repeat value="{!$ObjectType.Despatch__c.FieldSets.DispatchDetailView_CSS2_0}" var="f">
+                                             <th  style="text-align: center;">
+                                                <apex:commandLink status="msg" action="{!toggleSortDispatch}" rerender="dispatchdetail">
+                                                   <apex:outputText value="Dispatch Date" rendered="{!f.label == 'Despatch Date'}" />
+                                                   <apex:outputText value="Document Name" rendered="{!f.Label == 'Contents'}"/>
+                                                   <apex:outputText value="Sent Address" rendered="{!f.Label == 'Area'}"/>
+                                                   <apex:outputText value="{!f.Label}" 
+                                                      rendered="{!AND(f.Label != 'Despatch Date',
+                                                      f.Label != 'Contents',
+                                                      f.Label != 'Area')
+                                                      }"/>
+                                                   <apex:param name="sortField" value="{!f}" assignTo="{!sortField}"/>
+                                                </apex:commandLink>
+                                             </th>
+                                          </apex:repeat>
+                                       </tr> 
+                                    </thead>
+                                    <tbody>
+                                       <apex:repeat value="{!lstDispatch_DetailView }" var="c">
+                                          <tr>
+                                             <apex:repeat value="{!$ObjectType.Despatch__c.FieldSets.DispatchDetailView_CSS2_0}" var="f">
+                                                <td align="center">
+                                                   <div style="margin-left: 24%;">
+                                                   <apex:outputField value="{!c[f]}"   rendered="{!f.label == 'Waybill No'}" >
+                                                   
+                                                   <div class="as-track-button" data-tracking-number="{!c[f]}" data-slug="{!c.Slug__c}" data-counter="true" data-support="true" data-width="400" data-size="small"></div>  
+                                  <!--                   <apex:outputLink value="https://track.aftership.com/{!c[f]}" styleClass="trackBtn"  target="_blank">
+                                                        <apex:image id="theImage" value="{!$Resource.TrackIcon}" width="21" height="21"/>
+                                                        Track
+
+                                                     </apex:outputLink> -->
+                                                
+                                                   </apex:outputField>
+                                                    </div>
+<!--                                                     <apex:outputField value="{!c[f]}"   rendered="{!f.value == null}">   -->
+                                                                                                       
+<!--                                                        <apex:outputLink value="https://track.aftership.com/{!c[f]}" styleClass="trackBtn"  target="_blank"> -->
+<!--                                                         <apex:image id="theImage" value="{!$Resource.TrackIcon}" width="21" height="21"/> -->
+<!--                                                         Track -->
+<!--                                                      </apex:outputLink> -->
+<!--                                                    </apex:outputField> -->
+                                                  
+                                                   <apex:outputField value="{!c[f]}" rendered="{!f.label != 'Waybill No'}" />
+                                                    
+                                                </td>
+                                             </apex:repeat>
+                                          </tr>
+                                       </apex:repeat>
+                                       <tr style="{!If(lstDispatch_DetailView.size > 0, 'display:none','' )}">
+                                          <td align="center" colspan="{!$ObjectType.Despatch__c.FieldSets.DispatchDetailView_CSS2_0.size}">
+                                             No records to display.
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                                 <!-- buttons -->
+                                 <div style="margin-top:11px">
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-8">
+                                       <div align="center" style="margin-bottom:10px;">
+                                          <br/>
+                                          <apex:commandButton value="First" action="{!FirstPage}" disabled="{!prev}" styleclass="btn" status="msg"  rerender="dispatchdetail,despatchmsg" />
+                                          &nbsp;&nbsp;
+                                          <apex:commandButton value="Previous" action="{!previous}" disabled="{!prev}" styleclass="btn" status="msg" rerender="dispatchdetail,despatchmsg" />
+                                          &nbsp;&nbsp;
+                                          <apex:commandButton value="Next"  action="{!next}" disabled="{!nxtDispatch}" styleclass="btn" status="msg" rerender="dispatchdetail,despatchmsg"/>
+                                          &nbsp;&nbsp;
+                                          <apex:commandButton value="Last"  action="{!LastPageDispatch}" disabled="{!nxtDispatch}" styleclass="btn" status="searchingDispatch"  rerender="dispatchdetail,despatchmsg" />
+                                          &nbsp;&nbsp;
+                                       </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                    </div>
+                                 </div>
+                              </apex:outputpanel>
+                              <!--EOF Dispatchdetail -->
+                           </apex:outputpanel>
+                        </div>
+  
+  </apex:form>
+  
+</apex:page>

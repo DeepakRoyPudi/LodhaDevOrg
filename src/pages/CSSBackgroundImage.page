@@ -1,0 +1,25 @@
+<apex:page controller="CSSBackgroundImageController">
+	 <apex:form id="form">
+	 	
+		 	<apex:tabPanel switchType="client" selectedTab="name2" id="theTabPanel">
+		    
+		    <apex:tab label="CSS Background" name="name1" id="tabOne">
+		    	<apex:pageBlock >
+		    		<apex:PageBlockSection >
+				 		<apex:outputText value="Select CSS Background Image type:" />
+				       	<apex:selectRadio value="{!isProjectWise}">
+				          	 <apex:selectOptions value="{!items}"/>
+				        </apex:selectRadio><p/>
+				    </apex:PageBlockSection>
+				    
+				    <apex:pageBlockButtons location="Bottom">
+			        	<apex:commandButton value="Save" action="{!save}" rerender="msg, form"/>
+			        </apex:pageBlockButtons>
+			    </apex:pageBlock>
+			    
+		    </apex:tab>
+		    <apex:tab label="Widgets Customization" name="name2" id="tabTwo">content for tab two</apex:tab>
+		    </apex:tabPanel>
+		 	
+     </apex:form>
+</apex:page>

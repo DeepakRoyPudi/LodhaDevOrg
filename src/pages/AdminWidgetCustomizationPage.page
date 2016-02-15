@@ -1,0 +1,636 @@
+<!--@Created by: Deepak Pudi 
+     @Created Date:  10/3/2015  -->
+ 
+ <!-- ------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |Deepak Pudi            11/5/2015             1.0           Admin widget Customization 
+                                                            can be done using this page.
+ --------------------------------------------------------------------------------
+ |Sudeep Dube            4/6/2015              1.0          Add Documnet type tab and its 
+                                                            functionality      
+ ------------------------------------------------------------------------------ -->
+<apex:page controller="AdminWidgetCustomizationController" 
+           extensions="AdminDocumentTypeSelection,AdminDocumentNameSelection" 
+           docType="html-5.0" id="page">
+  
+  <!-------style for loading Symbol--->
+ <apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js"/>
+ 
+   <style>
+        #assign-action-spinner-main {position: fixed;left: 0;top: 0;
+                                     background-color:rgba(0,0,0,.6);
+                                     height: 100%;width: 110%;z-index: 999;
+                                     align: center;vertical-align: middle;}
+        #assign-action-spinner-content {position: absolute; top: 50%;left: 50%;
+                                        z-index: 1000;background-color:none;
+                                        width: 40px;height: 40px;}
+        #assign-action-spinner-content img {width: 40px;height: 40px;align: center;
+                                            vertical-align: middle;}
+        .h {
+            font-weight: bold;
+            font-size: 17px;
+        }  
+        .header {
+            word-spacing: 50px;
+            padding-left:70px;
+            padding:7px 11px 8px 21px;
+        } 
+          
+          .bs label {
+              display: inline-block;
+              margin-bottom: 5px;
+              font-weight: bold;
+              margin-right: -13%;
+            }
+   </style>
+   <!----End------------>
+   <!---Column Classes for Documnet panel Grid------>
+     <style>
+      .cloumnA{
+       }
+      .cloumnB{
+             vertical-align: inherit;
+             background-color:red;
+      }
+      .cloumnC{
+      }
+      
+      .resize{
+        resize: both;
+       
+        overflow:auto;
+      }
+      .customize_tab {
+            width: 150px;
+      }
+      .bPageBlock .detailList th, .bPageBlock .detailList td {
+                    vertical-align: bottom;
+        }
+     </style>  
+   <!--------End of Column classes----------->
+    <link href="{!URLFOR($Resource.bootStrap, '/bootstrap/css/bootstrap.min.css')}" rel="stylesheet"
+                 media="screen" />
+    <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/js/bootstrap.min.js')}"></script>
+    <!-- Hide search-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+        function EnableDisableSearch() {
+            document.getElementById('div').style.pointerEvents = 'none';
+            // To re-enable:
+            document.getElementById('div').style.pointerEvents = 'auto';
+        }
+    </script>
+    <!-- Hide search-->
+
+    <!------------>
+    <apex:includeScript value="{!URLFOR($Resource.DragDrop1_1, '/jquery-1.8.3.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.DragDrop1_1, '/jquery-ui.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.DragDrop1_1, '/jquery-ui.css')}" />
+
+<!-- this style override the standar style input checkbox and radio-->
+    <style>
+         .bs input[type="radio"], .bs input[type="checkbox"] {
+          margin: 19px 72px 4px 13%;
+          margin-top: 1px \9;
+  /* line-height: normal; */
+          body .pbBody table.list tr.headerRow td, body .pbBody table.list tr.headerRow th {
+          background: #f2f3f3;
+          border-width: 0 0 1px 1px;
+          border-color: #e0e3e5;
+          color: #000;
+          font-size: .9em;
+          font-weight: bold;
+          padding: 5px 2px 4px 5px;
+          }
+        body .pbBody table.list tr th, body .pbBody table.list tr td {
+        border: 1px solid #ededed;
+        color: #000;
+        }
+    </style>
+    <div class="bs">
+     <script>
+         var usertypemain;
+         function setRMasDefaultUser()
+       {
+        usertypemain='RM';
+       }
+       function setusertype(userty){
+       usertypemain=userty;
+       }
+        function MyUpdate(LineIndex,ordertype,Pname )
+       {
+         var ans= confirm('Do you want to save changes?');
+         if(ans==true){
+         if(ordertype=='Custom'){
+         var KeyWithSeqNO='';
+         var idsInOrder= $(".sort"+LineIndex).sortable("toArray");
+         for(var i=0;i<idsInOrder.length;i++){
+         var seqno=i+1;
+         var keyValue=Pname+ordertype+usertypemain+idsInOrder[i];
+         KeyWithSeqNO=KeyWithSeqNO+keyValue+'--->'+seqno+';';
+         }
+           Visualforce.remoting.Manager.invokeAction(
+             '{!$RemoteAction.AdminWidgetCustomizationController.UpdateRecord}', 
+               KeyWithSeqNO, 
+               function(result, event){
+                }, 
+                    {escape: true}
+                );  
+          }
+        
+         return true;
+        }
+       return false;
+       }
+       </script>
+        <apex:form id="form">
+        <apex:actionFunction name="rerenderPanel" rerender="cssMsg,bannerMsg,DocumentMsg,DocumentNameMsg,LedgerMsg" />
+        <div class="container">
+        <div id="content">
+             <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                <li class="active customize_tab">
+                    <a href="#Widget" data-toggle="tab" onclick="rerenderPanel();">
+                        Widget Customization</a>
+                </li>
+                <li class="customize_tab">
+                    <a href="#CSS" data-toggle="tab" onclick="rerenderPanel();"> 
+                        Background Image Customization</a>        
+                </li>
+                 <li class="customize_tab">
+                    <a href="#Banner" data-toggle="tab" onclick="rerenderPanel();">
+                         Banner Customization</a>        
+                </li>
+                <li class="customize_tab">
+                    <a href="#Document" data-toggle="tab" onclick="rerenderPanel();"> 
+                        Document Type Visibility</a>        
+                </li>
+                <li class="customize_tab">
+                    <a href="#DocumentName" data-toggle="tab" onclick="rerenderPanel();"> 
+                        Document Name Visibility</a>        
+                </li>
+                <li class="customize_tab">
+                    <a href="#AccLed" data-toggle="tab" onclick="rerenderPanel();"> 
+                        Tab Visibility Customization</a>        
+                </li>
+            </ul>
+            
+        <div id="my-tab-content" class="tab-content">
+        <div class="tab-pane" id="Banner">
+                <apex:PageMessages id="bannerMsg"/>
+                <apex:pageBlock id="BannerBlock">
+                    <apex:outputText style="font-weight:bold;font-size:16px;" 
+                                        value="Select Banner Type for CSS2.0" />
+                    <br/>
+                 <apex:selectRadio value="{!bannerType}" layout="pageDirection" 
+                                    styleClass="margin: 20px 35px 4px 13%;"
+                                      onclick="rerenderPanel();">
+                 <apex:selectOptions value="{!bannerOptions}"/>
+                 </apex:selectRadio>
+                <apex:commandButton style="margin-left: 394px;" value="Save" 
+                                    action="{!SaveBannerType}" rerender="bannerMsg"/>
+                </apex:pageBlock>
+       </div>    
+       <div class="tab-pane" id="AccLed">
+             <apex:PageMessages id="LedgerMsg"/>
+                <apex:pageBlock id="AccountLedgerBlock">
+                 <apex:outputText style="font-weight:bold;font-size:16px;" 
+                                  value="Tab Visibility Customization for CSS2.0" />
+                    <apex:PageBlockSection >
+                        <apex:inputField value="{!tabEnableDisableSetting[0].DisableAccountLedgerTab__c}"/>
+                    </apex:PageBlockSection>
+                    <apex:pageBlockButtons location="Bottom">
+                        <apex:commandButton value="Save" action="{!saveTabSetting}" rerender="LedgerMsg"/>
+                    </apex:pageBlockButtons>
+                </apex:pageBlock>
+       </div>
+            <!--  Start of Customize CSS Background Code -->
+       <div class="tab-pane" id="CSS">
+             <apex:PageMessages id="cssMsg"/>
+                <apex:pageBlock id="backgroundImgPgBlock">
+                 <apex:outputText style="font-weight:bold;font-size:16px;" 
+                                  value="Background Image Customization for CSS2.0" />
+                    <apex:PageBlockSection >
+                            <table>
+                                <tr>
+                                    <td>
+                                        <apex:selectRadio value="{!isProjectWise}" 
+                                                          onclick="rerenderPanel();">
+                                        <apex:selectOptions value="{!items}"/>
+                                        </apex:selectRadio>
+                                    </td>
+                                 </tr>
+                            </table>
+                    </apex:PageBlockSection>
+                    <apex:pageBlockButtons location="Bottom">
+                        <apex:commandButton value="Save" action="{!save}" rerender="cssMsg"/>
+                    </apex:pageBlockButtons>
+                </apex:pageBlock>
+                
+         </div>
+           <!--  End of Customize CSS Background Code -->
+           <!--start of the Documnet type customization --->
+         <div class="tab-pane" id="Document">
+             <apex:PageMessages id="DocumentMsg"/>
+             <apex:pageBlock id="DocumentBlock" >
+                 <apex:outputText style="font-weight:bold;font-size:16px;" 
+                                    value="Select Document Type for CSS2.0" /> 
+          <div style="text-align:center">
+              <apex:outputPanel id="abcd" >
+                   <table  style="margin-left: 225px;margin-top:25px; 
+                           vertical-align: inherit !important;" cellpadding="10" cellspacing="2" >
+                            <tr>
+                                <th style="text-align: center;">
+                                    <apex:outputText style="  text-align: center !important;" 
+                                    id="theFirst" ><h8 >Document Types</h8></apex:outputText>
+                                </th>   
+                                <th style="text-align: center;">  
+                                    <apex:outputText value="" id="theSecond"/>
+                                </th>
+                                <th style="text-align: center;">    
+                                    <apex:outputText style="text-align: center !important;" 
+                                                     id="theThird" ><h8 >
+                                                     Selected Document Types</h8></apex:outputText> 
+                                </th>    
+                              </tr> 
+                              <tr>
+                               <td>
+                                <apex:selectList id="sel1" value="{!LeftSelectedValues}" 
+                                                            label="Not Selected Types" 
+                                                            multiselect="true" 
+                                                            style="width:250px;height:300px;overflow:auto;"  
+                                                            styleClass="resize"
+                                                            size="10">
+                                    <apex:selectOptions value="{!LeftValues}" />
+                                </apex:selectList>
+                               </td> 
+                               <td style="vertical-align: inherit;">
+                                <apex:panelGroup >
+                                   <apex:image value="{!URLFOR($Resource.RMImages2, 
+                                                       '/RMImages2/select.png')}"  width="25" height="25">
+                                    <apex:actionSupport event="onclick" action="{!selectclick}" 
+                                                    reRender="abcd,DocumentMsg" status="loading"/>
+                                    </apex:image>
+                                    <br/><br/>
+                                     <apex:image value="{!URLFOR($Resource.RMImages2, 
+                                                       '/RMImages2/unselect.png')}" width="25" height="25">
+                                                       
+                                     <apex:actionSupport event="onclick"  action="{!unselectclick}" 
+                                                     reRender="abcd,DocumentMsg" status="loading"/>
+                                   </apex:image>
+                                </apex:panelGroup>
+                               </td>
+                              
+                               <td>
+                                <apex:selectList id="sel2" value="{!RightSelectedValues}" 
+                                                multiselect="true" styleClass="resize" style="width:250px;height:300px;overflow:auto;" 
+                                                size="10">
+                                <apex:selectOptions value="{!RightValues}" />
+                                </apex:selectList>
+                               </td>
+                              </tr> 
+                        </table> 
+                      </apex:outputPanel>  
+                           <!--action to save document type to be display to user in css--->
+                      <apex:commandButton value="Save" action="{!saveDocumentType}" 
+                                            reRender="DocumentMsg" status="loading" />
+                      
+                              <!-------loading symbol code start ------------>                
+                               <apex:actionStatus id="loading" layout="block">
+                                    <apex:facet name="start">
+                                        <div id="assign-action-spinner-main">
+                                        <div id="assign-action-spinner-content">
+                                             <img src="{!URLFOR($Resource.Bootstrap, 
+                                                        '/bootstrap/images/loadimage.gif')}" />  
+                                        </div>
+                                        </div>
+                                    </apex:facet>
+                               </apex:actionStatus>                
+                             <!-------loading symbol code End ------------>   
+                     </div>            
+                 </apex:pageBlock>
+              </div>   
+            <!--End of Documnet type customization----->
+             <!--start of the Document name customization --->
+               
+               <div class="tab-pane" id="DocumentName">
+                 <apex:PageMessages id="DocumentNameMsg"/>
+                 <apex:pageBlock id="DocumentNameBlock" >
+                     <apex:outputText style="font-weight:bold;font-size:16px;" 
+                                        value="Select Document Name for CSS2.0" /> 
+               <div style="text-align:center">
+                   <apex:outputPanel id="panelName" >
+                      <table  style="margin-left: 98px;margin-top:25px; 
+                            vertical-align: inherit !important;" cellpadding="10" cellspacing="2" >
+                             <tr>
+                                <th style="text-align: center;">
+                                    <apex:outputText style="  text-align: center !important;" 
+                                          id="theFirst" ><h8 >Document Names</h8></apex:outputText>
+                                </th>   
+                                <th style="text-align: center;">  
+                                    <apex:outputText value="" id="theSecond"/>
+                                </th>
+                                <th style="text-align: center;">    
+                                    <apex:outputText style="text-align: center !important;" 
+                                                     id="theThird" >
+                                                <h8 >Selected Document Names</h8></apex:outputText> 
+                                </th>    
+                              </tr> 
+                              <tr>
+                               <td>
+                               <apex:selectList id="sel1" value="{!leftSelectedNameValues}" 
+                                                 label="Not Selected Types" multiselect="true" 
+                                                  size="{!LeftNameValues.size}" styleClass="resize"   
+                                                  style="width:375px;height:300px;">
+                                    <apex:selectOptions value="{!LeftNameValues}"/>
+                                </apex:selectList>                            
+                               </td> 
+                               <td style="vertical-align: inherit;">
+                                <apex:panelGroup >
+                                   <apex:image value="{!URLFOR($Resource.RMImages2, 
+                                                       '/RMImages2/select.png')}"  width="25" height="25">
+                                    <apex:actionSupport event="onclick" action="{!selectClickName}" 
+                                                       reRender="panelName,DocumentNameMsg"  
+                                                       status="loading"/>
+                                    </apex:image>
+                                    <br/><br/>
+                                     <apex:image value="{!URLFOR($Resource.RMImages2, 
+                                                       '/RMImages2/unselect.png')}" width="25" height="25">
+                                     <apex:actionSupport event="onclick"  
+                                                         action="{!unSelectClickName}" 
+                                                         reRender="panelName,DocumentNameMsg" 
+                                                         status="loading"/>
+                                   </apex:image>
+                                </apex:panelGroup>
+                               </td>
+                              
+                               <td>
+                                       
+                                <apex:selectList id="sel2" value="{!rightSelectedNameValues}" 
+                                                 multiselect="true" styleClass="resize"  style="width:375px;height:300px;"    
+                                                 size="{!RightNameValues.size}">
+                                               
+                                <apex:selectOptions value="{!RightNameValues}">
+                               
+                                 
+                                 </apex:selectOptions>
+                                </apex:selectList>
+                             
+                               </td>
+                              </tr> 
+                        </table> 
+                      </apex:outputPanel>  
+                           <!--action to save document type to be display to user in css--->
+                      <apex:commandButton value="Save" action="{!saveDocumentName}" 
+                                          reRender="DocumentNameMsg" status="loading" />
+                          <!-------loading symbol code start ------------>                
+                               <apex:actionStatus id="loading" layout="block">
+                                    <apex:facet name="start">
+                                        <div id="assign-action-spinner-main">
+                                        <div id="assign-action-spinner-content">
+                                             <img src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}" />  
+                                        </div>
+                                        </div>
+                                    </apex:facet>
+                               </apex:actionStatus>                
+                             <!-------loading symbol code End ------------>   
+                     </div>            
+                 </apex:pageBlock>
+              </div>   
+            <!--End of Documnet name customization----->
+            <div class="tab-pane active" id="Widget">
+                <br/>
+                <div class= "h">Widget Customization for RM and CSS2.0</div>
+                <div id="confirm" class="modal hide fade" >
+                <div class="modal-body">
+                 Are you sure?
+                </div>
+              <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-primary" 
+                                      id="delete">Delete</button>
+                <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+              </div>
+           </div>
+        <apex:actionFunction action="{!SearchProject}" name="inputaction" id="inputactionid" 
+                             rerender="op1" />
+        <apex:actionFunction action="{!update_records}" name="callupdateLinkupdate_records" 
+                             status="loading" >
+        </apex:actionFunction>
+        <!-------loading symbol code start ------------>                
+                <apex:actionStatus id="loading" layout="block">
+                    <apex:facet name="start">
+                          <div id="assign-action-spinner-main">
+                                <div id="assign-action-spinner-content">
+                                     <img src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}" />  
+                                </div>
+                          </div>
+                    </apex:facet>
+                </apex:actionStatus>                
+            <!-------loading symbol code End ------------>              
+            <div class="ui-widget" id="div">
+                <center>
+                    <apex:outputText value="Project Name"></apex:outputText>
+                    <apex:inputText style="margin-left:20px;border:1px solid black;" 
+                                    value="{!SearchProject}"   onchange="inputaction();"  
+                                    onkeyup="inputaction();">
+                    </apex:inputText>
+                    <apex:actionStatus startText=" Searching.." stopText=" " id="searching" />
+               </center>
+            </div>
+            <hr/>  
+            <apex:pageBlock id="pageblock1" >
+                <apex:outputPanel id="op1" >
+                    <apex:outputPanel rendered="{!LstWrap.size>0}">
+                    <apex:pageBlockTable value="{!LstWrap}" var="Wr" id="pgblktble" >
+                      <apex:column headerValue="Action" id="actionclm" width="20%">
+                         <apex:commandLink action="{!Edit}" value="Edit" rendered="{!Not(Wr.isEdit)}" 
+                                           rerender="op1" id="editbtn" onclick="setRMasDefaultUser();" 
+                                           status="loading">
+                            <apex:param name="op_index" value="{!Wr.List_index}" 
+                                        assignTo="{!operation_index}" id="Paramindex" />
+                         </apex:commandLink>
+                         <apex:commandLink value="Update" rendered="{!Wr.isEdit}" id="editToSave" 
+                                           onclick="return (MyUpdate('{!Wr.List_index}',
+                                                                '{!Wr.set_order}','{!Wr.Pname}'));" 
+                                           action="{!update_records}"  status="loading">
+                            <apex:param name="op_index" value="{!Wr.List_index}" 
+                                        assignTo="{!operation_index}" id="Paramindexupdate" />   
+                          </apex:commandLink>  
+                          <apex:commandLink action="{!Cancel}" value="Cancel" rendered="{!Wr.isEdit}" 
+                                            rerender="op1" id="editToCancel" 
+                                            style="margin-left:10px" status="loading">
+                             <apex:param name="op_index" value="{!Wr.List_index}" 
+                                         assignTo="{!operation_index}" id="ParamindexCancel" /> 
+                           </apex:commandLink>  
+                       </apex:column>
+                       <apex:column headerValue="Project Name" width="20%">
+                            {!Wr.Pname}
+                       </apex:column>
+                       <apex:column headerValue="Default Dynamic Custom" id="columnradio" 
+                                    headerClass="header" >
+                       <apex:selectRadio value="{!Wr.set_order}" layout="linedirection" 
+                                         disabled="{!NOT(Wr.isEdit)}" >
+                           <apex:selectOptions value="{!orders}" />
+                           <apex:actionSupport event="onchange" rerender="opwidgets" status="loading">
+                           </apex:actionsupport>
+                       </apex:selectRadio>
+                       <apex:outputPanel rendered="{!Wr.isEdit}" id="opwidgets">
+                            <div class="panel panel-default">
+                                 <div class="panel-heading">
+                                      <h3 class="panel-title" id="panel_titleID{!Wr.List_index}">
+                                      <i class="fa fa-long-arrow-right fa-fw">
+                                      </i> Widgets Enable/Disable Section</h3>
+                                      <br/><br/>
+                                       <span   style="color:#f00; font-style: italic;">
+                                            <apex:outputText value="Drag and Drop widgets to 
+                                                                    rearrange the sequence" 
+                                                            rendered="{!Wr.set_order == 'Custom'}"/>
+                                            <apex:outputText value="This is default order 
+                                                                    at Org level" 
+                                                            rendered="{!Wr.set_order == 'Default'}"/>
+                                            <apex:outputText value="Order is based on the click 
+                                                                    count of the portal User" 
+                                                            rendered="{!Wr.set_order == 'Dynamic'}"/>
+                                        </span>
+                                    </div>
+                                    <div class="panel-body" >
+                                        <apex:outputLabel style="font-weight:bold;margin-right:10px;
+                                                          margin-left:40%">Select User
+                                                                             Type</apex:outputLabel>
+                                        <apex:selectList value="{!Wr.availableuser}" 
+                                                         multiselect="false" size="1" >
+                                            <apex:selectOptions value="{!AvailableUserlist}" />
+                                            <apex:actionSupport event="onchange" 
+                                                                reRender="Availwidgets" 
+                                                                action="{!changeUserType}"  
+                                                                oncomplete="setusertype('{!Wr.availableuser}');" 
+                                                                status="loading">
+                                                <apex:param name="op_index" value="{!Wr.List_index}" 
+                                                            assignTo="{!operation_index}" 
+                                                            id="Paramindex2"/>
+                                            </apex:actionSupport>
+                                        </apex:selectList>
+                                  <!--Widget Sections---->
+                                      <apex:outputPanel id="Availwidgets">
+                                     <!------Start of Default and Dynamic Order Widgets ----------->
+                                       <apex:outputPanel id="DefaultAndDynamicOrderPanel" 
+                                       rendered="{!OR(Wr.set_order=='Default',Wr.set_order=='Dynamic')}">
+                                      <!------------RM Widget Section Start------------->
+                                       <apex:outputPanel id="AvailwidgetsRM1" rendered="{!Wr.isRM}">
+                                             <apex:repeat value="{!Wr.RMCHKWidgets}" var="widget">
+                                                  <div id='{!widget.widgetName}'> 
+                                                     <apex:inputCheckbox value="{!widget.chkb}">
+                                                        <apex:actionSupport event="onchange"  
+                                                                            reRender="test11" 
+                                                                            status="loading"/>
+                                                     </apex:inputCheckbox>
+                                                     <apex:outputLabel style="margin-left:1%;
+                                                                       margin-right:10%">
+                                                                       {!widget.widgetName}
+                                                        </apex:outputLabel>
+                                                  </div>
+                                              </apex:repeat>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel id="test11"></apex:outputPanel>
+                                           <!-----------------RM Widget Section End--------->
+                                           <!------------CSS Widget Section Start------------->
+                                        <apex:outputPanel id="AvailwidgetsCSS1" 
+                                                          rendered="{!NOT(Wr.isRM)}">
+                                             <apex:repeat value="{!Wr.CSSCHKWidgets}" var="widget">
+                                                 <div id='{!widget.widgetName}'>
+                                                     <apex:inputCheckbox value="{!widget.chkb}">
+                                                         <apex:actionSupport event="onchange"  
+                                                                             reRender="test12" 
+                                                                             status="loading"/>
+                                                     </apex:inputCheckbox>
+                                                     <apex:outputLabel style="margin-left:1%;
+                                                                       margin-right:10%">
+                                                                       {!widget.widgetName}
+                                                                       </apex:outputLabel>
+                                                 </div>
+                                             </apex:repeat>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel id="test12"></apex:outputPanel>
+                                    <!------End of Default and Dynamic Order Widgets ----------->
+                                        </apex:outputPanel>
+                                            <!------Start of Custom Order Widgets ----------->
+                                        <apex:outputPanel id="CustomOrderPanel" 
+                                                          rendered="{!Wr.set_order=='Custom'}">
+                                        <script>
+                                           $(function() {
+                                                      $(".sort{!Wr.List_index}").sortable();
+                                                      });
+                                         </script>
+                          <!--End-----Style and Script for fix of not woking 
+                                                    of sortable in the outputpanel rerender-------->
+                            <!------------RM Widget Section Start------------->
+                                    <apex:outputPanel id="AvailwidgetsRM2" rendered="{!Wr.isRM}">
+                                    <apex:outputPanel id="sortRM" 
+                                                      Styleclass="sort{!Wr.List_index} droptrue" 
+                                                      style="align:center">
+                                         <apex:repeat value="{!Wr.RMCHKWidgets_Customize}" 
+                                                      var="widget">
+                                              <div id='{!widget.widgetName}'>
+                                                  <apex:inputCheckbox value="{!widget.chkb}">
+                                                    <apex:actionSupport event="onchange"  
+                                                                        reRender="test21" 
+                                                                        status="loading"/>
+                                                  </apex:inputCheckbox>
+                                                  <apex:outputLabel style="margin-left:1%;
+                                                                    margin-right:10%">
+                                                                    {!widget.widgetName}
+                                                                </apex:outputLabel>
+                                              </div>
+                                          </apex:repeat>
+                                     </apex:outputPanel>
+                                     </apex:outputPanel>
+                                     <apex:outputPanel id="test21"></apex:outputPanel>
+                                    <!-----------------RM Widget Section End--------->
+                                    <!------------CSS Widget Section Start------------->
+                                     <apex:outputPanel id="AvailwidgetsCSS2" 
+                                                       rendered="{!NOT(Wr.isRM)}">
+                                     <apex:outputPanel id="sortCSS" 
+                                                       Styleclass="sort{!Wr.List_index} droptrue" 
+                                                       style="align:center">
+                                          <apex:repeat value="{!Wr.CSSCHKWidgets_Customize }" 
+                                                       var="widget">
+                                             <div id='{!widget.widgetName}'>
+                                                <apex:inputCheckbox value="{!widget.chkb}">
+                                                    <apex:actionSupport event="onchange"  
+                                                                        reRender="test22" 
+                                                                        status="loading"/>
+                                                </apex:inputCheckbox>
+                                                <apex:outputLabel style="margin-left:1%;
+                                                                  margin-right:10%">
+                                                                  {!widget.widgetName}
+                                                                  </apex:outputLabel>
+                                              </div>
+                                          </apex:repeat>
+                                      </apex:outputPanel>
+                                      </apex:outputPanel>
+                                      <apex:outputPanel id="test22"></apex:outputPanel>
+                                  <!------End of Default and Dynamic Order Widgets ----------->
+                                      </apex:outputPanel>
+                                      </apex:outputPanel>
+                                        <!----------------CSS Widget Section End--------->
+                                    </div>
+                                </div>
+                        <!------End of Default and Dynamic Order Widgets ----------->
+                            </apex:outputPanel>
+                          </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+               <apex:outputPanel rendered="{!LstWrap.size==0}">
+                   <center><span style="font-size:14px;
+                               color:Red;">No Record Found for : "{!SearchProject}"</span></center> 
+              </apex:outputPanel>
+              </apex:outputPanel>
+        </apex:pageBlock>
+        </div>
+      </div>
+    </div>
+  </div>
+</apex:form>
+</div>
+
+</apex:page>

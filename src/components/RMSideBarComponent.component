@@ -1,0 +1,345 @@
+<!-- VisualForce Component for RM Side bar with click Show Hide functionality Which Contains Important Link for RM. 
+    attribute input: i/p parameters is used only for registrion popup other are links accessed by its controller 
+    @Created by: Sudeep Dube
+    @Created Date: 10/march/2015
+    @Input Parameter: CRN No as String.
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+    | Aditi Mulmule     04/06/2015             1.2             1.Changes in Registration 
+                                                               Details Popup for Resheduling Dates
+                                                               by user and mail functionality to
+                                                               send email to RM
+    | Aditi Mulmule     17/06/2015             1.3              Changed Universal Standard to
+                                                                Universal Standard and Responses.
+                                                                Removed Responses Link.   
+      Sudeep Dube       24/06/2015             1.4              Change Links click functionality and fix UI Issue                                                           
+    --------------------------------------------------------------------------------
+    -->
+<apex:component controller="RMCSS2_0CustomSettingLinkController" >
+    <apex:attribute name="CRN" type="String" description="CRN No of the customer" required="true" assignTo="{!CRNval}"/>
+    <apex:attribute name="registration_status" type="String" description="registration_status of the customer" />
+    <apex:attribute name="registration_challan_date" type="String" description="registration_challan_date of the customer"/>
+    <apex:attribute name="stamp_duty" type="String" description="stamp_duty of the customer"/>
+    <apex:attribute name="registration_date" type="String" description="registration_date of the customer"/>
+    <apex:attribute name="registration_charges" type="String" description="registration_date of the customer"/>
+     <script src="{!$Resource.YearRangeIncr}"></script>
+     <!--------->
+   
+    <!-------------------------------------------------------------------------->
+    <style>
+        a {
+           
+            outline: none !important;
+        }
+        .Rlabel {
+        height: 25%;
+        width: 50%;
+        text-align: right;
+        font-weight:bold;
+        }
+        .Rvalue {
+        height: 25%;
+        width: 50%;
+        padding-left: 5%;
+        }
+        
+        .well {
+        margin-bottom:0px;
+        }       
+        .link {
+        width: 25%;
+        float: left;
+        text-align: left;
+        text-decoration: underline;
+        font-size: 14px;
+        }
+        .reg
+        {
+        left: 12.5%;
+        }
+        @media (min-width: 100px) and (max-width:1199px){
+        .reg{left: 50px;}
+        }  
+        
+        .setFontHeader
+        {
+           font-size:14px;
+        } 
+        .setFontContent
+        {
+          font-size:13px;
+        
+        } 
+        .datePicker {
+                 z-index: 99999;/*Changed this css property which was 100 prior*/
+                
+        } 
+        .setFontSideBar
+        {
+            font-size: 60%;
+        }
+        bs a:focus {
+    outline: none;
+    outline-offset: -2px;
+}
+.linkClass{
+
+
+}
+
+           #assign-action-spinner-main {position: fixed;left: 0;top: 0;background-color:rgba(0,0,0,.6);height: 100%;width: 100%;z-index: 9999999;align: center;vertical-align: middle !important;}
+           #assign-action-spinner-content {position: absolute; top: 50%;left: 50%;z-index: 1000;background-color:none;width: 40px;height: 40px;}
+           #assign-action-spinner-content img {width: 40px;height: 40px;align: center;vertical-align: middle !important;}
+    </style>
+    <!-------------------------------------------------------------------------->
+    <!----------Sibar code Start-------------------->
+    <div class="sidebar right" style="display: block; right: -330px; font-size:20px">
+               <apex:actionStatus id="loading" layout="block" style="align:center">
+                                <apex:facet name="start">
+                                    <div id="assign-action-spinner-main" style="align:center">
+                                        <div id="assign-action-spinner-content" style="align:center"> 
+                                            <img  style="align:center" src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}"  />  
+                                        </div>
+                                    </div>
+                                </apex:facet>
+               </apex:actionStatus>
+       
+        <div id="arrowColoseOpen">
+            <img class="sidebar" data-action="open" data-side="right" id="imageout"  src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/openArrow.png')}"/>
+            <img class="sidebar " data-action="close" data-side="right" id="imagein"  src="{!URLFOR($Resource.Bootstrap,'/bootstrap/images/closeArrow.png')}" />
+        </div>
+        <!--<div  id="divCloserightBar" style="margin-top:-40px;height:32px;" >
+            <span style="letter-spacing: 8px;color:white;font-size:12px;margin-left:5px;">IMPORTANT LINKS</span>
+        </div>-->
+        <!---------------Start Registration Link------------------------------->
+        <div style="margin-top: -75%;margin-left: -5px;width:120%;height:100%">
+            <table cellpadding="0" cellspacing="0" style="height:50%">
+            
+            
+            <tr class="linkClass" id="divCloserightBar">
+              <td>
+                <span style="letter-spacing: 8px;color:white;font-size:12px;margin-left:5px;margin-top: -90px;">
+                IMPORTANT LINKS
+                </span>
+              </td>
+            </tr>
+            
+            <tr class="linkClass"><td >
+                <a class="sidebar " id="RegistraionLinkID" href="#" status="loading" data-toggle="modal" data-target="#myModalRegistration" style="Background-color:transparent;cursor: hand;"  data-keyboard="false">
+                <span class="setFontSideBar">
+                Registration Details
+                </span>
+                </a>
+                </td>
+                </tr>
+          
+          <tr class="linkClass"><td >  
+                <a class="sidebar " id="CDIInfoID" href="#"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                <span class="setFontSideBar">
+                CDI Info
+                </span>
+                
+                </a></td></tr>
+
+         <tr class="linkClass">
+                <td >
+                <span class="setFontSideBar ">Knowledge Bank</span></td> </tr>
+          
+         <tr class="linkClass"><td style="padding-left: 7%;" >
+                <a class="sidebar " id="ProjectPageID" href="#"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                <span class="setFontSideBar">
+                Project Page
+                </span>
+                </a></td></tr>           
+              
+         <tr class="linkClass"><td ><span class="setFontSideBar linkClass">Common Links</span></td></tr>
+           
+           <tr class="linkClass"><td style="padding-left: 7%;">
+                <a class="sidebar " id="DocumentTemplatesID" href="#"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                <span class="setFontSideBar">
+                Document Templates
+                </span>
+                </a></td></tr>           
+      
+      <tr class="linkClass"><td style="padding-left: 7%;" >
+                <a class="sidebar " id="PolicyandProcessDocID"  href="#"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                <span class="setFontSideBar">
+                Policy and Process Doc.
+                </span>
+                </a></td></tr>           
+
+      <tr class="linkClass"><td  style="padding-left: 7%;">
+                <a class="sidebar " id="CircularsandNotifications" href="#"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                <span class="setFontSideBar">
+                Circulars and Notifications
+                </span>
+                </a></td></tr>           
+
+      <tr class="linkClass"><td style="padding-left: 7%;">
+                <a class="sidebar " id="ProductFeaturesID" href="#"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                <span class="setFontSideBar">
+                Product Features
+                </span>
+                </a></td></tr>  
+                         
+ 
+        <tr class="linkClass"><td >
+                <a class="sidebar " id="UniversalStandardID" href="#"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                <span class="setFontSideBar">
+                 Universal Standard and Responses
+                </span>
+                </a></td></tr>           
+           
+            </table>
+        </div>                    
+        
+        
+        <!---------------- Modal ------------------->
+                             
+        <div class="modal fade" id="myModalRegistration" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+           
+            <div class="modal-dialog" >
+            
+                <div class="modal-content" style="height: 105%;">
+               
+                    <div class="modal-header">
+                      
+                        <apex:commandButton id="close1"  title="Cancel" value="x" html-data-dismiss="modal" html-aria-hidden="true"   styleClass="close"  onclick="reloadRegistrationPage();"/>
+                        
+                        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-registration-mark"></span> Registration Details</h4>
+                    </div>
+                    
+                    <div class="modal-body " style="font-size: 14px;margin: 2%" id="registrationModalBodyID">
+                        
+                            <!--<apex:actionFunction action="{!intialMethod}" name="dummyCRN" rerender="registrationCaseInfoID" status="loading"/>-->
+                            <div style="padding-left:10%">
+                            <apex:iframe id="RegistraionPageID" src="/apex/RMRegistrationDetail?crn={!CRN}&charges={!registration_charges}&stampDuty={!stamp_duty}&Date={!registration_date}&Status={!registration_status}&challanDate={!registration_challan_date}" height="800" width="1000" scrolling="true" />
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+    <!---------------End Registration Link------------------------------->   
+    <!--start of script for handle the clicks inside side bar -->
+    <script>
+     
+         
+        // All sides
+        var sides = ["left", "top", "right", "bottom"];
+        
+        // Initialize sidebars
+        for (var i = 0; i < sides.length; ++i) {
+            var cSide = sides[i];
+            $(".sidebar." + cSide).sidebar({side: cSide}).hide().trigger("sidebar:close").on("sidebar:closed", function () {
+                $(this).show();
+                
+            });
+        }
+        
+        // Click handlers
+        $(".sidebar").on("click", function () {
+       
+        
+         
+          
+            var $this = $(this);
+            
+      
+        
+            var action = $this.attr("data-action");
+            var side = $this.attr("data-side");                        
+            var id1 = $this.attr("id");
+            
+         // console.log('--------------'+id1);                          
+          
+           if(id1=='RegistraionLinkID'){
+        
+            $(".popover").hide();
+             //dummyCRN();
+             //alert('123');
+            $('#myModalRegistration').modal('show') ;
+              
+     
+            $('#myModalRegistration').modal({ keyboard: false },{ tabindex: -1 }) ;
+            $('#myModalRegistration').modal({backdrop: 'static'});  
+           }
+           
+          
+           if(id1=='CDIInfoID'){
+          
+           window.open('{!CDIInfo}','_blank');
+           }
+           if(id1=='ProjectPageID'){
+           window.open('{!Project_Page}','_blank');
+           }
+           if(id1=='DocumentTemplatesID'){
+           window.open('{!Document_Templates}','_blank');
+           }
+           if(id1=='PolicyandProcessDocID'){
+           window.open('{!Policy_and_Process_Doc}','_blank');
+           }
+           if(id1=='CircularsandNotifications'){
+            window.open('{!Circulars_and_Notifications}','_blank');
+           }
+           if(id1=='UniversalStandardID'){
+            window.open('{!Universal_Standard}','_blank');
+           }
+        
+           if(id1=='ProductFeaturesID'){
+            window.open('{!Product_Features}','_blank');
+           }
+          
+         
+           
+           if(action=='open'){
+          
+               $("#imageout"). css({"display": "none"});
+                $("#imagein"). css({"display": "block"});
+                $("#imagein").css({"position":"relative"});
+                 $(".popover").hide();
+              
+            }
+             if(action=='close'){
+        
+                $("#imageout"). css({"display": "block"});
+                $("#imagein"). css({"display": "none"});
+                $("#imageout").css({"position":"relative"});
+                $(".popover").hide();
+            }                               
+            
+            $(".sidebar." + side).trigger("sidebar:" + action);
+            return false;
+            
+           $('#myModalRegistration').modal({
+                       backdrop: 'static',
+                       keyboard: false
+                      });
+            
+            
+           
+        });
+    
+        
+        $("#myModalRegistration").on("click", function () {
+         
+           var $this = $(this);
+           console.log($this);
+           if( $this.attr("class")!='datePicker'){
+           $('.datePicker').css('display', 'none');
+           }
+        });
+     
+      function reloadRegistrationPage() {
+          console.log('')
+          var f = document.getElementById('RegistraionPageID');
+          console.log(f.src);
+          f.src = f.src;
+      }
+    </script>
+    <!----------Sibar handler  code End-------------------->
+</apex:component>

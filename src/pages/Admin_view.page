@@ -1,0 +1,202 @@
+<apex:page sidebar="false" cache="false" controller="AdminViewController">    
+    <apex:form >        
+        <apex:pageBlock title="Please select a Project Combination"  >       
+              <apex:outputpanel >
+                  <apex:pageMessages ></apex:pageMessages><br/>
+                      <div style="font-family: Arial,Helvetica,sans-serif; font-size: 100%; font-weight: bold; color:#4a4a56; align:center">
+                          <table align="Center" width="1000px">
+                              <tr>
+                                  <td width="20%"></td>
+                                  <td width="5%"><apex:outputLabel value="Project" /></td>
+                                  <td width="5%"> : 
+                                  </td>
+                                  <td width="50%">
+                                      <apex:selectList size="1" value="{!projId}" required="true">               
+                                            <apex:actionsupport reRender="cluster, wing"  event="onchange" status="counterStatus"/>
+                                            <apex:selectOptions value="{!projList}"></apex:selectOptions>
+                                      </apex:selectList>
+                                  </td>                                
+                                  <td width="20%">
+                                  </td>
+                              </tr> 
+                              <tr>
+                                  <td width="20%"></td>
+                                  <td width="5%"><apex:outputLabel value="Cluster " /></td>
+                                  <td width="5%"> : </td>
+                                  <td width="50%">                        
+                                      <apex:outputpanel id="cluster">
+                                          <apex:selectList size="1" value="{!clusterId}" required="true">
+                                            <apex:selectOptions value="{!ClusterFilter}"></apex:selectOptions>
+                                            <apex:actionSupport event="onchange" reRender="wing" status="counterStatus1"/>
+                                          </apex:selectList> 
+                                          <apex:actionStatus id="counterStatus" startText="  Please wait..." stopText=""/>
+                                      </apex:outputpanel>
+                                 </td>
+                                 <td width="20%"></td>
+                             </tr>    
+                             <tr>
+                                <td width="20%"></td>
+                                <td width="5%"><apex:outputLabel value="Wing " /></td>
+                                <td width="5%"> : </td>
+                                <td width="50%">
+                                    <apex:outputpanel id="wing">                                    
+                                        <apex:selectList size="1" value="{!wingId}" required="true">
+                                           <apex:selectOptions value="{!WingFilter}"></apex:selectOptions>
+                                        </apex:selectList>                                        
+                                        <apex:actionStatus id="counterStatus1" startText="  Please wait..." stopText="" />                                                                               
+                                    </apex:outputpanel>
+                                </td>                                
+                                <td width="20%"></td>                                
+                            </tr>                            
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>                            
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                <apex:commandButton action="{!search}" value="Search"/>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                       </table>                      
+                   </div>
+              </apex:outputpanel>            
+        </apex:pageBlock>                
+                
+        <apex:pageBlock title="Project Images">            
+            <br/>               
+            <div id="header">Individual Project Images :</div>
+            <br/><br/><br/><br/>
+                <div align="center">                
+                    <apex:outputPanel rendered="{!noImg}">                
+                        <div align="center">
+                            <table>  
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div class="box">
+                                        <apex:outputText value="No photo to display" escape="false" />
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            </table>
+                            
+                        </div> 
+                    </apex:outputPanel>
+                    <br/>                
+                    <apex:outputPanel rendered="{!noImg==false}"> 
+                        <div class="divTable">                                 
+                            <div class="divRow" align="center"> 
+                                <apex:repeat value="{!projImgList}" var="Img">
+                                    <div class="divCell">
+                                        <div class="box">                                    
+                                            <div id="one">                                            
+                                                <br/>
+                                                <center><h1>{!Img.Photo_Description__c} </h1></center>
+                                                <br/>
+                                                <hr></hr>
+                                                <apex:outputText value="{!Img.Project_View__c}" escape="false"> 
+                                                </apex:outputText>                                       
+                                                <hr></hr>
+                                                <br/><center><h1>{!Img.Image_Description__c} </h1></center><br/>                                            
+                                            </div>                                    
+                                        </div>
+                                   </div>
+                               </apex:repeat> 
+                            </div>               
+                        </div>
+                        <br/><br/>
+                    </apex:outputPanel>
+                    <br/><br/><br/>
+             </div>        
+             <br/>           
+          <apex:outputPanel rendered="{!noImg1==false}"> 
+             <div id="header">Common Amenities :</div>
+         
+                 <br/><br/><br/>
+                 <div align="center">                
+                     
+                
+                    <div class="divTable">                                 
+                        <div class="divRow" align="center"> 
+                            <apex:repeat value="{!projImgList1}" var="Img">
+                                <div class="divCell">
+                                    <div class="box">                                    
+                                        <div id="one">                                            
+                                            <br/>
+                                            <center><h1>{!Img.Photo_Description__c} </h1></center>
+                                            <br/>
+                                            <hr></hr>
+                                            <apex:outputText value="{!Img.Project_View__c}" escape="false" > </apex:outputText>                                       
+                                            <hr></hr>
+                                            <br/>
+                                            <center><h1>{!Img.Image_Description__c} </h1></center>
+                                            <br/>                                            
+                                        </div>                                    
+                                    </div>
+                                </div>
+                            </apex:repeat> 
+                        </div>                  
+                    </div><br/><br/>
+              
+              <br/><br/><br/>
+          </div>  
+            </apex:outputPanel>   
+        </apex:pageBlock>    
+    </apex:form>
+    
+    <style>
+        .divTable
+        {
+            display:table;
+            width:98%;
+            margin:2%;
+        }
+        
+        .divRow
+        {
+           display:table-row;
+           width:auto;
+    
+        }
+    
+        .divCell
+        {
+            float:left;
+            margin:1%;
+            display:table-column;
+            width:48%;
+            
+        }
+       
+        .box
+        {
+            float:left; 
+            border:2px solid #a1a1a1;
+            padding:10px 10px; 
+            background:#dddddd; 
+            border-radius:25px; 
+            -moz-border-radius:25px; /* Old Firefox */ 
+            -moz-box-shadow: 10px 10px 5px #888888; /* Old Firefox */ 
+            box-shadow: 10px 10px 5px #888888;
+            
+        }
+        
+        #one {width:500px;height:760px;}
+        #header {color:white;background:#1797c0;width:100%;height:20px;Padding-left:3px;Padding-top:3px;Padding-bottom:1px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;}
+    </style>
+</apex:page>

@@ -1,0 +1,387 @@
+<apex:page controller="SpSearchInventoryController" sidebar="false" action="{!updateList}">
+<link rel="Stylesheet" type="text/css" href="{!$Resource.ExtJS}/Extjs/resources/css/ext-all.css" />
+    <style>
+        .x-grid-cell {height: 50px; }
+        .x-grid-cell a
+        {  
+           color: black;
+           font-weight: bold;   
+        }
+        .x-grid-cell.flat-open
+        {
+            background-color: #92D050;
+            font-size:130%;
+            
+        }
+        .x-grid-cell.flat-hold
+        {
+            background-color: #000000;
+            font-size:130%;
+            
+        }
+        .x-grid-cell.flat-all
+        {
+            background-color: white;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-blocked
+        {
+            background-color: #FFFF00;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-booking
+        {
+            background-color: #7030A0;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-booked
+        {
+            background-color: #FFC000;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-cancellation
+        {
+            background-color: #984807;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-not-available
+        {
+            background-color: #FFFFFF;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-sold
+        {
+            background-color: #FF0000;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-scud
+        {
+            background-color: #C0504D;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-scud-reject
+        {
+            background-color: #D99795;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-fame-return
+        {
+            background-color: #FAC090;
+            font-size:130%;
+        }
+        .x-grid-cell.status-unknown
+        {
+            background-color: red;
+            font-size:130%;
+        }
+        .x-grid-cell.search-result
+        {   
+            background-color: #0070C0;
+            font-size:130%;
+        }
+        .header{
+           position: relative;
+           float: left;
+           left: 45.00%;
+           width: 100.00%;
+        }
+        .wrapper{
+           position: relative;
+           float: left;
+           left: 0.00%;
+           width: 100.00%;
+        }
+        .left1{
+           position: relative;
+           float: left;
+           left: 0.20%;
+           width: 46.00%;
+        }
+        .left2{
+           position: relative;
+           float: left;
+           left: -8.0%;
+           width: 40.00%;
+        }
+        .right{
+           position: relative;
+           float: right;
+           right: 9.00%;
+           width: 10.40%;
+        }
+        .footer{
+           position: relative;
+           float: left;
+           left: 45.00%;
+           width: 100.00%;
+        }
+        .body {
+           border-width: 0px;
+           padding: 0px;
+           margin: 0px;
+           font-size: 90%;   
+        }
+        
+        a .ttip {
+          display:none;
+        }
+        a:hover{
+          z-index:1; 
+        }
+        a:hover .ttip {  
+          display:block;
+          position:absolute; 
+          top:2px;
+          left:10px; 
+          width:180px;
+          height:auto;
+          border:2px double #0cf;
+          background-color:#cff; 
+          color:#099;
+          font-size:10px;
+          font-style:normal;
+         }
+    </style>
+        <script type="text/javascript" src="{!$Resource.ExtJS}/Extjs/ext-all.js"></script>
+        <apex:form >
+         <apex:pagemessages />
+        <apex:actionFunction name="update" action="{!updateList}" rerender="formsdiv">
+        </apex:actionFunction>
+    <div class="header">
+        <B>LODHA SEARCH</B>
+        <BR/><BR/><BR/>
+    </div>
+    <apex:pageBlock id="formsdiv">
+    <div class="wrapper">
+        <div class="left1">
+            <table>
+                <tr>
+                    <td>
+                        Project Name
+                    </td>                                        
+                    <td>
+                        <apex:selectList disabled="true" style="width:100%;" size="1" id="ProjectList" value="{!selectedProjID}" onchange="update(this.options[this.selectedIndex])" label="PROJECT">
+                        <apex:selectOptions value="{!ProjectsSelectionList}"/>                    
+                        </apex:selectList>
+                        
+                    </td>
+                </tr>
+                <tr >
+                    <td>
+                        ADDRESS
+                    </td>
+                    <td>
+                    <apex:inputTextarea style="margin-top:10px;width:100%;" id="SITE_ADDRESS" label="ADDRESS" cols="40" rows="06" value="{!address}"/>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td>
+                        SITE CONTACT NO.
+                    </td>
+                    <td>
+                    <apex:inputText style="margin-top:10px;width:100%;" id="SITE_CONTACT_NO" label="SITE CONTACT NO" value="{!site_contact_no}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        SITE INCHARGE
+                    </td>
+                    <td>
+                    <apex:inputText style="margin-top:10px;width:100%;" id="SITE_INCHARGE" label="SITE INCHARGE" value="{!site_incharge}"/>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td>
+                        CONTACT NO.
+                    </td>
+                    <td>
+                    <apex:inputText style="margin-top:10px;width:100%;" id="CONTACT_NO" label="CONTACT NO" value="{!contact_no}"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="left2">            
+            <table>
+                <tr>
+                    <td>
+                        CLUSTER  
+                    </td>
+                    <td colspan="3">
+                    <apex:selectList size="1" style="width:100%;" id="ClusterList" value="{!selectedclsuterID}" onchange="update(this.options[this.selectedIndex])" label="CLUSTER">
+                        <apex:selectOptions value="{!ClusterSelectionList}"/>
+                    </apex:selectList>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        WING   
+                    </td>
+                    <td colspan="3">
+                        <apex:selectList size="1" style="margin-top:10px;width:100%;" id="WingList" value="{!selectedwingID}" onchange="update(this.options[this.selectedIndex])" label="WING">
+                            <apex:selectOptions value="{!WingsSelectionList}"/>
+                        </apex:selectList>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        FLAT TYPE   
+                    </td>
+                    <td colspan="3">
+                        <apex:selectList size="1" style="margin-top:10px;width:100%;" id="FlattypeList" value="{!selectedflattypeID}" onchange="update(this.options[this.selectedIndex])" label="FLAT TYPE">
+                            <apex:selectOptions value="{!FlatTypeSelectionList}"/>
+                        </apex:selectList>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        FLOOR NO.
+                    </td>
+                    <td>
+                        <apex:inputText style="margin-top:10px;width:100%;" id="FLOOR_NO_FROM" label="FLOOR NO." value="{!floor_no_from}" size="5"/>                        
+                    </td>
+                    <td>
+                       <Span style="margin-top:0px;margin-left:1px;position:absolute;">TO</Span>
+                    </td>
+                    <td>
+                        <apex:inputText style="margin-top:10px;width:100%;" id="FLOOR_NO_TO" label="TO" value="{!floor_no_to}" size="5"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        FLAT NO.
+                    </td>
+                    <td>
+                        <apex:inputText style="margin-top:10px;width:100%;" id="FLAT_NO" label="FLAT NO." value="{!flat_no}" size="6"/>
+                    </td>
+                    <td colspan="2">
+                        <apex:selectRadio style="margin-top:10px;width:100%;"  id="FLAT_NO_OPTION" value="{!flat_no_option}">
+                        <apex:selectOption itemValue="exact_no"><b>Exact No.</b></apex:selectOption>
+                        <apex:selectOption itemValue="last_digit"><b>Last Digit</b></apex:selectOption>
+                        </apex:selectRadio>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        PREMIUM VIEW
+                    </td>
+                    <td colspan="3">
+                        <apex:selectList size="1" style="margin-top:10px;width:100%;" id="ViewList" value="{!selectedviewvalue}" label="PREMIUM VIEW:">
+                        <apex:selectOptions value="{!ViewSelectionList}"/>
+                        </apex:selectList>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td>
+                        VALUE(IN LACS)
+                    </td>
+                    <td>
+                        <apex:inputText style="margin-top:10px;width:100%;" id="VALUE_FROM" label="VALUE(IN LACS)" size="4" value="{!value_from}" />                                              
+                    </td>
+                    <td>
+                    TO
+                    </td>
+                    <td>
+                        <apex:inputText style="margin-top:10px;width:100%;" id="VALUE_TO" label="TO" size="4" value="{!value_to}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        CONSTRUCTION COMPLETED %                       
+                    </td>                    
+                    <td colspan="3">
+                        <apex:inputText style="margin-top:10px;width:100%;" id="CONSTRUCTION_COMPLETED" label="CONSTRUCTION COMPLETED MORE THAN" size="3"/>
+                    </td>                   
+                </tr>
+                <tr>
+                    <td>
+                        STATUS
+                    </td>                    
+                    <td colspan="3">
+                        <apex:selectList size="1" style="margin-top:10px;width:100%;" id="FlatStatusList" value="{!selectedflatstatus}" label="STATUS">
+                        <apex:selectOptions value="{!FlatStatusSelectionList}"/>
+                        </apex:selectList>
+                    </td>                   
+                </tr>
+
+            </table>
+            
+        </div>
+        <div class="right">
+            <apex:image url="{!$Resource.SPSearch}" width="150%" height="100%"/>
+           <!-- <apex:image url="{!$Resource.searchold}" width="100%" height="100%"/>-->
+        </div> 
+        </div>
+        <div class="footer">
+            <BR/><BR/><BR/>
+           <!--<apex:commandButton action="{!demoMethod}" value="Do the Demo" id="demo"/>-->
+           <apex:commandButton action="{!doSearch}" value="Search" id="search"/>           
+        </div>
+        </apex:pageBlock>
+        <div id="gridSpace"/>
+
+    </apex:form>
+    
+    <script type="text/javascript" >
+        var fieldValueArray = new Array();
+        var columnValueArray = new Array();
+        var dataValueArray = new Array();
+        var wingArray = new Array();
+        var flatperfloorcount = new Array(); 
+        var wingclusterlist = new Array();
+        var htmlValue = '';
+        var wingdetlist = new Array();
+
+        fieldValueArray = {!fieldValue};
+        columnValueArray = {!columnValue};
+        dataValueArray = {!dataValue};
+        flatperfloorcount = {!flatperfloorcount};
+        wingclusterlist = {!wingclusterlist};
+        wingdetlist = {!wing_det_string};
+
+        for(var j=0;j<fieldValueArray.length;j++){           
+            htmlValue+= '<div id=\"'+'gridtitle'+j+'\" align="center" style="font-size: 110%"><b>' + wingclusterlist[j] +'<br/><span style="background-color: #C0C0C0;">'+ wingdetlist[j] + '</span></b></div>' + '<div id=\"'+'gridSpace'+j+'\" align="center">'+'</div>';
+        }
+        document.getElementById("gridSpace").innerHTML = htmlValue;
+         
+        for(var i=0;i<fieldValueArray.length;i++){
+            var gridSpace = 'gridSpace'+i;
+            Ext.create('Ext.data.Store', {
+                storeId:'Lodha',
+                fields:fieldValueArray[i],
+                data:dataValueArray[i],
+                proxy: {
+                    type: 'memory',
+                    reader: {
+                        type: 'json',
+                        root: 'items'
+                    }
+                }
+                
+
+            });
+            
+            Ext.create('Ext.grid.Panel', {
+                title: '',
+                store: Ext.data.StoreManager.lookup('Lodha'),
+                columns:columnValueArray[i],
+                columnLines : true,
+                width: (flatperfloorcount[i]+1)*100,               
+                renderTo: gridSpace
+            });
+            
+                      
+        }   
+  Ext.override(Ext.selection.RowModel, {
+    onRowMouseDown: function(view, record, item, index, e) {
+        //IE fix: set focus to the first DIV in selected row
+        Ext.get(item).down('div').focus();
+
+        if (!this.allowRightMouseSelection(e)) {
+            return;
+        }
+
+        this.selectWithEvent(record, e);
+    }
+});
+    </script>
+</apex:page>

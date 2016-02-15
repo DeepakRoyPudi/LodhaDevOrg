@@ -1,0 +1,155 @@
+<apex:page standardController="Welcome_Call_Details__c" extensions="SpWelcomeCallExtension" sidebar="false">
+  <style type="text/css">
+   table td{padding:3px; font-weight: bold}
+    .td-color{background-color:#000080; color:#fff; text-align:center}
+    th{background-color:#00BFFF;color:#fff;padding:3px;text-align:center}  
+  </style>
+<apex:form id="FAMEFORM">
+      <div align="Right"><apex:image value="{!$Resource.Lodha_Logo}"/></div>
+     
+  <table width="100%" border="2" style="border-collapse: collapse">
+      <tr>
+          <td colspan="4"><div style="font-size:10px;color:red;font-weight: bold">* Indicate mandatory for FAME Accept.</div></td>
+      </tr>
+      <tr>
+          <td colspan="4" class="td-color" style="font-size:25px;"><Center>WELCOME CALL DETAILS</Center></td>
+      </tr>
+      <tr>
+          <td colspan="4">  
+              <apex:outputText style="font-weight: bold">CUSTOMER NAME:&nbsp;</apex:outputText>
+              <apex:outputText >{!customer_name_details }</apex:outputText> &nbsp;&nbsp;&nbsp;
+              <apex:outputText style="font-weight: bold"> FLAT DETAILS:&nbsp;</apex:outputText>
+              <apex:outputText > {!flat_details}</apex:outputText>
+          </td>
+
+      </tr>
+  </table>  
+  
+  <table width="50%" border="2" style="border-collapse: collapse">
+    <tr>
+      <th colspan="2" style="text-align:Left;">Personal Information :</th>
+    </tr>
+    <tr>
+      <td colspan="2"></td>
+    </tr>
+    <tr>
+      <td class="td-color">Primary Applicant’s Name</td>            
+      <td ><apex:inputField value="{!welcomecall.Title_of_Applicant__c}" />&nbsp;<apex:inputField value="{!welcomecall.Primary_Applicant_s_Name__c}" /></td>
+    </tr>
+    
+    <tr>
+      <td class="td-color">Telephone Number</td>            
+      <td ><apex:inputField value="{!welcomecall.Telephone_Number__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Email address</td>            
+      <td ><apex:inputField value="{!welcomecall.Email_address__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">PAN Number</td>            
+      <td ><apex:inputField value="{!welcomecall.PAN_Number_of_Applicant__c}"/></td>
+    </tr>
+    
+    <tr>
+      <td class="td-color">Address line 1</td>            
+      <td ><apex:inputField value="{!welcomecall.Address_Line_1__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Address line 2</td>            
+      <td ><apex:inputField value="{!welcomecall.Address_Line_2__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Address line 3</td>            
+      <td ><apex:inputField value="{!welcomecall.Address_Line_3__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">City</td>            
+      <td ><apex:inputField value="{!welcomecall.City_of_Applicant__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Pin code</td>            
+      <td ><apex:inputField value="{!welcomecall.Pin_Code__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Country</td>            
+      <td ><apex:inputField value="{!welcomecall.Country_of_Applicant__c}"/></td>
+    </tr>
+    
+    <tr>
+      <td class="td-color">Co-Applicant’s Name</td>            
+      <td ><apex:inputField value="{!welcomecall.Title_of_Co_Applicant__c}" />&nbsp;<apex:inputField value="{!welcomecall.Co_Applicant_s_Name__c}" /></td>
+    </tr>
+    <tr>
+      <td class="td-color">Relationship of Co-Applicant</td>            
+      <td ><apex:inputField value="{!welcomecall.Relationship_of_Co_Applicant_New__c}" /></td>
+    </tr>
+    <tr>
+      <td class="td-color">PAN Number</td>            
+      <td ><apex:inputField value="{!welcomecall.PAN_Number_of_Co_Applicant__c}" /></td>
+    </tr>
+    <tr>
+      <td class="td-color">City</td>            
+      <td ><apex:inputField value="{!welcomecall.City_of_Co_applicant__c}" /></td>
+    </tr>
+    <tr>
+      <td class="td-color">Country</td>            
+      <td ><apex:inputField value="{!welcomecall.Country_of_Co_applicant__c}" /></td>
+    </tr>
+
+    
+  </table>
+  <br/><br/>
+  <table width="50%" border="2" style="border-collapse: collapse">
+    <tr>
+      <th colspan="2" style="text-align:Left;">Details of your booked unit :</th>
+    </tr>
+    <tr>
+      <td colspan="2"></td>
+    </tr>
+    <tr>
+      <td class="td-color">Application Date</td>            
+      <td ><apex:outputField value="{!welcomecall.Application_Date__c}" /></td>
+    </tr>
+    <tr>
+      <td class="td-color">Application towards Project/Cluster/Wing/Unit</td>            
+      <td ><apex:outputtext value="{!welcomecall.Application_towards_Project_Cluster_Wing__c}" /></td>
+    </tr>
+    <tr>
+      <td class="td-color">Type of Unit</td>
+      <td ><apex:outputtext value="{!welcomecall.Type_of_Unit__c}" /></td>
+    </tr>
+    <tr>
+      <td class="td-color">Source of Booking</td>            
+      <td ><apex:outputtext value="{!welcomecall.Source_of_Booking__c}" /></td>
+    </tr>
+    <tr>
+      <td class="td-color">Carpet Area (Square Feet)</td>            
+      <td ><apex:outputtext value="{!welcomecall.Carpet_Area_Square_Feet__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Consideration Value</td>            
+      <td ><apex:outputtext value="{!welcomecall.Consideration_Value__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Number of parking slots included with the unit</td>            
+      <td ><apex:outputtext value="{!welcomecall.Number_of_parking_slots_included_with_th__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Current stage of construction</td>            
+      <td ><apex:outputtext value="{!welcomecall.Current_stage_of_construction__c}"/></td>
+    </tr>
+    <tr>
+      <td class="td-color">Expected Date of start of fit-outs</td>            
+      <td ><apex:inputfield value="{!welcomecall.Expected_Date_of_start_of_fit_outs__c}"/></td>
+    </tr>
+    <tr>
+      <td colspan="3"><apex:pageMessages ></apex:pageMessages></td>     
+    </tr>
+     <tr>
+      <td colspan="2" style="text-align:center;"><apex:commandButton value="SAVE" action="{!hold}"/><apex:commandButton value="SUBMIT" action="{!submit}"/></td>     
+    </tr>
+    
+  </table>
+  
+</apex:form>
+</apex:page>

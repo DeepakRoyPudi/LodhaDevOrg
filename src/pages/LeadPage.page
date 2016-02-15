@@ -1,0 +1,1071 @@
+<apex:page standardController="Lead" extensions="LeadExtensions" sidebar="false" showHeader="false"  >
+
+<apex:form rendered="{!showFiorenzaform}" styleclass="lodha_form_style" > <!-- Modified by CG Dev Team 10/11/2011 Display Wadala-Project Specific form -->
+<style>  
+
+form.lodha_form_style #lodha_form_wrapper{ background:#E66A6A url('{!$Resource.Lodha_Fiorenza_BG_center}') left top no-repeat; -webkit-background-size: 1024px 2000px;}
+/** ipad background hack on safari**/
+
+
+form.lodha_form_style .action_btn{text-align: center; width: auto; margin-top: 20px;}
+form.lodha_form_style .wadala_bottom_logo{text-align: center; width: auto; height: 100px; margin-top: 20px;}
+
+
+td#other_lead{float: right;text-align: right; width: 100px; clear: both; display: none;}
+.show_others_input {display: block;}
+.btn.lodha_btn:hover,.btn.lodha_btn{background:url('{!$Resource.fiorenza_btn_bg}') left top repeat-x; color: #f00; border: 2px solid #E1464D;}
+form.lodha_form_style #about_indulgences table td span { width: 251px;}
+form.lodha_form_style table td span {color: #fff;}
+form.lodha_form_style table td label {color: #fff;}
+
+span.dateFormat a{color: #fff;}
+form.lodha_form_style table td span.dateFormat{display: inline;}
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_Wadala_Lead_css}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper">
+    <div id="Lodha_WT_Header">&nbsp;</div>
+      <div id="about_cutomer" class="inputs_block">
+      <table>
+
+        <tbody>
+          <tr><th colspan="3">There&apos;s a lot in a name. Could we please know yours.</th></tr>
+          <tr>
+            <td><span>Saluation:</span><apex:inputField value="{!l.Salutation}"/></td>
+            <td><span>First Name:</span><apex:inputField value="{!l.FirstName}"/></td>
+            <td class="reqd_input"><span style="float: left;">Last Name:</span><apex:inputField value="{!l.LastName}" /></td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+      
+      
+      <div id="about_address" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">We would love to be in touch with you.</th></tr>
+         <tr>
+
+            <td><span>Current Residence:</span><apex:inputField value="{!l.Address_r1__c}"/> </td>
+            <td><span>Street:</span><apex:inputField value="{!l.Address2_R__c}"/> </td>
+            <td><span>Locality:</span><apex:inputField value="{!l.Address_3_R__c}" /></td>
+          </tr>
+           <tr>
+            <td><span>City:</span><apex:inputField value="{!l.City_R__c}"/></td>
+            <td><span>Other City:</span><apex:inputField value="{!l.Specify_Other_for_City_R__c}"/></td>
+            <td><span>Zone:</span><p class="select_input"><apex:inputField value="{!l.Zone_RS__c}"/></p></td>
+           </tr>
+           <tr>
+            <td><span>Suburb:</span><p class="select_input"><apex:inputField value="{!l.Suburb_RS__c}"/></p></td>
+            <td><span>Other Suburb:</span><apex:inputField value="{!l.Specify_Other_for_Suburb_R__c}"/></td>
+           </tr>            
+           <tr>
+            <td><span>Pincode:</span><apex:inputField value="{!l.Pincode_R__c}"  /></td>
+            <td><span>Country:</span><p style="width: 80px;" class="select_input"><apex:inputField value="{!l.Country_R__c}"/></p></td>
+          </tr>
+          <tr>
+            <td><span>Mobile:</span><apex:inputField value="{!l.Mobile__c}"   /></td>
+            <td><span>Birthday:</span><apex:inputField value="{!l.Date_Of_Birth__c}"  /></td>
+            <td><span>Email:</span><apex:inputField value="{!l.Email}"  /></td>
+          </tr>
+
+          <tr>
+            <td><span>Landline : </span><apex:inputField value="{!l.Landline__c}" styleClass="inputCheckBoxClass"/></td>
+            <td><span>Residence Phone:</span><apex:inputField value="{!l.Phone}"  /></td>            
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      
+      <div id="about_designation" class="inputs_block">
+      <table>
+
+        <tbody>
+          <tr><th colspan="3">The league of extraordinary gentlemen &amp; ladies...</th></tr>
+          <tr>
+            <td><span>Occupation:</span><apex:inputField value="{!l.Occupation__c}"  /></td>
+            <td colspan="3"><span style="width:201px;">Specify Others for Occupation:</span><apex:inputField value="{!l.Other_Occupation__c}"  /></td>   
+          </tr>
+
+         <tr>
+            <td><span>Designation:</span><apex:inputField value="{!l.Designation__c}"  /></td>
+            <td><span>Organization:</span><apex:inputField value="{!l.Lead_Company_Name__c}"  /></td>
+            <td><span>Work Location:</span><apex:inputField value="{!l.Address_3_O__c}"  /></td>
+
+          </tr>
+                 
+           <!--tr>
+            <td colspan="3"><span style="width: 432px;">Number of employees &nbsp;<em style="color: #333; font-size: 11px; font-style: normal;">(for privately owned companies)</em>:</span><apex:inputField value="{!l.NumberOfEmployees}"  styleClass="no_of_emp"/></td>
+          </tr-->
+        </tbody>
+      </table>
+      </div>
+      
+      <div id="about_residence" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">Help us choose a residence for you.</th></tr>
+          <tr>
+            
+            <td style="padding-left: 12px;"><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!l.Budget_in_Lakhs__c}"  /><em style="font-style: normal; padding-left: 2px; color: #fff;">&nbsp;lacs</em></td>
+            
+          </tr>
+        </tbody>
+
+      </table>
+      </div>
+      
+        
+      <div id="about_flat_type" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">You are looking for</th></tr>
+         <tr>
+            <apex:selectCheckboxes value="{!accomTypes}">
+                <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">It is a privilege to have here. How did you hear of us</th></tr>
+                       <apex:selectradio value="{!leadsource}" id="others_label">
+                            <apex:selectOption itemValue="Corporate Tie-Up" itemLabel="Corporate Tie-Up"/>
+                            <apex:selectOption itemValue="Newspaper" itemLabel="Newspaper"/>
+                            <apex:selectOption itemValue="Hoarding" itemLabel="Billboard"/>
+                            <apex:selectOption itemValue="Channel Partner" itemLabel="Channel Partner"/>
+                            <apex:selectOption itemValue="Web" itemLabel="Website"/>
+                            <apex:selectOption itemValue="Emailer" itemLabel="E-mailer/Personal Invites"/>     
+                            <apex:selectOption itemValue="Others" itemLabel="Others" />
+                       </apex:selectradio>
+                      
+              
+        </tbody>
+      </table>
+
+      </div>
+       
+      <div id="about_partner" class="inputs_block" style="padding-top: 0;">
+      <table>
+        <tbody>
+
+         <tr>
+            <td><span>Corporate Account Name:</span><apex:inputField value="{!l.Corporate_Account__c}" /></td>
+            <td><span>Channel Partner Name:</span><apex:inputField value="{!l.Channel_Partner__c}" /></td>
+            <td style="width: auto; padding-left: 0;"><span style="width: 100px;">Specify Others:</span><apex:inputfield value="{!l.LeadSource_Others__c}" style="float: right; width: 100px;" /> </td>       
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div id="about_indulgences" class="inputs_block" >
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">Your indulgences.</th></tr>
+          <tr>
+            <td style="width: auto;"><span style="padding-left: 18px;">The car/s you drive:</span><apex:inputField value="{!l.Owned_Car_Name__c}"   /></td>
+            <td style="width: auto;"><span>The club/s you frequent:</span><apex:inputField value="{!l.Club_Membership__c}"    /></td>
+          </tr>
+          <tr>
+            <td style="width: auto;"><span style="padding-left: 18px;">Favorite travelled destination (Abroad) :</span><apex:inputField value="{!l.Favorite_travelled_destination_Abroad__c}"   /></td>
+            <td style="width: auto;"><span>Favorite travelled destination (India) :</span><apex:inputField value="{!l.Favorite_travelled_destination_India__c}"    /></td>
+          </tr>          
+        </tbody>
+      </table>
+      </div>
+      <div class="action_btn">
+        <apex:commandButton action="{!submitLead}" value="Submit" styleClass="lodha_btn" style="margin-right: 0;"/>
+      </div>
+      <div class="wadala_bottom_logo">
+        &nbsp;
+      </div>
+
+  </div>
+
+</apex:form>
+
+<!--
+        /* Added by CG Dev Team 22/09/2011
+        *   Changes to include Wadala Project Form And CSS
+        *   CSS has been replaced with static resource file.
+        */  
+ -->   
+<apex:form rendered="false"> <!-- Modified by CG Dev Team 10/11/2011 Display Fiorenza-Project Specific form -->
+ <apex:stylesheet value="{!$Resource.Lodha_Fiorenza_Lead_css}"/> <!--Added by CG Dev Team 22/09/2011 to Display Fiorenza-Project Specific CSS-->
+<apex:pageMessages />
+<table  width="100%" cellpadding="0" cellspacing="0" height="865"  background="{!$Resource.Bgimage}">
+<tr>
+<td valign="top">
+<table width="100%" border="0" align="left" cellpadding="2" cellspacing="2"><!-- Display Wadala-Project Specific background-->
+  
+  <tr >
+    <td colspan="7"  class="headerFont" valign="bottom">There&acute;s lot in a name. Could we please know yours. </td>
+    </tr>
+  <tr>
+    <td width="1%" align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="5" align="right" valign="bottom"><table width="100%">
+    <tr>
+<td align="right" width="14%" class="inputLabel">Salutation:</td>
+<td width="12%" align="left" ><apex:inputField value="{!l.Salutation}" styleClass="inputFieldClass"/></td>
+<td align="right"  width="17%" class="inputLabel">First Name:</td>
+<td width="17%"  align="left"><apex:inputField value="{!l.FirstName}" styleClass="inputFieldClass"/></td>
+<td align="right"  width="20%" class="inputLabel">Last Name:</td>
+<td width="20%"  align="left"><apex:inputField value="{!l.LastName}" styleClass="inputFieldClass" /></td>
+    </tr>   
+    </table></td>
+    </tr>
+  <tr >
+    <td>&nbsp;</td>
+    <td  colspan="6" class="headerFont" valign="bottom">&nbsp;</td>
+  </tr>
+  <tr >
+    <td colspan="7" class="headerFont" valign="bottom" >We would love to be in touch with you. </td>
+    </tr>
+  <tr>
+    <td colspan="3" align="right" valign="bottom" class="inputLabel">Current Residence:  </td>
+    <td width="4%" align="left" ><apex:inputField value="{!l.Address_r1__c}" styleClass="inputFieldClass"/></td>
+    <td width="24%" align="right" class="inputLabel">Mobile: </td>
+    <td width="39%" align="left" class="inputLabel"><apex:inputField value="{!l.Mobile__c}" styleClass="inputFieldClass"/></td> 
+  </tr>
+  <tr>
+  <td colspan="5" align="right" class="inputLabel">Landline:  </td>
+  <td width="39%" align="left" ><apex:inputField value="{!l.Landline__c}" styleClass="inputCheckBoxClass"/></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="right" valign="bottom" class="inputLabel">Street:</td>
+    <td align="left"><apex:inputField value="{!l.Address2_R__c}" styleClass="inputFieldClass"/></td>
+    <td width="24%" align="right" class="inputLabel">Residence Phone:</td>
+    <td align="left" class="inputLabel"><apex:inputField value="{!l.Phone}" styleClass="inputFieldClass"/></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="right" valign="bottom" class="inputLabel">Locality:</td>
+    <td align="left"><apex:inputField value="{!l.Address_3_R__c}" styleClass="inputFieldClass"/></td>
+    <td align="right" class="inputLabel">Email:</td>
+    <td align="left"><apex:inputField value="{!l.Email}" styleClass="inputFieldClass"/></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="right" valign="bottom" class="inputLabel">Pincode:</td>
+    <td align="left"><apex:inputField value="{!l.Pincode_R__c}" styleClass="inputFieldClass"/></td>
+    <td align="right" class="inputLabel">Birthday:</td>
+    <td align="left" class="inputLabel"><apex:inputField value="{!l.Date_Of_Birth__c}" styleClass="inputFieldClass"/></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="right" valign="bottom" class="inputLabel">City: </td>
+    <td colspan="3" align="left" class="inputLabel"><apex:inputField value="{!l.City_R__c}" styleClass="inputFieldClass"/>&nbsp;&nbsp;Other City:&nbsp;
+      <apex:inputField value="{!l.Specify_Other_for_City_R__c}" styleClass="inputFieldClass" id="OtherCity"/></td>
+    </tr>
+  <tr>
+    <td colspan="3" align="right" valign="bottom" class="inputLabel">Zone:</td>
+    <td colspan="3" align="left"><apex:inputField value="{!l.Zone_RS__c}" style="background-color:#FFFFFF;color:#494949;font-family:Arial;font-size:11px" id="Zone"/></td>
+    </tr>
+  <tr>
+    <td height="26" colspan="3" align="right" valign="bottom" class="inputLabel">Suburb:</td>
+    <td colspan="3" align="left" class="inputLabel"><apex:inputField value="{!l.Suburb_RS__c}" styleClass="inputFieldClass"/>&nbsp;&nbsp;Other Suburb:&nbsp;
+      <apex:inputField value="{!l.Specify_Other_for_Suburb_R__c}" styleClass="inputFieldClass" id="OtherSuburb"/></td>
+    </tr>
+      <tr>
+    <td height="26" colspan="3" align="right" valign="bottom" class="inputLabel">Country:</td>
+    <td colspan="3" align="left" class="inputLabel"><apex:inputField value="{!l.Country_R__c}" styleClass="inputFieldClass"/></td>
+    </tr>
+  <tr>
+    <td colspan="3" align="right" valign="bottom" class="inputLabel">I work as:</td>
+    <td colspan="3" align="left" class="inputLabel"><apex:inputField value="{!l.Designation__c}" styleClass="inputFieldClass"/>&nbsp;&nbsp;for:&nbsp;
+      <apex:inputField value="{!l.Lead_Company_Name__c}" styleClass="inputFieldClass"/>&nbsp;&nbsp;  My Work Location:&nbsp;
+      <apex:inputField value="{!l.Address_3_O__c}" styleClass="inputFieldClass"/></td>
+    </tr>  <tr>
+    <td height="29" colspan="6" align="right" valign="bottom" >&nbsp;</td>
+    </tr>
+  <tr>
+    <td colspan="6"  align="right" valign="bottom" ><div class="headerFont" style="float:left;"> Help us choose a residence for you.&nbsp;&nbsp;&nbsp;</div>
+      <div class="inputLabel" style="float:left;padding-top:10px;"> Budget &nbsp;
+        <apex:image value="{!$Resource.RupeeFont}" width="9px" height="10px"/>
+  &nbsp;&nbsp;</div>
+      <div style="float:left;padding-top:5px;"><apex:inputField value="{!l.Budget_in_Lakhs__c}" styleClass="inputFieldClass"/>
+      </div>      <div class="inputLabel" style="float:left;padding-top:10px;padding-left:10px;">lacs</div></td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td width="22%" align="left" valign="bottom" >&nbsp;</td>
+    <td colspan="4" align="left"  >&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="6"  align="left" class="headerFont" valign="bottom">You are looking for:     </td>
+    </tr>
+  <tr>
+    <td align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    <td colspan="5"  align="left" valign="bottom">            <apex:selectCheckboxes value="{!accomTypes}" styleClass="inputCheckBoxClass" >
+      <apex:selectOptions value="{!items}"  />
+    </apex:selectCheckboxes> </td>
+    </tr>
+  <tr>
+    <td colspan="6"  align="left" valign="bottom">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td colspan="6"  align="right" valign="bottom" ><div class="headerFont" style="float:left;"> It is a privilege to have you here. How did you hear of us? &nbsp;&nbsp;&nbsp;</div></td>
+    </tr>
+   <tr>
+    <td colspan="6"  align="right" valign="bottom" >
+     <table width="100%" border="0">
+      <tr>
+       <td align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+       <td colspan="8">
+       <apex:selectradio value="{!leadsource}" styleClass="inputCheckBoxClass" >
+        <apex:selectOption itemValue="Hoarding" itemLabel="Billboard"/>
+        <apex:selectOption itemValue="Channel Partner" itemLabel="Channel Partner"/>
+        <apex:selectOption itemValue="Newspaper" itemLabel="Newspaper"/>
+        <apex:selectOption itemValue="Web" itemLabel="Website"/>
+        <apex:selectOption itemValue="Corporate Tie-Up" itemLabel="Corporate Tie-Up"/>
+        <apex:selectOption itemValue="Emailer" itemLabel="E-mailer/Personal Invites"/>     
+        <apex:selectOption itemValue="Others" itemLabel="Others"/>
+       </apex:selectradio>
+       </td>
+      </tr>
+      <tr>
+       <td align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+       <td colspan="8">
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;
+       <apex:inputField styleClass="inputLookUpClass" value="{!l.Channel_Partner__c}" />
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <apex:inputField styleClass="inputLookUpClass" value="{!l.Corporate_Account__c}" />
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <apex:inputField value="{!l.LeadSource_Others__c}" styleClass="inputFieldClass" />
+       </td>
+      </tr>
+      <tr>
+       <td align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+       <td colspan="8" class="inputCheckBoxClass">
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;
+       <i>Please Specify Channel Partner</i>
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;
+       <i>Please Specify Corporate Account</i>
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <i>Please Specify Others</i>
+       </td>
+      </tr>
+     </table>
+    </td>
+    </tr>
+    <tr>
+    <td colspan="6">&nbsp;</td>
+    </tr> 
+  <tr>
+    <td colspan="6"  align="left" class="headerFont" valign="bottom">Your indulgences.</td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="5"  align="left" valign="bottom" class="inputLabel">
+      <table width="100%" border="0">
+      <tr>
+        <td width="30%" align="right" class="inputLabel">The car/s you drive:</td>
+        <td width="14%" align="left"><apex:inputField value="{!l.Owned_Car_Name__c}" styleClass="inputFieldClass" /></td>
+        <td width="27%"  align="right" class="inputLabel">The club/s you frequent:</td>
+        <td width="29%" align="left"><apex:inputField value="{!l.Club_Membership__c}"  styleClass="inputFieldClass" /></td>
+      </tr>
+      <tr>
+<!-- added by CG dev team 23/11/2011-->
+        <td width="30%" align="right" class="inputLabel">Favorite travelled destination (Abroad) :</td>
+        <td width="14%" align="left"><apex:inputField value="{!l.Favorite_travelled_destination_Abroad__c}" styleClass="inputFieldClass" /></td>
+        <td width="27%"  align="right" class="inputLabel">Favourite travelled destination (India) :</td>
+        <td width="29%" align="left"><apex:inputField value="{!l.Favorite_travelled_destination_India__c}"  styleClass="inputFieldClass" /></td>
+<!-- End Changes-->
+        
+
+        
+      </tr>
+    </table>      </td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="5"  align="right" valign="bottom" >&nbsp;</td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="5"  align="center" valign="bottom">
+      <apex:commandbutton value="Submit" action="{!submitLead}" style="background-image:none;background-color:#FFD7C4;color:#FF0000;border:#FF0000;font-size:12px;" />
+      </td>
+    </tr>
+</table>
+</td>
+<td width="15%"  valign="top" class="sideBarFont"><apex:image value="{!$Resource.Logo}" width="200px" height="48px"/></td>
+</tr>
+</table>
+</apex:form>
+
+<!-- 
+     // CG Dev Team 22/09/2011
+    //Start:Additions to include Wadala Project Form And Css
+-->
+
+<apex:form rendered="{!showWadalaForm}" styleclass="lodha_form_style" > <!-- Modified by CG Dev Team 10/11/2011 Display Wadala-Project Specific form -->
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background: #3cb3ad url('{!$Resource.Lodha_Wadala_BG_right}') center 200px no-repeat;}
+
+form.lodha_form_style .action_btn{text-align: center; width: auto; margin-top: 20px;}
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center bottom no-repeat; width: auto; height: 100px; margin-top: 20px;}
+
+
+td#other_lead{float: right;text-align: right; width: 100px; clear: both; display: none;}
+.show_others_input {display: block;}
+.btn.lodha_btn:hover,.btn.lodha_btn{background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;}
+
+
+
+
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_Wadala_Lead_css}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper">
+    <div id="Lodha_WT_Header">&nbsp;</div>
+      <div id="about_cutomer" class="inputs_block">
+      <table>
+
+        <tbody>
+          <tr><th colspan="3">There&apos;s a lot in a name. Could we please know yours.</th></tr>
+          <tr>
+            <td><span>Saluation:</span><apex:inputField value="{!l.Salutation}"/></td>
+            <td><span>First Name:</span><apex:inputField value="{!l.FirstName}"/></td>
+            <td class="reqd_input"><span style="float: left;">Last Name:</span><apex:inputField value="{!l.LastName}" /></td>
+          </tr>
+
+        </tbody>
+      </table>
+      </div>
+      
+      
+      <div id="about_address" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">We would love to be in touch with you.</th></tr>
+         <tr>
+
+            <td><span>Current Residence:</span><apex:inputField value="{!l.Address_r1__c}"/> </td>
+            <td><span>Street:</span><apex:inputField value="{!l.Address2_R__c}"/> </td>
+            <td><span>Locality:</span><apex:inputField value="{!l.Address_3_R__c}" /></td>
+          </tr>
+           <tr>
+            <td><span>City:</span><apex:inputField value="{!l.City_R__c}"/></td>
+            <td><span>Other City:</span><apex:inputField value="{!l.Specify_Other_for_City_R__c}"/></td>
+            <td><span>Zone:</span><p class="select_input"><apex:inputField value="{!l.Zone_RS__c}"/></p></td>
+           </tr>
+           <tr>
+            <td><span>Suburb:</span><p class="select_input"><apex:inputField value="{!l.Suburb_RS__c}"/></p></td>
+            <td><span>Other Suburb:</span><apex:inputField value="{!l.Specify_Other_for_Suburb_R__c}"/></td>
+           </tr>            
+           <tr>
+            <td><span>Pincode:</span><apex:inputField value="{!l.Pincode_R__c}"  /></td>
+            <td><span>Country:</span><p style="width: 80px;" class="select_input"><apex:inputField value="{!l.Country_R__c}"/></p></td>
+          </tr>
+          <tr>
+            <td><span>Mobile:</span><apex:inputField value="{!l.Mobile__c}"   /></td>
+            <td><span>Birthday:</span><apex:inputField value="{!l.Date_Of_Birth__c}"  /></td>
+            <td><span>Email:</span><apex:inputField value="{!l.Email}"  /></td>
+          </tr>
+
+          <tr>
+            <td><span>Landline : </span><apex:inputField value="{!l.Landline__c}" styleClass="inputCheckBoxClass"/></td>
+            <td><span>Residence Phone:</span><apex:inputField value="{!l.Phone}"  /></td>            
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      
+      <div id="about_designation" class="inputs_block">
+      <table>
+
+        <tbody>
+          <tr><th colspan="3">The league of extraordinary gentlemen &amp; ladies...</th></tr>
+         <tr>
+            <td><span>Designation:</span><apex:inputField value="{!l.Designation__c}"  /></td>
+            <td><span>Organization:</span><apex:inputField value="{!l.Lead_Company_Name__c}"  /></td>
+            <td><span>Work Location:</span><apex:inputField value="{!l.Address_3_O__c}"  /></td>
+
+          </tr>
+           <tr>
+            <td colspan="3"><span style="width: 432px;">Number of employees &nbsp;<em style="color: #333; font-size: 11px; font-style: normal;">(for privately owned companies)</em>:</span><apex:inputField value="{!l.NumberOfEmployees}"  styleClass="no_of_emp"/></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div id="about_residence" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">Help us choose a residence for you.</th></tr>
+          <tr>
+            <td><span>Cluster:</span><apex:inputField value="{!l.Cluster_Name__c}"/></td>
+            <td style="padding-left: 12px;"><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!l.Budget_in_Lakhs__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;lacs</em></td>
+          </tr>
+        </tbody>
+
+      </table>
+      </div>
+      
+        
+      <div id="about_flat_type" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">You are looking for</th></tr>
+         <tr>
+            <apex:selectCheckboxes value="{!accomTypes}">
+                <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">It is a privilege to have here. How did you hear of us</th></tr>
+                       <apex:selectradio value="{!leadsource}" id="others_label">
+                            <apex:selectOption itemValue="Corporate Tie-Up" itemLabel="Corporate Tie-Up"/>
+                            <apex:selectOption itemValue="Newspaper" itemLabel="Newspaper"/>
+                            <apex:selectOption itemValue="Hoarding" itemLabel="Billboard"/>
+                            <apex:selectOption itemValue="Channel Partner" itemLabel="Channel Partner"/>
+                            <apex:selectOption itemValue="Web" itemLabel="Website"/>
+                            <apex:selectOption itemValue="Emailer" itemLabel="E-mailer/Personal Invites"/>     
+                            <apex:selectOption itemValue="Others" itemLabel="Others" />
+                       </apex:selectradio>
+                      
+                <!--
+               <tr>
+                  <td><input type="radio" name="LeadSrcOption" id="LeadSrcOption1" value="Newspaper" onclick="document.getElementById('other_lead').style.display = 'none';document.getElementById('{!$Component.LeadSourceOthers}').value='';document.getElementById('{!$Component.LeadSource}').value='Newspaper';"/><label>Newspaper</label></td>
+                  <td><input type="radio" name="LeadSrcOption" id="LeadSrcOption2" value="Hoarding" onclick="document.getElementById('other_lead').style.display = 'none';document.getElementById('{!$Component.LeadSourceOthers}').value='';document.getElementById('{!$Component.LeadSource}').value='Hoarding';"/><label>Billboard</label></td>
+                  <td><input type="radio" name="LeadSrcOption" id="LeadSrcOption3" value="Web" onclick="document.getElementById('other_lead').style.display = 'none';document.getElementById('{!$Component.LeadSourceOthers}').value='';document.getElementById('{!$Component.LeadSource}').value='Web';"/><label>Website</label></td>
+                  <td><input type="radio" name="LeadSrcOption" id="LeadSrcOption4" value="Emailer" onclick="document.getElementById('other_lead').style.display = 'none';document.getElementById('{!$Component.LeadSourceOthers}').value='';document.getElementById('{!$Component.LeadSource}').value='Emailer';"/><label>E-mailer/Personal Invite</label></td>
+                </tr>
+                 <tr>
+                  <td><input type="radio" name="LeadSrcOption" id="LeadSrcOption5" value="Corporate Tie-Up" onclick="document.getElementById('other_lead').style.display = 'none';document.getElementById('{!$Component.LeadSourceOthers}').value='';document.getElementById('{!$Component.LeadSource}').value='Corporate Tie-Up';"/><label>Corporate Tie-Up</label></td>
+                  <td><input type="radio" name="LeadSrcOption" id="LeadSrcOption6" value="Channel Partner" onclick="document.getElementById('other_lead').style.display = 'none';document.getElementById('{!$Component.LeadSourceOthers}').value='';document.getElementById('{!$Component.LeadSource}').value='Channel Partner';"/><label>Channel Partner</label></td>
+                  <td colspan="2">
+                    <input type="radio" name="LeadSrcOption" id="LeadSrcOption7" value="Others" onclick="document.getElementById('other_lead').style.display = 'block';document.getElementById('{!$Component.LeadSource}').value='Others';"/><label style="float: left; margin-right: 10px;">Others</label>
+                    <span style="width: auto; display: block;" id="other_lead"><apex:inputfield value="{!l.LeadSource_Others__c}" style="padding-left: 0;" id="LeadSourceOthers"/></span>
+                  </td>        
+                </tr>
+                <apex:inputhidden value="{!leadsource}" id="LeadSource" />
+                -->
+        </tbody>
+      </table>
+
+      </div>
+       
+      <div id="about_partner" class="inputs_block" style="padding-top: 0;">
+      <table>
+        <tbody>
+
+         <tr>
+            <td><span>Corporate Account Name:</span><apex:inputField value="{!l.Corporate_Account__c}" /></td>
+            <td><span>Channel Partner Name:</span><apex:inputField value="{!l.Channel_Partner__c}" /></td>
+            <td style="width: auto; padding-left: 0;"><span style="width: 100px;">Specify Others:</span><apex:inputfield value="{!l.LeadSource_Others__c}" style="float: right; width: 100px;" /> </td>       
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div id="about_indulgences" class="inputs_block" >
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">Your indulgences.</th></tr>
+          <tr>
+            <td style="width: auto;"><span style="padding-left: 18px;">The car/s you drive:</span><apex:inputField value="{!l.Owned_Car_Name__c}"   /></td>
+            <td style="width: auto;"><span>The club/s you frequent:</span><apex:inputField value="{!l.Club_Membership__c}"    /></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="action_btn">
+        <apex:commandButton action="{!submitLead}" value="Submit" styleClass="lodha_btn" style="margin-right: 0;"/>
+      </div>
+      <div class="wadala_bottom_logo">
+        &nbsp;
+      </div>
+
+  </div>
+
+</apex:form>
+
+
+
+<!-- End:Additions to include Wadala Project form and CSS-->  
+
+
+<!-- 
+     // CG Dev Team 19/10/2011
+     //Start:Additions to include WorldOne/WorldCrest Project Form And Css
+-->
+
+<apex:form rendered="{!showWorldOneForm}" styleclass="lodha_form_style" > <!-- Modified by CG Dev Team 10/11/2011 Display WorldOne/WorldCrest-Project Specific form -->
+<style>  
+body{background: #dedede;}
+form.lodha_form_style #lodha_form_wrapper{ background: #fff url('{!$Resource.Lodha_World_Tower_BG}') center 140px no-repeat;}
+form.lodha_form_style .action_btn{text-align: center; width: auto; margin-top: 20px;}
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_WT_Bottom_Logo}') center bottom no-repeat; width: auto; height: 175px; margin-top: 15px; margin-left: 4px;}
+form.lodha_form_style  #Lodha_WT_Header{width: 1000px; background:#6c6d72 url('{!$Resource.Lodha_WT_Header}') center top no-repeat; height: 52px;}
+td#other_lead{float: right;text-align: right; width: 100px; clear: both; display: none;}
+.show_others_input {display: block;}
+.btn.lodha_btn:hover,.btn.lodha_btn{/*background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;*/ background: #83817c;}
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_World_One}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper">
+      <div id="Lodha_WT_Header"></div>
+      <div id="about_cutomer" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">There&apos;s a lot in a name. Could we please know yours?</th></tr>
+          <tr>
+            <td><span>Saluation:</span><apex:inputField value="{!l.Salutation}"/></td>
+            <td><span>First Name:</span><apex:inputField value="{!l.FirstName}"/></td>
+            <td class="reqd_input"><span style="float: left;">Last Name:</span><apex:inputField value="{!l.LastName}" /></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      
+      <div id="about_designation" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">The league of extraordinary gentlemen &amp; ladies...</th></tr>
+         <tr>
+            <td><span>Designation:</span><apex:inputField value="{!l.Designation__c}"  /></td>
+            <td><span>Organization:</span><apex:inputField value="{!l.Lead_Company_Name__c}"  /></td>
+            <td><span>Work Location:</span><apex:inputField value="{!l.Address_3_O__c}"  /></td>
+          </tr>
+           <tr>
+            <td colspan="3"><span style="width: 469px;">Number of employees <em style="color: #333; font-size: 11px; font-style: normal;">(for privately owned companies)</em>:</span><apex:inputField value="{!l.NumberOfEmployees}"  styleClass="no_of_emp"/></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+  
+     <div id="about_indulgences" class="inputs_block" >
+      <table>
+        <tbody>
+          <tr><th colspan="3">Who have justified indulgences...</th></tr>
+          <tr>
+            <td><span>The car/s you drive:</span><apex:inputField value="{!l.Owned_Car_Name__c}"   /></td>
+            <td id="freq_clubs"><span>The club/s you frequent:</span><apex:inputField value="{!l.Club_Membership__c}"    /></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+       
+      <div id="about_residence" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="2">Help us choose a iconic residence for you.</th></tr>
+          <tr>
+           
+            <td style="padding-left: 12px;"><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!l.Budget_in_Lakhs__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;lacs</em></td>          
+            <td style="padding-left: 12px;"><span style="padding-right: 0;">Cluster Name: </span><apex:inputField value="{!l.Cluster_Name__c}"  /></td>          
+            <!--
+            <td style="padding-left: 12px;"><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!l.From__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;cr.</em></td>
+            <td style="padding-left: 12px;"><span style="padding-right: 0;">to</span><apex:inputField value="{!l.From__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;cr.</em> </td>
+            -->
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+        
+      <div id="about_flat_type" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">Type of iconic residence needed</th></tr>
+          <tr>
+            <apex:selectCheckboxes value="{!accomTypes}">
+                <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">It is a privilege to have here. How did you hear of us?</th></tr>
+                       
+                       <apex:selectradio value="{!leadsource}" id="others_label">
+                            <apex:selectOption itemValue="Corporate Tie-Up" itemLabel="Corporate Partner"/>
+                            <apex:selectOption itemValue="Hoarding" itemLabel="Billboard"/>
+                            <apex:selectOption itemValue="Web" itemLabel="Online"/>
+                            <apex:selectOption itemValue="Direct Mailer" itemLabel="Direct mailer"/>     
+                            <apex:selectOption itemValue="Channel Partner" itemLabel="Channel Partner"/>
+                            <apex:selectOption itemValue="References" itemLabel="Reference"/>                            
+                            <apex:selectOption itemValue="Newspaper" itemLabel="Newspaper"/>
+                            <apex:selectOption itemValue="Others" itemLabel="Others" />
+                       </apex:selectradio>
+        </tbody>
+      </table>
+
+      </div>
+          <div id="about_partner" class="inputs_block" style="padding-top: 0;">
+          <table style="margin-left: 0;">
+            <tbody>
+             <tr>
+                <td><span>Corporate Account Name:</span><apex:inputField value="{!l.Corporate_Account__c}" /></td>
+                <td><span style="width: 140px;">Channel Partner Name:</span><apex:inputField value="{!l.Channel_Partner__c}" /></td>
+                <td style="width: auto; padding-left: 38px;"><span style="width: 100px;">Specify Others:</span><apex:inputfield value="{!l.LeadSource_Others__c}" style="float: right; width: 100px;" /> </td>       
+             </tr>
+            </tbody>
+          </table>
+      </div>
+       
+      
+      <div id="about_address" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">We would love to be in touch with you.</th></tr>
+         <tr>
+            <td><span>Current Residence:</span><apex:inputField value="{!l.Address_r1__c}"/> </td>
+            <td><span>Street:</span><apex:inputField value="{!l.Address2_R__c}"/> </td>
+            <td><span>Locality:</span><apex:inputField value="{!l.Address_3_R__c}" /></td>
+          </tr>
+           <tr>
+            <td><span>City:</span><apex:inputField value="{!l.City_R__c}"/></td>
+            <td><span>Other City:</span><apex:inputField value="{!l.Specify_Other_for_City_R__c}"/></td>
+            <td><span>Zone:</span><p class="select_input"><apex:inputField value="{!l.Zone_RS__c}"/></p></td>
+           </tr>
+           <tr>
+            <td><span>Suburb:</span><p class="select_input"><apex:inputField value="{!l.Suburb_RS__c}"/></p></td>
+            <td><span>Other Suburb:</span><apex:inputField value="{!l.Specify_Other_for_Suburb_R__c}"/></td>
+           </tr>            
+           <tr>
+            <td><span>Pincode:</span><apex:inputField value="{!l.Pincode_R__c}"  /></td>
+            <td><span>Country:</span><p style="width: 80px;" class="select_input"><apex:inputField value="{!l.Country_R__c}"/></p></td>
+          </tr>
+          <tr>
+            <td><span>Mobile:</span><apex:inputField value="{!l.Mobile__c}"   /></td>
+            <td><span>Birthday:</span><apex:inputField value="{!l.Date_Of_Birth__c}"  /></td>
+            <td><span>Email:</span><apex:inputField value="{!l.Email}"  /></td>
+          </tr>
+          <tr>
+            <td><span>Landline : </span><apex:inputField value="{!l.Landline__c}" styleClass="inputCheckBoxClass"/></td>
+            <td><span>Residence Phone:</span><apex:inputField value="{!l.Phone}"  /></td>            
+          </tr>
+          <tr>
+            <td><span>Ethinicity: </span><apex:inputField value="{!l.Ethinicity__c}" /></td>
+            <td><span>Marital Status:</span><apex:inputField value="{!l.Marital_status__c}"  /></td>            
+          </tr>          
+        </tbody>
+      </table>
+      </div>
+     
+      <div class="action_btn">
+        <apex:commandButton action="{!submitLead}" value="Submit" styleClass="lodha_btn" style="margin-right: 0;"/>
+      </div>
+
+      <div class="wadala_bottom_logo">
+        &nbsp;
+      </div>
+  </div>
+</apex:form>
+<!-- End:Additions to include WorldOne Project form and CSS-->  
+
+<!-- Show The PARK related section-->
+<apex:form rendered="{!showTheParkForm}" styleclass="lodha_form_style" > <!-- Modified by CG Dev Team 10/11/2011 Display WorldOne/WorldCrest-Project Specific form -->
+<style>  
+body{background: #dedede;}
+form.lodha_form_style #lodha_form_wrapper{ background: #fff url('{!$Resource.Lodha_ThePark_Background_new}') center 140px repeat;}
+form.lodha_form_style .action_btn{text-align: center; width: auto; margin-top: 20px;}
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_The_Park_Logo}') center bottom no-repeat; width: auto; height: 175px; margin-top: 15px; margin-left: 4px;}
+form.lodha_form_style  #Lodha_WT_Header{width: 1000px; background:rgb(148, 177, 134) url('{!$Resource.Lodha_ThePark_Header}') center top no-repeat; height: 52px;}
+td#other_lead{float: right;text-align: right; width: 100px; clear: both; display: none;}
+.show_others_input {display: block;}
+.btn.lodha_btn:hover,.btn.lodha_btn{/*background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;*/ background: #83817c;}
+</style>
+
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>
+<script type="text/javascript">  
+$(document).ready(function(){
+var w=document.getElementById("j_id0:j_id421:radios").value;
+if(w=='Newspaper'){
+document.getElementById("radio1").checked=true;
+}
+if(w=='Hoarding'){
+document.getElementById("radio2").checked=true;
+}
+if(w=='Web'){
+document.getElementById("radio3").checked=true;
+}
+if(w=='Lodha contact center'){
+document.getElementById("radio4").checked=true;
+}
+if(w=='Direct Mailer'){
+document.getElementById("radio5").checked=true;
+}
+if(w=='Exhibition'){
+document.getElementById("radio6").checked=true;
+}
+if(w=='Magazine'){
+document.getElementById("radio7").checked=true;
+}
+if(w=='Email'){
+document.getElementById("radio8").checked=true;
+}
+if(w=='Radio'){
+document.getElementById("radio9").checked=true;
+}
+if(w=='TV'){
+document.getElementById("radio10").checked=true;
+}
+if(w=='Word of mouth'){
+document.getElementById("radio11").checked=true;
+}
+if(w=='Corporate Tie-Up'){
+document.getElementById("radio12").checked=true;
+}
+if(w=='Internal Referral'){
+document.getElementById("radio13").checked=true;
+}
+if(w=='Channel Partner'){
+document.getElementById("radio14").checked=true;
+}
+});
+</script> 
+
+<apex:stylesheet value="{!$Resource.Lodha_World_One}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper">
+      <div id="Lodha_WT_Header"></div>
+      <apex:inputhidden value="{!leadsource}" id="radios"/>
+      <div id="about_cutomer" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">There&apos;s a lot in a name. Could we please know yours?</th></tr>
+          <tr>
+            <td><span>Saluation:</span><apex:inputField value="{!l.Salutation}"/></td>
+            <td><span>First Name:</span><apex:inputField value="{!l.FirstName}"/></td>
+            <td class="reqd_input"><span style="float: left;">Last Name:</span><apex:inputField value="{!l.LastName}" /></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div id="visitors_update" class="inputs_block">
+      <table width="70%">
+        <tbody>
+          <tr><th colspan="3">Visiting / Meeting on behalf of?</th></tr>
+          <tr>
+            <td colspan="3" style="padding-left:80px;"><apex:selectRadio value="{!visitors}"> 
+                    <apex:selectOption itemValue="Self" itemLabel="Self"/>
+                    <apex:selectOption itemValue="Family" itemLabel="Family"/>
+                    <apex:selectOption itemValue="Friends/Colleague" itemLabel="Friends/Colleague"/>
+                </apex:selectRadio></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="visitors_update" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">We will look forward to your birthday every year.</th></tr>
+          <tr>
+            <td><span>Date of birth:</span><apex:inputField value="{!l.Date_Of_Birth__c}"  /></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      
+      <div id="about_address" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">We would love to be in touch with you.</th></tr>
+          <tr>
+            <td><span>Current Residence:</span><apex:inputField value="{!l.Address_r1__c}"/> </td>
+            <td><span>Street:</span><apex:inputField value="{!l.Address2_R__c}"/> </td>
+            <td><span>Locality:</span><apex:inputField value="{!l.Address_3_R__c}" /></td>     
+          </tr>
+           <tr>            
+            <td><span>City:</span><apex:inputField value="{!l.City_R__c}"/></td>  
+            <td><span>Other City:</span><apex:inputField value="{!l.Specify_Other_for_City_R__c}"/></td>         
+          </tr>
+          <tr>
+          <td><span>Pincode:</span><apex:inputField value="{!l.Pincode_R__c}"  /></td>
+          <td><span>Country:</span><p style="width: 80px;" class="select_input"><apex:inputField value="{!l.Country_R__c}"/></p></td>
+          </tr>
+          <tr>
+            <td><span>Mobile:</span><apex:inputField value="{!l.Mobile__c}"   /></td>            
+            <td><span>Landline : </span><apex:inputField value="{!l.Landline__c}" styleClass="inputCheckBoxClass"/></td>
+            <td><span>Residence Phone:</span><apex:inputField value="{!l.Phone}"  /></td>   
+          </tr>
+          <tr>          
+           <td><span>Email:</span><apex:inputField value="{!l.Email}"  /></td> 
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div id="about_designation" class="inputs_block">
+      <table width="80%">
+        <tbody>
+          <tr><th colspan="3">The league of extraordinary gentlemen &amp; ladies...</th></tr>
+         <tr>
+            <td colspan="3" style="padding-left:83px;">Occupation:<span style="padding-left:0px;width:850px;"><apex:selectradio value="{!occ}"> <apex:selectOptions value="{!options}"></apex:selectOptions></apex:selectradio></span></td>
+            
+            <!--<td><span >Specify Others for Occupation:</span><apex:inputField value="{!l.Other_Occupation__c}"/></td>-->
+         </tr>   
+         <tr>   
+            <td><span>Organization:</span><apex:inputField value="{!l.Lead_Company_Name__c}"  /></td>
+            <td><span>Designation:</span><apex:inputField value="{!l.Designation__c}"  /></td> 
+         </tr>
+         <tr>           
+            <td><span>Office Location:</span><apex:inputField value="{!l.Address_3_O__c}"  /></td>
+            <td><span>Pincode:</span><apex:inputField value="{!l.Pincode_o__c}"/></td>
+         </tr>  
+        </tbody>
+      </table>
+      </div>
+  
+  
+      <div id="about_residence" class="inputs_block">
+      <table width="80%">
+        <tbody>
+          <tr><th colspan="2">Allow us to aid you in choosing your dream residence.</th></tr>
+          <tr>           
+            <td style=""><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!l.Budget_in_Lakhs__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;lacs</em></td>          
+            <td style=""><span style="">Cluster Name:</span><apex:inputField value="{!l.Cluster_Name__c}"  /></td>          
+          </tr>
+          <tr><td colspan="2" style="padding-left:40px;">Configuration interested in:
+          <apex:selectCheckboxes value="{!accomTypes}">
+          <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes></td>
+          </tr>
+          <tr>           
+            <td style=""><span>Purpose of purchase: </span><apex:inputField value="{!l.Purpose__c}"/></td>          
+            <td style=""><span>Possession desired in: </span><apex:inputField value="{!l.Possession_desired_in__c}"  /></td>          
+          </tr>
+          
+          <tr>           
+            <td style=""><span>Current residence type: </span><apex:inputField value="{!l.Type_of_Home__c}"/></td>          
+            <td style=""><span style="width:165px;float:left;">Current residence ownership: </span><apex:inputField value="{!l.Current_Home_ownership__c}"  /></td>          
+          </tr>
+          
+        </tbody>
+      </table>
+      </div>
+      
+      
+     <div id="about_indulgences" class="inputs_block" >
+      <table>
+        <tbody>
+          <tr><th colspan="3">Justified indulgences that you may have.</th></tr>
+          <tr>
+            <td><span>The car/s you drive:</span><apex:inputField value="{!l.Owned_Car_Name__c}"   /></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr style=""><th colspan="3">It is a privilege to have here. How did you hear of us?</th></tr>
+          <tr>
+          <td><input type="radio" name="radios" value="Newspaper" id="radio1" onclick="fn(this.id);">&nbsp;&nbsp;Newspaper</input></td>
+          <td><input type="radio" name="radios" value="Hoarding" id="radio2" onclick="fn(this.id);">&nbsp;&nbsp;Billboard/Hoarding</input></td>
+          <td><input type="radio" name="radios" value="Web" id="radio3" onclick="fn(this.id);">&nbsp;&nbsp;Web</input></td>
+          <td><input type="radio" name="radios" value="Lodha contact center" id="radio4" onclick="fn(this.id);">&nbsp;&nbsp;Lodha contact center</input></td>
+          <td><input type="radio" name="radios" value="Direct Mailer" id="radio5" onclick="fn(this.id);">&nbsp;&nbsp;Direct mailer/Invitation</input></td></tr>
+          <tr>
+          <td><input type="radio" name="radios" value="Exhibition" id="radio6" onclick="fn(this.id);">&nbsp;&nbsp;Exhibition</input></td>
+          <td><input type="radio" name="radios" value="Magazine" id="radio7" onclick="fn(this.id);">&nbsp;&nbsp;Magazine</input></td>
+          <td><input type="radio" name="radios" value="Email" id="radio8" onclick="fn(this.id);">&nbsp;&nbsp;E-mail</input></td>
+          <td><input type="radio" name="radios" value="Radio" id="radio9" onclick="fn(this.id);">&nbsp;&nbsp;Radio</input></td>
+          <td><input type="radio" name="radios" value="TV" id="radio10" onclick="fn(this.id);">&nbsp;&nbsp;TV</input></td>
+          </tr>
+          <tr>
+          <td><input type="radio" name="radios" value="Word of mouth" id="radio11" onclick="fn(this.id);">&nbsp;&nbsp;Word of mouth</input></td>
+          <td><input type="radio" name="radios" value="Corporate Tie-Up" id="radio12" onclick="fn(this.id);">&nbsp;&nbsp;Corporate Tie-Up</input></td>
+          <td><input type="radio" name="radios" value="Internal Referral" id="radio13" onclick="fn(this.id);">&nbsp;&nbsp;Referred by Lodha booked customer</input></td>
+          <td><input type="radio" name="radios" value="Channel Partner" id="radio14" onclick="fn(this.id);">&nbsp;&nbsp;Channel Partner</input></td>
+          </tr>
+        </tbody>
+      </table>
+
+      </div>
+          <div id="about_partner" class="inputs_block" style="padding-top: 0;">
+          <table style="margin-left: 0;">
+            <tbody>
+             <tr>
+                <td><span>Source details:</span><apex:inputField value="{!l.Lead_Source_Detail__c}" /></td>
+                <td><span>Corporate Account Name:</span><apex:inputField value="{!l.Corporate_Account__c}" /></td>                   
+             </tr>
+            </tbody>
+          </table>
+      </div>    
+      
+      <div id="referer" class="inputs_block" style="padding-top: 0;">
+          <table style="margin-left: 0;">
+            <tbody>
+             <tr>
+                <td><span>Referred Account:</span><apex:inputField value="{!l.Referred_Booked_Account__c}" /></td>
+                <td><span>Referrer Account CRN:</span><apex:inputField value="{!l.Referrer_Account_CRN_Formula__c}" style="text-align:left;"/></td>                   
+             </tr>
+            </tbody>
+          </table>
+      </div>  
+      
+      <div id="channel_partner" class="inputs_block" style="padding-top: 0;">
+          <table style="margin-left: 0;">
+            <tbody>
+             <tr>
+                <td><span style="width: 140px;">Channel Partner Name:</span><apex:inputField value="{!l.Channel_Partner__c}" /></td>
+                <td><span>CP REAP Id:</span><apex:inputField value="{!l.REAP_ID__c}" style="text-align:left;"/></td>                   
+             </tr>
+            </tbody>
+          </table>
+      </div>
+       
+      
+      
+     
+      <div class="action_btn">
+        <apex:commandButton action="{!submitLead}" value="Submit" styleClass="lodha_btn" style="margin-right: 0;"/>
+      </div>
+
+      <div class="wadala_bottom_logo">
+        &nbsp;
+      </div>
+  </div>
+    <script>
+    
+    function fn(value){
+        var e=document.getElementById(value).value;
+        var d=document.getElementById("j_id0:j_id421:radios").value=e;
+    }    
+    </script>
+</apex:form>
+<!-- End:Additions to include The Park Project form and CSS-->  
+
+</apex:page>

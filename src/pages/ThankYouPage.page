@@ -1,0 +1,318 @@
+<apex:page sidebar="false" showHeader="false" controller="ThankYouController">
+<!--
+        /* Added by CG Dev Team 22/09/2011
+        *   Changes to include Wadala Project Form And Css
+        */  
+ -->   
+<style>
+.headerFont
+{
+    color:#FFFFFF;
+    font-family:Arial;
+    font-weight:bold;
+    font-size:16px;
+}
+.sideBarFont
+{
+   color:#FFFFFF;
+    font-family::Calibri;
+    font-size:18px;
+    background-color:#FFFFFF;
+}
+.btnCustomClass
+{
+    background-color:#FFFFFFF;
+    font-family:Arial;
+    font-size:14px;  
+}
+</style>
+
+
+<apex:form rendered="{!showFiorenzaForm}" styleclass="lodha_form_style" >
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background: url('{!$Resource.Lodha_Fiorenza_BG_center}') left top no-repeat;-webkit-background-size: 1024px 2000px;}
+
+/*.bottom_logo{ background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center bottom no-repeat; width: auto; height: 100px; margin-top: 35px;}*/
+/*form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center top no-repeat; width: auto; height: 100px; margin-top: 250px;}*/
+.btn.lodha_btn{background:url('{!$Resource.fiorenza_btn_bg}') left top repeat-x;;color: #f00; border: 2px solid #E1464D;}
+.btn.lodha_btn:hover{background:url('{!$Resource.fiorenza_btn_bg}') left top repeat-x;color: #f00; border: 2px solid #E1464D;}
+
+
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_Wadala_Lead_css}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper" class="thank_you_block">
+     
+   <div class="thank_you_message">Thank you</div>
+
+   <div class="action_btn" style="margin-top: 20px;">
+        <apex:commandbutton styleClass="lodha_btn" style="margin-right: 0;" value="Home Page" rerender="dummy"  onclick="navigateToUrl('/home/home.jsp')"/>
+   </div>
+   <div class="wadala_bottom_logo" style="margin-top: 35px;">&nbsp;</div>
+ </div>
+ 
+    
+</apex:form>
+
+<!-- End:Additions to include Wadala Project form and CSS--> 
+
+
+
+<apex:form rendered="false"><!-- Modified by CG Dev Team 22/09/2011 Display Fiorenza-Project Specific form -->
+
+<table width="100%" cellpadding="0" cellspacing="0" height="865px" style ="background: url('{!$Resource.Bgimage}')"><!-- Display Fiorenza-Project Specific background-->
+<tr>
+<td width="90%">
+<table width="100%" border="0" align="left" cellpadding="2" cellspacing="2"  >
+  <tr >
+    <td  class="headerFont">&nbsp;</td>
+    <td  colspan="9" class="headerFont" valign="bottom">&nbsp;</td>
+  </tr>
+  <tr >
+    <td width="1%" >&nbsp;</td>
+
+     <td  colspan="9" class="headerFont" valign="bottom" align="center"><p style="font-weight: bold; font-size: 14px;">Thank you for the information</p></td>
+  </tr>
+  <tr>
+    <td align="right" valign="bottom" >&nbsp;</td>
+    <td align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="2" align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="right" >&nbsp;</td>
+    <td width="10%" align="left">&nbsp;</td>
+    <td width="18%" align="right" >&nbsp;</td>
+    <td width="32%" align="left">&nbsp;</td>
+  </tr>
+  <tr >
+    <td  class="headerFont">&nbsp;</td>
+    <td  colspan="9" valign="bottom" align="center"><apex:commandbutton value="Close Window" rerender="dummy" style="background-image:none;background-color:#FFD7C4;color:#FF0000;border:#FF0000;font-size:12px;" onclick="javascript:closeWindow();"/>
+    </td>
+  </tr>
+  <tr >
+    <td width="1%"  class="headerFont">&nbsp;</td>
+    <td  colspan="9" class="headerFont" valign="bottom">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="4" align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+    <td align="right" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="4" align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+    <td align="right" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="4" align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+    <td align="right" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="4" align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+    <td align="right" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="4" align="right" valign="bottom" >&nbsp;</td>
+     <td colspan="2" align="left" >&nbsp;</td>
+     <td align="right" >&nbsp;</td>
+     <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="4" align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+    <td align="right" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="29" colspan="9" align="right" valign="bottom" >&nbsp;</td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="8" align="left" valign="bottom" >&nbsp;</td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td width="11%" align="left" valign="bottom" class="headerFont">&nbsp;</td>
+    <td colspan="7" align="left"  class="inputCheckBoxClass" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="8" align="left" valign="bottom" >&nbsp;</td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td  colspan="5" align="left" valign="bottom" class="headerFont">&nbsp;</td>
+    <td align="left" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td  colspan="8" align="left" valign="bottom" >&nbsp;</td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td  colspan="3" align="left" valign="bottom" class="headerFont">&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+    <td align="right" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td  colspan="3" align="left" valign="bottom" class="headerFont">&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+    <td align="right" >&nbsp;</td>
+    <td colspan="2" align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="3"  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="2"  align="left" valign="bottom" >&nbsp;</td>
+    <td colspan="2"  align="right" valign="bottom" >&nbsp;</td>
+    <td align="left"  >&nbsp;</td>
+  </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="8"  align="right" valign="bottom" >&nbsp;</td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="3"  align="right" valign="bottom" >&nbsp;</td>
+    <td colspan="3"  align="center" valign="bottom"></td>
+    <td colspan="2" align="left"  >&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td width="15%"  valign="top" class="sideBarFont"><apex:image value="{!$Resource.Logo}" width="200px" height="48px"/></td>
+</tr>
+</table>
+</apex:form>
+
+
+<!-- 
+     // CG Dev Team 22/09/2011
+    //Start:Additions to include Wadala Project Form And Css
+-->
+
+<apex:form rendered="{!showWadalaForm}" styleclass="lodha_form_style" >
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background: #3CB3AD url('{!$Resource.Lodha_Wadala_BG_right}') center 25px no-repeat; width: 1000px; margin: 0 auto; }
+
+/*.bottom_logo{ background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center bottom no-repeat; width: auto; height: 100px; margin-top: 35px;}*/
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center top no-repeat; width: auto; height: 100px; margin-top: 250px;}
+.btn.lodha_btn{background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;}
+.btn.lodha_btn:hover{background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;}
+
+
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_Wadala_Lead_css}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper" class="thank_you_block">
+     
+   <div class="thank_you_message">Thank you</div>
+
+   <div class="action_btn" style="margin-top: 20px;">
+        <apex:commandbutton styleClass="lodha_btn" style="margin-right: 0;" value="Home Page" rerender="dummy"  onclick="navigateToUrl('/home/home.jsp')"/>
+   </div>
+   <div class="wadala_bottom_logo" style="margin-top: 35px;">&nbsp;</div>
+ </div>
+ 
+    
+</apex:form>
+
+<!-- End:Additions to include Wadala Project form and CSS--> 
+
+
+<!-- 
+     // CG Dev Team 20/10/2011
+    //Start:Additions to include WorldOne/WorldCrest Project Form And Css
+-->
+
+<apex:form rendered="{!showWorldOneForm}" styleclass="lodha_form_style" >
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background: #fff url('{!$Resource.Lodha_World_Tower_BG}') center 55px no-repeat; width: 1000px; margin: 0 auto; }
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_WT_Bottom_Logo}') center top no-repeat; width: auto; height: 225px; margin-top: 220px; margin-left: 4px;}
+.btn.lodha_btn{/*background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;*/}
+.btn.lodha_btn:hover{/*background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;*/;}
+.thank_you_message {padding-top: 269px;}
+
+
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_World_One}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper" class="thank_you_block">
+     
+   <div class="thank_you_message">Thank you</div>
+
+   <div class="action_btn" style="margin-top: 20px;">
+        <apex:commandbutton styleClass="lodha_btn" style="margin-right: 0; margin-left: 4px;" value="Home Page" rerender="dummy"  onclick="navigateToUrl('/home/home.jsp')"/>
+   </div>
+   <div class="wadala_bottom_logo" style="margin-top: 45px;">&nbsp;</div>
+ </div>
+ 
+    
+</apex:form>
+
+<apex:form rendered="{!showTheParkForm}" styleclass="lodha_form_style" >
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background: #fff url('{!$Resource.Lodha_ThePark_Background_new}') center 55px no-repeat; width: 1000px; margin: 0 auto; }
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_The_Park_Logo}') center top no-repeat; width: auto; height: 225px; margin-top: 220px; margin-left: 4px;}
+.btn.lodha_btn{/*background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;*/}
+form.lodha_form_style  #Lodha_WT_Header{width: 1000px; background:rgb(148, 177, 134) url('{!$Resource.Lodha_ThePark_Header}') center top no-repeat; height: 50px;}
+.btn.lodha_btn:hover{/*background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;*/;}
+.thank_you_message {padding-top: 269px;}
+
+
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_World_One}" />
+        <apex:pageMessages />
+           <div id="Lodha_WT_Header"></div>
+ <div id="lodha_form_wrapper" class="thank_you_block">
+     
+   <div class="thank_you_message">Thank you</div>
+
+   <div class="action_btn" style="margin-top: 20px;">
+        <apex:commandbutton styleClass="lodha_btn" style="margin-right: 0; margin-left: 4px;" value="Home Page" rerender="dummy"  onclick="navigateToUrl('/home/home.jsp')"/>
+   </div>
+   <div class="wadala_bottom_logo" style="margin-top: 45px;">&nbsp;</div>
+ </div>
+ 
+    
+</apex:form>
+
+
+<!-- End:Additions to include WorldOne/WorldCrest Project form and CSS--> 
+
+<script type = "text/javascript">
+function closeWindow()
+{    
+       parent.window.open('','_self','');
+       parent.window.close(); 
+}
+</script>
+<script type="text/javascript">
+
+
+ var screenHeight;
+ 
+ // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+ 
+ if (typeof window.innerWidth != 'undefined')
+ {
+
+      screenHeight = screen.height;
+      var x = document.getElementById('lodha_form_wrapper');
+      x.style.height = screenHeight -250 +'px';
+ }
+
+
+</script>
+
+</apex:page>

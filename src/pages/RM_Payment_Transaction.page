@@ -1,0 +1,83 @@
+<apex:page standardController="Booking_Payment_Transaction__c" extensions="RMNewPaymentTransactionController">
+    <apex:form >
+    
+        <apex:pageBlock title="Booking Payment Transaction" id="pbId">
+            <apex:pageMessages id="msg"></apex:pageMessages><br/>
+            <apex:outputPanel rendered="{!Isduplicate}">
+                <apex:outputlink value="{!error}" target="_blank" style="color:red;">
+                    Click here to see duplicate record 
+                </apex:outputlink><br/><br/>
+            </apex:outputPanel>
+            
+            <apex:pageBlockSection title="Fetch Details" rendered="{!closeFetch}">
+                <center>
+                    <b>CRN No.</b><apex:inputText value="{!crn}"/><br/>
+                    <apex:commandButton value="Fetch Details" action="{!Fetch}"/>
+                </center>  
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="New Booking Payment Transaction" rendered="{!newBpt}" columns="2">
+                
+                <apex:outputField value="{!bpt.CRN__c}"/>
+                <apex:outputField value="{!bpt.Booking__c}"/>
+                
+                <apex:outputField value="{!bpt.Account_Name_New__c}"/>
+                <apex:outputField value="{!bpt.Co_Applicant_Name_New__c}"/>
+                
+                <apex:outputField value="{!bpt.Project_Name__c}"/>
+                <apex:outputField value="{!bpt.Cluster__c}"/>
+                <apex:outputField value="{!bpt.Wing__c}"/>
+                <apex:outputField value="{!bpt.Flat__c}"/>
+                                
+                <apex:inputField value="{!bpt.Type_of_Transaction_del__c}" required="true"/> 
+                <apex:inputField value="{!bpt.MT940__c}"/>
+                
+                <apex:inputField value="{!bpt.UTR_Code__c}"/>
+                <apex:inputField value="{!bpt.Bank_Name__c}" required="true"/>
+                <apex:inputField value="{!bpt.Amount_Transferred__c}" required="true"/>
+                <apex:inputField value="{!bpt.Remitted_to_Account__c}" required="true"/>
+                <apex:inputField value="{!bpt.Transaction_Date__c}" required="true"/>
+                <apex:inputField value="{!bpt.Bank_Account_Holders_Name__c}" required="true"/>
+                <apex:inputField value="{!bpt.Towards__c}" required="false" />
+                
+                
+                  
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Attachments" rendered="{!lstAttachment.size > 0}" columns="1">
+            	<apex:repeat value="{!lstAttachment}" var="rec" >
+                	<apex:inputFile value="{!rec.body}" fileName="{!rec.name}" /> 
+                </apex:repeat>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!newBpt}"> 
+                <center>  
+                    <table>
+                       <tr>
+                          <td>
+                              <apex:commandButton Value="Save" action="{!bptsave}" />
+                          </td>
+                          <td>
+                              <apex:commandButton Value="Cancel" action="{!Cancel}"/>
+                          </td>
+                          <td>
+                              <apex:commandButton Value="File Attachment" action="{!addAttachment}"  rendered="{!isFileUpload}"/>
+                          </td>
+                      </tr>
+                    </table>
+                </center>
+            
+            </apex:outputPanel>
+            
+            <!-- <apex:outputPanel rendered="{!noRecord}">
+                <div><b>Insufficient Privileges </b></div>
+            </apex:outputPanel> -->
+        
+        </apex:pageBlock>
+		 <apex:actionStatus id="actStatusId" >
+             <apex:facet name="start" >
+               <img src="/img/loading.gif" />                    
+             </apex:facet>
+         </apex:actionStatus>
+    </apex:form>
+    
+</apex:page>

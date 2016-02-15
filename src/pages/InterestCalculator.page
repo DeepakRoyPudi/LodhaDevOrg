@@ -1,0 +1,64 @@
+<apex:page standardController="Booking_Details__c" extensions="InterestCalculatorController" sidebar="false" standardStylesheets="true" tabStyle="Demands__c"> 
+    
+<script>
+  function setFocusOnLoad() {}
+</script>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.w2l, "innerCSS")}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.w2l, "lodha.css")}"/>
+    <!--<apex:sectionHeader title="Know your Interest Amount" subtitle="Interest Calculator"/>-->
+    <apex:sectionHeader title="Interest Calculator"/>
+    <apex:form id="form">
+        <center>
+        <apex:panelGrid bgcolor="white" columns="1"> 
+        <apex:panelGrid width="758" cellpadding="0" cellspacing="0" bgcolor="white" columns="1" styleClass="topPanelContainer"> 
+        <br/>
+        
+        <apex:outputPanel layout="block" styleClass="topPanel">
+           <apex:panelGrid width="758" cellpadding="0" cellspacing="0" bgcolor="white" columns="2"> 
+               <apex:image height="200" url="{!URLFOR($Resource.SiteSamples, 'img/clock.png')}"/>
+              
+        <apex:panelGrid columns="2" style="margin-top:1em;">
+         
+        <apex:pageblock id="pageBlock2">
+        
+        <apex:pageblocksection columns="2" id="pageBlockSection1">
+        <apex:inputField value="{!proxyobject.Demand_Date__c}" style="border:1;color: #6D7B8D;" styleClass="dropEnquire" />
+        <apex:inputField value="{!proxyobject.Payment_Date__c}" style="border:1;color: #6D7B8D;" styleClass="dropEnquire"/>
+        </apex:pageblocksection>
+        
+        <apex:pageblocksection columns="2" id="pageBlockSection2">
+        <apex:outputText value="Outstanding Amount"  style="color: #6D7B8D;"/>
+        <apex:inputText value="{!outstandingAmount}" style="border:0;" styleClass="dropEnquire" id="outstandingAmt"/>
+        </apex:pageblocksection>
+        
+        <apex:pageblocksection columns="2" id="pageBlockSection3">
+        <apex:outputText value="Total Interest"  style="color: #6D7B8D;"/>
+        <apex:outputText value="{!InterestAmount}" style="border:0;" styleClass="dropEnquire"/>
+        </apex:pageblocksection>
+        
+        <apex:pageBlockButtons location="bottom">
+        <apex:commandButton value="Calculate" id="theButton"/>
+        </apex:pageBlockButtons>
+        </apex:pageblock>
+        
+          </apex:panelGrid> 
+         </apex:panelGrid> 
+        </apex:outputPanel> 
+       </apex:panelGrid> 
+      </apex:panelGrid>
+     </center>
+     <apex:pageBlock >
+     <table width="100%" border="1" cellspacing="0" style="text-align:center;margin-top:1px;font-size:10pt;font-family:Arial Unicode MS;">
+                <tr style="font-weight:bold"><td width="100%" align="left">Interest related</td></tr>
+                <tr><td width="100%" align="left">1.  As per the terms of the Allotment Lettter/Agreement for Sale, Interest @ 18% p.a. shall be levied on delayed payments from the date of default till actual realisation.</td></tr>
+                <tr><td width="100%" align="left">2. Any payments received from you shall be appropriated in the following order:</td></tr>
+                <tr><td width="100%" align="left">&nbsp;&nbsp;&nbsp;a. Firstly, towards costs and expenses for enforcement of the Allotment/ Agreement and recovery of the Total Consideration,</td></tr>
+                <tr><td width="100%" align="left">&nbsp;&nbsp;&nbsp;b. Secondly, towards interest on the amounts (including Total Consideration) payable hereunder and </td></tr>
+                <tr><td width="100%" align="left">&nbsp;&nbsp;&nbsp;c. Finally towards Total Consideration and the charges and other amounts payable hereunder.</td></tr>
+            </table>
+     </apex:pageBlock>
+          
+    </apex:form>
+   
+</apex:page>

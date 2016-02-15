@@ -1,0 +1,176 @@
+<apex:page controller="PaymentModeController">
+ <style type="text/css">
+    .alignRight{text-align:right;padding-right:10px; font-weight: bold;}
+  </style>
+    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+       
+        <tr>
+            <td align="center" bgcolor="#c0c0c0"><b>Mode</b></td>
+            <td align="center" bgcolor="#c0c0c0"><b>Favoring</b></td>
+            <td align="center" bgcolor="#c0c0c0"><b>Steps to make payment</b></td>
+        </tr>
+        
+        <tr>
+            <td><apex:outputText value="Cheque / Demand Draft / Pay Order"/></td>
+            <td><apex:outputText value="{!mode.In_Favor_of__c}" />. Payable at : &nbsp;<apex:outputText value="{!mode.Branch__c }" /></td>
+            <td>1. Drop Box available at site office or Corporate office<br>OR</br>2. Send via Courier to our Corporate Office address</td>
+        </tr>
+        
+        <tr>
+            <td><apex:outputText value="RTGS / NEFT"/></td>
+            <td>
+                <apex:outputText value="{!mode.In_Favor_of__c}" />. A/C : &nbsp;<apex:outputText value="{!mode.Account_Number__c}" />
+                 Of &nbsp;<apex:outputText value="{!mode.Bank_Name__c}" />, &nbsp;<apex:outputText value="{!mode.Bank_Address__c}" />.
+            </td>
+            <td>
+               <table>
+                <tr><td>
+                Mention
+                </td></tr>
+                <tr><td>
+                IFSC Code : &nbsp;<apex:outputText value="{!mode.IFSC_Code__c}"/>
+                </td></tr>
+                <tr><td>
+                MICR Code : &nbsp;<apex:outputText value="{!mode.MICR_Code__c}"/>
+                </td></tr>
+                <tr><td>
+                SWIFT Code : &nbsp;<apex:outputText value="{!mode.SWIFT_Code__c}"/>
+                </td></tr>
+                
+                </table>
+            </td>
+        </tr>       
+    </table>    
+<br/>
+    <h1>Now track your online transaction with us by filling Transaction Information Form</h1>
+<br/><br/><br/>
+
+<apex:form id="payment_transaction_form">
+  <apex:pageBlock title="Online Transaction Tracking">
+    <span style="background-color: #C2E4FE; float: right">
+      <span class="requiredExample">&nbsp;</span>
+      <span class="requiredMark">*</span>
+      <span class="requiredText"> = Required Information</span>
+   </span>
+   <br/>
+   <br/>
+   <table border="1" cellpadding="5" cellspacing="0" width="100%">
+     <tr>
+       <th colspan="8" align="center" bgcolor="#c0c0c0"> Transaction Information Form </th>
+     </tr>
+     <tr> 
+       <td class="alignRight">CRN:</td>   
+       <td><apex:inputField value="{!booking_tran.CRN__c}"/></td>
+       <td class="alignRight">Project Name:</td>   
+       <td><apex:inputField value="{!booking_tran.Project_Name__c}"/></td>
+       <td class="alignRight">Cluster Name:</td>   
+       <td><apex:inputField value="{!booking_tran.Cluster__c}"/></td>
+     </tr>
+     <tr>
+       <td class="alignRight">Account Name:</td>   
+       <td><apex:inputField value="{!booking_tran.Account_Name_New__c}"/></td>
+       <td class="alignRight">Co-Applicant Name:</td>   
+       <td><apex:inputField value="{!booking_tran.Co_Applicant_Name_New__c}"/></td>
+       <td colspan="2"></td>
+     </tr>
+     <tr>
+       <td class="alignRight">Wing:</td>   
+       <td><apex:inputField value="{!booking_tran.Wing__c}"/></td>
+       <td class="alignRight">Flat:</td>   
+       <td><apex:inputField value="{!booking_tran.Flat__c}"/></td>
+       <td class="alignRight">Type of Transaction:</td>
+       <td><apex:selectlist value="{!typeoftransaction}" size="1">
+       <apex:selectOptions value="{!OldTransactionTypes}"></apex:selectOptions>
+       </apex:selectlist>&nbsp;&nbsp;<span style="color:#c00">{!error1}</span>
+       </td>
+     </tr>
+
+     <tr>
+       <td class="alignRight">UTR Code:</td>   
+       <td><apex:inputField required="true" value="{!booking_tran.UTR_Code__c}" label="UTR Code"/><span style="color:#c00"><strong>{!error}</strong>{!dup_error}</span></td>
+       <td class="alignRight">Bank Name:</td>   
+       <td><apex:inputField required="true"  value="{!booking_tran.Bank_Name__c}"/></td>
+       <td class="alignRight">Amount Transferred:</td>   
+       <td><apex:inputField required="true" value="{!booking_tran.Amount_Transferred__c}"/></td>
+     </tr>
+     <tr>
+       <td class="alignRight">Bank Account Holders Name:</td>   
+       <td><apex:inputField value="{!booking_tran.Bank_Account_Holders_Name__c}"/></td>
+       <td class="alignRight">Remitted to Account:</td>   
+       <td><apex:inputField required="true" value="{!booking_tran.Remitted_to_Account__c}"/></td>
+       <td class="alignRight">Transaction Date:</td> 
+       <td><apex:inputField required="true" value="{!booking_tran.Transaction_Date__c}"/></td>
+     </tr>
+     <tr>
+       <td colspan="6" align="center">
+         <apex:commandButton value="SAVE" action="{!paymentsave}"/>
+       </td>
+     </tr>   
+   </table>
+   <br/>
+   <br/>
+   
+   <table border="1" cellpadding="5" cellspacing="0" width="100%" id="payment_transaction">
+     <tr>
+       <th colspan="12" align="center" bgcolor="#c0c0c0"> Payment Transaction History </th>
+     </tr>
+     <tr>
+       <apex:repeat value="{!headers}" var="h">
+         <td align="center" bgcolor="#c0c0c0">{!h}</td>  
+       </apex:repeat>
+     </tr>
+     <apex:repeat value="{!TransactionList}" var="tr">
+       <tr>       
+        <td><apex:outputField value="{!tr.Project_Name__c}"/></td>
+        <td><apex:outputField value="{!tr.Cluster__c}"/></td>
+        <td><apex:outputField value="{!tr.Wing__c}"/></td>
+        <td><apex:outputField value="{!tr.Flat__c}"/></td>
+        <td><apex:outputField value="{!tr.Bank_Name__c}"/></td>
+        <td><apex:outputField value="{!tr.Amount_Transferred__c}"/></td>
+        <td><apex:outputField value="{!tr.Remitted_to_Account__c}"/></td>
+        <td align="center"><apex:outputField value="{!tr.Type_of_Transaction_del__c}"/></td>
+        <td><apex:outputField value="{!tr.UTR_Code__c}"/></td>
+        <td><apex:outputField value="{!tr.Transaction_Date__c}"/></td>        
+        <td><apex:outputField value="{!tr.Status__c}" /></td>
+        <td><apex:outputField value="{!tr.Accounts_Remarks__c}" /></td>
+       </tr>
+     </apex:repeat>
+   </table>
+   <br/>
+   </apex:pageBlock>
+   
+</apex:form>
+<div>
+<H1>Important to Note:</H1>
+    <ul>
+    <li>
+    This Website is for the convenience of the customers and the data provided herein is as per our records in relation to your booking with us. As far as payment confirmation status is concerned, change of the same from “pending” to “approved” is subject to realization of payment by us.  In case of the payment not received by us the status shall state “rejected” or “pending”. Please note that the interest as Application Form/Allotment Letter/Agreement to Sell shall be applicable on outstanding payments till the date of realization of the same.  Lodha Group reserves its right to discontinue this service, as per its discretion, any time.
+    </li>
+    <li>
+    You may download, reproduce and retransmit information displayed on this web page for non-commercial, personal use. If you do so, you agree that Lodha Group and or its licensors retains all copyright and other proprietary notices contained on the materials. All information provided herein is sensitive, confidential and privileged and meant to be used only for your information.
+    </li>
+    <li>
+    All content on this web site is provided to you on an "As Is" "As Available" basis without warranty of any kind either express or implied. Please provide correct UTR no. for reconciliation and Lodha Group should not be held responsible , in any manner whatsoever and under any circumstances whatsoever, in case you have provided incorrect details. Errors and omissions excepted.
+    </li>
+    <li>
+    This web site and its content are owned by Lodha Group or its affiliates or agents or its licensors. All content, trademarks, services marks, trade names, logos, and icons are proprietary to Lodha Group or its affiliates or agents or its licensors. Nothing contained on this web page should be construed as granting, any rights of any nature whatsoever.
+    </li>
+    <li>
+    The terms and conditions and this website and use thereof shall be governed in accordance with the laws of India.
+    </li>   
+    </ul>
+</div>    
+ <!-- For Tracking using google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+
+  ga('create', 'UA-41070804-1', 'force.com');
+  ga('send', 'pageview');
+
+
+</script>
+</apex:page>

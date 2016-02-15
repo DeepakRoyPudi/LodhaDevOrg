@@ -1,0 +1,300 @@
+<apex:page standardController="Booking_Information__c" extensions="SpBDFGenerate" renderAs="pdf">
+<apex:stylesheet value="{!URLFOR($Resource.BDF_FORM_css)}"/>
+<table id="main_table" width="100%" border="0">
+  <tr>
+    <td>
+      <table id="header_logo_table" width="100%" border="0">
+        <tr>
+         <td colspan="9" bgcolor="#c0c0c0">BOOKING DETAILS FORM (FOR OFFICIAL USE ONLY)</td>
+         <td colspan="2" align="right" rowspan="3"><apex:image url="{!$Resource.Lodha_Logo}" height="47" width="153"/></td>
+        </tr>
+        <tr>
+          <td colspan="9" align="left">Incomplete forms will be summarily rejected.</td>
+          <td></td>
+        </tr>
+        
+      </table>
+      <table id="proj_detail_table" border="0" width="100%">
+        <tr >
+          <td width="10%">Project Name: </td>
+          <td width="15%"> <strong><u>{!flat.Wing__r.Project__c}</u></strong> </td>
+          <td width="18%">Booking Type(BHK): </td>
+          <td width="15%"> <strong><u>{!flat.Flat_Type__r.Name}</u></strong> </td>
+          <td width="10%">CRN No: </td>
+          <td width="12%"> <u><strong>{!booking.CRN__c}</strong></u> </td>
+          <td width="10%">Loyalty ID: </td>
+          <td width="10%"> <u><strong>{!booking.Loyalty_Id__c}</strong></u> </td>
+        </tr>
+        <tr>
+          <td width="10%">Customer Name: </td>
+          <td width="15%"> <u><strong>{!booking.Name_of_Applicant__c}</strong></u></td>
+          <td width="18%">(Cluster/Wing/Residence No.): </td>
+          <td width="15%"> <u><strong> {!flat.Wing__r.Cluster_hidden__c}/{!flat.Wing__r.name}/{!flat.Flat_No__c} </strong></u> </td>
+          <td width="10%">Visit Form No.: </td>
+          <td width="12%"><u><strong>{!booking.Visitor_Form_No__c}</strong></u> </td>
+          <td width="10%">Date of Booking: </td>
+          <td width="10%"><u><strong>{!booking_date}</strong></u></td>
+        </tr>
+      </table> 
+      
+      <br/>
+      
+      <table id="pricing_table" border="1" class="tbl-bdr" width="100%" style="border-collapse: collapse">
+        <tr>
+          <td valign="top"><u> Cutomer Type:</u><br/><br/>
+          {!booking.Customer_Type__c}&nbsp;&nbsp;{!corp_name}
+          </td>
+          <td valign="top"><u> Source Type:</u> <br/><br/>
+            {!booking.Booking_By__c} 
+          </td>
+          <td width="60%"><u> Sales Person:</u>&nbsp;&nbsp;{!booking.Sales_Person__r.Name}<br/><br/>
+            Details: &nbsp; {!Details} <br/>
+          </td>
+        </tr>
+       
+      </table>  
+      <br/>
+      <span><STRONG>Commercial Details</STRONG></span>
+      <table id="pricing_table" border="1" class="tbl-bdr" width="100%" style="border-collapse: collapse">
+        <tr>
+          <td align="left" style="font-weight:bold;" width="35%">1.Rates &amp; Charges</td>
+          <td align="center" style="font-weight:bold;">Approved Transaction Rate(T)</td>
+          <td align="center" style="font-weight:bold;">Actual Rate(A)</td>
+          <td align="center" style="font-weight:bold;">Deviation Value (D)(D=T-A)</td>
+          <td align="center" style="font-weight:bold;">Description/Justification (SCUD Reference)</td>
+        </tr>
+        <tr>
+          <td align="left">(B) Base Rate (Rs/sqft):</td>
+          <td align="center">{!flat.Base_Rate_Sq_Ft_Rs__c}</td>
+          <td align="center">{!booking.Base_Rate_Sq_ft_Actual_Rs__c}</td>
+          <td align="center">{!baserate_diff}</td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left">(F) Total Floor Rise (Rs/sqft):</td>
+          <td align="center">{!flat.Floor_Rise_Sq_Ft_Rs__c}</td>
+          <td align="center">{!booking.Floor_rise_Sq_ft_Actual_Rs__c}</td>
+          <td align="center">{!floorrise_diff}</td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left">(P) Total Premium/s (if any) (Rs/sqft):</td>
+          <td align="center">{!flat.Premium_Sq_Ft_Rs__c}</td>
+          <td align="center">{!booking.Premium_Sq_ft_Actual_Rs__c}</td>
+          <td align="center">{!premview_diff }</td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left">(D) Applicable waiver (if any) (Rs/sqft):</td>
+          <td align="center">{!flat.Applicable_Waiver_Sq_Ft_Rs__c}</td>
+          <td align="center">{!booking.Applicable_Waiver_Sq_ft_Actual_Rs__c}</td>
+          <td align="center">{!waiver_diff }</td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left" style="font-weight:bold;">(TR) Final Total Rate (TR=B+F+P-D) (Rs/sqft):</td>
+          <td align="center">{!flat.Total_Rate_Sq_Ft_Rs__c}</td>
+          <td align="center">{!booking.Total_Rate_Sq_ft_Actual_Rs__c}</td>
+          <td align="center">{!totalrate_diff }</td>
+          <td align="center"> {!finalTotalRate}</td>
+        </tr>
+        <tr>
+          <td align="left">(SA) Salable Area (sqft):</td>
+          <td align="center">{!flat.Salable_Area__c}</td>
+          <td align="center">{!flat.Salable_Area__c}</td>
+          <td align="center"></td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left">(FC) Flat Cost (C=TRxSA) (Rs):</td>
+          <td align="center">{!flat.Flat_Cost_Rs__c}</td>
+          <td align="center">{!booking.Flat_Cost_Actual_Rs__c}</td>
+          <td align="center">{!flatcost_diff}</td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left">(I) Infrastructure Charges (Rs):</td>
+          <td align="center">{!Infrastructure_Charges}</td>
+          <td align="center">{!Infrastructure_Charges_Actual}</td>
+          <td align="center">{!infra_diff}</td>
+          <td align="left">{!Infrastructure_desc}</td>
+        </tr>
+        <tr>
+          <td align="left" style="font-weight:bold;">(CV) Consideration Value (FC+I) (Rs):</td>
+<!--           <td align="center">{!flat.Consideration_Rs__c}</td> -->
+          <td align="center">{!decimalApprovedConsiderationValue}</td>
+<!--           <td align="center">{!booking.Consideration_Actual_Rs__c}</td> -->
+          <td align="center">{!decimalActualConsiderationValue}</td>
+          <td align="center">{!cv_diff}</td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left">(S) Society Charges (Rs):</td>
+          <td align="center"></td>
+          <td align="center"></td>
+          <td align="center"></td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left">(O) Other Charges (Rs):</td>
+          <td align="center"></td>
+          <td align="center"></td>
+          <td align="center"></td>
+          <td align="center"></td>
+        </tr>
+        <tr>
+          <td align="left">(TC) Total Cost: (TC=CV+S+O)</td>
+          <td align="center"></td>
+          <td align="center"></td>
+          <td align="center"></td>
+          <td align="center"></td>
+        </tr>
+      </table>
+      <br/>
+      <table id="payment_parking_table" border="0" width="100%">
+        <tr>
+        <td width="40%">
+          <table  id="payment_scedule_table" border="0" class="tbl-bdr" width="100%">
+            <tr>
+              <td align="center" style="font-weight:bold;" colspan="4">2. Payment Schedule Committed*:</td>
+            </tr>
+            <tr>
+              <td>
+                  <apex:image rendered="{!paymentSchedule}" url="{!$Resource.Checked}"/>
+                  <apex:image rendered="{!!paymentSchedule}" url="{!$Resource.Uncheck}"/>
+              </td>
+              <td>As per Standard Schedule</td>
+              <td>
+                  <apex:image rendered="{!!paymentSchedule}" url="{!$Resource.Checked}"/>
+                  <apex:image rendered="{!paymentSchedule}" url="{!$Resource.Uncheck}"/></td>
+              <td>Modified Schedule (Attach copy)</td>   
+            </tr>     
+          </table>
+        </td>
+        <td width="60%">
+          <table id="parking_table" border="0" class="tbl-bdr" width="100%">
+            <tr>
+              <td align="center" style="font-weight:bold;" colspan="6">3. Parking Allotment Details*:</td>
+            </tr>
+            <tr>
+              <td>Applicable(Nos.):__</td>
+              <td>Requested(Nos.):__</td>
+              <td>Alloted(Nos.):<u>{!alloted}</u></td>
+              <td> Type 2W: <u>{!booking.Parking_Nos_2W__c}</u></td>
+              <td>4W: <u>{!booking.Parking_Nos_4w__c}</u></td>
+              <td>Type:<u>{!booking.Parking_Type__c}</u></td>
+            </tr>     
+          </table>
+        </td>      
+      </tr>
+    </table>
+    <br/>
+    <table id="special_trt_table" border="0" width="100%" style="border-collapse: collapse">
+      <tr>
+        <td style="font-weight:bold;" width="25%">4. Special Treatment/s (if any):</td>
+        <td style="font-weight:bold;" width="35%">Example</td>
+        <td style="font-weight:bold;">Description /Justification</td>
+        <td style="font-weight:bold;">SCUD / Promo Code</td>
+      </tr>
+      <tr>
+        <td>A) Special Offer:</td>
+        <td>LCD TV, AC, Holiday</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>B) Special Processing:</td>
+        <td>Bank cheque after loan sanction/Needs NoC for PF</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>C) Miscellaneous:</td>
+        <td>Shift to lower floor when next building opens</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>   
+    
+    <br/><b>5.Total Value of offers/considerations* : Rs. ________________ (In Words: Rupees_____________________________________________)
+    <br/>Special Instructions (For CC/Product) :_______________________________________________________________________________________</b>
+ <br/>  <br/>
+  <b>6. Reason for Discount :</b>&nbsp;{!booking.Reason_for_discount__c}
+  <br/>  <br/>
+    <table id="approval_table" width="100%" style="border-collapse: collapse">
+      <tr>
+        <td>
+          <table class="tbl-bdr">
+            <tr>
+              <td colspan="2" align="left" style="font-weight:bold;">Recommended by</td>
+            </tr>
+            <tr></tr>
+            <tr></tr>
+           
+            <tr>
+              <td>Sales Manager Name :</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><p>_____________<br/>Signature</p></td>
+              <td><p>_____________<br/>Date (dd/mm/yyyy)</p></td>
+            </tr>
+          </table>   
+        </td>
+        <td>
+          <table class="tbl-bdr">
+            <tr>
+              <td colspan="2" align="left" style="font-weight:bold;">Site Approval</td>
+            </tr>        
+             <tr></tr>
+            <tr></tr>   
+            <tr>
+              <td>Site In-charge Name: </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><p>_____________<br/>Signature</p></td>
+              <td>_____________<br/>Date (dd/mm/yyyy)</td>
+            </tr>
+          </table>   
+        </td>
+        <td>
+          <table class="tbl-bdr">
+            <tr>
+              <td colspan="2" align="left" style="font-weight:bold;">HO Approval (for Deviations,if any)</td>
+            </tr>
+             <tr></tr>
+            <tr></tr>
+            <tr>
+              <td>Approver Name :</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><p>_____________<br/>Signature</p></td>
+              <td><p>_____________<br/>Date (dd/mm/yyyy)</p></td>
+            </tr>
+          </table>   
+        </td>
+        <td>
+          <table class="tbl-bdr">
+            <tr>
+              <td colspan="2" align="left" style="font-weight:bold;">HO Acceptance (Customer Care) :</td>
+            </tr>
+             <tr></tr>
+            <tr></tr>
+            <tr>
+              <td>Project In-charge Name :</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><p>_____________<br/>Signature</p></td>
+              <td><p>_____________<br/>Date (dd/mm/yyyy)</p></td>
+            </tr>
+          </table>   
+        </td>   
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+</apex:page>

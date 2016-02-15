@@ -1,0 +1,15 @@
+<apex:page controller="CentralMobileVerificationController"> 
+
+    <apex:pageblock title="Central Mobile Verification Control">
+    <center>
+        <apex:form >
+            <h1>Central Mobile Verification Control On</h1>
+            <apex:inputCheckbox value="{!inputValue}" id="theCheckbox"/>
+            <br/><br/>
+            <apex:commandButton value="Submit" action="{!mobileVerification}"/>
+        </apex:form> 
+    </center>
+    </apex:pageblock>
+
+ 
+</apex:page>

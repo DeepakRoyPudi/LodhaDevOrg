@@ -1,0 +1,32 @@
+<apex:page controller="PdfPopupController" showHeader="false" sidebar="false" tabStyle="Booking_Details_Channel__tab">  
+<apex:form >   
+ <script type="text/javascript">
+        function closeWindow(){
+            window.close();
+        }
+        </script>
+       <table border="1" style="border-collapse: collapse" >
+       <tr>
+       <td  width="50%" height="40" align="center"> <font size="2">Service Tax Option&nbsp;</font>
+         
+        
+        
+          <apex:selectlist value="{!selectedItem}" size="1">
+          <apex:selectOptions value="{!Items}" />
+          </apex:selectlist>
+                     
+          </td>
+          </tr>
+          <tr>
+              <td width="50%" height="80" align="center">
+              
+              
+              
+        
+             <apex:commandButton action="{!generate_pdf}" value="Generate PDF" oncomplete="closeWindow()" />
+             
+                </td>
+                </tr> 
+                </table>
+                  </apex:form>         
+              </apex:page>

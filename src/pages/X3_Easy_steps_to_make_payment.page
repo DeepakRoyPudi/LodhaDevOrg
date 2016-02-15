@@ -1,0 +1,37 @@
+<apex:page id="thePage" showHeader="true" sidebar="false">
+    <apex:form >
+        <apex:pageBlock >
+            <table width="100%" border="1" cellspacing="0" style="text-align:center;margin-top:1px;font-size:10pt;font-family:Arial Unicode MS;">
+            <tr style="font-weight:bold">
+                <td width="1%" align="center">Payment Options</td>
+                <td width="10%" align="center">Important Instructions</td>          
+            </tr>
+            <tr>
+                <td width="1%" align="center">A) Cheque Payments</td>
+                <td width="10%" align="left">1. Drop box available at Dombivali site office as well as at Corporate Office.<br/>
+                2. Send via Courier to our Corporate Office address.
+                <br/>
+                <br/>
+                # Cheques to reach us 2 days before due date to facilitate timely realization. 
+                </td>
+            </tr>
+            <!-- </table>
+          
+            <table width="100%" border="1" cellspacing="0" style="text-align:center;margin-top:1px;font-size:10pt;font-family:Arial Unicode MS;"> -->
+            <tr>
+                <td width="1%" align="center">B) RTGS Payments</td>
+                <td width="10%" align="left">1. A facility primarily for customers residing/located Overseas.<br/>
+                                             2. Customers residing in India can use this service only for Construction based payments (Plinth Onwards). For 21 and 42 day timebound payments please send us a cheque.
+                <br/>
+                <br/>
+                # Please send an email specifying UTR number and online payment details to your Relationship Manager within 3 days of making the payment.
+                </td>
+            </tr>
+            </table>
+            <br/>
+            <br/>
+            <br/>
+            <apex:outputtext value="Corporate Office: Lodha Excelus, N M Joshi Marg, Mahalaxmi, Mumbai 400 011, India"/>
+        </apex:pageBlock>    
+    </apex:form> 
+</apex:page>

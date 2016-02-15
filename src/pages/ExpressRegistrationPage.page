@@ -1,0 +1,849 @@
+<apex:page standardController="Lead" extensions="ExpressRegistrationExtension" title="Express Registration" showHeader="false" StandardStylesheets="true" id="jquery" sidebar="false">
+
+<apex:stylesheet value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'stylesheets/xpress.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'stylesheets/template.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.jqueryui, 'js/jquery-1.5.1.min.js')}"/> 
+<apex:includeScript value="{!URLFOR($Resource.jqueryui, 'js/jquery-ui-1.8.14.custom.min.js')}"/> 
+<apex:stylesheet value="{!URLFOR($Resource.jqueryui, 'development-bundle/themes/base/jquery.ui.all.css')}"/>
+<script type="text/javascript">
+   $j = jQuery.noConflict();
+   $j(document).ready(function() {
+  $j( '#' + '{!$Component.formID.textfield3}'.replace(/([^0-9a-z])/gi,"\\\\$1") ).datepicker({ dateFormat: 'dd/mm/yy', showOn: "button", buttonImageOnly: true, buttonImage: "{!$Resource.calendar}" });
+  $j( '#' + '{!$Component.formID.textfield3}'.replace(/([^0-9a-z])/gi,"\\\\$1") ).fadeIn('slow');
+     });
+  </script>
+<style type="text/css">
+   .radiobox {
+   width: 450px;
+   margin-left: 130px;
+   margin-top: 5px;
+   }
+   .purposebox {
+   width: 500px;
+   margin-top: 15px;
+   }
+   .budgetbox {
+   width: 500px;
+   float: left;
+   }
+   .occupationbox {
+   width: 400px;
+   float: left;
+   }
+
+</style>
+     <script type="text/javascript">
+            function validateForm()
+            {
+
+                //validate Email Started
+                var x=document.getElementById('jquery:formID:textfield11').value;
+                var atpos=x.indexOf("@");
+                var dotpos=x.lastIndexOf(".");
+
+                if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length)
+                  {
+                      document.getElementById('jquery:formID:hiddenEmailStatus').value  = 'False';
+                  }
+                  else
+                  {
+                      document.getElementById('jquery:formID:hiddenEmailStatus').value  = 'True';
+                  }
+                  
+                  //validate Email Ended
+                  
+                  //validate PlotNo. Started
+                   var ValidChars = "0123456789.";
+                   var IsNumber=true;
+                   var Char;
+                   var sText;
+                   sText = document.getElementById('jquery:formID:textfield4').value;
+
+                   for (i = 0; i < sText.length && IsNumber == true; i++) 
+                      { 
+                      Char = sText.charAt(i); 
+                      if (ValidChars.indexOf(Char) == -1) 
+                         {
+                         IsNumber = true;
+                         }
+                      }
+                      document.getElementById('jquery:formID:hiddenIsValidPlotNo').value = IsNumber;
+
+                   //validate Pin Code Ended
+                   
+                   //validate PlotNo. Started
+
+                   sText = document.getElementById('jquery:formID:textfield7').value;
+
+                   for (i = 0; i < sText.length && IsNumber == true; i++) 
+                      { 
+                      Char = sText.charAt(i); 
+                      if (ValidChars.indexOf(Char) == -1 || sText.length != 6) 
+                         {
+                         IsNumber = false;
+                         }
+                      }
+                      document.getElementById('jquery:formID:hiddenIsValidPinCode').value = IsNumber;
+                   //validate Plot Code Ended
+                   
+                   //validate Mobile Started
+
+                   sText = document.getElementById('jquery:formID:textfield8').value;
+
+                   for (i = 0; i < sText.length && IsNumber == true; i++) 
+                      { 
+                      Char = sText.charAt(i); 
+                      if (ValidChars.indexOf(Char) == -1 || sText.length != 10) 
+                         {
+                         IsNumber = false;
+                         }
+                      }
+                      document.getElementById('jquery:formID:hiddenIsValidMobile').value = IsNumber;
+                   //validate Mobile Ended
+                   
+            }
+                </script>
+                <style type="text/css">
+
+.style1 {
+    color: #FF0000;
+    font-size: 10px;
+}
+
+.style3 {
+    color: #FF0000;
+    font-size: 12px;
+}
+.style2 {color: #FF0000}
+#tcalShade {display: none;}
+
+</style>
+
+
+
+<div id="main_holder">
+<div id="gray_back">
+<div id="xpress_heading">Xpress Site Visit</div>
+
+<div class="form_content">
+  Enjoy the hassle free experience of booking your site visit. Take a guided tour with a personally assigned Xpress Manager to give you a complete overview about the sample flat and the project.  
+ <br/>Please carry a print out of the registration confirmation which will be mailed to your registered Email ID or just show the confirmation email, during your visit. Site Address: Palava Sales Gallery, Near Khidkaleshwar Temple, Kalyan Shil Road, Dombivali (E). To get Directions, please click - <a href="http://www.palava.in/codenamethecentre/howtoreach.php" target="_blank" style="text-decoration:underline; cursor:pointer;">www.palava.in/codenamethecentre/howtoreach.php</a>
+</div>
+<div id="form_container">
+<!-- form id="formID" class="formular" name="formID" method="post" action="sendmail.php" -->
+
+<apex:form id="formID" styleclass="formular">
+  
+<apex:messages styleClass="style3" />
+  <table class="form_lebel" border="0" cellpadding="0" cellspacing="3" width="100%">
+  
+    <tbody>
+        <tr>
+            <td colspan="8"><apex:image value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'images/xpress_sperator.gif')}"/></td>
+        </tr>
+        <tr>
+            <td colspan="8" height="25"><span class="form_heading">Contact Detail</span></td>
+        </tr>
+    
+        <tr>
+            <td height="10" width="12%">First Name<span class="style2">*</span>: </td>
+            <td width="18%"> 
+                <!--input name="fname" class="validate[required] text-input" id="textfield" type="text" /-->
+                <apex:inputtext id="textfield" styleclass="validate[required] text-input" value="{!leadFirstName}" />
+            </td>
+          
+            <td width="2%">&nbsp;</td>
+          
+            <td width="11%">Last Name<span class="style2">*</span>: </td>
+            <td width="18%"><!--input name="lname" class="validate[required] text-input" id="textfield2" type="text" /-->
+                <apex:inputtext id="textfield2" styleclass="validate[required] text-input" value="{!leadLastName}" />
+            </td>
+      
+            <td width="2%">&nbsp;</td>
+          
+<!--            <td width="12%" valign="middle">Proposed Date &amp; Time of Visit<span class="style2">*</span>:</td> -->
+            <td width="12%" style="padding-top:10px">
+                Proposed Date &amp; Time of Visit<span class="style2">*</span>:
+            </td>
+            <td width="30%" style="padding-top:10px">
+                <!--<apex:inputText id="textfield3" styleclass="validate[required] text-input_date" value="{!DateOfVisit}" />-->
+<!--                <apex:inputfield id="textfields1" styleclass="validate[required] text-input_date" value="{!weblead.Date_Of_Visit__c}" /> -->
+                <table>
+                    <tr>
+                        <td>
+                            <apex:inputfield id="textfields1" styleclass="validate[required] text-input_date" value="{!objLead.Date_Of_Birth__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:selectList value="{!selectedTime}" size="1" >
+                                <apex:selectOptions value="{!lstTime}" />
+                            </apex:selectList>&nbsp;<b>:</b>&nbsp;
+                            
+                            <apex:selectList value="{!selectedMinute}" size="1">
+                                <apex:selectOptions value="{!lstMinute}" />
+                            </apex:selectList>&nbsp;
+                            
+                            <apex:selectList value="{!selectedTimeType}" size="1">
+                                <apex:selectOptions value="{!lstTimeType}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    <tr>
+      <td height="30" width="16%">Plot/Flat No.&amp; Bldg:</td>
+      <td><!--input name="plot" class="validate[optional] text-input" id="textfield4" type="text" /-->
+      <apex:inputtext id="textfield4" styleclass="validate[optional] text-input" value="{!PlotNo}" />
+      <apex:inputHidden id="hiddenIsValidPlotNo" value="{!IsValidPlotNo}"/>
+      </td>
+      <td>&nbsp;</td>
+       <td height="30" width="11%">Street :</td>
+      <td><!--input name="street" class="validate[optional] text-input" id="textfield4" type="text" /-->
+      <apex:inputtext id="textfield5" styleclass="validate[optional] text-input" value="{!Street}" />
+      </td>
+      <td>&nbsp;</td>
+       <td height="30" width="12%">Locality :</td>
+      <td><!--input name="locality" class="validate[optional] text-input_date" id="textfield4" size="1" type="text" /-->
+      <apex:inputtext id="textfield6" styleclass="validate[optional] text-input_date" value="{!Locality}" />
+      </td>
+      <td>&nbsp;</td>
+      </tr>
+      <tr>
+      <td>City<span class="style2">*</span>:</td>
+      <td><!--select name="city" class="class=validate[required]" id="select"-->
+        <apex:selectList value="{!city}" size="1">
+            <apex:selectOption itemValue="None" itemlabel="Select City"/> 
+                                        <apex:selectOption itemValue="Adilabad" itemlabel="Adilabad"/>
+                                        <apex:selectOption itemValue="Agartala" itemlabel="Agartala"/>
+                                        <apex:selectOption itemValue="Agra" itemlabel="Agra"/>
+                                        <apex:selectOption itemValue="Ahmadnagar" itemlabel="Ahmadnagar"/>
+                                        <apex:selectOption itemValue="Ahmedabad" itemlabel="Ahmedabad"/>
+                                        <apex:selectOption itemValue="Aizawl" itemlabel="Aizawl"/>
+                                        <apex:selectOption itemValue="Ajmer" itemlabel="Ajmer"/>
+                                        <apex:selectOption itemValue="Akola" itemlabel="Akola"/>
+                                        <apex:selectOption itemValue="Alappuzha" itemlabel="Alappuzha"/>
+                                        <apex:selectOption itemValue="Aldona" itemlabel="Aldona"/>
+                                        <apex:selectOption itemValue="Alibag" itemlabel="Alibag"/>
+                                        <apex:selectOption itemValue="Aligarh" itemlabel="Aligarh"/>
+                                        <apex:selectOption itemValue="Allahabad" itemlabel="Allahabad"/>
+                                        <apex:selectOption itemValue="Almora" itemlabel="Almora"/>
+                                        <apex:selectOption itemValue="Alwar" itemlabel="Alwar"/>
+                                        <apex:selectOption itemValue="Ambala" itemlabel="Ambala"/>
+                                        <apex:selectOption itemValue="Amli" itemlabel="Amli"/>
+                                        <apex:selectOption itemValue="Amravati" itemlabel="Amravati"/>
+                                        <apex:selectOption itemValue="Amreli" itemlabel="Amreli"/>
+                                        <apex:selectOption itemValue="Amritsar" itemlabel="Amritsar"/>
+                                        <apex:selectOption itemValue="Anand" itemlabel="Anand"/>
+                                        <apex:selectOption itemValue="Anantapur" itemlabel="Anantapur"/>
+                                        <apex:selectOption itemValue="Anugul" itemlabel="Anugul"/>
+                                        <apex:selectOption itemValue="Aquem" itemlabel="Aquem"/>
+                                        <apex:selectOption itemValue="Ariyalur" itemlabel="Ariyalur"/>
+                                        <apex:selectOption itemValue="Auraiya" itemlabel="Auraiya"/>
+                                        <apex:selectOption itemValue="Aurangabad" itemlabel="Aurangabad"/>
+                                        <apex:selectOption itemValue="Azamgarh" itemlabel="Azamgarh"/>
+                                        <apex:selectOption itemValue="Baddi" itemlabel="Baddi"/>
+                                        <apex:selectOption itemValue="Badgam" itemlabel="Badgam"/>
+                                        <apex:selectOption itemValue="Bagalkot" itemlabel="Bagalkot"/>
+                                        <apex:selectOption itemValue="Bahadurgarh" itemlabel="Bahadurgarh"/>
+                                        <apex:selectOption itemValue="Balaghat" itemlabel="Balaghat"/>
+                                        <apex:selectOption itemValue="Balangir" itemlabel="Balangir"/>
+                                        <apex:selectOption itemValue="Baleshwar" itemlabel="Baleshwar"/>
+                                        <apex:selectOption itemValue="Baltana" itemlabel="Baltana"/>
+                                        <apex:selectOption itemValue="Bambolim" itemlabel="Bambolim"/>
+                                        <apex:selectOption itemValue="Bandora" itemlabel="Bandora"/>
+                                        <apex:selectOption itemValue="Bangalore" itemlabel="Bangalore"/>
+                                        <apex:selectOption itemValue="Banka" itemlabel="Banka"/>
+                                        <apex:selectOption itemValue="Bankura" itemlabel="Bankura"/>
+                                        <apex:selectOption itemValue="Banswara" itemlabel="Banswara"/>
+                                        <apex:selectOption itemValue="Barabanki" itemlabel="Barabanki"/>
+                                        <apex:selectOption itemValue="Baramula" itemlabel="Baramula"/>
+                                        <apex:selectOption itemValue="Baran" itemlabel="Baran"/>
+                                        <apex:selectOption itemValue="Barddhaman" itemlabel="Barddhaman"/>
+                                        <apex:selectOption itemValue="Bardoli" itemlabel="Bardoli"/>
+                                        <apex:selectOption itemValue="Bareilly" itemlabel="Bareilly"/>
+                                        <apex:selectOption itemValue="Bargarh" itemlabel="Bargarh"/>
+                                        <apex:selectOption itemValue="Baripada" itemlabel="Baripada"/>
+                                        <apex:selectOption itemValue="Barmer" itemlabel="Barmer"/>
+                                        <apex:selectOption itemValue="Barnala" itemlabel="Barnala"/>
+                                        <apex:selectOption itemValue="Barpeta" itemlabel="Barpeta"/>
+                                        <apex:selectOption itemValue="Barwani" itemlabel="Barwani"/>
+                                        <apex:selectOption itemValue="Begusarai" itemlabel="Begusarai"/>
+                                        <apex:selectOption itemValue="Belgaum" itemlabel="Belgaum"/>
+                                        <apex:selectOption itemValue="Bellary" itemlabel="Bellary"/>
+                                        <apex:selectOption itemValue="Betul" itemlabel="Betul"/>
+                                        <apex:selectOption itemValue="Bhandara" itemlabel="Bhandara"/>
+                                        <apex:selectOption itemValue="Bharatpur" itemlabel="Bharatpur"/>
+                                        <apex:selectOption itemValue="Bharuch" itemlabel="Bharuch"/>
+                                        <apex:selectOption itemValue="Bhavnagar" itemlabel="Bhavnagar"/>
+                                        <apex:selectOption itemValue="Bhilwara" itemlabel="Bhilwara"/>
+                                        <apex:selectOption itemValue="Bhind" itemlabel="Bhind"/>
+                                        <apex:selectOption itemValue="Bhiwadi" itemlabel="Bhiwadi"/>
+                                        <apex:selectOption itemValue="Bhiwani" itemlabel="Bhiwani"/>
+                                        <apex:selectOption itemValue="Bhopal" itemlabel="Bhopal"/>
+                                        <apex:selectOption itemValue="Bhubaneswar" itemlabel="Bhubaneswar"/>
+                                        <apex:selectOption itemValue="Bicholim" itemlabel="Bicholim"/>
+                                        <apex:selectOption itemValue="Bid" itemlabel="Bid"/>
+                                        <apex:selectOption itemValue="Bidar" itemlabel="Bidar"/>
+                                        <apex:selectOption itemValue="Bijapur" itemlabel="Bijapur"/>
+                                        <apex:selectOption itemValue="Bikaner" itemlabel="Bikaner"/>
+                                        <apex:selectOption itemValue="Bilaspur" itemlabel="Bilaspur"/>
+                                        <apex:selectOption itemValue="Bishnupur" itemlabel="Bishnupur"/>
+                                        <apex:selectOption itemValue="BokaroSteelCity" itemlabel="BokaroSteelCity"/>
+                                        <apex:selectOption itemValue="Bongaigaon" itemlabel="Bongaigaon"/>
+                                        <apex:selectOption itemValue="Buldana" itemlabel="Buldana"/>
+                                        <apex:selectOption itemValue="Bundi" itemlabel="Bundi"/>
+                                        <apex:selectOption itemValue="Buxar" itemlabel="Buxar"/>
+                                        <apex:selectOption itemValue="Calangute" itemlabel="Calangute"/>
+                                        <apex:selectOption itemValue="Chamba" itemlabel="Chamba"/>
+                                        <apex:selectOption itemValue="Champhai" itemlabel="Champhai"/>
+                                        <apex:selectOption itemValue="Chandigarh" itemlabel="Chandigarh"/>
+                                        <apex:selectOption itemValue="Chandrapur" itemlabel="Chandrapur"/>
+                                        <apex:selectOption itemValue="Changlang" itemlabel="Changlang"/>
+                                        <apex:selectOption itemValue="Chatra" itemlabel="Chatra"/>
+                                        <apex:selectOption itemValue="Chennai" itemlabel="Chennai"/>
+                                        <apex:selectOption itemValue="Chhatarpur" itemlabel="Chhatarpur"/>
+                                        <apex:selectOption itemValue="Chhindwara" itemlabel="Chhindwara"/>
+                                        <apex:selectOption itemValue="Chikmagalur" itemlabel="Chikmagalur"/>
+                                        <apex:selectOption itemValue="Chitradurga" itemlabel="Chitradurga"/>
+                                        <apex:selectOption itemValue="Chittaurgarh" itemlabel="Chittaurgarh"/>
+                                        <apex:selectOption itemValue="Chittoor" itemlabel="Chittoor"/>
+                                        <apex:selectOption itemValue="Churu" itemlabel="Churu"/>
+                                        <apex:selectOption itemValue="Coimbatore" itemlabel="Coimbatore"/>
+                                        <apex:selectOption itemValue="Colvale" itemlabel="Colvale"/>
+                                        <apex:selectOption itemValue="Cuddalore" itemlabel="Cuddalore"/>
+                                        <apex:selectOption itemValue="Cuddapah" itemlabel="Cuddapah"/>
+                                        <apex:selectOption itemValue="Cuttack" itemlabel="Cuttack"/>
+                                        <apex:selectOption itemValue="Dalhousie" itemlabel="Dalhousie"/>
+                                        <apex:selectOption itemValue="Daman" itemlabel="Daman"/>
+                                        <apex:selectOption itemValue="Damoh" itemlabel="Damoh"/>
+                                        <apex:selectOption itemValue="Dantewada" itemlabel="Dantewada"/>
+                                        <apex:selectOption itemValue="Darbhanga" itemlabel="Darbhanga"/>
+                                        <apex:selectOption itemValue="Darjeeling" itemlabel="Darjeeling"/>
+                                        <apex:selectOption itemValue="Datia" itemlabel="Datia"/>
+                                        <apex:selectOption itemValue="Dausa" itemlabel="Dausa"/>
+                                        <apex:selectOption itemValue="Davanagere" itemlabel="Davanagere"/>
+                                        <apex:selectOption itemValue="Debagarh" itemlabel="Debagarh"/>
+                                        <apex:selectOption itemValue="Dehradun" itemlabel="Dehradun"/>
+                                        <apex:selectOption itemValue="Deoghar" itemlabel="Deoghar"/>
+                                        <apex:selectOption itemValue="Deoria" itemlabel="Deoria"/>
+                                        <apex:selectOption itemValue="Dewas" itemlabel="Dewas"/>
+                                        <apex:selectOption itemValue="Dhamtari" itemlabel="Dhamtari"/>
+                                        <apex:selectOption itemValue="Dhanbad" itemlabel="Dhanbad"/>
+                                        <apex:selectOption itemValue="Dhar" itemlabel="Dhar"/>
+                                        <apex:selectOption itemValue="Dharamshala" itemlabel="Dharamshala"/>
+                                        <apex:selectOption itemValue="Dharmapuri" itemlabel="Dharmapuri"/>
+                                        <apex:selectOption itemValue="Dhauhera" itemlabel="Dhauhera"/>
+                                        <apex:selectOption itemValue="Dhaulpur" itemlabel="Dhaulpur"/>
+                                        <apex:selectOption itemValue="Dhemaji" itemlabel="Dhemaji"/>
+                                        <apex:selectOption itemValue="Dhenkanal" itemlabel="Dhenkanal"/>
+                                        <apex:selectOption itemValue="Dhubri" itemlabel="Dhubri"/>
+                                        <apex:selectOption itemValue="Dhule" itemlabel="Dhule"/>
+                                        <apex:selectOption itemValue="Dibrugarh" itemlabel="Dibrugarh"/>
+                                        <apex:selectOption itemValue="Dimapur" itemlabel="Dimapur"/>
+                                        <apex:selectOption itemValue="Dindigul" itemlabel="Dindigul"/>
+                                        <apex:selectOption itemValue="Dindori" itemlabel="Dindori"/>
+                                        <apex:selectOption itemValue="Diu" itemlabel="Diu"/>
+                                        <apex:selectOption itemValue="Doda" itemlabel="Doda"/>
+                                        <apex:selectOption itemValue="Dohad" itemlabel="Dohad"/>
+                                        <apex:selectOption itemValue="Dumka" itemlabel="Dumka"/>
+                                        <apex:selectOption itemValue="Dungarpur" itemlabel="Dungarpur"/>
+                                        <apex:selectOption itemValue="Durg" itemlabel="Durg"/>
+                                        <apex:selectOption itemValue="Dwarka" itemlabel="Dwarka"/>
+                                        <apex:selectOption itemValue="Ernakulam" itemlabel="Ernakulam"/>
+                                        <apex:selectOption itemValue="Erode" itemlabel="Erode"/>
+                                        <apex:selectOption itemValue="Etah" itemlabel="Etah"/>
+                                        <apex:selectOption itemValue="Etawah" itemlabel="Etawah"/>
+                                        <apex:selectOption itemValue="Faizabad" itemlabel="Faizabad"/>
+                                        <apex:selectOption itemValue="Faridabad" itemlabel="Faridabad"/>
+                                        <apex:selectOption itemValue="Faridkot" itemlabel="Faridkot"/>
+                                        <apex:selectOption itemValue="Farrukhabad" itemlabel="Farrukhabad"/>
+                                        <apex:selectOption itemValue="Fatehabad" itemlabel="Fatehabad"/>
+                                        <apex:selectOption itemValue="Firozabad" itemlabel="Firozabad"/>
+                                        <apex:selectOption itemValue="Firozpur" itemlabel="Firozpur"/>
+                                        <apex:selectOption itemValue="Gadchiroli" itemlabel="Gadchiroli"/>
+                                        <apex:selectOption itemValue="Gandhidham" itemlabel="Gandhidham"/>
+                                        <apex:selectOption itemValue="Gandhinagar" itemlabel="Gandhinagar"/>
+                                        <apex:selectOption itemValue="Ganganagar" itemlabel="Ganganagar"/>
+                                        <apex:selectOption itemValue="Gangtok" itemlabel="Gangtok"/>
+                                        <apex:selectOption itemValue="Ganjam" itemlabel="Ganjam"/>
+                                        <apex:selectOption itemValue="Garhwa" itemlabel="Garhwa"/>
+                                        <apex:selectOption itemValue="Gaya" itemlabel="Gaya"/>
+                                        <apex:selectOption itemValue="Ghaziabad" itemlabel="Ghaziabad"/>
+                                        <apex:selectOption itemValue="Ghazipur" itemlabel="Ghazipur"/>
+                                        <apex:selectOption itemValue="Giridih" itemlabel="Giridih"/>
+                                        <apex:selectOption itemValue="Goalpara" itemlabel="Goalpara"/>
+                                        <apex:selectOption itemValue="Godda" itemlabel="Godda"/>
+                                        <apex:selectOption itemValue="Golaghat" itemlabel="Golaghat"/>
+                                        <apex:selectOption itemValue="Gonda" itemlabel="Gonda"/>
+                                        <apex:selectOption itemValue="Gondiya" itemlabel="Gondiya"/>
+                                        <apex:selectOption itemValue="Gopalganj" itemlabel="Gopalganj"/>
+                                        <apex:selectOption itemValue="Gorakhpur" itemlabel="Gorakhpur"/>
+                                        <apex:selectOption itemValue="GreaterNoida" itemlabel="GreaterNoida"/>
+                                        <apex:selectOption itemValue="Gulbarga" itemlabel="Gulbarga"/>
+                                        <apex:selectOption itemValue="Guna" itemlabel="Guna"/>
+                                        <apex:selectOption itemValue="Guntur" itemlabel="Guntur"/>
+                                        <apex:selectOption itemValue="Gurgaon" itemlabel="Gurgaon"/>
+                                        <apex:selectOption itemValue="Guwahati" itemlabel="Guwahati"/>
+                                        <apex:selectOption itemValue="Gwalior" itemlabel="Gwalior"/>
+                                        <apex:selectOption itemValue="Hailakandi" itemlabel="Hailakandi"/>
+                                        <apex:selectOption itemValue="Hamirpur" itemlabel="Hamirpur"/>
+                                        <apex:selectOption itemValue="Hanumangarh" itemlabel="Hanumangarh"/>
+                                        <apex:selectOption itemValue="Harda" itemlabel="Harda"/>
+                                        <apex:selectOption itemValue="Hardoi" itemlabel="Hardoi"/>
+                                        <apex:selectOption itemValue="Haridwar" itemlabel="Haridwar"/>
+                                        <apex:selectOption itemValue="Hassan" itemlabel="Hassan"/>
+                                        <apex:selectOption itemValue="Hathras" itemlabel="Hathras"/>
+                                        <apex:selectOption itemValue="Hatinda" itemlabel="Hatinda"/>
+                                        <apex:selectOption itemValue="Haveri" itemlabel="Haveri"/>
+                                        <apex:selectOption itemValue="Hazaribag" itemlabel="Hazaribag"/>
+                                        <apex:selectOption itemValue="Hingoli" itemlabel="Hingoli"/>
+                                        <apex:selectOption itemValue="Hisar" itemlabel="Hisar"/>
+                                        <apex:selectOption itemValue="Hoogly" itemlabel="Hoogly"/>
+                                        <apex:selectOption itemValue="Hoshiarpur" itemlabel="Hoshiarpur"/>
+                                        <apex:selectOption itemValue="Hosur" itemlabel="Hosur"/>
+                                        <apex:selectOption itemValue="Howrah" itemlabel="Howrah"/>
+                                        <apex:selectOption itemValue="Hyderabad" itemlabel="Hyderabad"/>
+                                        <apex:selectOption itemValue="Imphal" itemlabel="Imphal"/>
+                                        <apex:selectOption itemValue="Indore" itemlabel="Indore"/>
+                                        <apex:selectOption itemValue="Itanagar" itemlabel="Itanagar"/>
+                                        <apex:selectOption itemValue="Jabalpur" itemlabel="Jabalpur"/>
+                                        <apex:selectOption itemValue="Jagadhri" itemlabel="Jagadhri"/>
+                                        <apex:selectOption itemValue="Jagatsinghapur" itemlabel="Jagatsinghapur"/>
+                                        <apex:selectOption itemValue="Jaipur" itemlabel="Jaipur"/>
+                                        <apex:selectOption itemValue="Jaisalmer" itemlabel="Jaisalmer"/>
+                                        <apex:selectOption itemValue="Jajapur" itemlabel="Jajapur"/>
+                                        <apex:selectOption itemValue="Jalandhar" itemlabel="Jalandhar"/>
+                                        <apex:selectOption itemValue="Jalaun" itemlabel="Jalaun"/>
+                                        <apex:selectOption itemValue="Jalgaon" itemlabel="Jalgaon"/>
+                                        <apex:selectOption itemValue="Jalna" itemlabel="Jalna"/>
+                                        <apex:selectOption itemValue="Jalor" itemlabel="Jalor"/>
+                                        <apex:selectOption itemValue="Jalpaiguri" itemlabel="Jalpaiguri"/>
+                                        <apex:selectOption itemValue="Jammu" itemlabel="Jammu"/>
+                                        <apex:selectOption itemValue="Jamnagar" itemlabel="Jamnagar"/>
+                                        <apex:selectOption itemValue="Jamshedpur" itemlabel="Jamshedpur"/>
+                                        <apex:selectOption itemValue="Jamui" itemlabel="Jamui"/>
+                                        <apex:selectOption itemValue="Jasidih" itemlabel="Jasidih"/>
+                                        <apex:selectOption itemValue="Jaunpur" itemlabel="Jaunpur"/>
+                                        <apex:selectOption itemValue="Jehanabad" itemlabel="Jehanabad"/>
+                                        <apex:selectOption itemValue="Jhabua" itemlabel="Jhabua"/>
+                                        <apex:selectOption itemValue="Jhajjar" itemlabel="Jhajjar"/>
+                                        <apex:selectOption itemValue="Jhalawar" itemlabel="Jhalawar"/>
+                                        <apex:selectOption itemValue="Jhansi" itemlabel="Jhansi"/>
+                                        <apex:selectOption itemValue="Jharsuguda" itemlabel="Jharsuguda"/>
+                                        <apex:selectOption itemValue="Jhunjhunun" itemlabel="Jhunjhunun"/>
+                                        <apex:selectOption itemValue="Jind" itemlabel="Jind"/>
+                                        <apex:selectOption itemValue="Jodhpur" itemlabel="Jodhpur"/>
+                                        <apex:selectOption itemValue="Jorhat" itemlabel="Jorhat"/>
+                                        <apex:selectOption itemValue="Junagadh" itemlabel="Junagadh"/>
+                                        <apex:selectOption itemValue="Kaithal" itemlabel="Kaithal"/>
+                                        <apex:selectOption itemValue="Kancheepuram" itemlabel="Kancheepuram"/>
+                                        <apex:selectOption itemValue="Kanker" itemlabel="Kanker"/>
+                                        <apex:selectOption itemValue="Kannauj" itemlabel="Kannauj"/>
+                                        <apex:selectOption itemValue="Kanniyakumari" itemlabel="Kanniyakumari"/>
+                                        <apex:selectOption itemValue="Kannur" itemlabel="Kannur"/>
+                                        <apex:selectOption itemValue="Kanpur" itemlabel="Kanpur"/>
+                                        <apex:selectOption itemValue="Kapurthala" itemlabel="Kapurthala"/>
+                                        <apex:selectOption itemValue="Karaikal" itemlabel="Karaikal"/>
+                                        <apex:selectOption itemValue="Karauli" itemlabel="Karauli"/>
+                                        <apex:selectOption itemValue="Kargil" itemlabel="Kargil"/>
+                                        <apex:selectOption itemValue="Karimganj" itemlabel="Karimganj"/>
+                                        <apex:selectOption itemValue="Karimnagar" itemlabel="Karimnagar"/>
+                                        <apex:selectOption itemValue="Karnal" itemlabel="Karnal"/>
+                                        <apex:selectOption itemValue="Karwar" itemlabel="Karwar"/>
+                                        <apex:selectOption itemValue="Kasauli" itemlabel="Kasauli"/>
+                                        <apex:selectOption itemValue="Kashipur" itemlabel="Kashipur"/>
+                                        <apex:selectOption itemValue="Kathua" itemlabel="Kathua"/>
+                                        <apex:selectOption itemValue="Katihar" itemlabel="Katihar"/>
+                                        <apex:selectOption itemValue="Kavaratti" itemlabel="Kavaratti"/>
+                                        <apex:selectOption itemValue="Kawardha" itemlabel="Kawardha"/>
+                                        <apex:selectOption itemValue="Kendrapara" itemlabel="Kendrapara"/>
+                                        <apex:selectOption itemValue="Kendujhar" itemlabel="Kendujhar"/>
+                                        <apex:selectOption itemValue="Khagaria" itemlabel="Khagaria"/>
+                                        <apex:selectOption itemValue="Khajuraho" itemlabel="Khajuraho"/>
+                                        <apex:selectOption itemValue="Khammam" itemlabel="Khammam"/>
+                                        <apex:selectOption itemValue="Khandala" itemlabel="Khandala"/>
+                                        <apex:selectOption itemValue="Kheda" itemlabel="Kheda"/>
+                                        <apex:selectOption itemValue="Kheri" itemlabel="Kheri"/>
+                                        <apex:selectOption itemValue="Khordha" itemlabel="Khordha"/>
+                                        <apex:selectOption itemValue="Kishanganj" itemlabel="Kishanganj"/>
+                                        <apex:selectOption itemValue="KochBihar" itemlabel="KochBihar"/>
+                                        <apex:selectOption itemValue="Kochi" itemlabel="Kochi"/>
+                                        <apex:selectOption itemValue="Kodaikanal" itemlabel="Kodaikanal"/>
+                                        <apex:selectOption itemValue="Kodarma" itemlabel="Kodarma"/>
+                                        <apex:selectOption itemValue="Kohima" itemlabel="Kohima"/>
+                                        <apex:selectOption itemValue="Kokrajhar" itemlabel="Kokrajhar"/>
+                                        <apex:selectOption itemValue="Kolar" itemlabel="Kolar"/>
+                                        <apex:selectOption itemValue="Kolasib" itemlabel="Kolasib"/>
+                                        <apex:selectOption itemValue="Kolhapur" itemlabel="Kolhapur"/>
+                                        <apex:selectOption itemValue="Kolkata" itemlabel="Kolkata"/>
+                                        <apex:selectOption itemValue="Koppal" itemlabel="Koppal"/>
+                                        <apex:selectOption itemValue="Koraput" itemlabel="Koraput"/>
+                                        <apex:selectOption itemValue="Korba" itemlabel="Korba"/>
+                                        <apex:selectOption itemValue="Kota" itemlabel="Kota"/>
+                                        <apex:selectOption itemValue="Kottayam" itemlabel="Kottayam"/>
+                                        <apex:selectOption itemValue="Kozhikode" itemlabel="Kozhikode"/>
+                                        <apex:selectOption itemValue="Kullu" itemlabel="Kullu"/>
+                                        <apex:selectOption itemValue="Kupwara" itemlabel="Kupwara"/>
+                                        <apex:selectOption itemValue="Kurnool" itemlabel="Kurnool"/>
+                                        <apex:selectOption itemValue="Kurukshetra" itemlabel="Kurukshetra"/>
+                                        <apex:selectOption itemValue="Kushinagar" itemlabel="Kushinagar"/>
+                                        <apex:selectOption itemValue="Lakhisarai" itemlabel="Lakhisarai"/>
+                                        <apex:selectOption itemValue="Lalitpur" itemlabel="Lalitpur"/>
+                                        <apex:selectOption itemValue="Latur" itemlabel="Latur"/>
+                                        <apex:selectOption itemValue="Leh" itemlabel="Leh"/>
+                                        <apex:selectOption itemValue="Lohardaga" itemlabel="Lohardaga"/>
+                                        <apex:selectOption itemValue="Lonavala" itemlabel="Lonavala"/>
+                                        <apex:selectOption itemValue="Lucknow" itemlabel="Lucknow"/>
+                                        <apex:selectOption itemValue="Ludhiana" itemlabel="Ludhiana"/>
+                                        <apex:selectOption itemValue="Lunglei" itemlabel="Lunglei"/>
+                                        <apex:selectOption itemValue="Madhepura" itemlabel="Madhepura"/>
+                                        <apex:selectOption itemValue="Madhubani" itemlabel="Madhubani"/>
+                                        <apex:selectOption itemValue="Madikeri" itemlabel="Madikeri"/>
+                                        <apex:selectOption itemValue="Madurai" itemlabel="Madurai"/>
+                                        <apex:selectOption itemValue="Mahabaleshwar" itemlabel="Mahabaleshwar"/>
+                                        <apex:selectOption itemValue="Mahasamund" itemlabel="Mahasamund"/>
+                                        <apex:selectOption itemValue="Mahbubnagar" itemlabel="Mahbubnagar"/>
+                                        <apex:selectOption itemValue="Mahe" itemlabel="Mahe"/>
+                                        <apex:selectOption itemValue="Mahendragarh" itemlabel="Mahendragarh"/>
+                                        <apex:selectOption itemValue="Mahesana" itemlabel="Mahesana"/>
+                                        <apex:selectOption itemValue="Mahoba" itemlabel="Mahoba"/>
+                                        <apex:selectOption itemValue="Mahona" itemlabel="Mahona"/>
+                                        <apex:selectOption itemValue="Mainpuri" itemlabel="Mainpuri"/>
+                                        <apex:selectOption itemValue="Mamallapuram" itemlabel="Mamallapuram"/>
+                                        <apex:selectOption itemValue="Mamit" itemlabel="Mamit"/>
+                                        <apex:selectOption itemValue="Manali" itemlabel="Manali"/>
+                                        <apex:selectOption itemValue="Mandawa" itemlabel="Mandawa"/>
+                                        <apex:selectOption itemValue="Mandi" itemlabel="Mandi"/>
+                                        <apex:selectOption itemValue="Mandla" itemlabel="Mandla"/>
+                                        <apex:selectOption itemValue="Mandsaur" itemlabel="Mandsaur"/>
+                                        <apex:selectOption itemValue="Mandya" itemlabel="Mandya"/>
+                                        <apex:selectOption itemValue="Mangalore" itemlabel="Mangalore"/>
+                                        <apex:selectOption itemValue="Mansa" itemlabel="Mansa"/>
+                                        <apex:selectOption itemValue="Mapusa" itemlabel="Mapusa"/>
+                                        <apex:selectOption itemValue="Margao" itemlabel="Margao"/>
+                                        <apex:selectOption itemValue="Marigaon" itemlabel="Marigaon"/>
+                                        <apex:selectOption itemValue="Mathura" itemlabel="Mathura"/>
+                                        <apex:selectOption itemValue="Matli" itemlabel="Matli"/>
+                                        <apex:selectOption itemValue="Medinipur" itemlabel="Medinipur"/>
+                                        <apex:selectOption itemValue="Meerut" itemlabel="Meerut"/>
+                                        <apex:selectOption itemValue="Moga" itemlabel="Moga"/>
+                                        <apex:selectOption itemValue="Mohali" itemlabel="Mohali"/>
+                                        <apex:selectOption itemValue="Mokokchung" itemlabel="Mokokchung"/>
+                                        <apex:selectOption itemValue="Moradabad" itemlabel="Moradabad"/>
+                                        <apex:selectOption itemValue="Morena" itemlabel="Morena"/>
+                                        <apex:selectOption itemValue="Mormugao" itemlabel="Mormugao"/>
+                                        <apex:selectOption itemValue="Muktsar" itemlabel="Muktsar"/>
+                                        <apex:selectOption itemValue="Mumbai" itemlabel="Mumbai"/>
+                                        <apex:selectOption itemValue="Munger" itemlabel="Munger"/>
+                                        <apex:selectOption itemValue="Murshidabad" itemlabel="Murshidabad"/>
+                                        <apex:selectOption itemValue="Mussoorie" itemlabel="Mussoorie"/>
+                                        <apex:selectOption itemValue="Muzaffarnagar" itemlabel="Muzaffarnagar"/>
+                                        <apex:selectOption itemValue="Muzaffarpur" itemlabel="Muzaffarpur"/>
+                                        <apex:selectOption itemValue="Mysore" itemlabel="Mysore"/>
+                                        <apex:selectOption itemValue="Nabarangapur" itemlabel="Nabarangapur"/>
+                                        <apex:selectOption itemValue="Nagaon" itemlabel="Nagaon"/>
+                                        <apex:selectOption itemValue="Nagapattinam" itemlabel="Nagapattinam"/>
+                                        <apex:selectOption itemValue="Nagaur" itemlabel="Nagaur"/>
+                                        <apex:selectOption itemValue="Nagpur" itemlabel="Nagpur"/>
+                                        <apex:selectOption itemValue="Nainital" itemlabel="Nainital"/>
+                                        <apex:selectOption itemValue="Nalbari" itemlabel="Nalbari"/>
+                                        <apex:selectOption itemValue="Nalgonda" itemlabel="Nalgonda"/>
+                                        <apex:selectOption itemValue="Namakkal" itemlabel="Namakkal"/>
+                                        <apex:selectOption itemValue="Nandurbar" itemlabel="Nandurbar"/>
+                                        <apex:selectOption itemValue="Narsimhapur" itemlabel="Narsimhapur"/>
+                                        <apex:selectOption itemValue="Narwana" itemlabel="Narwana"/>
+                                        <apex:selectOption itemValue="Nashik" itemlabel="Nashik"/>
+                                        <apex:selectOption itemValue="NaviMumbai" itemlabel="NaviMumbai"/>
+                                        <apex:selectOption itemValue="Navsari" itemlabel="Navsari"/>
+                                        <apex:selectOption itemValue="Nawada" itemlabel="Nawada"/>
+                                        <apex:selectOption itemValue="Nawalgarh" itemlabel="Nawalgarh"/>
+                                        <apex:selectOption itemValue="Nawanshahr" itemlabel="Nawanshahr"/>
+                                        <apex:selectOption itemValue="Nayagarh" itemlabel="Nayagarh"/>
+                                        <apex:selectOption itemValue="Neemuch" itemlabel="Neemuch"/>
+                                        <apex:selectOption itemValue="Nellore" itemlabel="Nellore"/>
+                                        <apex:selectOption itemValue="NewDelhi" itemlabel="NewDelhi"/>
+                                        <apex:selectOption itemValue="Nizamabad" itemlabel="Nizamabad"/>
+                                        <apex:selectOption itemValue="Noida" itemlabel="Noida"/>
+                                        <apex:selectOption itemValue="Ooty" itemlabel="Ooty"/>
+                                        <apex:selectOption itemValue="Orchha" itemlabel="Orchha"/>
+                                        <apex:selectOption itemValue="Osmanabad" itemlabel="Osmanabad"/>
+                                        <apex:selectOption itemValue="Pakaur" itemlabel="Pakaur"/>
+                                        <apex:selectOption itemValue="Palakkad" itemlabel="Palakkad"/>
+                                        <apex:selectOption itemValue="Pali" itemlabel="Pali"/>
+                                        <apex:selectOption itemValue="Palwal" itemlabel="Palwal"/>
+                                        <apex:selectOption itemValue="Panaji" itemlabel="Panaji"/>
+                                        <apex:selectOption itemValue="Panchkula" itemlabel="Panchkula"/>
+                                        <apex:selectOption itemValue="Panipat" itemlabel="Panipat"/>
+                                        <apex:selectOption itemValue="Panna" itemlabel="Panna"/>
+                                        <apex:selectOption itemValue="Parbhani" itemlabel="Parbhani"/>
+                                        <apex:selectOption itemValue="Patan" itemlabel="Patan"/>
+                                        <apex:selectOption itemValue="Pathanamthitta" itemlabel="Pathanamthitta"/>
+                                        <apex:selectOption itemValue="Pathankot" itemlabel="Pathankot"/>
+                                        <apex:selectOption itemValue="Patiala" itemlabel="Patiala"/>
+                                        <apex:selectOption itemValue="Patna" itemlabel="Patna"/>
+                                        <apex:selectOption itemValue="Perambalur" itemlabel="Perambalur"/>
+                                        <apex:selectOption itemValue="PernemTaluka" itemlabel="PernemTaluka"/>
+                                        <apex:selectOption itemValue="Phek" itemlabel="Phek"/>
+                                        <apex:selectOption itemValue="Pilibhit" itemlabel="Pilibhit"/>
+                                        <apex:selectOption itemValue="Pinjore" itemlabel="Pinjore"/>
+                                        <apex:selectOption itemValue="Pithoragarh" itemlabel="Pithoragarh"/>
+                                        <apex:selectOption itemValue="Pondicherry" itemlabel="Pondicherry"/>
+                                        <apex:selectOption itemValue="Porbandar" itemlabel="Porbandar"/>
+                                        <apex:selectOption itemValue="PortBlair" itemlabel="PortBlair"/>
+                                        <apex:selectOption itemValue="Pudukkottai" itemlabel="Pudukkottai"/>
+                                        <apex:selectOption itemValue="Pune" itemlabel="Pune"/>
+                                        <apex:selectOption itemValue="Puri" itemlabel="Puri"/>
+                                        <apex:selectOption itemValue="Purnia" itemlabel="Purnia"/>
+                                        <apex:selectOption itemValue="Puruliya" itemlabel="Puruliya"/>
+                                        <apex:selectOption itemValue="Pushkar" itemlabel="Pushkar"/>
+                                        <apex:selectOption itemValue="RaeBareli" itemlabel="RaeBareli"/>
+                                        <apex:selectOption itemValue="Raichur" itemlabel="Raichur"/>
+                                        <apex:selectOption itemValue="Raigarh" itemlabel="Raigarh"/>
+                                        <apex:selectOption itemValue="Raipur" itemlabel="Raipur"/>
+                                        <apex:selectOption itemValue="Raisen" itemlabel="Raisen"/>
+                                        <apex:selectOption itemValue="Rajahmundry" itemlabel="Rajahmundry"/>
+                                        <apex:selectOption itemValue="Rajauri" itemlabel="Rajauri"/>
+                                        <apex:selectOption itemValue="Rajgarh" itemlabel="Rajgarh"/>
+                                        <apex:selectOption itemValue="Rajkot" itemlabel="Rajkot"/>
+                                        <apex:selectOption itemValue="Rajnandgaon" itemlabel="Rajnandgaon"/>
+                                        <apex:selectOption itemValue="Rajpura" itemlabel="Rajpura"/>
+                                        <apex:selectOption itemValue="Rajsamand" itemlabel="Rajsamand"/>
+                                        <apex:selectOption itemValue="Ramanathapuram" itemlabel="Ramanathapuram"/>
+                                        <apex:selectOption itemValue="Rampur" itemlabel="Rampur"/>
+                                        <apex:selectOption itemValue="Ranchi" itemlabel="Ranchi"/>
+                                        <apex:selectOption itemValue="Ranikhet" itemlabel="Ranikhet"/>
+                                        <apex:selectOption itemValue="Ratlam" itemlabel="Ratlam"/>
+                                        <apex:selectOption itemValue="Ratnagiri" itemlabel="Ratnagiri"/>
+                                        <apex:selectOption itemValue="Raurkela" itemlabel="Raurkela"/>
+                                        <apex:selectOption itemValue="Rayagada" itemlabel="Rayagada"/>
+                                        <apex:selectOption itemValue="Rewa" itemlabel="Rewa"/>
+                                        <apex:selectOption itemValue="Rewari" itemlabel="Rewari"/>
+                                        <apex:selectOption itemValue="Rohtak" itemlabel="Rohtak"/>
+                                        <apex:selectOption itemValue="Roorkee" itemlabel="Roorkee"/>
+                                        <apex:selectOption itemValue="Ropar/Rupnager" itemlabel="Ropar/Rupnager"/>
+                                        <apex:selectOption itemValue="Rudrapur" itemlabel="Rudrapur"/>
+                                        <apex:selectOption itemValue="Sagar" itemlabel="Sagar"/>
+                                        <apex:selectOption itemValue="Saharanpur" itemlabel="Saharanpur"/>
+                                        <apex:selectOption itemValue="Saharsa" itemlabel="Saharsa"/>
+                                        <apex:selectOption itemValue="Sahibganj" itemlabel="Sahibganj"/>
+                                        <apex:selectOption itemValue="Saiha" itemlabel="Saiha"/>
+                                        <apex:selectOption itemValue="Salem" itemlabel="Salem"/>
+                                        <apex:selectOption itemValue="Sancoale" itemlabel="Sancoale"/>
+                                        <apex:selectOption itemValue="Sangli" itemlabel="Sangli"/>
+                                        <apex:selectOption itemValue="Sangrur" itemlabel="Sangrur"/>
+                                        <apex:selectOption itemValue="Satara" itemlabel="Satara"/>
+                                        <apex:selectOption itemValue="Satna" itemlabel="Satna"/>
+                                        <apex:selectOption itemValue="SawaiMadhopur" itemlabel="SawaiMadhopur"/>
+                                        <apex:selectOption itemValue="Sehore" itemlabel="Sehore"/>
+                                        <apex:selectOption itemValue="Seoni" itemlabel="Seoni"/>
+                                        <apex:selectOption itemValue="Serchhip" itemlabel="Serchhip"/>
+                                        <apex:selectOption itemValue="Shahjahanpur" itemlabel="Shahjahanpur"/>
+                                        <apex:selectOption itemValue="Shillong" itemlabel="Shillong"/>
+                                        <apex:selectOption itemValue="Shimla" itemlabel="Shimla"/>
+                                        <apex:selectOption itemValue="Shimoga" itemlabel="Shimoga"/>
+                                        <apex:selectOption itemValue="Shivpuri" itemlabel="Shivpuri"/>
+                                        <apex:selectOption itemValue="Sibsagar" itemlabel="Sibsagar"/>
+                                        <apex:selectOption itemValue="Sidhi" itemlabel="Sidhi"/>
+                                        <apex:selectOption itemValue="Sikar" itemlabel="Sikar"/>
+                                        <apex:selectOption itemValue="Silchar" itemlabel="Silchar"/>
+                                        <apex:selectOption itemValue="Siliguri" itemlabel="Siliguri"/>
+                                        <apex:selectOption itemValue="Silvassa" itemlabel="Silvassa"/>
+                                        <apex:selectOption itemValue="Sirohi" itemlabel="Sirohi"/>
+                                        <apex:selectOption itemValue="Sirsa" itemlabel="Sirsa"/>
+                                        <apex:selectOption itemValue="Sitapur" itemlabel="Sitapur"/>
+                                        <apex:selectOption itemValue="Sivaganga" itemlabel="Sivaganga"/>
+                                        <apex:selectOption itemValue="Solan" itemlabel="Solan"/>
+                                        <apex:selectOption itemValue="Solapur" itemlabel="Solapur"/>
+                                        <apex:selectOption itemValue="Somvarpet" itemlabel="Somvarpet"/>
+                                        <apex:selectOption itemValue="Sonipat" itemlabel="Sonipat"/>
+                                        <apex:selectOption itemValue="Srikakulam" itemlabel="Srikakulam"/>
+                                        <apex:selectOption itemValue="Srinagar" itemlabel="Srinagar"/>
+                                        <apex:selectOption itemValue="Sultanpur" itemlabel="Sultanpur"/>
+                                        <apex:selectOption itemValue="Sundargarh" itemlabel="Sundargarh"/>
+                                        <apex:selectOption itemValue="Surat" itemlabel="Surat"/>
+                                        <apex:selectOption itemValue="Tawang" itemlabel="Tawang"/>
+                                        <apex:selectOption itemValue="Tezpur" itemlabel="Tezpur"/>
+                                        <apex:selectOption itemValue="Thane" itemlabel="Thane"/>
+                                        <apex:selectOption itemValue="Thanjavur" itemlabel="Thanjavur"/>
+                                        <apex:selectOption itemValue="Thiruvallur" itemlabel="Thiruvallur"/>
+                                        <apex:selectOption itemValue="Thiruvarur" itemlabel="Thiruvarur"/>
+                                        <apex:selectOption itemValue="Thoubal" itemlabel="Thoubal"/>
+                                        <apex:selectOption itemValue="Thrissur" itemlabel="Thrissur"/>
+                                        <apex:selectOption itemValue="Tikamgarh" itemlabel="Tikamgarh"/>
+                                        <apex:selectOption itemValue="Tinsukia" itemlabel="Tinsukia"/>
+                                        <apex:selectOption itemValue="Tiruchirapalli" itemlabel="Tiruchirapalli"/>
+                                        <apex:selectOption itemValue="Tirunelveli" itemlabel="Tirunelveli"/>
+                                        <apex:selectOption itemValue="Tirupathi" itemlabel="Tirupathi"/>
+                                        <apex:selectOption itemValue="Tonk" itemlabel="Tonk"/>
+                                        <apex:selectOption itemValue="Trivandrum" itemlabel="Trivandrum"/>
+                                        <apex:selectOption itemValue="Tuensang" itemlabel="Tuensang"/>
+                                        <apex:selectOption itemValue="Tumkur" itemlabel="Tumkur"/>
+                                        <apex:selectOption itemValue="Udaipur" itemlabel="Udaipur"/>
+                                        <apex:selectOption itemValue="Udhampur" itemlabel="Udhampur"/>
+                                        <apex:selectOption itemValue="Udupi" itemlabel="Udupi"/>
+                                        <apex:selectOption itemValue="Ujjain" itemlabel="Ujjain"/>
+                                        <apex:selectOption itemValue="Umaria" itemlabel="Umaria"/>
+                                        <apex:selectOption itemValue="Una" itemlabel="Una"/>
+                                        <apex:selectOption itemValue="Unnao" itemlabel="Unnao"/>
+                                        <apex:selectOption itemValue="Uttarkashi" itemlabel="Uttarkashi"/>
+                                        <apex:selectOption itemValue="Vadodara" itemlabel="Vadodara"/>
+                                        <apex:selectOption itemValue="Valsad" itemlabel="Valsad"/>
+                                        <apex:selectOption itemValue="Vapi" itemlabel="Vapi"/>
+                                        <apex:selectOption itemValue="Varanasi" itemlabel="Varanasi"/>
+                                        <apex:selectOption itemValue="Varca" itemlabel="Varca"/>
+                                        <apex:selectOption itemValue="Vellore" itemlabel="Vellore"/>
+                                        <apex:selectOption itemValue="Vidisha" itemlabel="Vidisha"/>
+                                        <apex:selectOption itemValue="Vijayawada" itemlabel="Vijayawada"/>
+                                        <apex:selectOption itemValue="Viluppuram" itemlabel="Viluppuram"/>
+                                        <apex:selectOption itemValue="Virar" itemlabel="Virar"/>
+                                        <apex:selectOption itemValue="Virudhunagar" itemlabel="Virudhunagar"/>
+                                        <apex:selectOption itemValue="Visakhapatnam" itemlabel="Visakhapatnam"/>
+                                        <apex:selectOption itemValue="Vizianagaram" itemlabel="Vizianagaram"/>
+                                        <apex:selectOption itemValue="Vyara" itemlabel="Vyara"/>
+                                        <apex:selectOption itemValue="Warangal" itemlabel="Warangal"/>
+                                        <apex:selectOption itemValue="Wardha" itemlabel="Wardha"/>
+                                        <apex:selectOption itemValue="Washim" itemlabel="Washim"/>
+                                        <apex:selectOption itemValue="Wokha" itemlabel="Wokha"/>
+                                        <apex:selectOption itemValue="Yamunanagar" itemlabel="Yamunanagar"/>
+                                        <apex:selectOption itemValue="Yanam" itemlabel="Yanam"/>
+                                        <apex:selectOption itemValue="Yavatmal" itemlabel="Yavatmal"/>
+                                        <apex:selectOption itemValue="Zirakhpur" itemlabel="Zirakhpur"/>
+                                        <apex:selectOption itemValue="Zunheboto" itemlabel="Zunheboto"/>
+                                        <apex:selectOption itemValue="Others" itemlabel="Others"/>
+      </apex:selectList>
+      <!--/select--></td>
+      <td>&nbsp;</td>
+      <td width="11%">Pin Code:</td>
+      <td><!--input name="pincode" class="validate[optional,custom[onlyNumberSp]] text-input" id="textfield6" size="15" maxlength="6" type="text" /-->
+      <apex:inputtext id="textfield7" styleclass="validate[optional,custom[onlyNumberSp]] text-input" value="{!PinCode}" />
+      <apex:inputhidden id="hiddenIsValidPinCode" value="{!IsValidPinCode}"/>
+      </td>
+      <td>&nbsp;</td>
+       <td height="30" width="12%">Country<span class="style2"></span>:</td>
+      <td><!--input name="mobile" class="validate[required,custom[phone]] text-input_date" onkeypress="intOnly(this);" id="textfield5" maxlength="10" type="text" /-->
+      <!-- <span><apex:outputtext id="textfield89" styleclass="validate[required,custom[country]] text-input_date" value="{!Country}"      /></span> -->
+      <input type="text"  class="validate[required,custom[phone]] text-input_date" name="jquery:formID:textfield89" id="jquery:formID:textfield89" value="India" readonly = "readonly" />
+
+
+      </td>
+      
+      <td>&nbsp;</td>
+      </tr>
+    <tr>
+      <td width="11%">Email<span class="style2">*</span>:</td>
+      <td><!--input name="email" class="validate[required,custom[email]] text-input" id="textfield9" type="text" /-->
+      <apex:inputtext id="textfield11" styleclass="validate[required,custom[email]] text-input" value="{!leadEmail}" />
+      <apex:inputHidden id="hiddenEmailStatus" value="{!IsValidEmail}"/>
+      
+      </td>
+            <td>&nbsp;</td>
+      <td>Landline:</td>
+      <td width="10%"><!--input name="std" class="form_std" id="textfield7" type="text" /-->
+          <apex:inputtext id="textfield9" styleclass="form_std" value="{!leadstdCode}" style="margin-right: 4px;"/>
+        <!--input name="landline" class="form_landline" id="textfield8" type="text" /-->
+        <apex:inputtext id="textfield10" styleclass="form_landline" value="{!leadPhone}" />
+        </td>
+      <!-- -->
+      <td>&nbsp;</td>
+       <td height="30" width="12%">Mobile<span class="style2">*</span>:</td>
+      <td><!--input name="mobile" class="validate[required,custom[phone]] text-input_date" onkeypress="intOnly(this);" id="textfield5" maxlength="10" type="text" /-->
+      <apex:inputtext id="textfield8" styleclass="validate[required,custom[phone]] text-input_date" onkeypress="intOnly(this);" value="{!leadMobile}" />
+     <apex:inputHidden id="hiddenIsValidMobile" value="{!IsValidMobile}"/>
+      </td>
+      <!-- -->
+      </tr>
+    <tr>
+      <td height="30" width="5%">Occupation:</td>
+      <td colspan="7"><table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody><tr style="padding-right: 25px;">
+          <apex:selectradio value="{!Occupation}" styleClass="occupationbox">
+        <apex:selectOption itemValue="Service" itemLabel="Service" />
+        <apex:selectOption itemValue="Professional" itemLabel="Professional"/>
+        <apex:selectOption itemValue="Business" itemLabel="Business"/>
+        <apex:selectOption itemValue="Others" itemLabel="Other (Please specify)"/>
+       </apex:selectradio>
+          
+          <apex:inputtext id="textfield12" styleclass="form_others" value="{!others}" />
+         
+        </tr>
+      </tbody></table></td>
+      </tr>
+    <tr>
+      <td colspan="8" height="20"><span style="float: left;"><apex:image value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'images/xpress_sperator.gif')}"/></span></td>
+    </tr>
+    <div style="clear: both;"></div>
+    <tr>
+            <td colspan="8" height="28"><span class="form_heading" style="float: left; margin-top: 10px; margin-bottom: 5px;">Requirement</span></td>
+      </tr>
+       <div style="clear:both;"></div>
+    <tr>
+           <td colspan="7"><table border="0" cellpadding="0" cellspacing="0" width="100" style="float: left; margin: 5px 0 0 5px;">
+        <tbody><tr>
+             <td> <span style="margin-right: 15px;">Type<span style="color: #DD351B;"> *</span>: </span></td>
+              <apex:selectCheckboxes styleClass="validate[required]" value="{!accomTypes}" >
+                  <apex:selectOptions value="{!Items}" />
+              </apex:selectCheckboxes> 
+        </tr>
+      </tbody></table></td>
+      </tr>
+    <tr>
+
+       <td><span style="float: left; margin-right: 53px; margin-top: 20px; margin-bottom: 20px;">Purpose: </span></td>
+      <td colspan="7"><table border="0" cellpadding="0" cellspacing="0" width="400">
+        <tbody><tr>
+            <apex:selectradio value="{!Purpose}" styleClass="purposebox" >
+            <apex:selectOption itemValue="Stay with family" itemLabel="Stay with family"/>
+            <apex:selectOption itemValue="Investment" itemLabel="Investment"/>
+            <apex:selectOption itemValue="Second/Weekend home" itemLabel="Second/Weekend home"/>
+            </apex:selectradio>
+        </tr>
+      </tbody></table></td>
+    </tr>
+    <tr>
+
+      <td colspan="7"></td>
+    </tr>
+           <div style="clear:both;"></div>
+    <tr>
+<span style="float: left;">
+      <td colspan="8" height="20"><apex:image value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'images/xpress_sperator.gif')}"/></td></span>
+      </tr>
+    <div style="clear: both;"></div>
+    <tr>
+      <td colspan="8"><span class="form_heading" style="float: left; margin-top: 10px; margin-bottom: 10px;">Budget *</span></td>
+      </tr>
+        <div style="clear:both;"></div>
+    <tr>
+      <td colspan="8" height="30"><table border="0" cellpadding="0" cellspacing="0" width="400">
+        <tbody><tr><!-- IT-HD 0057234 : Anupam Agrawal -->
+        <apex:selectradio value="{!BudgetInLakhs}" styleClass="budgetbox" > 
+        <apex:selectOption itemValue="40-50 lacs" itemLabel="40-50 lacs"/>
+        <apex:selectOption itemValue="51-60 lacs" itemLabel="51-60 lacs"/>
+        <apex:selectOption itemValue="61 and Above" itemLabel="61 and Above"/>
+       </apex:selectradio>
+
+          <td width="27%"><apex:commandButton styleClass="submit" action="{!saveLead}" disabled="{!bdisableButton}" onclick="validateForm();" /></td>
+        </tr>
+      </tbody></table></td>
+      </tr>
+    <tr>
+      <td colspan="7"></td>
+    </tr>
+  </tbody></table>
+
+<div align="right"><span class="style1">&nbsp;&nbsp; *Mandatory </span></div>
+ 
+
+
+</apex:form>
+</div>
+</div>
+
+
+
+</div>
+
+
+</apex:page>

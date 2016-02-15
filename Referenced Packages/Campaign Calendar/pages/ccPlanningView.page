@@ -1,0 +1,356 @@
+<apex:page controller="CAMPAIGNCAL.ccPlanningViewController" title="Planning View" label="Campaign Calendar Listing" sidebar="false" tabstyle="Campaign_Calendar__tab">
+    <apex:styleSheet value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/jquery-ui-1.8.11.custom.css')}" /> 
+    <apex:styleSheet value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'calendar.css')}" />  
+    <apex:styleSheet value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.qtip.min.css')}" />  
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/jquery-1.5.2.min.js')}" />
+    <apex:styleSheet value="{!URLFOR($Resource.CAMPAIGNCAL__ccPlanningViewCSS)}"/>
+    <script type="text/javascript" src="{!URLFOR($Resource.ccPlanningViewJS)}"></script>  
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/jquery-ui-1.8.11.custom.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.loadmask-0.4.min.js')}" />   
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.framedialog-1.1.2.min.js')}" />  
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.hoverintent.min.js')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.qtip.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.cookie.js')}" />     
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'icsgen.js')}" /> 
+    <style type="text/css">
+        .campaignCalendarListViewButton {background-position: -26px -55px;}
+    </style> 
+    <script type="text/javascript">
+    	var isPrintView=false;
+        var listPage = '{!URLFOR($Page.ccPlanningView)}';
+        var calendarPage = '{!URLFOR($Page.ccPlanningViewPrint)}';
+        var campaignNewPage = '{!URLFOR($Page.ccNew)}';
+        var campaignEditPage = '{!URLFOR($Page.ccEdit)}';
+        var campaignDescriptionPage = '{!URLFOR($Page.ccDescription)}';
+        var feedbackPage = '{!URLFOR($Page.ccFeedback)}';
+        var colorSettingsPage = '{!URLFOR($Page.ccColorSettings)}';
+        var planningViewPrintPage = '{!URLFOR($Page.ccPlanningViewPrint)}';
+        var planningViewBrowserPrintPage = '{!URLFOR($Page.ccPlanningPrintBrowser)}';
+        var displayDates = {!DisplayDates};
+        var planningViewPage = true;
+        var campaignCalendarIcon = '{!URLFOR($Resource.ccIcons, 'bracketlabs-cctoolbar-icon.png')}';
+        var blccFilterId = '{!JSENCODE(filterId)}';
+        var blccErrors = '{!JSENCODE(errors)}';
+        if (blccErrors != '') {
+            alert(blccErrors);
+        }
+        //use the custom labels
+        var monthLabelArr={1:'{!$Label.ccMonth_1}',2:'{!$Label.ccMonth_2}',3:'{!$Label.ccMonth_3}',4:'{!$Label.ccMonth_4}',5:'{!$Label.ccMonth_5}',6:'{!$Label.ccMonth_6}',7:'{!$Label.ccMonth_7}',8:'{!$Label.ccMonth_8}',9:'{!$Label.ccMonth_9}',10:'{!$Label.ccMonth_10}',11:'{!$Label.ccMonth_11}',12:'{!$Label.ccMonth_12}'};
+        var campaignsPlural='{!$Label.ccStr_Campaign_Plural}';
+        var monthViewIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_090_table.png')}';
+        var planningViewIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_156_show_thumbnails_with_lines.png')}';
+        var previousIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_224_thin_arrow_left.png')}';
+        var nextIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_223_thin_right_arrow.png')}';
+        var dateIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_045_calendar.png')}';
+        var newIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_151_edit.png')}';
+        var printIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_015_print.png')}';
+        var colorIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_092_tint.png')}';
+        var feedbackIcon = '{!URLFOR($Resource.ccIcons, 'glyphicons_194_circle_question_mark.png')}';
+
+
+        // Get a reference to jQuery that we can work with 
+        $j = jQuery.noConflict();
+    
+
+
+    </script>
+    
+    <script type="text/javascript">
+    // Include the UserVoice JavaScript SDK (only needed once on a page)
+    UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/NiDzbElp9xwcArHEcLHgLQ.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
+
+    //
+    // UserVoice Javascript SDK developer documentation:
+    // https://www.uservoice.com/o/javascript-sdk
+    //
+
+    // Set colors
+    UserVoice.push(['set', {
+      accent_color: '#448dd6',
+      trigger_color: 'white',
+      trigger_background_color: 'rgba(46, 49, 51, 0.6)'
+    }]);
+
+    // Identify the user and pass traits
+    // To enable, replace sample data with actual user traits and uncomment the line
+    UserVoice.push(['identify', {
+      email:'{!JSENCODE($User.Email)}', // User’s email address
+      name:'{!JSENCODE($User.FirstName)} {!JSENCODE($User.LastName)}' // User’s real name
+    }]);
+
+
+    // Or, use your own custom trigger:
+    UserVoice.push(['addTrigger', '#uvFeedback', { mode: 'contact' }]);
+    UserVoice.push(['autoprompt', {}]);
+    </script>
+
+    <style type="text/css">
+        .ui-datepicker-calendar {display: none;}​
+        .ui-datepicker button.ui-datepicker-current { display: none; }
+        
+    </style>
+    <style type="text/css">
+.toolbar{width:100%; min-width:1060px; float:left;}
+.toolbar>div{padding:5px 5px 5px 2px;}
+.toolbar .listViewSelectContainer{float:left;}
+.toolbar .listViewSelectContainer span { min-height:14px;font-family: Arial,Helvetica,sans-serif; font-size: 13px;color: #555555;font-weight: bold;padding-right:6px;}
+.toolbar .monthViewSelect{float:left;}
+.toolbar .planningViewSelect{float:left;}
+.toolbar .centerToolbar{float:left;}
+.centerToolbar, .rightToolbar{ padding: 5px 0px 5px 0px !important;}
+.centerToolbar div{float:left;}
+.planningButtonViews{min-width:150px;padding:5px;float:left;height:100%;}
+.toolbar .rightToolbar{float:right;}
+.rightToolbar div{float:left;}
+.toolbarHeaderIcon{}
+.toolbar img{display: block;
+    margin-left: auto;
+    margin-right: auto; 
+    margin-top: 1px;    
+}
+.ui-button-text-only .ui-button-text{padding: 0.3em 1em; !important}
+.previousIncrement{ padding-left:0px;padding-right:4px; }
+.nextIncrement{ padding-left:4px;padding-right:0px; }
+.currentIncrementSelect{ margin-left:8px;margin-right:8px; padding:2px; margin-top:-2px;}
+.incrementToToday{ margin-left:8px;}
+.showDates{ float:left; }
+.showDates input{margin: 0 0 1px;}
+.showHierarchy{ float:left; clear:left; }
+.showHierarchy input{margin: 0 0 1px;}
+.rightToolbar>div{margin-left:8px;margin-right:8px;}
+.rightToolbar>div{padding:2px;}
+.newCampaignButton{ margin-right: 0px !important;}
+body .bPageTitle{ 
+    padding: 4px 4px 4px 4px !important;
+    margin-bottom: 0px !important;
+}
+.arrowButtons{
+    /*min-height: 29px;*/
+}
+.arrowButtons img { margin-top: 0px !important; height:18px;}
+.arrowButtons .ui-button-text{
+    padding: 4px !important;
+}
+.arrowButtons .toolbarHeaderIcon{max-height:20px;}
+
+.toolbarButtonIconOnly{
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.toolbarButtonIconOnly:hover{
+    border-color:#A6A6A6;
+}
+
+span.customStyleSelectBox {
+    background-color: #e6e6e6;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px 5px 5px 5px;
+    color: #7C7C7C;
+    font-size: 11px;
+    padding: 5px 7px;
+}
+span.customStyleSelectBox.changed {
+    background-color: #e6e6e6;
+}
+.customStyleSelectBoxInner {
+    background: url({!URLFOR($Resource.ccZipfile, 'images/canvas-list-nav-item-arrow.gif')}) no-repeat scroll right center transparent;
+}
+
+
+#ccViewSelect .ui-state-disabled{
+    opacity: 1 !important;  
+}
+
+.newCampaignButton img {padding-top:2px;}
+
+.jqueryuibuttontext{ 
+    color: #212121;
+    font-weight: bold;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 13px;
+}
+.pageTitleIcon{ width: 44px !important; margin-top: 3px !important;}
+
+.customStyleSelectBoxInner{
+	min-width: 160px;
+}
+/*webkit for mac hack*/
+.campaignCalendarViewSelect{
+	background: none;
+}
+</style>
+    <apex:form >
+        <apex:actionFunction action="{!viewMonth}" name="viewMonth"/>
+        <apex:actionFunction action="{!viewList}" name="viewList"/>
+        <apex:actionFunction name="refreshLegend" rerender="color-legend-panel" onComplete="createColorLegend();"/>
+    </apex:form>
+    
+    
+    <apex:form >
+    <table width="100%" cellpadding="0" cellspacing="0" style="">
+            <tr>
+                <td width="55%">
+                   <apex:sectionHeader id="pageTitleDate" title="Campaign Calendar" subtitle="{!currentYear}" />
+                </td>
+            </tr>
+        </table>
+<div class="toolbar" >
+    <div class="hiddenPlanningViewValues">
+        <span style="font-size: 13px; color: black;" id="year" class="incrementedValue">{!currentYear}</span>
+        <span style="font-size: 13px; color: black;" id="quarter" class="incrementedValue"></span>
+        <span style="font-size: 13px; color: black;" id="month" class="incrementedValue"></span>
+    </div>
+    <div class="listViewSelectContainer">
+        <apex:outputLabel value="View" style="padding-right: 5px;" styleClass="jqueryuibuttontext" />
+        <apex:selectList styleClass="campaignCalendarViewSelect" value="{!filterId}" size="1">
+                <apex:actionSupport event="onchange" rerender="hiddenFilterId,BtnPrintCalendar" action="{!setFilterId}" oncomplete="loadAndRenderCampaignData('Loading...');" disableDefault="true"/> 
+                <apex:selectOptions value="{!listViewOptions}" />
+        </apex:selectList>
+    </div>
+    <div class="monthViewSelect toolbarButton">
+        <div id="ccViewSelect">
+                <input type="radio" id="ccViewSelect-month" name="ccViewSelect"  onclick="viewMonth()" /><label title="{!$Label.ccStr_Toolbar_MonthViewTooltip}" for="ccViewSelect-month">Month View</label>
+                <input type="radio" id="ccViewSelect-planning" name="ccViewSelect" checked="checked"  onclick="viewList()" disabled="disabled" /><label title="{!$Label.ccStr_Toolbar_PlanViewTooltip}" for="ccViewSelect-planning">Plan View</label>
+        </div>      
+    </div>
+    <div class="planningButtonViews">
+            <div id="pvRadioFilters">
+                <input type="radio" id="pvRadioFilter-month" name="pvRadioFilter" /><label for="pvRadioFilter-month" title="{!$Label.ccStr_PlanningToolbar_ByMonthTooltip}">Month</label>
+                <input type="radio" id="pvRadioFilter-quarter" name="pvRadioFilter" /><label for="pvRadioFilter-quarter" title="{!$Label.ccStr_PlanningToolbar_ByQuarterTooltip}">Quarter</label>
+                <input type="radio" id="pvRadioFilter-year" name="pvRadioFilter" checked="checked" /><label for="pvRadioFilter-year"  title="{!$Label.ccStr_PlanningToolbar_ByYearTooltip}">Year</label>
+            </div>
+        </div>
+    <div class="centerToolbar">
+        <div class="centerToolbarIcons">
+            <div class="previousIncrement toolbarButton arrowButtons" title="{!$Label.ccStr_Toolbar_PreviousTooltip}" >
+                <img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_224_thin_arrow_left.png')}" />
+            </div>
+            <div class="nextIncrement toolbarButton arrowButtons" title="{!$Label.ccStr_Toolbar_NextTooltip}" >
+                <img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_223_thin_right_arrow.png')}" />
+            </div>
+            
+            <div class="incrementToToday" title="{!$Label.ccStr_Toolbar_Today}"><a href="#">Today</a></div>
+            
+            <div class="currentIncrementSelect toolbarButton toolbarButtonIconOnly">
+                <img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_045_calendar.png')}" title="{!$Label.ccStr_Toolbar_DateTooltip}" />
+                <div style="visibility:hidden;max-width:0px !important; max-height:0px !important;">
+                    <input style="visibility:hidden;max-width:0px !important; max-height:0px !important;" type='text' id='manualIncrement' />
+                </div>
+            </div>
+            <div class="checkboxContainer">
+                <div class="showDates" title="{!$Label.ccStr_Toolbar_ShowDates}"><input onClick="javascript:toggleShowDates($j(this));" checked="checked" name="showDates" type="checkbox" />
+                <label for="showDates" class="jqueryuibuttontext">Dates</label></div>
+                <div class="showHierarchy" title="{!$Label.ccStr_Toolbar_ShowHierarchy}"><input onClick="javascript:toggleShowHierarchy($j(this));" name="showHierarchy" id="showHierarchy" type="checkbox" />
+                <label for="showHierarchy" class="jqueryuibuttontext">Hierarchy</label></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rightToolbar">
+
+        <div class="newCampaignButton toolbarButton toolbarButtonIconOnly" title="{!$Label.ccStr_Toolbar_NewTooltip}">
+            <img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_151_edit.png')}" />
+        </div>
+        <div class="printBtn toolbarButton toolbarButtonIconOnly" title="{!$Label.ccStr_Toolbar_PrintTooltip}">
+            <img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_015_print.png')}" />
+        </div>
+		<apex:outputPanel rendered="{!displayColorSettingsButton}">
+        <div class="colorBtn toolbarButton colorSettingsButton toolbarButtonIconOnly" id="colorSettingsButton" title="{!$Label.ccStr_Toolbar_ColorTooltip}">
+        	<img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_092_tint.png')}" />
+        </div>
+        </apex:outputPaneL>   
+        <apex:outputPanel rendered="{!NOT(displayColorSettingsButton)}">
+        <div class="colorBtn toolbarButton toolbarButtonIconOnly" id="colorSettingsButton" title="{!$Label.ccStr_Toolbar_ColorTooltip}">
+        	<img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_092_tint.png')}" />
+        </div>
+        </apex:outputPaneL>   
+        
+        <div class="icsDownloadButton toolbarButton toolbarButtonIconOnly" title="{!$Label.ccStr_Toolbar_Calendar}" >
+            <img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_filetypes_125_ics.png')}" />
+        </div>
+
+        <div id="uvFeedback" class="bracketLabsFeedbackButton toolbarButton toolbarButtonIconOnly"  title="{!$Label.ccStr_Toolbar_FeedbackTooltip}">
+            <img class="toolbarHeaderIcon" src="{!URLFOR($Resource.ccIcons, 'glyphicons_194_circle_question_mark.png')}" />
+        </div>
+        
+    </div>
+</div>
+        <apex:outputPanel id="campaignList"><div class="bPageBlock apexDefaultPageBlock secondaryPalette"></div>
+            <div id="planningView" style="min-height:500px;">
+            <table id="planningViewTable_month" class="planningViewTables">
+                    <thead>
+                        <tr>
+                            <th class="wide" style="text-align: left;" tdtype="name">{!$Label.ccStr_Campaign}</th>
+                            <th tdtype="previous" class="planningMonth_previous previousnext">&laquo;</th>
+                            <th tdtype="calendar"></th>
+                            <th tdtype="next" class="planningMonth_next previousnext">&raquo;</th>
+                            <th class="wide" tdtype="description">{!$Label.ccStr_Description}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="planningViewData">
+                    </tbody>
+                </table>
+                <table id="planningViewTable_quarter" class="planningViewTables">
+                    <thead>
+                        <tr>
+                            <th class="wide" style="text-align: left;" >{!$Label.ccStr_Campaign}</th>
+                            <th class="previousnext">&laquo;</th>
+                            <th class="pv_QuarterViewMonth"></th>
+                            <th class="pv_QuarterViewMonth"></th>
+                            <th class="pv_QuarterViewMonth"></th>
+                            <th class="previousnext">&raquo;</th>
+                            <th class="wide">{!$Label.ccStr_Description}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="planningViewData">
+                    </tbody>
+                </table>
+                <table id="planningViewTable_year" class="planningViewTables">
+                    <thead>
+                        <tr>
+                            <th class="wide" style="text-align: left;" >{!$Label.ccStr_Campaign}</th>
+                            <th class="previousnext">&laquo;</th>
+                            <th>{!$Label.ccMonth_1}</th>
+                            <th>{!$Label.ccMonth_2}</th>
+                            <th>{!$Label.ccMonth_3}</th>
+                            <th>{!$Label.ccMonth_4}</th>
+                            <th>{!$Label.ccMonth_5}</th>
+                            <th>{!$Label.ccMonth_6}</th>
+                            <th>{!$Label.ccMonth_7}</th>
+                            <th>{!$Label.ccMonth_8}</th>
+                            <th>{!$Label.ccMonth_9}</th>
+                            <th>{!$Label.ccMonth_10}</th>
+                            <th>{!$Label.ccMonth_11}</th>
+                            <th>{!$Label.ccMonth_12}</th>
+                            <th class="previousnext">&raquo;</th>
+                            <th class="wide">{!$Label.ccStr_Description}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="planningViewData">
+                    </tbody>
+                </table>
+            </div>
+        </apex:outputpanel>
+        <apex:outputPanel id="hiddenFilterId"><input type="hidden" id="filterId" value="{!filterId}" /></apex:outputPanel>
+    </apex:form>
+    
+<apex:outputPanel id="color-legend-panel">    
+    <div style="display:none;">
+        <div id="color-appendix">
+            <table>
+                <input id="active-color-field" type="hidden" value="{!activeColorField}" />
+                <apex:repeat value="{!colorIndex}" var="colorSettings">
+                    <tr>
+                        <td><span style="background-color: {!HTMLENCODE(colorSettings.Color)};">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{!colorSettings.Option}</td>
+                    </tr>
+                </apex:repeat> 
+            </table>
+        </div>
+    </div>
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!isYardstickEnabled}">
+    <iframe id="ys" name="ys" src="" scrolling="no" width="0" frameborder="0" height="0"></iframe>
+    <script>window.frames["ys"].document.location.href="https://{!JSENCODE(getSFHost)}/apex/YSTICK__YardstickTrackClick?url="+parent.document.URL;</script>
+</apex:outputPanel>
+</apex:page>

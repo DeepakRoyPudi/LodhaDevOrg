@@ -1,0 +1,160 @@
+﻿<apex:page standardController="Account" extensions="AccountDespatchRelatedListController" sidebar="false" showHeader="false"> 
+    <apex:form id="results">
+    <apex:sectionHeader subtitle="Dispatch"/>
+        <apex:pageblock >
+            <div id="dialog">
+            <div id="as-root"></div>
+            <script>
+    
+                (function(e,t,n){
+                    var r,i=e.getElementsByTagName(t)[0];
+                    if(e.getElementById(n))return;
+                    r=e.createElement(t);
+                    r.id=n;
+                    r.src="//apps.aftership.com/all.js";
+                    i.parentNode.insertBefore(r,i)
+                })
+                (document,"script","aftership-jssdk")
+
+                window.onload = removeFocus;
+                function removeFocus(){
+                    window.blur();
+                }
+
+            </script>
+            </div> 
+        
+            <!-- Filter Section -->
+                <table width="100%">
+                    <tr>
+                        <td style="padding-top:5px;"><apex:outputtext > Content </apex:outputtext></td>
+                        <td><apex:inputtext value="{!searchContent}" id="input" onfocus="this.blur();"/></td>
+                        <td> </td>
+                        <td> </td>
+                        <td style="padding-top:5px;"><apex:outputText >Despatch Date From </apex:outputText></td>
+                        <td><apex:inputField value="{!fromDateSearch.Despatch_Date__c}" onfocus="this.blur();"/></td>
+                        <td style="padding-top:5px;"><apex:outputText > To </apex:outputText></td>
+                        <td><apex:inputField value="{!toDateSearch.Despatch_Date__c}" onfocus="this.blur();"/></td>
+                        <td> </td>
+                        <td> </td>
+                        <td style="padding-top:5px;"><apex:outputtext > Last Delivery status </apex:outputtext></td>
+                        <td><apex:inputtext value="{!searchStatus}"/></td>
+                        <td> </td>
+                        <td><apex:commandButton value="Go" action="{!searchByFilter}"/></td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                    </tr>
+                </table>
+
+                <br/>
+                
+                <apex:pageblockTable value="{!listDespatch}" var="despatch">
+                
+                    <!-- Action Column -->
+                    <apex:column headerValue="Action">
+                        <apex:commandLink action="{!editDespatch}"  target="_parent" rendered="{!isEditLink}">Edit
+                            <apex:param name="desId" value="{!despatch.Id}"/>
+                        </apex:commandLink>
+                        <apex:outputText rendered="{!isEditLink}"> &nbsp;|&nbsp; </apex:outputText>
+                        <apex:commandLink action="{!deleteDespatch}" onclick="return confirm('Are you sure?');"  target="_self" rendered="{!isDeleteLink}">Del
+                            <apex:param name="desId" value="{!despatch.Id}"/>
+                        </apex:commandLink>
+                        <apex:outputText rendered="{!isDeleteLink}"> &nbsp;|&nbsp; </apex:outputText>
+                        <apex:commandLink action="{!openDespatch}" value="View"  target="_parent"> 
+                            <apex:param name="despatchId" value="{!despatch.Id}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    <!-- WayBill No with Track Status Button -->
+                   <apex:column headerValue="WayBill No" style="text-align: right;"> 
+<!--                        <apex:outputPanel rendered="{!(!(CONTAINS(despatch.Last_Delivery_Status__c,'DELIVERED') || CONTAINS(despatch.Last_Delivery_Status__c,'Delivered') || CONTAINS(despatch.Last_Delivery_Status__c,'delivered')))}" > -->
+                            <div class="as-track-button" data-tracking-number="{!despatch.Waybill_No__c}" data-slug="{!despatch.slug__c}" data-counter="true" data-support="true" data-width="400" data-size="small"></div>
+<!--                        </apex:outputPanel> -->
+<!--                        <apex:outputField value="{!despatch.Waybill_No__c}" rendered="{!CONTAINS(despatch.Last_Delivery_Status__c,'DELIVERED') || CONTAINS(despatch.Last_Delivery_Status__c,'Delivered') || CONTAINS(despatch.Last_Delivery_Status__c,'delivered')}"/> -->
+                    </apex:column>
+                   <!-- WayBill Date -->
+                   <apex:column headerValue="WayBill Date">
+                       <!-- <apex:facet name="header">
+                           <apex:commandLink value="WayBill Date" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Waybill_Date__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet>  -->
+                       <apex:outputField value="{!despatch.Waybill_Date__c}"/>
+                   </apex:column>
+                   <!-- Despatch Date -->
+                    <apex:column headerValue="Despatch Date">
+                       <!-- <apex:facet name="header">
+                           <apex:commandLink value="Despatch Date" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Despatch_Date__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet> -->
+                       <apex:outputField value="{!despatch.Despatch_Date__c}"/>
+                   </apex:column>
+                   <!-- Courier Name -->
+                   <apex:column headerValue="Courier Name">
+                       <!-- <apex:facet name="header">
+                           <apex:commandLink value="Courier Name" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Courier_Name__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet> -->
+                       <apex:outputField value="{!despatch.Courier_Name__c}"/>
+                   </apex:column>
+                   <!-- Area -->
+                   <apex:column headerValue="Area">
+                       <!-- <apex:facet name="header">
+                           <apex:commandLink value="Area" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Area__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet> -->
+                       <apex:outputField value="{!despatch.Area__c}"/>
+                   </apex:column>
+                   <!-- Contents -->
+                   <apex:column headerValue="Contents">
+                       <!-- <apex:facet name="header">
+                           <apex:commandLink value="Contents" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Contents__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet> -->
+                       <apex:outputField value="{!despatch.Contents__c}"/>
+                   </apex:column>
+                   <!-- MileStone -->
+                   <apex:column headerValue="Milestone">
+                       <!-- <apex:facet name="header">
+                           <apex:commandLink value="Milestone" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Milestone__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet> -->
+                       <apex:outputField value="{!despatch.Milestone__c}"/>
+                   </apex:column>
+                   <!-- Sender Name -->
+                   <apex:column headerValue="Sender Name">
+                      <!-- <apex:facet name="header">
+                           <apex:commandLink value="Sender Name" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Sender_Name__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet>  -->
+                       <apex:outputField value="{!despatch.Sender_Name__c}"/>
+                   </apex:column>
+                   <!-- Last Delivery Status -->
+                   <apex:column headerValue="Last Delivery Status">
+                       <!-- <apex:facet name="header">
+                           <apex:commandLink value="Last Delivery Status" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Last_Delivery_Status__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet> -->
+                       <apex:outputField value="{!despatch.Last_Delivery_Status__c}"/>
+                   </apex:column>
+                   <!-- Delivered Date -->
+                   <apex:column headerValue="Delivered Date">
+                       <!-- <apex:facet name="header">
+                           <apex:commandLink value="Last Delivery Status" action="{!toggleSort}" rerender="results">
+                               <apex:param name="sortField" value="Last_Delivery_Status__c" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                       </apex:facet> -->
+                       <apex:outputField value="{!despatch.Delivered_Date__c}"/>
+                   </apex:column>
+                </apex:pageblockTable>
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

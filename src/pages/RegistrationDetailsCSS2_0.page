@@ -1,0 +1,372 @@
+<!-- 
+    Description:
+    VisualForce page for Registration Details tab CSS
+    @Created by: AditiMulmule
+    @Created Date: 26/03/2015
+         
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    |Aditi Mulmule      26/03/2015            Initial Draft    Functionality in 
+                                                              Progress
+                                                              
+    | Sudeep Dube       03/06/2015            1.1             1.Changes in Registration 
+                                                             Details Popup for Resheduling Dates
+                                                             by user and mail functionality to
+                                                             send email to RM  
+                                                             
+    | Sudeep Dube       03/07/2015            1.1           Implemenation of Draft Link Functionality 
+                                                            Using Box Integration
+                                                                                                       
+    --------------------------------------------------------------------------------
+    
+      -->
+<apex:page sidebar="false" title="Registration Details" controller="RegistrationDetailsCSS2_0Controller" showHeader="false" docType="html-5.0" action="{!enableViewAgreementButton}">
+    <apex:composition template="LandingPageCSS2_0">
+        <apex:define name="body">
+     
+    <style>
+        .col-md-2 {
+        left: 4%;
+        }
+        .col-md-4 {
+        left: 4%;  
+        }
+        .col-md-5 {
+        left: 4%;
+        }
+        .well1{
+        margin-bottom:0px;
+        margin-left:4%;
+        margin-right:4%; 
+        }
+        .well2{  
+        margin-bottom:0px;
+        margin-left:4%;
+        margin-right:4%;
+        }
+        .well {
+        margin-bottom:0px;
+        }
+        .link {
+        text-align: left;
+        text-decoration: underline;
+        }
+        body {
+        background-image: url({!IF(isProjectWise,imageUrl  ,($Resource.CSS_Background_Image))
+        }
+        );
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        }
+        .reg
+        {
+        left: 12.5%;
+        }
+        @media (min-width: 100px) and (max-width:1199px){
+        .reg{left: 50px;}
+        }
+        #assign-action-spinner-main {position: fixed;left: 0;top: 0;background-color:rgba(0,0,0,.6);height: 100%;width: 100%;z-index: 999;align: center;vertical-align: middle;}
+        #assign-action-spinner-content {position: absolute; top: 50%;left: 45%;z-index: 1000;background-color:none;width: 40px;height: 40px;}
+        #assign-action-spinner-content img {width: 40px;height: 40px;align: center;vertical-align: middle;}
+    </style>
+    <apex:outputPanel > 
+           <body>
+                <c:GoogleAnalytics Page="My Referral" 
+                    User="{!username}" 
+                    Project="{!userProject}"
+                    Segment="{!userSeqment}"
+                    CRN="{!CRN}"
+                    Gender="male"
+                    LastLogin="{!userLastLogin}"
+                    />
+                <apex:actionStatus id="msg" layout="block" style="align:center">
+                    <apex:facet name="start">
+                        <div id="assign-action-spinner-main" style="align:center">
+                            <div id="assign-action-spinner-content" style="align:center"> 
+                                <img  style="align:center" src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}"  />  
+                            </div>
+                        </div>
+                    </apex:facet>
+                </apex:actionStatus>
+                <apex:form id="formID">
+                    <div class="container container_allpages" >
+                        <div class="panel panel-default panelmargintop" style="margin-right:2%;" >
+                            <div class="panel-heading">
+                                <h3 class="panel-title"> <span class="glyphicon glyphicon-registration-mark"></span> Registration Details</h3>
+                            </div>
+                            <div class="panel-body" style="padding-bottom:3%;">
+                             <!-------------- Panel visible when registration not done------------------->
+                             <apex:outputPanel rendered="{!(IsBlank(account_obj.Booking_Details__r[0].Registered_Date__c))}">
+                             <!---draft Agreement Link -->
+                                     <!------Code for Agreement link Start -------->
+                                <apex:actionFunction action="{!viewAgreement}" 
+                                    name="viewAgreement"  status="msg"
+                                    reRender="lblInfo pnlFirstAgreementLabel pnlAgreementLabel"
+                                    oncomplete="populateBoxFrame('{!strViewAgreementUrl}', '{!$Site.CurrentSiteUrl}')"/>
+                               
+                                <!-----Code for Agreement link END----->
+                                  <div class="col-md-5">
+                                    <apex:commandLink action="{!viewAgreement}"
+                                        oncomplete="populateBoxFrame('{!strViewAgreementUrl}', '{!$Site.CurrentSiteUrl}')"
+                                        value="Draft Agreement Link" 
+                                        rendered="{!(blnShowAgreementButton)}" styleclass="link" status="msg"/>
+                                    <apex:outputPanel rendered="{!ShowMessage}">
+                                        Draft Agreement Link will be active post payment of  project specific min 
+                                        amount for registration {!Round($Setup.View_Agreement_CV_Limits__c.CV_Paid_Lower_Limit__c*100,2)}% 
+                                        of CV
+                                    </apex:outputPanel>
+                                    <!--  <a href="{!Draft_Agreement_Link}" target="_blank" >Draft Agreement Link</a> -->
+                                   </div>
+                                   <div class="col-md-1">
+                                   </div>
+                                   <div class="col-md-5 link">
+                                    <a href="{!registration_link}" target="_blank">Registration Guidelines</a>
+                                   </div>
+                                    <div class="col-md-1">
+                                    </div>
+                                   <br/>
+                                   <br/>
+                                <div style="width:90% ;margin-left:4%" align="center">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body" >
+                                               Registration related information will be available here post your registration process is complete.
+                                            </div>
+                                        </div>
+                                </div>
+                                <br/>
+                                <div style="margin-left:4%;">
+                                    <apex:outputPanel id="lblDisclaimer"  rendered="{!blnShowAgreementButton}" >
+                                        <div style="font-size:12px;">
+                                            <b><u>Disclaimer</u> :</b>   
+                                            The draft Agreement to Sell is a standard agreement applicable for the Project. 
+                                            All commercials and specifics relating to the Unit booked by the customer as 
+                                            mentioned in the Application Form shall be set out in the individual agreement 
+                                            to sell to be entered into with the respective customer. Please use Internet 
+                                            Explorer 10 and above or Google Chrome to view the draft agreement.
+                                        </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                             <!---draft Agreement Link -->      
+                             
+                             </apex:outputPanel>
+                             <!-------------- End of Panel visible when registration not done------------------->
+                             
+                             
+                             <!-------------- Panel visible when registration done------------------->
+                             <apex:outputPanel rendered="{!Not(IsBlank(account_obj.Booking_Details__r[0].Registered_Date__c))}">
+                              <br/>
+                                <div class="col-md-5 link">
+                                    <a href="{!registered_agreement_link}" target="_blank">Registered Agreement Link</a>
+                                </div>
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-2">
+                                    <apex:outputLabel >Registration Date :</apex:outputLabel>
+                                </div>
+                                <div class="col-md-4">
+                                    <apex:outputField value="{!account_obj.Booking_Details__r[0].Registered_Date__c}" /> 
+                                </div>
+                                <!--<div class="col-md-2">
+                                    <apex:outputLabel >Registration Charges :</apex:outputLabel>
+                                </div>
+                                <div class="col-md-4">
+                                    <apex:outputPanel rendered="{Not(IsBlank(RestAPICallout_wrapper_obj.registration_charges))}">
+                                        INR 
+                                        <c:FormatCurrencyComponent currency_value="{!RestAPICallout_wrapper_obj.registration_charges}"/>
+                                    </apex:outputPanel>
+                                </div> -->
+                                <div class="clear"></div>
+                                <br/>
+                              
+                             
+                                <!--<div class="col-md-2">
+                                    <apex:outputLabel >Stamp Duty : </apex:outputLabel>
+                                </div>
+                                <div class="col-md-4">
+                                    <apex:outputPanel rendered="{!Not(IsBlank(RestAPICallout_wrapper_obj.stamp_duty))}">
+                                        INR 
+                                        <c:FormatCurrencyComponent currency_value="{!RestAPICallout_wrapper_obj.stamp_duty}"/>
+                                    </apex:outputPanel>
+                                </div>
+                                   
+                                <div class="col-md-2">
+                                    <apex:outputLabel > Agreement Date :</apex:outputLabel>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                                 <div class="clear"></div>
+                                 <br/>
+                                <div class="col-md-2">
+                                    <apex:outputLabel >Registration Number :</apex:outputLabel>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                               
+                             
+                                
+                                <div class="clear"></div>
+                                <br/>
+                                <div class="col-md-2">
+                                    <apex:outputLabel >Registration Location :</apex:outputLabel>
+                                </div>
+                                <div class="col-md-4">
+                                </div> -->
+                                <div class="clear"></div>
+                               
+                             
+                             </apex:outputPanel>
+                             <!-------------- End of Panel visible when registration done------------------->
+                             
+                             
+                               
+                                <!---------draft Link popup show the draft Link------->
+                                <div id="draftLinkModalID" class="modal fade" >
+                                    <div class="modal-dialog" style="width:100%;height:initial;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title"><span class="glyphicon glyphicon-list-alt"></span>
+                                                    Draft Agreement Document
+                                                </h4>
+                                            </div>
+                                            <div class="modal-body" id="test">
+                                                <apex:iframe width="100%" height="500px" src="" id="draftIframeID" scrolling="true"/>
+                                            </div>
+                                            <!-- <div class="modal-footer">
+                                                </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!---------------->
+                                             <!-- Registration Visit Rescheduling Form -->
+                       <!--         <apex:outputPanel rendered="{!(IsBlank(RestAPICallout_wrapper_obj.registration_date))}">
+                                    <div style="width:90% ;margin-left:4%" align="center">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body" >
+                                                <apex:outputPanel rendered="{!NOT(isQueryTypeCaseExist)}">
+                                                    <h6> (Registration Related Query Not Exist)</h6>
+                                                </apex:outputPanel>
+                                                <div align="center" style="width:90%;">
+                                                    <div class="well col-md-5 well1"  style="margin-bottom: 0%;">
+                                                        <div class="col-md-12" align="left">
+                                                            <apex:outputLabel ><b>Scheduled Registration Details</b></apex:outputLabel>
+                                                        </div>
+                                                        <div class="clear"></div>
+                                                        <br/>
+                                                        <div class="container" style="width:100%;" align="left">
+                                                            <div class="col-md-7" align="left">
+                                                                <apex:outputLabel >Date : </apex:outputLabel>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <apex:outputText value="{!schedule_Date}"> </apex:outputText>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                            <div class="col-md-7">
+                                                                <apex:outputLabel >Time : </apex:outputLabel>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <apex:outputText value="{!schedule_time}"> </apex:outputText>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                            <div class="col-md-7">
+                                                                <apex:outputLabel rendered="false">Venue : </apex:outputLabel>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <apex:outputText value="xxxxxx" rendered="false"/>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    
+                                                    <div class=" well col-md-5 well2" style="padding-bottom:4.7%;margin-bottom: 0%;">
+                                                        <apex:outputPanel id="reschedulefieldSectionID">
+                                                            <div class="col-md-12" align="left">
+                                                                <apex:outputLabel ><b>Reschedule My Visit</b></apex:outputLabel>
+                                                                <apex:commandLink value="Reschedule Request" action="{!toggleEdit}" oncomplete="yearIncr();" reRender="reschedulefieldSectionID"  style="float:right;color:#015BA7" Rendered="{!AND(Not(isEdit),isQueryTypeCaseExist)}" status="msg"/>
+                                                                <apex:commandLink value=" Cancel" action="{!toggleEdit}" reRender="reschedulefieldSectionID,statusMail,submitmsg,formID"  style="float:right;color:#015BA7" Rendered="{!AND(isEdit,isQueryTypeCaseExist)}" status="msg"/>
+                                                                <apex:outputText value=" | " rendered="{!isEdit}" style="float:right;padding-left:10px;padding-right:10px;"/>
+                                                                <apex:commandLink value="Send " action="{!sendEmailToRM}" reRender="reschedulefieldSectionID,statusMail,submitmsg,formID"  style="float:right;color:#015BA7" Rendered="{!AND(isEdit,isQueryTypeCaseExist)}" status="msg"/>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                            <br/>
+                                                            <div class="container" style="width:100%;" align="left">
+                                                                <div class="col-md-7">
+                                                                    <apex:outputLabel >Proposed Date : </apex:outputLabel>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <apex:outputText value="{!reSchedule_Date}"  rendered="{!Not(isEdit)}"></apex:outputText>
+                                                                    <apex:inputField value="{!virtualcase.Stage_Date__c}" rendered="{!isEdit}" style="width:100%"/>
+                                                                </div>
+                                                                <div class="clear"></div>
+                                                                <div class="col-md-7">
+                                                                    <apex:outputLabel >Proposed Time : </apex:outputLabel>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <apex:outputText value="{!reSchedule_time}"  rendered="{!Not(isEdit)}"> </apex:outputText>
+                                                                    <apex:outputPanel rendered="{!isEdit}">
+                                                                        <div class="input-append bootstrap-timepicker">
+                                                                            
+                                                                            <apex:input id="timepicker1" value="{!virtualTime}" type="time" styleclass="input-small" style="width:100%"/>
+                                                                            <i class="icon-time"></i>
+                                                                        </div>
+                                                                        <script type="text/javascript">
+                                                                            $('#timepicker1').timepicker();
+                                                                             $('.dateFormat').hide();
+                                                                        </script>
+                                                                    </apex:outputPanel>
+                                                                </div>
+                                                                <div class="col-md-7">
+                                                                    <apex:outputText value=" " />
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <apex:outputText value=" " />
+                                                                </div>
+                                                            </div>
+                                                        </apex:outputPanel>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </apex:outputPanel> -->       
+                                <!-- form container -->
+                            </div>
+                            <!-- Panel Body -->
+                        </div>
+                        <!-- Panel -->
+                    </div>
+                    <!-- Container -->
+                    <div class="foorterdiv"></div>
+                </apex:form>
+                <script>
+                    //Function Adds the Source URL to the Iframe to display the Contents from Box
+                    function populateBoxFrame(pStrAgreementUrl, pStrCurrentSiteUrl){
+                        
+                        
+                        if(pStrAgreementUrl != ''){      
+                           
+                            $('#draftLinkModalID').modal('show'); 
+                            $('#draftIframeID').attr("src",'https://view-api.box.com/1/sessions/' + pStrAgreementUrl+ '/view?theme=dark');
+                            //window.open('https://view-api.box.com/1/sessions/' + pStrAgreementUrl+ '/view?theme=dark');
+                            //window.open(pStrCurrentSiteUrl + "AgreementView?sessionId=" + pStrAgreementUrl,'_blank');
+                        }
+                        else{
+                            viewAgreement();
+                        }
+                        //$("#iframeBoxView").attr("src", pStrAgreementUrl);
+                    }
+                    
+                    // jQuery.noConflict(); // you can use $ instead
+                    
+                    
+                </script>
+            </body>
+             </apex:outputPanel>
+        </apex:define>
+    </apex:composition>
+</apex:page>

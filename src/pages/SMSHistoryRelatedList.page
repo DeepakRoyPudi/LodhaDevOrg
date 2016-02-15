@@ -1,0 +1,121 @@
+<!--
+Description: A Page to display the SMS History related list of Documents on Account detail page with sortable columns
+
+Version    Date            Author            Description
+1.0        06/06/2014      Asmita Bubane     Initial Draft
+-->
+
+
+<apex:page standardController="Account" extensions="SMSHistoryRelatedListController" docType="html-5.0" id="myPage" sidebar="false" showHeader="false">
+    <script>
+        window.onload = removeFocus;
+        function removeFocus(){
+            window.blur();
+        }
+    </script>
+    <apex:form id="myForm">
+    <apex:sectionHeader subtitle="SMS History"/>
+    <apex:pageMessages id="errors" />
+        <apex:pageblock id="results">
+            <!-- Filter Section -->
+            <table width="100%">
+                <tr>
+                    <td width="200px"><b><apex:outputText >Filter By : </apex:outputText></b></td>
+                </tr>
+                <tr>
+                    <td><apex:outputtext > SMS Type </apex:outputtext></td>
+                    <td><apex:inputtext value="{!searchName}" id="input1"/></td>
+                    <td> </td>
+                    <td><apex:outputText >From Date </apex:outputText></td>
+                    <td><apex:inputField value="{!fromDateSearch.Created_Date__c}"/></td>
+                    <td><apex:outputText >To Date </apex:outputText></td>
+                    <td><apex:inputField value="{!toDateSearch.Created_Date__c}"/></td>
+                    <td> </td>
+                    <td><apex:commandButton value="Go" action="{!searchByFilter}"/></td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td><apex:commandButton value="SMS History Report" action="{!displayReport}" oncomplete="generateReport('{!sms_report_page}');"/></td>
+                </tr>
+            </table>
+
+            <br/>
+            
+            <!-- Related List -->                
+                <apex:pageblocktable value="{!listSmsHistory}" var="sms">
+                
+                    <!-- Action Column -->
+                    <apex:column headerValue="Action">
+                        <apex:commandLink action="{!editSmsHistory}"  target="_parent" rendered="{!isEditLink}">Edit
+                            <apex:param name="smsId" value="{!sms.Id}"/>
+                        </apex:commandLink>
+                        <apex:outputText rendered="{!isEditLink}"> &nbsp;|&nbsp; </apex:outputText>
+                        <apex:commandLink action="{!deleteSmsHistory}" onclick="return confirm('Are you sure?');"  target="_self" rendered="{!isDeleteLink}">Del
+                            <apex:param name="smsId" value="{!sms.Id}"/>
+                        </apex:commandLink>
+                        <apex:outputText rendered="{!isDeleteLink}"> &nbsp;|&nbsp; </apex:outputText>
+                        <apex:commandLink action="{!openSmsRecord}" value="View"  target="_parent"> 
+                            <apex:param name="smsId" value="{!sms.Id}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    <!-- Mobile Number Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Mobile Number" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Mobile_Number__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!sms.Mobile_Number__c}"/>
+                    </apex:column>
+                    <!-- SMS Text Column -->
+                    <apex:column headerValue="SMS Text">
+                        <apex:outputField value="{!sms.SMS_Text__c}"/>
+                    </apex:column>
+                    <!-- SMS Type Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="SMS Type" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="SMS_Type__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!sms.SMS_Type__c}"/>
+                    </apex:column>
+                    <!-- Created Date Column -->
+                     <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Created Date" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Created_Date__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!sms.Created_Date__c}"/>
+                    </apex:column>
+                    <!-- Status Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Status" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Status__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!sms.Status__c}"/>
+                    </apex:column>
+                    <!-- Remark Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Remark" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Remark__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!sms.Remark__c}"/>
+                    </apex:column>
+                    
+                </apex:pageblocktable>
+        </apex:pageblock>
+    </apex:form>
+    <script>
+        
+        function generateReport(reportPage){
+            window.open(reportPage);
+        }
+    </script>
+</apex:page>

@@ -1,0 +1,115 @@
+<!--
+Description: A Page to display the related list of Notes and Attachments on Account detail page with sortable columns
+
+        Version    Date            Author            Description
+        1.0        10/6/2014      Asmita Bubane     Initial Draft
+-->
+
+
+<apex:page standardController="Account" extensions="NotesAndAttachmentRLOnAccountController" docType="html-5.0" id="myPage">
+
+    <apex:form id="myForm">
+        <apex:pageMessages id="errors" />
+        <apex:pageblock id="results">
+        	<!-- Filter Table -->
+        	
+        	<center>
+        		<table>
+        			<tr>
+        				<td>Filter By Title: </td>
+        				<td><apex:inputtext value="{!searchName}"/></td>
+        				<td> </td>
+                        <td><apex:commandButton value="Go" action="{!searchByFilter}"/></td> 
+                        <td> </td>
+                        <td> </td>  
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>
+                        <td> </td>      			
+                		<td><apex:commandButton value="Attach File" action="{!attachFile}" oncomplete="attchFileClicked('{!attachFileLink}');"/></td>
+                		<td> </td>
+                		<td><apex:commandButton value="View All" action="{!viewAll}" oncomplete="viewFileClicked('{!viewFileLink}');"/></td>
+                    </tr>
+        		</table>
+        	</center>         
+            
+            <!-- Related List -->                
+                <apex:pageblocktable value="{!listAttachment}" var="attach">
+                
+                    <!-- Action Column -->
+                    <apex:column headerValue="Action">
+                        <apex:commandLink action="{!editAttachment}"  target="_parent">Edit
+                            <apex:param name="attachId" value="{!attach.Id}"/>
+                        </apex:commandLink>&nbsp;|&nbsp;
+                        <apex:commandLink action="{!deleteAttachment}" onclick="if(!confirm('Are you sure?')){return};"  target="_parent">Del
+                            <apex:param name="attachId" value="{!attach.Id}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    
+                    <!-- File Name Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Title" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Name" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:commandLink action="{!openAttachment}" value="{!attach.Name}"  target="_parent">
+                            <apex:param name="attachId" value="{!attach.Id}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    <!-- Description Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Description" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Description" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!attach.Description}"/>
+                    </apex:column>
+                    <!-- Attachment Type -->
+                    <apex:column headerValue="Attachment Type">
+                        <apex:outputText value="Email" rendered="{!IF(CONTAINS(attach.Description, 'https://mail.google.com/mail'), true, false)}"/>
+                        <apex:outputText value="Manual" rendered="{!IF(CONTAINS(attach.Description, 'https://mail.google.com/mail'), false, true)}"/> 
+                    </apex:column>
+                    <!-- Last Modified Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Last Modified" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="LastModifiedDate" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!attach.LastModifiedDate}"/>
+                    </apex:column>
+                    <!-- Created By Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Created By" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="CreatedById" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!attach.CreatedById}"/>
+                    </apex:column>
+                    <!-- Created Date Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Created Date" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="CreatedDate" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!attach.CreatedDate}"/>
+                    </apex:column>
+                    
+                </apex:pageblocktable>
+        </apex:pageblock>
+    </apex:form>
+    
+    <script>
+        function attchFileClicked(attachLink){
+            window.open(attachLink);
+        }
+        
+        function viewFileClicked(viewLink){
+            window.open(viewLink);
+        }
+    </script>
+</apex:page>

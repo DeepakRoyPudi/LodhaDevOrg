@@ -1,0 +1,9 @@
+<apex:page >
+<!-- Begin Default Content REMOVE THIS -->
+<h1>ERROR !</h1>
+<apex:form >
+<p>YOU DO NOT HAVE PERMISSIONS TO PERFORM THIS ACTION.</p>
+<p>Please contact your system administrator if you want to perform this action.</p>
+</apex:form>
+<!-- End Default Content REMOVE THIS -->
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page StandardController="Case"  Extensions="CaseAssignmentController" recordSetVar="NotClosedCases" action="{!autoAssignment}">   
+<apex:sectionHeader title="Re-assigning Cases"/>   
+<apex:outputPanel >       
+Re-assigning all the cases. 
+</apex:outputPanel> 
+</apex:page>

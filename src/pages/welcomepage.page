@@ -1,0 +1,15 @@
+<apex:page showheader="false" sidebar="false">
+<style>
+h1
+{
+text-align:center;
+color:blue;
+}
+</style>
+<apex:form >
+<marquee> <h1>
+This is my first VisualForce Page! </h1>
+</marquee>
+<h1> This text is displayed without INLINE styles </h1>   
+</apex:form>
+</apex:page>

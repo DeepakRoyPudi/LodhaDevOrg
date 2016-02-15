@@ -1,0 +1,5 @@
+<apex:page showHeader="true" cache="false" sidebar="false">
+<div style= "width: 100%; float:left;" >
+<center><apex:image value="{!$Resource.Channel_Partner_Home_Page}" width="100%" /></center>
+</div>
+</apex:page>

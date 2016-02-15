@@ -1,0 +1,323 @@
+<apex:page Controller="TaskCreateController" id="thepage" tabStyle="Account" >
+ <apex:pageMessages />
+    <apex:includeScript value="{!URLFOR($Resource.jQuery)}"/>  
+    <apex:includeScript value="{!URLFOR($Resource.JQueryTestUI)}"/> 
+
+<style type="text/css">
+
+/*.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader h3 {
+    font-size: 1.1em;color:black;
+}*/
+.processing_msg_code{
+    padding: 6px 0 6px 24px;
+    font-family: Arial,Tahoma,Verdana,Helvetica,Sans-serif; 
+    background: url(/img/loading.gif) left center no-repeat;
+    display: inline-block;    
+    font-size: 12px;
+    text-align: center;
+    margin-left: 23px;
+
+  }
+  #popupcontent {
+    background-color: white;
+    border: 1px solid #585858;
+    display: none;
+    height: 8%;
+    left: 50%;
+    line-height: 31px;
+    overflow: auto;
+    padding: 5px;
+    position: fixed;
+    top: 50%;
+    width: 12%;
+    z-index: 100;
+}
+#opaque {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: none;
+    background-color: gray;
+    filter: alpha(opacity=80);
+    opacity: 0.8;
+    -moz-opacity:0.8;
+    -khtml-opacity:0.8
+}
+#tsid, #helpNav, #userNav, #sidebarCell{    
+    height: 30px;   
+    margin-top: 6px;    
+    position: relative;    
+    z-index: 1;
+    }
+* html #opaque {
+    position: absolute;
+}
+.center
+{
+text-align:center;
+}
+
+  #accountpanel{height: 100%;
+    position: relative;}
+    #accrequiredBlock {
+    background-color: #C00;
+    bottom: 3px;
+    left: -4px;
+    position: absolute;
+    top: -153px;
+    width: 3px;
+    }
+     #queryrequiredBlock {
+    background-color: #C00;
+    bottom: 0px;
+    left: -4px;
+    position: absolute;
+    top: 6px;
+    width: 3px;
+    }
+    .hightlightfield{
+    background-color: #CC0000;position: relative; display:block;top: 1px;float:left;height:20px;width: 3px;left: -0.8px;
+    }
+    
+    .hightlighttextarea{
+    background-color: #CC0000;position: relative; display:block;top: 1px;float:left;height:60px;width: 3px;left: -4px;
+    }
+    
+</style>
+
+<script>
+   function showpopup()
+   {
+     // document.getElementById('opaque').style.display='block';
+      var popUp = document.getElementById("popupcontent");
+      popUp.style.display = "block";
+
+   } 
+    function hidepopup()
+   {
+      var popUp = document.getElementById("popupcontent");
+      popUp.style.display = "none";
+      document.getElementById('opaque').style.display='none';
+     
+   }
+    $(document).ready(function(){            
+         
+         $(".statusclass :eq(0)").remove();
+         
+    });
+    function oncompletequerytype(){
+    
+        $(".documentclass").attr('size','22');
+        $(".possessionclass").attr('size','13');
+    }
+    
+    function checkreminderset(){
+     
+      var mcCbxCheck = $('.remindercheck');
+    if(mcCbxCheck.is(':checked')) {
+        alert('checked');
+        return true;
+    }
+    }
+    
+    function openGoogle(){
+        window.open('http://172.29.7.44/cdi/CDIMain.aspx?ID=000'+{!crn}+'&SRC=eu1.salesforce.com','location')
+    }
+   
+   </script>
+ <div id="opaque"/>
+   <div id="popupcontent">
+   <div class="processing_msg_code">Loading...</div>
+      </div>
+  <apex:form id="Editform" rendered="{!Iseditform}" >
+        <apex:sectionHeader subtitle="New Task" title="Task Edit"/>        
+        <apex:pageBlock title="Task Edit">
+         <apex:pageBlockButtons >
+         <apex:commandButton value="Save" action="{!Createtask}"/>
+         <apex:commandButton value="Cancel"  immediate="true" action="{!Cancel}"/>
+         <apex:commandButton value="Get CDI Info" reRender="test" onclick="openGoogle()"/>
+         <apex:actionStatus id="displaystatus"  onstart="showpopup();" onstop="hidepopup();">
+         <h1>Center-aligned heading</h1>
+         </apex:actionStatus>
+
+
+         </apex:pageBlockButtons>
+              
+            <apex:pageBlockSection title="Task Information"  id="taskinfo" columns="2" collapsible="true" >
+            
+            <apex:inputField value="{!newtask.OwnerId}"/>
+            <apex:inputField value="{!newtask.ReminderDate__c}"/>
+            <apex:inputField value="{!newtask.Status}" styleClass="statusclass"/>
+            <apex:inputField value="{!newtask.ReminderTime__c}"/>
+            <apex:inputField value="{!newtask.Target_Completion_Date__c}" required="true"/>
+            <apex:inputTextarea value="{!newtask.Description}"  cols="75" rows="10" label="Email Comments"/>          
+
+            <!--apex:inputCheckbox styleClass="remindercheck" value="{!reminderset}" label="Reminder Set" onchange="checkreminderset()"/-->            
+            <!-- <apex:inputField value="{!newtask.IsReminderSet}"/-->
+           
+            
+            </apex:pageBlockSection>
+        
+           <apex:pageBlockSection collapsible="true"/>
+          <apex:pageBlockSection title="Additional Information"  id="additionalinfo" columns="1">
+          <div class="requiredInput">        
+          <apex:selectList value="{!subjectpickval}" multiselect="false" size="1" label="Interaction Mode" required="true">         
+             <div class="hightlightfield"></div>      
+          <apex:selectOptions value="{!describesubjectpiclist}" />
+          </apex:selectList>
+          </div>
+          <apex:inputField value="{!newtask.Communication_Type__c}" required="true"/>
+          <apex:inputField value="{!newtask.Call_sType__c}" required="true"/>           
+                                 
+        
+        
+         <apex:pageBlockSectionitem >
+          <apex:outputLabel value="Query Type"> </apex:outputLabel>
+          <apex:actionRegion immediate="false">   
+          <div class="requiredInput">  
+          <div class="requiredBlock" id="queryrequiredBlock"></div> 
+          <apex:inputField value="{!newtask.Query_Type__c}">                         
+          <apex:actionSupport event="onchange" action="{!Onchange}"  status="displaystatus" immediate="false" reRender="relatedpanel" oncomplete="oncompletequerytype();" />               
+          </apex:inputField>
+          </div>
+          </apex:actionRegion>
+          </apex:pageBlockSectionitem>
+        </apex:pageBlockSection>
+
+        
+        <apex:outputPanel id="relatedpanel">
+        
+        <apex:pageBlockSection title="Payment Related"  collapsible="true" id="paymentinfo" columns="1" rendered="{!Ispaymentrelated}">        
+        <apex:pageBlockSectionitem >
+        <apex:outputLabel value="Payment Related"/>
+        <apex:actionRegion immediate="false">  
+        <apex:inputField value="{!newtask.Query_Sub_Type_Payment_Related__c}">
+        <apex:actionSupport event="onchange" action="{!OnchangePaymentRelated}"  status="displaystatus" immediate="false" reRender="paymentrelatedpanel"/>                        
+        </apex:inputField>
+        </apex:actionRegion>
+        </apex:pageBlockSectionitem>
+         
+         
+         
+        <apex:outputPanel id="paymentrelatedpanel">       
+        <apex:pageBlockSection columns="1">
+        
+        <apex:outputText rendered="{!Isptp}"><b style="padding-top: 30px;float: left;"><u>PTP</u></b></apex:outputText>
+        <apex:inputField value="{!newtask.Pick_up_Date__c}" rendered="{!Isptp}" required="{!Isptp}"/>
+        <apex:inputField value="{!newtask.Amount__c}" rendered="{!Isptp}"/>
+        <apex:actionregion immediate="false">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;<apex:outputLabel value="Mode of Payment" rendered="{!Isptp}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <apex:inputField value="{!newtask.Mode_of_payment_Made__c}" rendered="{!Isptp}">
+        <apex:actionSupport event="onchange" action="{!OnchangeSubPaymentRelated}"  status="displaystatus" immediate="false" reRender="subpaymentrelatedpanel"/>
+        </apex:inputField> 
+        </apex:actionregion>
+        <apex:inputField value="{!newtask.Arrange_Pick_up__c}" rendered="{!Isptp}"/> 
+        
+        <apex:outputPanel id="subpaymentrelatedpanel"> 
+        <apex:inputCheckbox value="{!customeraware}" rendered="{!if((Isptp&&Isneft),true,false)}">
+        <b><i><u>Declaration</u>:I have made the customer aware of the online payment process and benefits of the same.</i></b>     
+        </apex:inputCheckbox> 
+        </apex:outputPanel>
+        
+        <apex:outputText rendered="{!Ispaymentmade}"><b style="padding-top: 30px;float: left;"><u>Payment made already</u></b></apex:outputText>
+        <apex:inputField value="{!newtask.Date_of_Payment__c}" rendered="{!Ispaymentmade}"/>
+        <apex:inputField value="{!newtask.Amt_to_be_paid__c}" rendered="{!Ispaymentmade}"/>
+        <apex:inputField value="{!newtask.Amt_already_paid__c}" rendered="{!Ispaymentmade}"/>  
+        
+        <apex:outputText rendered="{!Isinterestrelated}"><b style="padding-top: 30px;float: left;"><u>Interest Related</u></b></apex:outputText>
+        <apex:inputField value="{!newtask.Interest_Related__c}" rendered="{!Isinterestrelated}"/>
+        
+        <apex:outputText rendered="{!Isservicerelated}"><b style="padding-top: 30px;float: left;"><u>Service Tax Related</u></b></apex:outputText>
+        <apex:inputField value="{!newtask.Service_Tax_Related__c}" rendered="{!Isservicerelated}"/>
+        
+        <apex:outputText rendered="{!Iswillpay}"><b style="padding-top: 30px;float: left;"><u>Will Not Pay</u></b></apex:outputText>
+        <apex:inputField value="{!newtask.Sub_query_Type_2_Payment_Related__c}" rendered="{!Iswillpay}" required="{!Iswillpay}"/>
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Comments"/>
+        <apex:outputPanel styleClass="requiredInput" id="accountpanel">
+        <span class="requiredBlock" id="accrequiredBlock"></span>
+        <apex:inputTextarea value="{!paymentcomment}" cols="100" rows="10" label="Comments" required="{!Ispaymentrelated}"/>        
+        </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        </apex:outputPanel>
+        
+        
+    
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Document/Information Related"  collapsible="true" id="documentinfo" columns="1" rendered="{!Isdocumentrelated}">
+        <apex:inputField value="{!newtask.Query_Sub_Type_Document_Information__c}" styleClass="documentclass" />
+        <apex:inputTextarea value="{!documentcomment}" cols="100" rows="10" label="Comments" />
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Possession Related"  collapsible="true" id="Possessioninfo" columns="1" rendered="{!Ispossessionrelated}">
+        <apex:inputField value="{!newtask.Query_Sub_Type_Possession_Related__c}" styleClass="possessionclass"/>
+        <apex:inputTextarea value="{!possessioncomment}" cols="100" rows="10" label="Comments" />
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Lead Related / Event Tracking"  collapsible="true" id="leadinfo" columns="1" rendered="{!Isleadrelated}">
+        <apex:inputField value="{!newtask.Query_Type_Lead_Generation__c}"/>
+        <apex:inputTextarea value="{!leadcomment}" cols="100" rows="10" label="Comments" />
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Customer IT Tools Related"  collapsible="true" id="customerinfo" columns="1" rendered="{!Iscustomerrelated}">
+        <apex:inputField value="{!newtask.Query_Sub_Type_System_Related__c}"/>
+        <apex:inputField value="{!newtask.Sub_query_Type_Customer_Related__c}"/>
+        
+        <apex:inputTextarea value="{!customercomment}" cols="100" rows="10" label="Comments" />
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Cancellation Related"  collapsible="true" id="cancellationinfo" columns="1" rendered="{!Iscancellationrelated}">
+        
+        <apex:pageBlockSectionitem >
+        <apex:outputLabel value="Cancellation Related"/>
+        <apex:actionRegion immediate="false">  
+        <apex:inputField value="{!newtask.Query_Sub_Type_Cancellation_Related__c}">
+        <apex:actionSupport event="onchange" action="{!OnchangecancelRelated}"  status="displaystatus" immediate="false" reRender="cancelrelatedpanel"/>                        
+        </apex:inputField>
+        </apex:actionRegion>
+        </apex:pageBlockSectionitem>
+        
+        <apex:outputPanel id="cancelrelatedpanel">
+        <apex:pageBlockSection rendered="{!Isretentioncall}" columns="1">
+        <apex:inputField value="{!newtask.Query_Sub_Type_1_Cancellation_Related__c}" /> 
+        <apex:inputField value="{!newtask.Reason_for_Cancellation__c}" /> 
+        <apex:inputField value="{!newtask.Customer_wishes_to_continue__c}"/> 
+        <apex:inputField value="{!newtask.Result_of_retention_call__c}"/> 
+        </apex:pageBlockSection>
+        </apex:outputPanel>              
+        
+        <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Comments"/>
+        <apex:outputPanel styleClass="requiredInput" id="accountpanel">
+        <div class="requiredBlock" id="accrequiredBlock"></div>
+        <apex:inputTextarea value="{!cancellationcomment}" cols="100" rows="10" label="Comments" required="{!Iscancellationrelated}"/>
+        </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+         
+         <apex:outputpanel id="welcomecallrelated" rendered="{!Iswelcomecallrelated}">
+         <apex:pageBlockSection title="Welcome Call Related"  collapsible="true" id="welcomecallinfo" columns="1" >
+        <apex:inputTextarea value="{!welcomecallcomment}" cols="100" rows="10" label="Comments" />
+        </apex:pageBlockSection>
+         </apex:outputpanel>
+         
+         <apex:outputpanel id="TDSRelated" rendered="{!IsTDSAuthorizationrelated}">
+         <apex:pageBlockSection title="TDS Related"  collapsible="true" id="TDSRelatedinfo" columns="1" >
+         <apex:inputfield id="AuthorizationPicklist" value="{!newtask.TDS_Related__c}"/>
+         <apex:inputTextarea value="{!TDSAuthorizationcomment}" cols="100" rows="10" label="Comments"/>
+         </apex:pageBlockSection>
+         </apex:outputpanel>
+         
+         
+        </apex:outputPanel>
+        </apex:pageBlock>
+
+   </apex:form> 
+</apex:page>

@@ -1,0 +1,11 @@
+<apex:page >
+<div style="margin: 30px 30px 30px 30px;font-size:13px;">
+<b>Dear Member,<br/><br/>
+
+We are currently upgrading the portal to serve you better. In the mean while, for any queries regarding referral rewards, <br/>kindly contact our help desk number 022 6773 7363 or write to us at clubcasa@lodhagroup.com / Preferati@lodhagroup.com.<br/> Sorry for the inconvenience. 
+<br/><br/>
+Warm Regards, <br/>
+Team ClubCASA/Preferati 
+<br/></b>
+</div>
+</apex:page>

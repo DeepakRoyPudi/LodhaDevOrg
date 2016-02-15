@@ -1,0 +1,23 @@
+<apex:component controller="SiteLoginController" id="loginComponent">
+  <apex:form id="loginForm" forceSSL="true" >
+    <apex:outputPanel layout="block" id="panel" >
+      <apex:pageMessages id="error"/>
+      <apex:panelGrid columns="8" style="margin-top:1em;" id="grid">
+        <apex:outputLabel value="{!$Label.site.username} :" for="username" style="padding-right:5px;font-family:futura_md_btmedium, Arial;"/>
+        <apex:inputText id="username" value="{!username}" style="border: 1px rgb(100, 92, 92) solid; height:21px; width:150px;" title="Please enter User Name e.g. Harshit Saxena"/>
+        <apex:outputText value=""/><apex:outputText value=""/>
+        <apex:outputLabel value="{!$Label.site.password} :" for="password"/>
+        <apex:inputSecret id="password" value="{!password}" style="border: 1px rgb(100, 92, 92) solid; height:21px; width:150px;" title="Please enter your password e.g. 123456"/>
+        <apex:outputText value=""/>
+        <apex:commandLink id="loginButton" action="{!login}"><apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'imgs_03.jpg')}" style="width:90px;"/></apex:commandLink>
+        <apex:outputText value=""/>
+        </apex:panelGrid>
+        <apex:panelGroup id="theLinks">
+          <!--<apex:outputLink value="{!$Page.ForgotPasswordCustom}" style="font-size:12px;color:#A0A0A0;" target="Center"> {!$Label.site.forgot_your_password_q}</apex:outputLink>-->
+          <apex:outputLink value="{!$Page.ForgotPassword}" style="font-size:12px;color:#A0A0A0;" target="Center"> {!$Label.site.forgot_your_password_q}</apex:outputLink>
+          <apex:outputText value=" | " rendered="{!$Site.RegistrationEnabled}" />
+          <apex:outputLink value="{!$Page.SiteRegister}" rendered="{!$Site.RegistrationEnabled}">{!$Label.site.new_user_q}</apex:outputLink>
+        </apex:panelGroup>
+    </apex:outputPanel>
+  </apex:form>
+</apex:component>

@@ -1,0 +1,20 @@
+<apex:page sidebar="false" showHeader="false" docType="html-5.0" controller="PossessionInformationCSS2_0Controller">    
+<apex:composition template="LandingPageCSS2_0">
+    <apex:define name="body">
+<!--     <p>This is a simple page demonstrating that this -->
+<!--      this is Possession page of Customer.</p> -->
+     <apex:iframe src="http://221.135.139.147/knowledge-bank/lodha-projects/" /> 
+<!-- {!possession_info} -->
+         <!-- Google Analtyics component -->
+                <c:GoogleAnalytics Page="Po" 
+                        User="{!username}" 
+                        Project="{!userProject}"
+                        Segment="{!userSeqment}"
+                        CRN="{!userCRN}"
+                        Gender="male"
+                        LastLogin="{!userLastLogin}"
+                />
+            <!-- End Of Google Analtyics component -->  
+    </apex:define>
+</apex:composition>
+</apex:page>

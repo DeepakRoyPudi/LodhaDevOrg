@@ -1,0 +1,33 @@
+<apex:page id="LoyaltyLead" standardController="SCUD_Information__c"  extensions="spSendScudEmailController" showHeader="true" sidebar="false">
+<apex:form Id="sendEmail">
+<script language="JavaScript">
+function confirmation()
+{
+var sscomments = document.getElementById('{!$Component.sendEmail.Comments}').value;
+
+if(sscomments == '')
+{
+    alert('Error:\nPlease enter SS Comments');   
+}
+else
+{
+    var con = confirm("Do you want to Send EMail to SCUD Members?");
+    if(con)
+    {
+        sendMail();
+    }
+}
+
+}
+</script>
+
+SS Comments: <br/> 
+<apex:inputtextarea id="Comments" cols="150" value="{!ScudInfo.Sales_Strategist_Comments__c}" />
+<apex:selectRadio id="ScStatus" value="{!scudStatus}">
+    <apex:selectOptions value="{!items}"/>
+</apex:selectRadio> 
+<apex:commandButton value="Send Email" oncomplete="window.top.location='/{!ScudInfo.id}'" onclick="confirmation()" disabled="{!sendEmail}" />
+
+<apex:actionFunction reRender="ScStatus" action="{!send_email}" Name="sendMail"/>
+</apex:form>
+</apex:page>

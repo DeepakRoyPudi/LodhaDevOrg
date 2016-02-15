@@ -1,0 +1,41 @@
+<apex:page sidebar="false" showheader="false">
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/jquery-1.5.2.min.js')}" />
+    <style type="text/css">
+        #uvw-dialog-close{
+            display: none;
+        }
+        #uvTab{
+            display: none !important;
+        }
+        
+    </style>
+    <script type="text/javascript" src="https://widget.uservoice.com/U1eCBihJLuwr7j5TcTOtg.js"></script>
+    <script type="text/javascript">
+    	
+		
+    </script>
+    <script type="text/javascript">
+    	
+    	if(parent.errorArray != null){
+            var errors = '';
+            $.each(parent.errorArray,function(i,value){
+                errors += 'Action: '+value.action;
+                errors += ' Method: '+value.method;
+                errors += ' Message: '+value.message;
+            });
+            parent.errorArray = null;  //clear the errors array
+        }
+        
+        $j = jQuery.noConflict();
+        $j(document).ready(function(){
+        //truncate for uv 255 limit
+        errors=errors.substring(0,254);
+        window.uvOptions = {
+		    custom_fields: {
+		      "Error Message": errors 
+		    }
+		};
+            UserVoice.showPopupWidget({});
+        });
+    </script>
+</apex:page>

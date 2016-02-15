@@ -1,0 +1,187 @@
+<apex:page showHeader="true" cache="false" sidebar="false" controller="ProjectViewController" >   
+
+    <apex:form >    
+        <apex:pageBlock >            
+            <br/><br/><br/> 
+            <div align="center">
+                <table>                
+                    <tr>
+                        <td Style="Width:10%;">  
+                        </td>                    
+                        <td Style="Width:85%">   
+                            <div>
+                                <div style="float:left; margin-left:170px; margin-right:150px;">             
+                                    <h1> Project Name : </h1><apex:outputText value=" {!projectName}"/> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <h1> Cluster : </h1><apex:outputText value=" {!cluster}"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <h1> Wing : </h1><apex:outputText value=" {!wing}"/> &nbsp;&nbsp;&nbsp;&nbsp;    
+                                </div> 
+                            </div>            
+                         </td>
+                        <td Style="Width:5%">     
+                        </td>               
+                    </tr>
+                    <tr>
+                        <td></td><td></td><td></td>
+                    </tr>          
+                </table>
+                    <br/><br/>                
+            
+                <apex:outputPanel rendered="{!noImg}">
+                    <div align="center">
+                        <table>  
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div class="box">
+                                        <apex:outputText value="No photo to display" escape="false" />
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table><br/><br/>
+                    </div> 
+                </apex:outputPanel>
+            
+           
+                <div class="divTable">
+                    <apex:define name="body">                      
+                       
+                        <div class="divRow" align="center"> 
+                            <apex:repeat value="{!projImgList}" var="Img">
+                                <div class="divCell">
+                                    <div class="box">                                
+                                        <div id="one">                                        
+                                            <br/>
+                                                <center><h1>{!Img.Photo_Description__c} </h1></center>
+                                            <br/>
+                                            <hr></hr>
+                                            <apex:outputText value="{!Img.Project_View__c}" escape="false" > </apex:outputText>                                      
+                                            <hr></hr>
+                                            <br/>
+                                            <center><h1>{!Img.Image_Description__c} </h1></center>
+                                            <br/>                                        
+                                        </div>                                
+                                    </div>
+                                </div>
+                          </apex:repeat> 
+                      </div>                        
+                    
+                    </apex:define> 
+               </div><br/><br/>
+          </div>
+            
+          <apex:outputPanel rendered="{!noImgcommon==false}">  
+          <div id="header">Common Amenities:</div>
+          
+             <div align="center"> 
+                <div class="divTable">
+                    <apex:define name="body">                      
+                       
+                        <div class="divRow" align="center"> 
+                            <apex:repeat value="{!CommonprojImgList}" var="Img">
+                                <div class="divCell">
+                                    <div class="box">                                
+                                        <div id="one">                                        
+                                        <br/>
+                                        <center><h1>{!Img.Photo_Description__c} </h1></center>
+                                        <br/>
+                                        <hr></hr>
+                                        <apex:outputText value="{!Img.Project_View__c}" escape="false" > </apex:outputText>                                   
+                                        <hr></hr>
+                                        <br/>
+                                        <center><h1>{!Img.Image_Description__c} </h1></center>
+                                        <br/>                                        
+                                        </div>                                
+                                    </div>
+                                </div>
+                            </apex:repeat> 
+                        </div>                        
+                    
+                    </apex:define> 
+            </div>
+            <br/><br/>            
+        </div>
+        </apex:outputPanel>
+        <div>
+            <h1>Important to Note:</h1>    
+            <ul>
+                <li>The Web Page is for the convenience of the customers and the Photos uploaded herein depict the progress of your Wing/Building as on the month mentioned above the respective photo. We reserve our right to 
+                <ol>(i) change/replace the Photos, as per our discretion; </ol><ol>(ii) upload updated/new Photos in relation to your Wing/Building and </ol><ol>(iii) discontinue the services with respect to this Web Page. </ol>
+                <li>The Photos depicted herein are taken on a periodic basis and may not necessarily co-relate to the request/demand letters sent to you in respect of your payment milestones. The photos of the unit/wing/building are for representation only and may not be in relation to your unit/wing/building. Errors and Omissions excepted.</li>
+                </li>
+                <li>
+                This Web Page is only for your viewing and you are not authorised to download, reproduce and retransmit information / photos uploaded on this web page , in any manner, format or form , whatsoever. You acknowledge that Lodha Group and/or its licensors and/or photographers retain all copyright for content contained in the said Photos and reserves their rights to take strict civil and criminal action against any unauthorized use of the same. 
+                </li>
+                <li>
+                This web site and its content are owned by Lodha Group or its affiliates or agents or its licensors and/or photographers. All content, trademarks, services marks, trade names, logos, and icons are proprietary to Lodha Group or its affiliates or agents or its licensors. Nothing contained on this web page should be construed as granting any rights of any nature whatsoever.
+                </li>
+                <li>The terms and conditions and this website and use thereof shall be governed in accordance with the laws of the India. </li>            
+            </ul>
+        </div>           
+            
+     </apex:pageBlock>
+  </apex:form>
+  
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"/>  
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function()
+        {
+        $(document).bind("contextmenu",function(e){
+              return false;
+        });
+    }); 
+    </script>
+   
+   <style>
+        .divTable
+        {
+            display:table;
+            width:98%;
+            margin:2%;
+        }
+        
+        .divRow
+        {
+           display:table-row;
+           width:auto;
+    
+        }
+    
+        .divCell
+        {
+            float:left;
+            margin:1%;
+            display:table-column;
+            width:48%;
+            
+        }
+       
+        .box
+        {
+            float:left; 
+            border:2px solid #a1a1a1;
+            padding:10px 10px; 
+            background:#dddddd; 
+            border-radius:25px; 
+            -moz-border-radius:25px; /* Old Firefox */ 
+            -moz-box-shadow: 10px 10px 5px #888888; /* Old Firefox */ 
+            box-shadow: 10px 10px 5px #888888;
+            
+        }
+        
+        #one {width:500px;height:760px;}
+        #header {color:white;background:#1797c0;width:100%;height:20px;Padding-left:3px;Padding-top:3px;Padding-bottom:1px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;}
+    </style>
+   
+
+    <!-- For Tracking using google analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-40772499-1', 'force.com');
+      ga('send', 'pageview');
+    </script>
+</apex:page>

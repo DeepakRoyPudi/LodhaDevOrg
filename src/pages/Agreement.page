@@ -1,0 +1,104 @@
+<!--
+Document History
+
+    Version        Date            Author            Description
+    
+    1.0            22/04/2014      Anonymous         Initial Draft
+    
+    1.1            13/05/2014      Siddharth Birari  Removal of 'View Agreement' button from the page
+                                                     Renamed 'View Agreement in Fileopen' to 'View Agreement'
+ --> 
+
+<apex:page Controller="AgreementController" showHeader="false" action="{!enableViewAgreementButton}">
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+<script>
+
+    //Function Adds the Source URL to the Iframe to display the Contents from Box
+    function populateBoxFrame(pStrAgreementUrl, pStrCurrentSiteUrl){
+		
+        if(pStrAgreementUrl != ''){
+            console.log('Current Site URL ' + pStrCurrentSiteUrl);
+            window.open(pStrCurrentSiteUrl + "AgreementView?sessionId=" + pStrAgreementUrl);
+        }
+        else{
+            viewAgreement();
+        }
+        //$("#iframeBoxView").attr("src", pStrAgreementUrl);
+    }
+    
+    jQuery.noConflict(); // you can use $ instead
+    (function($) {
+        $.fn.blink = function(options){
+    
+            var defaults = { delay:500 };
+            var options = $.extend(defaults, options);
+        
+            return this.each(function() {
+        
+                var obj = $(this);
+                setInterval(function(){
+            
+                    if($(obj).css("visibility") == "visible"){
+                
+                        $(obj).css('visibility','hidden');
+                    }
+                    else{
+                
+                        $(obj).css('visibility','visible');
+                    }
+                }, options.delay);
+            });
+        }
+    }(jQuery))
+    
+    //Page Load
+    jQuery(document).ready(function(){
+        jQuery('.blink').blink();
+    });
+</script>
+
+<style>
+
+.setMargin{
+    margin-top: 1%; 
+}
+</style>
+
+    <apex:form >
+        
+        <apex:actionFunction action="{!viewAgreement}" 
+                             name="viewAgreement"
+                             reRender="lblInfo pnlFirstAgreementLabel pnlAgreementLabel"
+                             oncomplete="populateBoxFrame('{!strViewAgreementUrl}', '{!$Site.CurrentSiteUrl}')"/>
+        
+        <div class="setMargin">
+            <apex:outputPanel id="pnlFirstAgreementLabel" styleClass="setMargin" rendered="{!AND(blnIsFirstView, blnShowAgreementButton)}">
+                <label class="blink">To view draft agreement click on the button below</label>
+            </apex:outputPanel>
+        
+            <apex:outputPanel id="pnlAgreementLabel" styleClass="setMargin" rendered="{!!blnIsFirstView}">
+            
+                <apex:outputLabel id="lblInfo"
+                                  value="To view an agreement click on the button" 
+                                  rendered="{!blnShowAgreementButton}"/>
+            </apex:outputPanel>
+        </div>
+        
+        <div>
+            <apex:commandButton action="{!viewAgreement}"
+                                oncomplete="populateBoxFrame('{!strViewAgreementUrl}', '{!$Site.CurrentSiteUrl}')"
+                                styleClass="setMargin"
+                                value="View Agreement"
+                                rendered="{!blnShowAgreementButton}"/>
+        </div>
+        
+        <div class="setMargin">
+            <apex:outputLabel id="lblDisclaimer"
+                              value="Disclaimer : The draft Agreement to Sell is a standard agreement applicable for the Project. All commercials and specifics relating to the Unit booked by the customer as mentioned in the Application Form shall be set out in the individual agreement to sell to be entered into with the respective customer. Please use Internet Explorer 10 and above or Google Chrome to view the draft agreement." 
+                              rendered="{!blnShowAgreementButton}"/>
+        </div>
+   </apex:form>
+</apex:page>

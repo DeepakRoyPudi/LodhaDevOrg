@@ -1,0 +1,435 @@
+<apex:page controller="PartnerBookingDetailController" sidebar="false" tabStyle="Booking_Details_Channel__tab">
+   
+   <apex:form id="fId">
+   
+    <table style="border:none; background-color:none;" width="100%" >
+    <tr>
+    <td width="1%"></td> 
+    <td valign="top" width="40%">
+       <table  height="150" width="500" style="border:2px solid black; background-color:white;">
+       <tr>
+           <td height="5"></td>
+       </tr>
+       <tr>
+               <td><b><font size="3" face="Calibri"> Organisation Name</font></b></td>
+        <td width="5">:</td>
+        <td><font size="2"> <apex:outputText value="{!organizationName}"></apex:outputtext></font></td>
+        <td style=" padding-left: 50px;"  ><b><font size="3" face="Calibri"> REAP ID</font></b></td>
+        <td width="5">:</td>
+        <td><font size="2"><apex:outputText value="{!reapId}"></apex:outputtext></font></td>
+       </tr>
+       <tr>
+        <td><b> <font size="3" face="Calibri"> Contact Person</font></b></td>
+        <td width="5">:</td>
+        <td> <font size="2"><apex:outputText value="{!contactPerson}"></apex:outputtext></font></td>
+        <td style=" padding-left: 50px;" > <b><font size="3" face="Calibri">Office No.</font></b></td>
+        <td width="5">:</td>
+        <td><font size="2"> <apex:outputText value="{!officeNo}"></apex:outputtext></font></td>
+       </tr>
+       <tr>
+        <td><b><font size="3" face="Calibri"> E-mail ID</font></b></td>
+        <td width="5">:</td>
+        <td><font size="2"> <apex:outputText value="{!email}"></apex:outputtext></font> </td>
+        <td style=" padding-left: 50px;" ><b><font size="3" face="Calibri"> Mobile No.</font> </b></td>
+        <td width="5">:</td>
+        <td><font size="2"> <apex:outputText value="{!mobile}"></apex:outputtext></font></td>
+        </tr>
+       <tr>
+        <td height="10" ></td>
+       </tr>
+       <tr>
+        <td colspan="6"> <font size="2"> In case any of your personal details have changed, you can update the same                
+        by contacting us at channel@lodhagroup.com through e-mail id provided above. </font>
+        </td>                  
+       </tr>
+       <tr>
+          <td height="10" ></td>
+       </tr>
+    </table >
+    </td>
+    <td  width="1%"></td>
+    <td valign="top" width="58%">
+    
+    <table height="50" style="border:2px solid black" width="100%" cellspacing="0px" >
+        <tr style="background-color:#1F4A2A;color:white;">
+            <td colspan="9" align="center" style="color:white" height="20" width="100%"><font size="4"><b>ACCOUNT&nbsp; PAYOUT &nbsp;SUMMARY</b></font></td>
+        </tr>
+        <tr><td height="8"></td></tr>
+        <tr>
+            <td><b> &nbsp;<font size="2">Date:</font></b></td>
+            <td align="left"><b><font size="2">
+                <apex:selectRadio value="{!filterValue}" immediate="true">
+                    <apex:actionSupport event="onchange" action="{!getAllBookingDetailList}" reRender="selectedOption"/>
+                    <apex:selectOption itemValue="all" itemLabel="All"/>
+                    <apex:selectOption itemValue="filter" itemLabel="Date Range"/>
+                </apex:selectRadio></font>
+               </b>
+            </td>
+            <td align="left"><font size="3">
+                <apex:commandButton value="Search" action="{!getAllBookingDetailList}" /></font>
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        
+       
+        <tr>
+        <td colspan="4">
+           <apex:outputPanel layout="none" id="selectedOption">
+           <apex:outputpanel rendered="{!Not(filterValue=='all')}">
+               <b><font size="2"> &nbsp;From Date</font></b>
+               <apex:inputtext id="fDate" value="{!fromDate}" onclick="DatePicker.pickDate(true, '{!$Component.fDate}', false);"/>
+               <b><font size="2"> To Date </font></b>
+               <apex:inputText id="tDate" value="{!toDate}" onclick="DatePicker.pickDate(true, '{!$Component.tDate}', false);" onBlur="return formatDate();"/>
+           </apex:outputpanel>
+           </apex:outputpanel>
+       </td>
+       </tr>
+       <tr>
+       <td height="8"></td>
+       </tr>
+      
+        <tr>
+        <apex:outputpanel id="opanel">
+        <table height="150" style="border:2px solid black" width="100%" cellspacing="0px" >
+        
+        <thead>
+            <tr style="background-color:#7b8236;color:white;" height="40">
+                
+                <td  style="width:70px;color:white;"><font size="2.5" face="Calibri">&nbsp;<b>SEGMENTS</b></font></td>
+                <td align="right" style="width:80px;color:white;" > <font size="2.5" face="Calibri"><b> INVOICES RECEIVED</b></font> </td>
+                <td align="right" style="width:80px;color:white;" ><font size="2.5" face="Calibri"><b> BASIC BROKERAGE</b></font> </td>
+                <td align="right" style="width:80px;color:white;" ><font size="2.5" face="Calibri"><b> ELIGIBLE AMOUNT </b></font></td>
+                <td align="right" style="width:80px;color:white;" ><font size="2.5" face="Calibri"><b> AMT. PAID WITH<br/>TAXES, IF ANY</b></font></td>
+                <!--<td align="right" style="width:70px;color:white;" ><font size="2.5" face="Calibri"><b> BALANCE<br></br>DUE &nbsp; </b></font> </td>-->
+            </tr>
+        </thead>
+        <tbody>  
+        <tr>
+        <td width="40"></td>
+        </tr>
+            <apex:variable var="count" value="{!0}"/> 
+            <apex:repeat value="{!summaryList}" var="agr">
+          
+                <tr style="{! IF(mod(count,2) == 0,'background-color:#FFFFFF;','background-color:#C4CEAC;')}">
+                
+                <td  width=""><font size="2">
+                   <b> &nbsp;<apex:outputText value="{!agr.projType}" style="text-transform:uppercase;" ></apex:outputText></b></font>
+                </td>
+                <td align="right" ><font size="2">
+                   <b> <apex:outputText value="{!agr.invoiceReceived}"></apex:outputText></b></font>
+                </td>
+                <td align="right"><font size="2">
+                    <b>
+                    
+                  <!-- <apex:outputtext value="{0,number, #,##0.00}">
+                      <apex:param value="{!agr.invoiceAmt }"/>
+                  </apex:outputtext>-->
+                    <apex:outputtext value="{0,number,#,##,##0}">
+                      <apex:param value="{!agr.invoiceAmt }"/>
+                  </apex:outputtext> 
+
+                    <!-- <apex:outputText value="{!agr.invoiceAmt}"></apex:outputText>  -->
+                    </b></font>
+                </td>
+                <td align="right"><font size="2">
+                    <b>
+                    <apex:outputtext value="{0,number, #,##,##0}">
+                      <apex:param value="{!agr.eligibleAmt }"/>
+                  </apex:outputtext>
+                    
+                   <!-- <apex:outputText value="{!agr.eligibleAmt}"></apex:outputText>-->
+                    </b></font>
+                </td>
+                <td align="right"><font size="2"> <b>
+                <apex:outputtext value="{0,number, #,##,##0}">
+                      <apex:param value="{!agr.amtPaid}"/>
+                  </apex:outputtext></b></font>
+                    
+                </td>
+                <!--<td align="right"><font size="2"> <b>
+                <apex:outputtext value="{0,number,#,##0}">
+                      <apex:param value="{!agr.balanceDue}"/>
+                  </apex:outputtext>&nbsp; </b></font>
+                </td>-->
+                <apex:variable var="count" value="{!count + 1}"/> 
+              </tr>
+             </apex:repeat>
+         </tbody>
+    </table>
+     </apex:outputpanel>
+    </tr>
+    </table>
+   
+   </td>
+   </tr>
+   <td width="50"></td>
+   </table> 
+   
+   
+   <apex:outputpanel id="table2">
+   
+    <table style="border:none"  width="100%" cellspacing="0px" >
+        <thead>
+            <tr style="background-color:#1F4A2A;color:white;" width="0" height="55" >
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"> <b>PAYMENT STATUS</b></font></td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"> <b>SEGMENT</b></font ></td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"><b>PROJECT NAME</b></font ></td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"><b> APPLICATION<br></br> DATE</b></font></td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"><b> FLAT DETAILS </b></font></td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"><b> CUSTOMER TYPE</b></font ></td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"><b> CUSTOMER NAME </b></font></td>
+                <td align="right" style="color:white;"><font size="2.5" face= " Calibri"><b> FLAT COST&nbsp; (Rs.)</b></font ></td>
+                <td align="right" style="color:white;"><font size="2.5" face= " Calibri"> %&nbsp;&nbsp; </font></td>
+                <td align="right" style="color:white;"><font size="2.5" face= " Calibri"><b> BASIC BROKERAGE&nbsp;&nbsp; <br></br>(Rs.)</b></font> </td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"><b> PREVIEW INVOICE</b></font></td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"><b> INVOICE RECEIVED</b></font> </td>
+                <td align="center" style="color:white;"><font size="2.5" face= " Calibri"><b> BOOKING STATUS</b></font> </td>
+            </tr>
+        </thead>
+        <tbody>  
+            <apex:variable var="count" value="{!0}"/> 
+            <apex:repeat value="{!bookingDetailList}" var="opp" >
+                <tr style="{! IF(mod(count,2) == 0,'background-color:#FFFFFF;','background-color:#C4CEAC;')}">
+                
+                <td width="2px" align="center">
+                <apex:image url="{!$Resource.Green_Flag}"  rendered="{!Not(opp.Channel_Partner_Payment__c ==null)}"/>
+                
+               <!-- <apex:outputText value="{!opp.Project__c}"></apex:outputText>-->
+                </td>
+                
+                <td width="10px" > <center><font size="2"><apex:outputText value="{!opp.ProjecttypeUpperCase__c}"></apex:outputText></font></center></td>
+                
+                <td width="100px" align="center"><font size="2"> <apex:outputText value="{!opp.ProjectNameUppercase__c}"></apex:outputText></font></td>
+                
+                <td width="50px"><center><font size="2">
+                    <apex:outputText value="{0,date,dd'-'MMM'-'yyyy}">
+                     <apex:param value="{!opp.Application_Date__c}" /> 
+                    </apex:outputText></font></center></td>
+                
+                <td align="center" width="130px">
+                 <font size="2"> <apex:outputText value="{!opp.CLuster__c}"></apex:outputText>
+                    &nbsp;                      
+                <apex:outputText value="{!opp.Wing__c }"></apex:outputText>
+                     &nbsp;                  
+                <apex:outputText value="{!opp.Flat_No__c}"></apex:outputText></font>
+                                 
+                                     </td>
+                
+                <td  width="10px"><center><font size="2"> <apex:outputText value="{!opp.Customer_Type__c}"></apex:outputText></font></center></td>
+                
+                <td width="110px" align="center" ><font size="2"> <apex:outputText value="{!opp.Primary_Applicant__c}"></apex:outputText></font></td>
+                
+                <td width="20px" align="right"><font size="2">
+                 <apex:outputtext value="{0,number,#,##0}">
+                      <apex:param value="{!opp.Flat_Cost_Formula__c}"/>
+                  </apex:outputtext></font>
+                
+                <!--<apex:outputText value="{!opp.Flat_Cost_Formula__c}"></apex:outputText>-->
+                </td>
+                
+                <td width="10px" align="right"><font size="2">
+                 <apex:outputPanel rendered="{!NOT(ISNULL(percentagePayableMap[opp.id]))}"> 
+                <!--<apex:outputText value="{!percentagePayableMap[opp.id]}"/>  -->
+                
+                <apex:outputtext value="{0,number,#,##0.00}">
+                      <apex:param value="{!percentagePayableMap[opp.id]}"/>
+                  </apex:outputtext> 
+                </apex:outputPanel></font>
+               <!-- <apex:outputText value="{!opp.Project__c}"></apex:outputText>-->
+                </td>
+                
+                <td width="20px" align="right"> <font size="2">
+                
+                <apex:outputtext value="{0,number,#,##0}">
+                      <apex:param value="{!opp.Basic_Brokerage_amount__c }"/>
+                  </apex:outputtext></font>
+               <!-- <apex:outputText value="{!opp.Basic_Brokerage_amount__c}"></apex:outputText>-->
+                </td>
+                
+                <td  width="40px"><center><font size="2">
+                <apex:outputPanel rendered="{!eligibilitycheckMap[opp.id]==1}"> 
+                <apex:commandLink onclick="window.open('/CP/apex/pdf_popup?id={!opp.id}','Popup', 'width=900, height=800, top=200, left=200');return false;" style="font-weight: bold; font-size: 98%;">Preview Invoice</apex:commandLink>
+                </apex:outputPanel></font></center>
+              <!-- <apex:outputText value="{!opp.Project__c}"></apex:outputText>-->
+                </td>
+                
+                <td width="50px"><center><font size="2">
+                    <apex:outputText value="{0,date,dd'-'MMM'-'yyyy}">
+                        <apex:param value="{!opp.Invoice_Received_Date__c}" /> 
+                    </apex:outputText></font></center></td>
+                
+                <td width="20px" ><center><font size="2">
+                <apex:outputText value="Sold" rendered="{!opp.Status__c=='Active'}"/>
+                <apex:outputText value="Cancel" rendered="{!opp.Status__c!='Active'}"/>
+               <!-- <apex:outputText value="{!opp.Project__c}"></apex:outputText>-->
+               </font> </center></td>
+                <apex:variable var="count" value="{!count + 1}"/> 
+           </tr>
+           </apex:repeat>
+           </tbody>
+            <tr><td height="5"></td></tr>              
+               <tr>
+               
+<td align="center" colspan="13">             <b>  <font size="2">
+
+           <apex:panelGrid columns="4">
+                <apex:commandLink action="{!first}" rendered="{!(hasPrevious)}" rerender="table2">First</apex:commandlink>
+                <apex:commandLink action="{!previous}" rendered="{!hasPrevious}" rerender="table2">Previous</apex:commandlink>
+                <apex:commandLink action="{!next}" rendered="{!hasNext}" rerender="table2">Next</apex:commandlink>
+                <apex:commandLink action="{!last}" rendered="{!AND(bookingDetailList.size>0,hasNext)}" rerender="table2">Last</apex:commandlink>
+            </apex:panelGrid></font></b></td></tr>
+
+            <br/><br/>
+            <apex:outputPanel rendered="{!bookingDetailList.size==0}"><center><b>No records to display </b></center></apex:outputPanel>
+               
+    </table>
+    
+    </apex:outputpanel>
+    
+    <br/><br/><br/>
+    <div style="">              
+    <h2>Channel Partner Portal Disclaimer:</h2>
+    <ol>
+    <li>
+    The channel partner will be eligible to view the payment details on the portal.
+    </li>
+    <li>
+    The Payment details on the site are for information purpose only and do not create binding obligations
+    on the company to make any payment to the Channel Partner Account. All payments will be released
+    subject to compliance of applicable policies, laws, orders regulations and agreement executed with the
+    Company.
+    </li>
+    <li>
+    Service tax will be payable as per applicable laws.
+    </li>
+    <li>
+    In the event the commission is enormously paid to the channel partner, the Channel Partner is required
+    to promptly refund the commission received from the Company failing which the Company reserve the right
+    to recover the amount by deducting the same from the commission payable to the Channel Partner in
+    respect of any other transaction.
+    </li>
+    <li>
+    The information disclosed on the portal is confidential and shall not be disclosed to any third party
+    without the prior written permission from the Company.
+    </li><li>
+    Error and omission expected.
+    </li>
+    </ol>
+    *** for more information please refer FAQ section****
+    
+    </div>
+
+    </apex:form>
+ <!--  <apex:form id="fId">
+    <apex:sectionHeader title="Booking Details" subtitle="Home" />
+        <apex:pageBlock title="Booking Details">
+                   
+            <apex:pageBlockTable value="{!bookingDetailList}" var="bookingDetail" border="1" width="100%"> 
+            
+                <apex:column  >
+                 <apex:facet name="header">Payment Status</apex:facet>
+                 <apex:image url="{!$Resource.Green_Flag}"  rendered="{!Not(bookingDetail.Channel_Partner_Payment__c ==null)}"/>
+                 <apex:image url="{!$Resource.Red_Flag}" rendered="{!(bookingDetail.Channel_Partner_Payment__c ==null)}"/>
+                 
+                 </apex:column>
+        
+                              
+                <apex:column >
+                <apex:outputText value="{!bookingDetail.Project__c}" />
+                <apex:facet name="header">Project Name</apex:facet>
+                </apex:column>
+                                
+                <apex:column style="border-bottom: 0;">
+                <apex:outputField value="{!bookingDetail.Application_Date__c}" />
+                <apex:facet name="header">Application Date</apex:facet>
+                </apex:column>
+                
+                <apex:column >
+                <apex:outputText value="{!bookingDetail.CLuster__c}" />
+                <apex:facet name="header">Cluster</apex:facet>
+                </apex:column>
+                
+                <apex:column >
+                <apex:outputText value="{!bookingDetail.Wing__c}" />
+                <apex:facet name="header">Wing</apex:facet>
+                </apex:column>
+                
+                <apex:column >
+                <apex:outputText value="{!bookingDetail.Flat_No__c}" />
+                <apex:facet name="header">Flat No</apex:facet>
+                </apex:column>
+                
+             
+                
+                <apex:column >
+                <apex:outputField value="{!bookingDetail.Customer_Type__c}" />
+                <apex:facet name="header">Customer Type</apex:facet>
+                </apex:column>
+                
+                <apex:column >
+                <apex:outputText value="{!bookingDetail.Primary_Applicant__c}" />
+                <apex:facet name="header">Customer Name </apex:facet>
+                </apex:column>
+
+                <apex:column >
+                <apex:outputText value="{!bookingDetail.Co_Applicant__c}" />
+                <apex:facet name="header">Co-applicant Name </apex:facet>
+                </apex:column>
+                
+                <apex:column >
+                <apex:outputText value="{!bookingDetail.Flat_Cost_Formula__c}" />
+                <apex:facet name="header">Flat Cost</apex:facet>
+                </apex:column>
+                
+                <apex:column >
+                <apex:outputPanel rendered="{!NOT(ISNULL(percentagePayableMap[bookingDetail.id]))}"> 
+                <apex:outputText value="{!percentagePayableMap[bookingDetail.id]}"/>
+                </apex:outputPanel>
+                <apex:facet name="header">% </apex:facet>
+                </apex:column>
+            
+                <apex:column >
+                <apex:outputText value="{!bookingDetail.Basic_Brokerage_amount__c}" />
+                <apex:facet name="header">Basic Brokerage Amount</apex:facet>
+                </apex:column>
+                
+            
+                
+             
+                                   
+                <apex:column >
+                <apex:outputPanel rendered="{!eligibilitycheckMap[bookingDetail.id]==1}"> 
+                    <apex:commandLink onclick="window.open('/CP/apex/pdf_popup?id={!bookingDetail.id}');return false;" style="font-weight: bold; font-size: 98%;">Preview Invoice</apex:commandLink>
+                </apex:outputPanel>
+                <apex:facet name="header">Preview Invoice</apex:facet>
+                </apex:column>
+                
+                <apex:column >
+                <apex:outputField value="{!bookingDetail.Invoice_Received_Date__c}" />
+                <apex:facet name="header">Invoice Received Date </apex:facet>
+                </apex:column>
+                
+                <apex:column >
+                <apex:outputText value="Sold" rendered="{!bookingDetail.Status__c=='Active'}"/>
+                <apex:outputText value="Cancel" rendered="{!bookingDetail.Status__c!='Active'}"/>
+                <apex:facet name="header">Booking Status</apex:facet>
+                </apex:column>
+    
+                
+            </apex:pageBlockTable>
+            
+            <apex:panelGrid columns="4">
+                <apex:commandLink action="{!first}" rendered="{!(hasPrevious)}" rerender="fId">First</apex:commandlink>
+                <apex:commandLink action="{!previous}" rendered="{!hasPrevious}" rerender="fId">Previous</apex:commandlink>
+                <apex:commandLink action="{!next}" rendered="{!hasNext}" rerender="fId">Next</apex:commandlink>
+                <apex:commandLink action="{!last}" rendered="{!AND(bookingDetailList.size>0,hasNext)}" rerender="fId">Last</apex:commandlink>
+            </apex:panelGrid>
+            <br/><br/>
+            <apex:outputPanel rendered="{!bookingDetailList.size==0}"><center><b>No records to display </b></center></apex:outputPanel>
+               
+        </apex:pageBlock>
+        
+    </apex:form> -->
+</apex:page>

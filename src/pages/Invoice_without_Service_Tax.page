@@ -1,0 +1,215 @@
+<apex:page controller="BookingController1" renderAs="pdf">
+<table width="100%">
+<tr>
+<td width="100%" align="center"> <apex:outputText style="color:red " value="**Sample Invoice**">
+</apex:outputText><br/></td>
+</tr>
+</table>
+<table border="1" style="border-collapse: collapse" width="100%">
+        <tr>
+            <td   colspan="9"   height="90" width="600" align="center" style="border-top:2px solid #000; border-right:2px solid #000"><b>CP Letter Head</b><br></br>Address Line 1<br></br>Address Line 2<br></br>Tel: 011-00000000 &nbsp;,&nbsp;Fax: 011-0000000<br></br>Email:accounts@companysite.in<br></br>Website:www.companysite.in
+            </td>
+         </tr>
+          <tr > 
+              <td   colspan="9"  height="100" width="600" align="center" style="border-right:2px solid #000;">
+                  <table  style="border-collapse:collapse;" width="100%">
+                      <tr><td align="center" style="font-weight: bold; border-top:2px solid #000;">INVOICE</td>
+                      </tr>
+                      <tr><td align="left">INVOICE No </td>
+                      </tr>
+                      <tr><td align="left">DATE:</td>
+                      </tr>
+                       <tr>
+                            <td height="20" ></td>
+                      </tr>
+
+                      <tr><td align="left"><b>Construction Company Name : {!book.Company_Name_New__c} </b></td>
+                      </tr>
+                      <tr><td align="left">Address: {!book.Project_Name__r.Company_Address__c}</td>
+                      </tr>
+                    <!--  <tr><td align="left">Address Line 2</td> 
+                      </tr>-->
+                      <tr><td align="left">REAP ID: {!book.Channel_Partner__r.REAP_ID__c} </td>
+                      </tr>
+                 </table>
+             </td>                
+        </tr>
+        <tr> 
+              <td    colspan="9"   height="200" style=" border-right:2px solid #000;border-bottom:2px solid #000;">  
+                  <table  width="100%" style="border-collapse: collapse;">
+                      <tr>
+                          <td width="10%" align="center" style="border-bottom:2px solid #000; border-top:2px solid #000;" >Sr No.</td>
+                          <td width="50%" align="center" style="border-left:2px solid #000; border-top:2px solid #000;">Particulars</td>
+                          <td width="10%" align="center" style="border-left:2px solid #000; border-top:2px solid #000;">Tax Rate</td>
+                          <td align="center" style="border-left:2px solid #000; border-top:2px solid #000;">Amount</td>
+                       </tr>
+                        <tr>
+                           <td></td>
+                           <td height="10" style="border-top:2px solid #000; border-left:2px solid #000;"></td>
+                           <td style="border-top:2px solid #000; border-left:2px solid #000;"></td>
+                           <td style="border-top:2px solid #000;border-left:2px solid #000;"></td>
+                       </tr>
+
+                       
+                       <tr>
+                           <td> 1.</td>
+                           <td style="border-left:2px solid #000;">&nbsp; Description of service provided</td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                       </tr>
+                       <tr>
+                           <td></td>
+                           <td height="10" style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                          
+                       </tr>
+
+                       <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">&nbsp; Customer Name :- {!book.Primary_Applicant__c} </td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                       </tr>
+                         <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">&nbsp; Project Name:-  {!book.Project__c}</td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                       </tr>
+
+                        <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">&nbsp; Cluster Name:-{!book.CLuster__c}</td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                       </tr>
+                        <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">&nbsp; Wing:- {!book.Wing__c}</td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                       </tr>
+                        <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">&nbsp; Flat No:- {!book.Flat_No__c} </td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                       </tr>
+                        <tr>
+                            <td></td>
+                            <td height="20" style="border-left:2px solid #000;"></td>
+                            <td style="border-left:2px solid #000;"></td>
+                            <td style="border-left:2px solid #000;"></td>
+                      </tr>
+
+                       <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">&nbsp; Flat Cost:- 
+                           <apex:OutputText value="{0, number, ###,##0.00}">
+                           <apex:param value="{!book.Flat_Cost__c}"/>
+                           </apex:OutputText>
+                           </td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"></td>
+                       </tr>
+                       <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">&nbsp;  Brokerage Amount:- </td>
+                           <td style="border-left:2px solid #000;"></td>
+                           <td style="border-left:2px solid #000;"  align="center">
+                           <apex:OutputText value="{0, number, ###,##0.00}">
+                           <apex:param value="{!book.Basic_Brokerage_amount__c}"/>
+                           </apex:OutputText>
+                            </td>
+                       </tr>
+                        <tr>
+                            <td></td>
+                            <td height="20" style="border-left:2px solid #000;"></td>
+                            <td style="border-left:2px solid #000;"></td>
+                            <td style="border-left:2px solid #000;"></td>
+                      </tr>
+
+                       <!--<tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">Service tax:-</td>
+                           <td align="center" style="border-left:2px solid #000;">  {!book.Service_Tax_Cess__c}</td>
+                           <td align="center" style="border-left:2px solid #000;"> {!book.Service_tax_amount__c}</td>
+                       </tr>
+                       <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">Education cess:-</td>
+                           <td align="center" style="border-left:2px solid #000;">{!book.Education_Cess_rate__c}</td>
+                           <td align="center" style="border-left:2px solid #000;">{!book.Education_Cess_amount__c}</td>
+                       </tr>
+                       
+                       <tr>
+                           <td></td>
+                           <td style="border-left:2px solid #000;">Secondary and higher education cess:-</td>
+                           <td align="center" style="border-left:2px solid #000;">{!book.Secondary_and_Higher_Education_Cess_Rate__c}</td>
+                           <td align="center" style="border-left:2px solid #000;">{!book.Secondary_and_Higher_Education_Cess__c}</td>
+                       </tr>-->
+
+                        
+                       <tr>
+                              <td></td>
+                              
+                            <td height="40" style="border-left:2px solid #000;"></td>
+                            <td style="border-left:2px solid #000;"></td>
+                            <td style="border-left:2px solid #000;"></td>
+                            
+                      </tr>
+
+                       <tr>
+                           <td style="border-top:2px solid #000;" height="35"></td>
+                           <td style="border-left:2px solid #000; border-top:2px solid #000;">&nbsp; TOTAL</td>
+                           <td style="border-left:2px solid #000; border-top:2px solid #000;"></td>
+                           <td align="center" style="border-left:2px solid #000;border-top:2px solid #000;">
+                           <apex:OutputText value="{0, number, ###,##0.00}">
+                           <apex:param value="{!book.Basic_Brokerage_amount__c}"/>
+                           </apex:OutputText>
+                            </td>
+                       </tr>
+            </table>
+              </td> 
+        </tr>
+         <tr>
+              <td style="border-bottom:2px solid #000;border-right:2px solid #000;">Amount in words:&nbsp;&nbsp;&nbsp;&nbsp;{!amountInWordsWithoutTax}</td>
+              
+         </tr>
+         <tr>
+            <td width="100%" style="border-bottom:2px solid #000;border-right:2px solid #000;">       
+              <table width="100%" style="border-collapse: collapse">
+                  <tr>
+                      <td align="left">E &amp; OE</td>
+                      <td align="center"></td>
+                  </tr>
+                  <tr>
+                      <td colspan="2" height="20">     </td>
+                  </tr>
+                  <tr>
+                      <td> Cheque favouring to be mentioned here </td>
+                      <td align="center"> Authorised Signatory</td>
+                  </tr>
+                  <tr>
+                     <!-- <td> 2. Cheque favouring to be mentioned here</td>-->
+                      <td></td>
+                  </tr>
+                  <tr>
+                     <!-- <td> 3. Any other terms if required</td>-->
+                      <td></td>
+                  </tr>
+                  <tr>
+                      <td height="40" colspan="2" ></td>
+                  </tr>
+                  <tr>
+                      <td colspan="2"> &nbsp;&nbsp;PAN NO:&nbsp;&nbsp;PAN NO HERE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>                    
+                  </tr> 
+              </table>                
+          </td>   
+         </tr>
+         <tr>
+             <td height="10" style="background-color:gray;border-bottom:2px solid #000;border-right:2px solid #000;"></td>
+         </tr>
+       </table>
+</apex:page>

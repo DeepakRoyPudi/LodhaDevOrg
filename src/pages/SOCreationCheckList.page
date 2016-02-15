@@ -1,0 +1,255 @@
+<apex:page standardController="SOCreation__c" extensions="SpSOCreationCheckList" sidebar="false">
+  <style type="text/css">
+   table td{padding:3px; font-weight: bold}
+    .td-color{background-color:#000080; color:#fff; text-align:center}
+    th{background-color:#00BFFF;color:#fff;padding:3px;text-align:center}  
+  </style>
+
+  <script type="text/javascript">
+function closeWindow(){
+    window.close();
+}
+
+</script>
+
+  <apex:form id="SOCreationForm">
+      <apex:actionFunction name="submit" action="{!submit}"/>
+      <div align="Right"><apex:image value="{!$Resource.Lodha_Logo}"/></div> 
+
+ <br/>
+ <br/>
+ <table width="80%" border="2" style="border-collapse: collapse">
+ <tr>
+          <td colspan="4" class="td-color" style="font-size:25px;"><Center>SO Creation CheckList</Center></td>
+ </tr>
+ <tr>
+     <th width="25%">Title</th>
+     <th width="25%">Fields Checked</th>
+     <th width="25%">Type of Input</th>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}"><th width="25%">SFDC Fields against which to verify</th></apex:outputPanel>
+ </tr>
+ <tr>
+     <td class="td-color"></td>
+     <td align="Center">Applicant Name</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Applicant_Name__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Name_of_Applicant__c}" />-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!AppNameCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!AppNameCorrect==false}"/></td></apex:outputPanel>
+     
+ </tr>
+ <tr>
+  <td colspan="4"></td>
+ </tr>
+ <tr>
+     <td class="td-color" rowspan="5">Flat Details</td>
+ </tr>
+ <tr colspan="4">
+ </tr>
+ <tr>
+     <td align="Center">Project</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Project__c}"/></td> 
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <!--<td align="Center"><apex:outputtext value="{!wing.Project__c}" />-->
+     <td align="Center">
+     <!--<apex:outputtext value="{!booking.Flat__r.Wing__r.Cluster__r.Project_Name__r.Name}" />-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!ProjectCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!ProjectCorrect==false}"/></td></apex:outputPanel>    
+ </tr>
+ <tr>
+     
+     <td align="Center">Cluster / Wing</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Cluster__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <!--<td align="Center"><apex:outputField value="{!wing.Cluster_hidden__c}" />-->
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Flat__r.Wing__r.Cluster__r.Name}" />
+     &nbsp;<span>,</span>&nbsp;
+     <apex:outputField value="{!booking.Flat__r.Wing__r.Name}" />-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!ClusterCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!ClusterCorrect==false}"/></td></apex:outputPanel>
+ </tr>
+ <tr>
+     
+     <td align="Center">Flat no.</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Flat_No__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <!--<td align="Center"><apex:outputField value="{!booking.Flat__r.Flat_No__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <td align="Center">
+     <!--<apex:outputField value="{!Flat.Flat_No__c}" />-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!FlatCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!FlatCorrect=false}"/></td></apex:outputPanel>
+ </tr>
+ <tr>
+  <td colspan="4"></td>
+ </tr>
+ <tr>
+     <td class="td-color"></td>
+     <td align="Center">Application Date</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Application_Date__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Application_Date__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!AppDateCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!AppDateCorrect==false}"/></td></apex:outputPanel>
+ </tr>
+ <tr>
+  <td colspan="4"></td>
+ </tr>
+ <tr>
+     <td class="td-color" rowspan="6">Rate Details</td>
+ </tr>
+ <tr>
+     <td align="Center">Basic Rate/Sq.ft(Rs)</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Rate_Details_Basic__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Base_Rate_Sq_ft_Actual_Rs__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!BasicCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!BasicCorrect==false}"/></td></apex:outputPanel>
+ </tr>
+ <tr>
+     <td align="Center">Floor Rise/Sq.ft(Rs)</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Rate_Details_Floor_Rise__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <!--<td align="Center"><apex:outputField value="{!flat.Floor_Rise_Sq_Ft_Rs__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Floor_rise_Sq_ft_Actual_Rs__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!FloorRiseCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!FloorRiseCorrect==false}"/>
+     </td></apex:outputPanel>
+ </tr>
+ <tr>
+     <td align="Center">Premium /Sq.ft(Rs)</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Rate_Details_Premium__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Premium_Sq_ft_Rs__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!PremiumCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!PremiumCorrect==false}"/></td></apex:outputPanel>
+ </tr>
+ <tr>
+     <td align="Center">Discount /Sq.ft(Rs)</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Rate_Details_Discount__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Applicable_Waiver_Sq_ft_Rs__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!DiscountCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!DiscountCorrect==false}"/></td></apex:outputPanel>
+ </tr>
+ <tr>
+     <td align="Center">Infrastructure (Rs)</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Rate_Details_Infrastructure__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Infrastructure_Cost_Rs__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!InfrastructureCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!InfrastructureCorrect==false}"/></td></apex:outputPanel>
+ </tr>
+ <tr>
+  <td colspan="4"></td>
+ </tr>
+ <tr>
+     <td class="td-color"></td>
+     <td align="Center">Total Consideration (Rs)</td>
+     <td align="Center"><apex:inputField value="{!SOCreation.Total_Consideration__c}"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <td align="Center">
+     <!--<apex:outputField value="{!booking.Consideration_Actual_Rs__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!CVCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!CVCorrect==false}"/></td></apex:outputPanel>
+ </tr>
+ <tr>
+  <td colspan="4"></td>
+ </tr>
+ <tr>
+     <td class="td-color" rowspan="6">Source Details</td>
+ </tr>
+ <tr>
+     <td align="Center">Direct</td>
+     <td align="Center"><apex:inputcheckbox value="{!Direct_Source}" id="Direct" onchange="document.getElementById('{!$Component.SOCreationForm.CRB}').disabled = document.getElementById('{!$Component.SOCreationForm.Direct}').checked;document.getElementById('{!$Component.SOCreationForm.Broker}').disabled = document.getElementById('{!$Component.SOCreationForm.Direct}').checked;document.getElementById('{!$Component.SOCreationForm.Others}').disabled = document.getElementById('{!$Component.SOCreationForm.Direct}').checked;document.getElementById('{!$Component.SOCreationForm.SelfRef}').disabled = document.getElementById('{!$Component.SOCreationForm.Direct}').checked;"/></td>
+     <apex:outputPanel rendered="{!showSFDCFieldsColumn}">
+     <td rowspan="6" align="Center">
+     <!--<apex:outputField value="{!booking.Booking_By__c}" rendered="{!showSFDCFieldsColumn}"/>-->
+     <apex:image width="20px" value="{!$Resource.Correct_Symbol}" rendered="{!SourceCorrect}"/>
+     <apex:image value="{!$Resource.Incorrect_Symbol}" width="20px" rendered="{!SourceCorrect==false}"/></td></apex:outputPanel>
+ </tr>
+<tr>
+     <td align="Center">CRB</td>
+     <td align="Center"><apex:inputcheckbox value="{!CRB_Source}" id="CRB" onchange="document.getElementById('{!$Component.SOCreationForm.Direct}').disabled = document.getElementById('{!$Component.SOCreationForm.CRB}').checked;document.getElementById('{!$Component.SOCreationForm.Broker}').disabled = document.getElementById('{!$Component.SOCreationForm.CRB}').checked;document.getElementById('{!$Component.SOCreationForm.Others}').disabled = document.getElementById('{!$Component.SOCreationForm.CRB}').checked;document.getElementById('{!$Component.SOCreationForm.SelfRef}').disabled = document.getElementById('{!$Component.SOCreationForm.CRB}').checked;"/></td>
+ </tr>
+ <tr>
+     <td align="Center">Broker</td>
+     <td align="Center"><apex:inputcheckbox value="{!Broker_Source}" id="Broker" onchange="document.getElementById('{!$Component.SOCreationForm.CRB}').disabled = document.getElementById('{!$Component.SOCreationForm.Broker}').checked;document.getElementById('{!$Component.SOCreationForm.Direct}').disabled = document.getElementById('{!$Component.SOCreationForm.Broker}').checked;document.getElementById('{!$Component.SOCreationForm.Others}').disabled = document.getElementById('{!$Component.SOCreationForm.Broker}').checked;document.getElementById('{!$Component.SOCreationForm.SelfRef}').disabled = document.getElementById('{!$Component.SOCreationForm.Broker}').checked;"/></td>
+     
+ </tr>
+  <tr>
+     <td align="Center">Self-Referral</td>
+     <td align="Center"><apex:inputcheckbox value="{!SelfRef_Source}" id="SelfRef" onchange="document.getElementById('{!$Component.SOCreationForm.CRB}').disabled = document.getElementById('{!$Component.SOCreationForm.SelfRef}').checked;document.getElementById('{!$Component.SOCreationForm.Direct}').disabled = document.getElementById('{!$Component.SOCreationForm.SelfRef}').checked;document.getElementById('{!$Component.SOCreationForm.Others}').disabled = document.getElementById('{!$Component.SOCreationForm.SelfRef}').checked;document.getElementById('{!$Component.SOCreationForm.Broker}').disabled = document.getElementById('{!$Component.SOCreationForm.SelfRef}').checked;"/></td>
+     
+ </tr>
+ <tr>
+     <td align="Center">Others</td>
+     <td align="Center"><apex:inputcheckbox value="{!Others_Source}" id="Others" onchange="document.getElementById('{!$Component.SOCreationForm.CRB}').disabled = document.getElementById('{!$Component.SOCreationForm.Others}').checked;document.getElementById('{!$Component.SOCreationForm.Broker}').disabled = document.getElementById('{!$Component.SOCreationForm.Others}').checked;document.getElementById('{!$Component.SOCreationForm.Direct}').disabled = document.getElementById('{!$Component.SOCreationForm.Others}').checked;document.getElementById('{!$Component.SOCreationForm.SelfRef}').disabled = document.getElementById('{!$Component.SOCreationForm.Others}').checked;"/></td>
+     
+ </tr>
+   </table> 
+<table>
+<tr>
+<td>
+Remarks :
+</td>
+<td>
+<apex:inputfield value="{!SOCreation.Remarks__c}" />     
+</td>
+</tr>
+</table>
+   <br></br>
+ <apex:pagemessages ></apex:pagemessages>
+ <div align="Center">
+ <apex:commandButton value="Generate SO" disabled="{!issubmitted}" oncomplete="var s=confirm('Are you sure you want to submit Generate SO?');if(s==true){submit();}"/>
+ </div>
+ </apex:form>
+ <script>
+ window.onload= fn;
+ 
+ function fn(){
+    var a= document.getElementById('{!$Component.SOCreationForm.Direct}').checked;
+    var b= document.getElementById('{!$Component.SOCreationForm.CRB}').checked;
+    var c= document.getElementById('{!$Component.SOCreationForm.Broker}').checked;
+    var d = document.getElementById('{!$Component.SOCreationForm.SelfRef}').checked;
+    var e = document.getElementById('{!$Component.SOCreationForm.Others}').checked;
+    if(a==true){
+        document.getElementById('{!$Component.SOCreationForm.Broker}').disabled=a;
+        document.getElementById('{!$Component.SOCreationForm.Others}').disabled=a;
+        document.getElementById('{!$Component.SOCreationForm.CRB}').disabled=a;
+        document.getElementById('{!$Component.SOCreationForm.SelfRef}').disabled=a;
+    }
+    else if(b==true){
+        document.getElementById('{!$Component.SOCreationForm.Broker}').disabled=b;
+        document.getElementById('{!$Component.SOCreationForm.Others}').disabled=b;
+        document.getElementById('{!$Component.SOCreationForm.Direct}').disabled=b;
+        document.getElementById('{!$Component.SOCreationForm.SelfRef}').disabled=b;
+    }
+    else if(c==true){
+        document.getElementById('{!$Component.SOCreationForm.Direct}').disabled=c;
+        document.getElementById('{!$Component.SOCreationForm.Others}').disabled=c;
+        document.getElementById('{!$Component.SOCreationForm.CRB}').disabled=c;
+        document.getElementById('{!$Component.SOCreationForm.SelfRef}').disabled=c;
+    }
+    else if(d==true){
+        document.getElementById('{!$Component.SOCreationForm.Broker}').disabled=d;
+        document.getElementById('{!$Component.SOCreationForm.Others}').disabled=d;
+        document.getElementById('{!$Component.SOCreationForm.CRB}').disabled=d;
+        document.getElementById('{!$Component.SOCreationForm.Direct}').disabled=d;
+    }
+    else if(e==true){
+        document.getElementById('{!$Component.SOCreationForm.Broker}').disabled=e;
+        document.getElementById('{!$Component.SOCreationForm.Direct}').disabled=e;
+        document.getElementById('{!$Component.SOCreationForm.CRB}').disabled=e;
+        document.getElementById('{!$Component.SOCreationForm.SelfRef}').disabled=e;
+    }
+ }
+ </script>
+</apex:page>

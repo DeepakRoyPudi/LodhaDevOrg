@@ -1,0 +1,240 @@
+<!-- 
+    Description:
+    VisualForce page for Booking Details tab CSS
+    @Created by: Aditi Mulmule
+    @Created Date: 16/03/2015
+        
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+       --------------------------------------------------------------------------------
+    |Aditi Mulmule       16/03/2015           Initial Draft    Booking details of 
+                                                               Logged In user
+       --------------------------------------------------------------------------------
+     -->
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" docType="html-5.0" 
+    controller="BookingDetailsCSS2_0Controller" title="Booking Details">
+    <!--   Style for table and columns -->   
+    <style>
+        .col-md-2 {
+        left: 4%;
+        }
+        .col-md-4 {
+        left: 4%;
+        }
+        .well {
+        background-color: #FCFCFC;
+        border: 1px solid #D2C6C6;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+        }
+        .td{
+        width: 49%;
+        }
+        .panel {
+        background-color: #fff;
+        box-shadow: none;
+        border: 1px solid #d5d5d5;
+        border-radius: 4px !important;
+        /* box-shadow: -1px 3px 6px -2px #777; */
+        overflow: hidden;
+        }
+        body {
+        background-image: url({!IF(isProjectWise,imageUrl  ,($Resource.CSS_Background_Image))
+        }
+        );
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        }
+        .nav > li{ 
+        -moz-margin-start: 2px;
+        -webkit-margin-start: 3px;}
+        /* classes for error message */ 
+        .message {
+        background-color: #ffc;
+        border-style: solid;
+        border-width: 1px;
+        color: #000;
+        padding: 6px 8px 6px 6px;
+        margin: 4px 20px;
+        }
+        .errorM6, .errorM4, .errorM3, .errorM2, .errorS1 {
+        border-color: #c00;
+        }
+        .errorM3 .msgIcon, .errorMedium {
+        background-image: url(/img/msg_icons/error24.png);
+        background-position: 0 0;
+        width: 24px;
+        height: 24px;
+        }
+    </style>
+    <!--    End of style -->
+    <apex:composition template="LandingPageCSS2_0">
+        <apex:define name="body">
+            <!-- Google Analtyics component -->
+            <c:GoogleAnalytics Page="Booking Details" 
+                User="{!username}" 
+                Project="{!userProject}" 
+                Segment="{!userSeqment}"
+                CRN="{!CRN}"
+                Gender="male"
+                LastLogin="{!userLastLogin}"
+                />
+            <apex:outputPanel >
+                <!--          Booking Details View -->
+                <div class="container container_allpages">
+                    <div class="panel panel-default panelmargintop" 
+                        style="padding-botom:5%;margin-right:2%;">
+                        <div class="panel-heading" style="height:4%;" align="left">
+                            <h3 class="panel-title"><i class="glyphicon glyphicon-home"></i>
+                                Booking Details
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <apex:pagemessages id="showError"/>
+                            <apex:repeat value="{!lstBooking_detailView}" var="c">
+                                <!--new panel-->
+                                <div class="table-responsive">
+                                    <table class="table table table-bordered">
+                                        <tr >
+                                            <td style="width:50%">
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Account Name</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.Account__r.Name}" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Project</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.Project__c}" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Co-Applicant Name</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.Co_Applicant__c}" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Cluster</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.CLuster__c}" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Booking ID/CRN</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.CRN__c}" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Wing</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.Wing__c}" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Application Date</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <c:FormatDateComponent date_value="{!c.Application_Date__c}"/>
+                                                </div>
+                                            </td>
+                                            <td >
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Flat No.</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.Flat_No__c}" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Allotment Date</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <c:FormatDateComponent date_value="{!c.Allotment_Date__c}"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Flat ID</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.Flat_ID__c}" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Consideration Value</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.Consideration_Value__c}" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Flat Type</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:OutputField value="{!c.Flat_Type__c}" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Project Location</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <apex:outputText value="{!projectLocation}" />
+                                                </div>
+                                            </td>
+                                          <td>
+                                                <!--<div class="col-md-5" align="left">
+                                                    <apex:outputLabel >Parking</apex:outputLabel>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <apex:outputText value="{!cust_parking}" />
+                                                </div> -->
+                                            </td> 
+                                        </tr>
+                                        <!--<div class="clear"></div> -->
+                                    </table>
+                                </div>
+                                <!-- table responsive div-->
+                            </apex:repeat>
+                        </div>
+                    </div>
+                </div>
+                <!--       End of Booking Details View -->
+                <div class="foorterdiv"></div>
+            </apex:outputPanel>
+        </apex:define>
+    </apex:composition>
+</apex:page>

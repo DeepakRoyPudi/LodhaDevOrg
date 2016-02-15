@@ -1,0 +1,215 @@
+<apex:page showHeader="false" sidebar="false">
+
+    <head>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js" />
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+        <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/style.css')}" rel="stylesheet" media="screen" />
+        <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/bootstrap.min.css')}" rel="stylesheet" media="screen" />
+        <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/font-awesome.min.css')}" rel="stylesheet" media="screen" />
+        <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/animate.min.cs')}" rel="stylesheet" media="screen" />
+        <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/prettyPhoto.css')}" rel="stylesheet" media="screen" />
+        <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/main.css')}" rel="stylesheet" media="screen" />
+        <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/responsive.css')}" rel="stylesheet" media="screen" />
+        <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/bootstrap.min.js')}"></script>
+        <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/jquery.prettyPhoto.js')}"></script>
+        <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/jquery.isotope.min.js')}"></script>
+        <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/main.js')}"></script>
+        <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/wow.min.js')}"></script>
+        <!--Added for construction updates new-->
+        <link rel="stylesheet" href="{!URLFOR($Resource.TestConstruction, '/colorbox/colorbox.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.TestConstruction, '/colorbox/bootstrap.min.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.TestConstruction, '/colorbox/prettify.css')}" />
+        <!-- <script src="jquery.min.js"></script> -->
+        <script src="{!URLFOR($Resource.TestConstruction, '/colorbox/jquery.colorbox.js')}"></script>
+        <!--<script src="{!URLFOR($Resource.TestConstruction, '/colorbox/bootstrap.min.js')}"></script> -->
+        <script src="{!URLFOR($Resource.TestConstruction, '/colorbox/query.bootstrap.wizard.js')}"></script>
+        <script src="{!URLFOR($Resource.TestConstruction, '/colorbox/prettify.js')}"></script>
+        <!--Added for showing videos aligned -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <!-- end -->
+        <title>Colorbox Examples</title>
+        <style>
+            body {
+                font: 12px/1.2 Verdana, sans-serif;
+                padding: 0 10px;
+            }
+            a:link,
+            a:visited {
+                text-decoration: none;
+                color: #416CE5;
+                border-bottom: 1px solid #416CE5;
+            }
+            h2 {
+                font-size: 13px;
+                margin: 15px 0 0 0;
+            }
+
+        </style>
+        <script>
+            $(document)
+                .ready(function () {
+                    //Examples of how to assign the Colorbox event to elements
+
+                    $(".group3")
+                        .colorbox({
+                            rel: 'group3',
+                            transition: "none",
+                            width: "75%",
+                            height: "75%"
+                        });
+                    $(".group2")
+                        .colorbox({
+                            rel: 'group2',
+                            transition: "none",
+                            width: "75%",
+                            height: "75%"
+                        });
+                    $('#rootwizard')
+                        .bootstrapWizard({
+                            'tabClass': 'nav nav-tabs'
+                        });
+
+                });
+
+        </script>
+        <style>
+            .box1 {
+                width: 23%;
+                ;
+                height: 160px;
+                border: solid 1px #fff;
+                float: left;
+                margin: 10px;
+            }
+            .box2 {
+                width: 30%;
+                height: 160px;
+                border: solid 1px #fff;
+                float: left;
+                margin: 10px 10px 25px 10px;
+            }
+            project_anchor {
+                color: #7c7c7c;
+                font-size: 16px;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 5px;
+                width: 100%;
+                text-transform: capitalize;
+                display: block;
+                padding-top: 10px;
+            }
+            .nav-pills>li.active>a,
+            .nav-pills>li.active>a:hover,
+            .nav-pills>li.active>a:focus {
+                color: #fff;
+                background-color: #A68D2B;
+            }
+            ul li,
+            ol li {
+                margin-left: 0em;
+                !important;
+            }
+            img {
+                height: 100% !important;
+            }
+            a:link,
+            a:visited {
+                border-bottom: 1px solid #D0D0D0 !important;
+            }
+            .nav-pills>li>a {
+                border-radius: 0px !important;
+            }
+            .nav-pills>li>a {
+                border-radius: 0px !important;
+            }
+            .nav-pills>li>a {
+                margin-top: 0px;
+                .embed-responsive-16by9 {
+                    padding-bottom: 56.25%;
+                }
+                .embed-responsive {
+                    position: relative;
+                    display: block;
+                    height: 0;
+                    padding: 0;
+                    overflow: hidden;
+                }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div id="rootwizard" class="tabbable tabs-left">
+            <ul class="nav nav-pills nav-stacked col-md-2">
+                <li class="active"><a href="#tab1" class="project_anchor" data-toggle="pill">Images</a>
+                </li>
+                <li><a href="#tab2" data-toggle="pill" class="project_anchor">Videos</a>
+                </li>
+
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab1">
+                    <a class="group2" href="{!URLFOR($Resource.TestConstruction,'/colorbox/images/ohoopee1.jpg')}" title="image1">
+                        <div class="box1">
+                            <apex:image url="{!URLFOR($Resource.TestConstruction,'/colorbox/images/ohoopee1.jpg')}" />
+                        </div>
+                    </a>
+                    <a class="group2" href="{!URLFOR($Resource.TestConstruction,'/colorbox/images/ohoopee2.jpg')}" title="image2">
+                        <div class="box1">
+                            <apex:image url="{!URLFOR($Resource.TestConstruction,'/colorbox/images/ohoopee2.jpg')}" />
+                        </div>
+                    </a>
+                    <a class="group2" href="{!URLFOR($Resource.TestConstruction,'/colorbox/images/ohoopee3.jpg')}" title="image3">
+                        <div class="box1">
+                            <apex:image url="{!URLFOR($Resource.TestConstruction,'/colorbox/images/ohoopee3.jpg')}" />
+                        </div>
+                    </a>
+                    <a class="group2" href="{!URLFOR($Resource.TestConstruction,'/colorbox/images/ohoopee3.jpg')}" title="image3">
+                        <div class="box1">
+                            <apex:image url="{!URLFOR($Resource.TestConstruction,'/colorbox/images/ohoopee3.jpg')}" />
+                        </div>
+                    </a>
+                </div>
+                <div class="tab-pane" id="tab2">
+                    <a class="group3" title="video1">
+                        <div class="box2">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/kIRpC0gFN5M"></iframe>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a class="group3" title="video1">
+                        <div class="box2">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/Lka9A7IRYz8"></iframe>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a class="group3" title="video1">
+                        <div class="box2">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/-IQHgzwg-mw"></iframe>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a class="group3" title="video1">
+                        <div class="box2">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/mshyq7dxR7A"></iframe>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+        <script type="text/javascript" src="{!URLFOR($Resource.CSS2_0, '/colorbox/bootstrap/js/bootstrap.js')}"></script>
+    </body>
+</apex:page>

@@ -1,0 +1,159 @@
+<!--
+Description: A Page to display the related list of Documents on Account detail page with sortable columns
+
+Version    Date            Author            Description
+1.0        20/05/2014      Asmita Bubane     Initial Draft
+-->
+
+
+<apex:page standardController="Account" extensions="DocumentRelatedListController" docType="html-5.0" id="myPage" sidebar="false" showHeader="false">
+   <script>
+        window.onload = removeFocus;
+        function removeFocus(){
+            window.blur();
+        }
+    </script> 
+    
+    <apex:form id="myForm">
+    <apex:sectionHeader subtitle="Documents"/>
+    <apex:pageMessages id="errors" />
+        <apex:pageblock id="results">
+            <!-- Filter Section -->
+            <table width="100%">
+                <tr>
+                    <td><b><apex:outputText style="font-weight: bold">Filter By : </apex:outputText></b></td>
+                    <td> </td>
+                    <td><apex:outputtext > Name </apex:outputtext></td>
+                    <td><apex:inputtext value="{!searchName}" id="input1"/></td>
+                    <td> </td>
+                    <td><apex:outputText >From Date </apex:outputText></td>
+                    <td><apex:inputField value="{!fromDateSearch.Despatch_Date__c}"/></td>
+                    <td><apex:outputText >To Date </apex:outputText></td>
+                    <td><apex:inputField value="{!toDateSearch.Despatch_Date__c}"/></td>
+                    <td> </td>
+                    <td><apex:commandButton value="Go" action="{!searchByFilter}"/></td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td><apex:commandButton value="Generate Documents" action="{!generateDocuments}" oncomplete="generateDoc('{!doc_generate_page}');"/></td>
+                    <td><apex:commandButton value="ISS" action="{!displayIss}" oncomplete="generateIss('{!iss_Link}');"/></td>
+                    <td><apex:commandButton value="Document Report" action="{!displayReport}" oncomplete="generateReport('{!doc_report_page}');"/></td>
+                </tr>
+            </table> 
+
+            <br/>
+            
+            <!-- Related List -->                
+                <apex:pageblocktable value="{!listDocument}" var="doc">
+                
+                    <!-- Action Column -->
+                    <apex:column headerValue="Action">
+                        <apex:commandLink action="{!editDocument}"  target="_parent" rendered="{!isEditLink}">Edit
+                            <apex:param name="docId" value="{!doc.Id}"/>
+                        </apex:commandLink>
+                        <apex:outputText rendered="{!isEditLink}"> &nbsp;|&nbsp; </apex:outputText>
+                        <apex:commandLink action="{!deleteDocument}" onclick="return confirm('Are you sure?');"  target="_self" rendered="{!isDeleteLink}">Del
+                            <apex:param name="docId" value="{!doc.Id}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    <!-- Name Column --> 
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Name" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Name" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:commandLink action="{!openDocument}" value="{!doc.Name}"  target="_parent"> 
+                            <apex:param name="docId" value="{!doc.Id}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    <!-- View Documnet Column -->
+                    <apex:column headerValue="View Document">
+                        <apex:outputField value="{!doc.View_Document__c}" rendered="{!doc.Document_URL__c != ''}"/>
+                    </apex:column> 
+                    <!-- View Email Column -->
+                    <apex:column headerValue="View Email">
+                        <apex:outputField value="{!doc.View_Email__c}" rendered="{!doc.Email_URL__c != ''}"/>
+                    </apex:column> 
+                    <!-- Document Category Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Document Category" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Document_Category__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!doc.Document_Category__c}"/>
+                    </apex:column>
+                    <!-- Version Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Version" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Version__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!doc.Version__c}"/>
+                    </apex:column>
+                    <!-- Date Of Generation Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Date of Generation" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Date_of_generation__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!doc.Date_of_Generation__c}"/>
+                    </apex:column>
+                    <!-- Identification Parameter Column -->
+                    <!-- <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Identification Parameter" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Identification_Parameter__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!doc.Identification_Parameter__c}"/>
+                    </apex:column> -->
+                    <!-- Publish Mode Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Publish Mode" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Publish_Mode__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!doc.Publish_Mode__c}"/>
+                    </apex:column>
+                    <!-- Document Source Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Document Source" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="Document_Source__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!doc.Document_Source__c}"/>
+                    </apex:column>
+                    <!-- User Name Column -->
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="User Name" action="{!toggleSort}" rerender="results">
+                                <apex:param name="sortField" value="User__c" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!doc.User__c}"/>
+                    </apex:column>
+                    
+                </apex:pageblocktable>
+        </apex:pageblock>
+    </apex:form>
+    <script>
+        
+        function generateDoc(page){
+            window.open(page);
+        }
+        
+        function generateReport(reportPage){
+            window.open(reportPage);
+        }
+        function generateIss(issPage){
+            window.open(issPage);
+        }
+    </script>
+</apex:page>

@@ -1,0 +1,460 @@
+<!-- VisualForce page for Referral tab CSS
+   @Created by: Trupti Dhoka
+   @Created Date: 04/03/2015 
+   
+   
+   --------------------------------------------------------------------------------
+   | Modified By      | Modified Date       | Version        | Description         |
+   --------------------------------------------------------------------------------
+   |Trupti Dhoka       18/03/2015               1.1                Updated UI 
+   --------------------------------------------------------------------------------
+   |Trupti Dhoka       20/03/2015               1.2             active tab logic 
+   -------------------------------------------------------------------------------
+   Trupti D           15/5/2015                 1.1             Added responsiveness of 
+                                                                    table heading            
+   |---------------------------------------------------------------------------------->
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0" id="Landingpage" controller="LandingPageCSS2_0Controller"  action="{!init}">
+  
+   <meta charset="utf-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js" />
+   <script src="http://bxslider.com/lib/plugins/jquery.fitvids.js"></script>
+   <script src="http://bxslider.com/lib/jquery.bxslider.js"></script>
+   <!--<script type="text/javascript" src="bootstrap-datepicker.de.js" charset="UTF-8"></script> NEW-->
+   <apex:includeScript value="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js" />
+   <apex:stylesheet value="https://cdn.datatables.net/1.10.5/css/jquery.dataTables.css" />
+   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+   <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/style.css')}" rel="stylesheet" media="screen" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/bootstrap.min.css')}" rel="stylesheet" media="screen" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/font-awesome.min.css')}" rel="stylesheet" media="screen" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/animate.min.cs')}" rel="stylesheet" media="screen" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/prettyPhoto.css')}" rel="stylesheet" media="screen" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/main.css')}" rel="stylesheet" media="screen" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/responsive.css')}" rel="stylesheet" media="screen" />
+   <link href="https://jdewit.github.io/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" media="screen" />
+   <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/bootstrap.min.js')}"></script>
+   <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/jquery.prettyPhoto.js')}"></script>
+   <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/jquery.isotope.min.js')}"></script>
+   <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/main.js')}"></script>
+   <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/wow.min.js')}"></script>
+   <script src="https://jdewit.github.io/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+   <script src="{!$Resource.YearRangeIncr}"></script>
+  
+   <!-- Added for contrction updates -->
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/jquery.bxslider.css')}" rel="stylesheet" media="screen" />
+   <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/jquery.bxslider.js')}"></script>
+   <!--[if lt IE 9]> 
+   <script src="js/html5shiv.js"></script>
+   <script src="js/respond.min.js"></script>
+   <![endif]-->
+   <style>
+      .requiredField {
+          BORDER-LEFT: #c11b17 3px solid;
+      }
+      .buttoncolor {
+          background-color: #B89A3C;
+          color: white;
+          border-color: goldenrod;
+          border-style: hidden;
+      }
+      <!------------------------header---------------------------> 
+      gloaballink ul li a {
+          color: #9a9999;
+          text-decoration: none;
+          margin-left: 1px;
+      }
+      <!------------------------header---------------------------> 
+      .Widgetset {
+          min-height: 264px;
+          margin-bottom: 5px;
+          margin-top: 2px;
+      }
+      .foorterdiv {
+          height: 50px;
+          width: 100%
+      }
+      .container_allpages{ 
+          margin-top:10px;
+          padding: 20px;
+      }
+      <!--Responsiveness of crisp view headers -->
+      @media screen and (min-width: 50px) and (max-width:590px) { 
+          .panel-default > .panel-heading {
+               height: 50px !important;
+      }
+          .panel-heading{
+               padding: 10px 8px;
+          }
+          .submitQuerybtn1 {
+              margin: -25px auto !important;
+              float: right!important;
+              background: #a68d2b !important;
+              padding: 2px 10px !important;
+              color: #fff !important;
+          }
+          .table_title {
+              width: 100%;
+              float: left;
+          }
+      }
+      <!--These style are usedto enable scroll if records are larger in crisp views -->
+      .crispRecentActivity_Scroll
+      {
+        height: 200px;
+        overflow: auto;
+      }
+       .crispPayment_Scroll
+      {
+        height:133px;
+        overflow: auto;
+      }
+        .crispDocument_Scroll
+      {
+        height:166px;
+        overflow: auto;
+      }
+      <!--EOF style -->
+      <!--  this style is used for loading symbol -->
+      #assign-action-spinner-main{
+          position: fixed;
+          left: 0;
+          top: 0;
+          background-color: rgba(0, 0, 0, .6);
+          height: 100%;
+          width: 100%;
+          z-index: 999;
+          align: center;
+          vertical-align: middle;
+      }
+      #assign-action-spinner-content {
+          position: absolute;
+          top: 50%;
+          left: 45%;
+          z-index: 1000;
+          background-color: none;
+          width: 40px;
+          height: 40px;
+      }
+      #assign-action-spinner-content img {
+          width: 40px;
+          height: 40px;
+          align: center;
+          vertical-align: middle;
+      }
+      .h {
+          font-weight: bold;
+          font-size: x-large;
+      }
+      .header {
+          word-spacing: 50px;
+          padding-left: 70px;
+          padding: 7px 11px 8px 21px;
+      }
+      .alert {
+          padding: 5px !important;
+          margin-bottom: 0px !important;
+          border: 1px solid transparent !important;
+          border-radius: 4px;
+      }
+      .nav > li {
+          -moz-margin-start: 2px;
+          -webkit-margin-start: 3px; 
+      }
+      .container_new { 
+          width: 1163px;
+          margin: 0 auto;
+          padding: 15px;
+      }
+      .navbar-inverse .navbar-nav > li > a {
+        padding: 5px 27px;
+        margin: 0;
+        border-radius: 0px;
+        color: #727070;
+        line-height: 24px;
+        display: inline-block;
+        width: 100%;
+        text-transform: none;
+    }
+   </style>
+   <!--header start -->
+   <!-- Google Analtyics component -->
+   <c:GoogleAnalytics Page="Home"  
+      User="{!username}"  
+      Project="{!userProject}" 
+      Segment="{!userSeqment}" 
+      CRN="{!userCRN}" 
+      Gender="male" 
+      LastLogin="{!userLastLogin}" 
+      NoOfLogins="{!UserTotalLogins}"
+      /> 
+<!--       TotalLogins="{!TotalLogins}"  -->
+   <!-- End Of Google Analtyics component -->
+   <div class="headerbg">
+      <div class="container Site-content ">
+         <div class="row">
+            <div class="col-sm-12">
+               <div class="row">
+                  <div class="col-sm-1 col-xs-12 ">
+                     <apex:image styleClass="logo" url="{!URLFOR($Resource.CSS2_0,'/CSS2_0/images/logo.png')}" />
+                  </div>
+                  <div class="col-sm-11 col-xs-12 ">
+                     <div id="gloaballink" class="pull-right">
+                        <ul>
+                           <li><i class="fa fa-cloud-download fa-lg"></i><a target="_blank" href="{!welcome_Guide}" title="Download Welcome Guide">Welcome Guide</a>
+                           </li>
+                           <!-- Help -->
+                           <li>
+                              <div class="dropdown">
+                                 <i class="fa fa-question-circle fa-lg"></i>
+                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                 Help <span class="caret"></span></a>
+                                 <ul class="dropdown-menu">
+                                    <li><a target="_blank" href="{!Faqs}">FAQs</a>
+                                    </li>
+                                    <li><a target="_blank" href="{!service_offerings}">Service Offerings</a>
+                                    </li>
+                                    <li><a target="_blank" href="{!possession_info}"> Possession Information</a>
+                                    </li>
+                                 </ul>
+                              </div>
+                           </li>
+                           <!-- EOF Help -->
+                           <!-- Get in Touch With Us -->
+                           <li>
+                              <div class="dropdown">
+                                 <i class="fa fa fa-phone fa-lg"></i>
+                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contact Us<span class="caret"></span></a>
+                                 <ul class="dropdown-menu" role="menu">
+                                    <li><!----Customer Care No.:-->
+                                    <a><apex:outputPanel rendered="{! custcare_num != null && custcare_num.size>0}">
+                                               Customer Care No.:   <br/>
+                                               <apex:repeat value="{!custcare_num}" var="num" id="theRepeatNo">
+                                               <a href="tel:{!num.CustomerCareNumber__c}">{!num.City__c} : {!num.CustomerCareNumber__c}</a>   
+                                               </apex:repeat>
+                                         </apex:outputPanel></a> 
+                                    </li>
+                                    <li><a>Relationship Manager : {!RM_DetailsList[0].Owner.Name} </a> </li>
+                                    <li>
+                                       <a>Email : {!RM_DetailsList[0].Owner.Email} </a>
+                                    </li>
+                                     <li>
+                                         <a href="tel:{!RM_DetailsList[0].Owner.Phone}" style="display:{!IF(AND(ProjectType.size > 0,ProjectType[0].Project_Type__c == 'Hi End / Luxury' , RM_DetailsList[0].Owner.Phone != null),'block','none')} ">Mobile :{!RM_DetailsList[0].Owner.Phone}</a>
+                                    </li>
+                                   <!-- <li style="clear:both;"><a href="#SubmitQuery" data-toggle="modal" data-backdrop="static"  data-keyboard="false" onclick="ResetQueryField();return false;">Submit Query </a>
+                                    </li> -->
+                                 </ul>
+                              </div>
+                           </li>
+                           <li>
+                              <i class="fa fa-envelope fa-lg"></i>
+                              <a target="_blank" style="cursor: pointer;" onclick="openMyLodhaMailBox();" title="My Mailbox">My Mailbox</a>
+                           </li>
+                           <!--Logout -->
+                           <li>
+                              <div class="dropdown dropdown-box">
+                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                 Welcome {!Customer_Name} <span class="caret"></span></a>
+                                 <ul class="dropdown-menu" style="text-align:left;">
+                                    <li style="text-align:left;"><a href="#">Booking ID: {!CRN}</a>
+                                    </li>
+                                    <apex:form >
+                                       <apex:commandLink oncomplete="Logoutfunction();"  style="margin-left: 12%;" action="{!getProfilecompleteness}" reRender="xtraID,pmid">Logout</apex:commandLink>
+                                       <apex:outputPanel id="xtraID">
+                                          <apex:inputHidden value="{!profile_completeness}" id="oneText"/>
+                                          <script>
+                                             function Logoutfunction()
+                                             {
+                                                var profile_meter_value='{!profile_completeness}';
+                                                if(profile_meter_value == 100)
+                                              {
+                                                 window.location.href="{!$Site.Prefix}/secur/logout.jsp"
+                                              }
+                                              else
+                                              {
+                                                console.log('inside else if');
+                                                 $('#Logoutreminder').modal('show');
+                                              }
+                                             }  
+                                             
+                                          </script>
+                                       </apex:outputPanel>
+                                    </apex:form>
+                                 </ul>
+                              </div>
+                           </li>
+                           <!--EOF Logout -->
+                        </ul>
+                        <div class="headdate" style="MARGIN-TOP: 10PX">
+                           <!--{!dateVal} -->
+                           {!currentDate}{!currentTime}
+                        </div>
+                     </div>
+                     <div class="clear"></div>
+                    <!-- <apex:pagemessages id="landingmsg"/> -->
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--Nav Menu Start-->
+      <div class="navbar-inverse">
+         <div class="container">
+            
+            <div class="navbar-header">
+               <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" type="button">
+               <span class="sr-only">Toggle navigation</span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               </button>
+               <!--<a class="navbar-brand" href="#"> </a>-->
+            </div>
+           
+            <div class="collapse navbar-collapse paddingleft">
+               <ul class="nav navbar-nav">
+                  <li id="home" class="{!IF(OR($CurrentPage.Name == 'HomeCSS2_0',$CurrentPage.Name =='LandingPageCSS2_0',$CurrentPage.Name =='homecss2_0'),'active','')}">
+                     <a href="{!URLFOR($Page.HomeCSS2_0)}" title="Home">Home</a>
+                  </li>
+                  <li class="{!IF(OR($CurrentPage.Name == 'PaymentInformationCSS2_0', $CurrentPage.Name == 'PaymentModesCSS2_0',
+                     $CurrentPage.Name == 'paymentmodescss2_0',$CurrentPage.Name == 'paymentinformationcss2_0'),'active','')}">
+                     <a href="{!URLFOR($Page.PaymentInformationCSS2_0)}" alt="Payment Information" title="Payment Information">Payment Information</a>
+                  </li>
+                  <li class="{!IF($CurrentPage.Name == 'BookingDetailsCSS2_0','active','')}">
+                     <a href="{!URLFOR($Page.BookingDetailsCSS2_0)}" alt="Booking Details" title="Booking Details">Booking Details</a>
+                  </li>
+                  <li class="{!IF($CurrentPage.Name == 'DocumentsSMSCSS2_0','active','')}"><a href="{!URLFOR($Page.DocumentsSMSCSS2_0)}" alt="Communication History" title="Communication History">Communication History</a> </li>
+                  <li class="{!IF($CurrentPage.Name == 'ProfileInformationCSS2_0','active','')}"><a href="{!URLFOR($Page.ProfileInformationCSS2_0)}" alt="Profile Info" title="Profile Information">Profile Information </a> </li>
+                  <li class="{!IF($CurrentPage.Name == 'ConstructionUpdatesCSS2_0','active','')}"><a href="{!URLFOR($Page.ConstructionUpdatesCSS2_0)}" alt="Construction Updates" title="Construction Updates">Construction Updates </a> </li>
+                  <li class="{!IF($CurrentPage.Name == 'RegistrationDetailsCSS2_0','active','')}"><a href="{!URLFOR($Page.RegistrationDetailsCSS2_0)}" alt="Registration Details" title="Registration Details">Registration Details </a> </li>
+               <!--   <li class="{!IF($CurrentPage.Name == 'ReferralCSS2_0','active','')}"><a href="{!URLFOR($Page.ReferralCSS2_0)}" alt="Referral" title="Referral" style="margin-right:0px!important;">Referral</a>
+                  </li> -->
+                  
+                  
+                  <!-------------mobile device CSS ---------------->
+                  <li class="mobile-device">
+                     <a target="_blank" href="{!welcome_Guide}" title="Download Welcome Guide">Welcome Guide </a>
+                  </li>
+                  <!--<li class="mobile-device">
+                     <a target="_blank" href="{!possession_info}" title="Posession Information">Possession Information</a>
+                     </li>-->
+                  <li class="dropdown mobile-device">
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help <span class="caret"></span></a>
+                     <ul class="dropdown-menu" role="menu">
+                        <li><a target="_blank" href="{!Faqs}">FAQs</a>
+                        </li>
+                        <li><a target="_blank" href="{!service_offerings}">Service Offerings</a>
+                        </li>
+                        <li><a target="_blank" href="{!possession_info}"> Possession Information</a>
+                        </li>
+                     </ul>
+                  </li>
+                  <li class="dropdown mobile-device">
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Contact Us <span class="caret"></span></a>
+                     <ul class="dropdown-menu" role="menu">
+                        <li><a>
+                        <apex:outputPanel rendered="{! custcare_num != null && custcare_num.size>0}">
+                                              Customer Care No.:   <br/>
+                                               <apex:repeat value="{!custcare_num}" var="num" id="theRepeat">
+                                                   
+                                                   <a href="tel:{!num.CustomerCareNumber__c}">{!num.City__c} : {!num.CustomerCareNumber__c}</a>
+                                               </apex:repeat>
+                         </apex:outputPanel></a>
+                        </li>
+                        <li><a>Relationship Manager : {!RM_DetailsList[0].Owner.Name} </a>
+                        </li>
+                        <li><a>Email : {!RM_DetailsList[0].Owner.Email} </a>
+                        </li>
+                        <li>
+                           <a style="display:{!IF(AND(ProjectType.size > 0,ProjectType[0].Project_Type__c == 'Hi End / Luxury' , RM_DetailsList[0].Owner.Phone != null),'block','none')} ">Mobile :{!RM_DetailsList[0].Owner.Phone}</a>
+                        </li>
+                     <!--   <li style="clear:both;">
+                            <a href="#SubmitQuery" data-toggle="modal" data-backdrop="static"  data-keyboard="false" onclick="ResetQueryField();return false;">Submit a query</a>
+                        </li> -->
+                     </ul>
+                  </li>
+                  <li class="mobile-device">
+                     <a target="_blank" style="cursor: pointer;" onclick="openMyLodhaMailBox();" title="My Mailbox">My Mailbox</a>
+                  </li>
+                  <li class="dropdown mobile-device">
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Welcome {!Customer_Name} <span class="caret"></span></a>
+                     <ul class="dropdown-menu" role="menu">
+                        <apex:form >
+                           <apex:commandLink oncomplete="Logoutfunction();" action="{!getProfilecompleteness}" reRender="xtraID,pmid"> 
+                                Logout
+                           </apex:commandLink>
+                         </apex:form>
+                     </ul>
+                  </li>
+                  <!--------------mobile device ---------------->
+               </ul>
+            </div>
+         </div>
+         <!-- end Of Container-->
+      </div>
+      <div class="navstrip"></div>
+      <apex:insert name="body" />
+      <!--Nav Menu End-->
+      <!--header End -->
+      <div class="clear"> </div>
+      <!--Footer Start-------->
+      <footer class="footer" style="margin-top:0%">
+         <div class="container footer-new">
+            <p>@ Lodha Group {!year(today())}. All rights reserved.</p>
+         </div>
+      </footer>
+   </div>
+   <!--End of Headerbg-->
+   <!-- Modal popup for Submit A Query -->
+<!--   <div id="SubmitQuery" class="modal fade">
+      <div class="modal-dialog" >
+         <div class="modal-content">
+            <div class="modal-header">
+               <h4 class="modal-title"><span class="glyphicon glyphicon-question-sign"></span> Submit Your Query</h4>
+            </div>
+            <div class="modal-body" id="test">
+               <c:SubmitQueryCSS2_0 id="componentRef" />
+            </div>
+            <div class="modal-footer">
+            </div>
+         </div>
+      </div>
+   </div> -->
+   <!--Modal popup for reminder functionality-->
+   <div id="Logoutreminder" class="modal fade">
+      <div class="modal-dialog" >
+         <div class="modal-content">
+            <apex:outputPanel id="pmid">
+               <div class="modal-header">
+                  <h4 class="modal-title"><span style="margin-right: 1%;" class="glyphicon glyphicon-question-sign"></span>Reminder for Profile Completeness</h4>
+               </div>
+               <div class="modal-body" id="test1">
+                  <c:ProfileCompletenessReminderCSS2_0 id="profilereminder" profileCompletenessValue="{!Profile_completeness}"/>
+               </div>
+               <div class="modal-footer">
+               </div>
+            </apex:outputPanel>
+         </div>
+      </div>
+   </div>
+   <!--End of reminder--> 
+   <!--     </body> -->
+   
+   
+   <script>
+      // Script requires for rendering error msg and field in submit a Query 
+    //  function ResetQueryField() {
+    //          $("[id*=statusMail]").hide();
+    //          $("[id*=subject]").val('');
+    //          $("[id*=description]").val('');
+    //          $("[id*=submitmsg]").css("display", "none");
+   //   } 
+      function openMyLodhaMailBox(){
+         var sessionId ='{!$Api.Session_ID}';
+         var userId ='{!$User.Id}';
+         var serverurl = "https://eu1.salesforce.com/services/data/v20.0/sobjects/User/";
+         window.open("https://mail.mylodha.com/lodhaweb/src/lodhaportal.php?sf_sessionid=" +sessionId + "&sf_userid=" +userId+ "&sf_serverurl=" + serverurl, "lodhamail");
+      }  
+   </script>
+</apex:page>

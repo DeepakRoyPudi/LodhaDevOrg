@@ -1,0 +1,178 @@
+<apex:page title="Express Registration" standardStylesheets="false" showHeader="false" sidebar="false" standardController="Lead" extensions="ThankYouExtension">
+<!--
+
+/*
+Author - CG DEV
+Date Created - 03/11/2011
+*/
+-->
+<apex:stylesheet value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'stylesheets/xpress.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'stylesheets/template.css')}"/>    
+<script>
+function myprintfunction()
+{
+document.getElementById('{!$Component.printer}').style.visibility = "hidden";
+var objBrowse = window.navigator;
+if (objBrowse.appName == "Opera" || objBrowse.appName == "Chrome") 
+{
+setTimeout('window.print()', 500);
+} 
+else 
+{
+window.print();
+
+}
+document.getElementById('{!$Component.printer}').style.visibility = "visible";
+}
+
+</script>
+
+<style type="text/css">
+
+.style1 {
+    color: #FF0000;
+    font-size: 10px;
+}
+.style2 {color: #FF0000}
+
+</style>
+
+
+
+<div id="main_holder">
+<div>
+<div>
+  <div style="background: #f2f2f2;">
+
+    <div  class="form_content">
+          Dear&nbsp;{!lead.FirstName}  ,<br /> 
+      <br/>
+     <center><span style="text-align:center; margin:5px 0px 5px 0px; font-size:16px; font-family:Arial, Helvetica, sans-serif; font-weight:bold;" ><strong>Thank you for registering with us.</strong></span></center><br />
+     <center>Kindly carry  a printout of the details during your site visit. You will also receive a copy of the same via email shortly.</center><br />
+
+     <center><apex:image id="printer" onclick="myprintfunction();" title="print" url="{!$Resource.PrintBtn}" /></center>
+
+     </div>
+  </div>
+</div>
+<div style="text-align:center; margin:5px 0px 5px 0px; font-size:16px; font-family:Arial, Helvetica, sans-serif; font-weight:bold;" id="form_container">
+
+ </div>
+  <div id="form_container">
+  <table>
+   <tbody><tr>
+      <td width="9%" height="30">First Name<span class="style2"></span>:</td>
+      <td>{!lead.FirstName}</td>
+      <td width="3%">&nbsp;</td>
+      <td width="12%">Last Name: </td>
+      <td width="20%">{!lead.LastName}</td>
+      <td width="3%">&nbsp;</td>
+      <!--<td width="16%">Proposed Date:</td>
+      <td width="24%">{!ProposedDate}</td>-->
+      <td width="16%">Proposed Date:</td>
+      <td width="24%">{!ProposedDate}</td>
+     
+      </tr>
+    <tr>
+     </tr><tr>
+      <td width="20%" height="30">Plot/Flat No. &amp; Bldg :</td>
+      <td>{!lead.Address_r1__c}</td>
+      <td>&nbsp;</td>
+       <td width="5%" height="30">Street :</td>
+      <td>{!lead.Address2_R__c}</td><td>&nbsp;</td>
+       <td width="5%" height="30">Locality :</td>
+       
+      <td>{!lead.Address_3_R__c}</td>
+      <td>&nbsp;</td>
+      </tr>
+     <tr>
+     
+      <td>City:</td>
+      <td>{!lead.City_O__c}{!lead.City_R__c}</td>
+      <td>&nbsp;</td>
+      <td>Pin Code:</td>
+      <td>{!lead.Pincode_R__c}</td>
+          <td>&nbsp;</td>
+        <td height="30">Mobile:</td>
+      <td>{!lead.Mobile__c}</td>
+      </tr>
+    <tr>
+     
+     
+      <td>Landline:</td>
+      <td>{!lead.STD_Code__c}{!lead.Phone}</td>
+      <td>&nbsp;</td>
+      <td>Email:</td>
+      <td>{!lead.Email}</td>
+      </tr>
+    <tr>
+      <td width="9%" height="30">Occupation:</td>
+      <td colspan="7"><table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr>
+                    <td width="20%">{!lead.Occupation__c}</td>
+           </tr>
+      </tbody></table></td>
+      </tr>
+   <tr>
+      <td colspan="8" height="12"><apex:image value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'images/xpress_sperator.gif')}"/></td>
+    </tr>
+    <tr>
+      <td colspan="8"><span class="form_heading">Requirement</span></td>
+      </tr>
+    <tr>
+      <td width="9%" height="30">Type:</td>
+      <td colspan="7"><table width="100%" cellspacing="0" cellpadding="0" border="0">
+       <tbody><tr>
+          
+          <td width="20%">{!lead.Type_of_Accomodation__c}</td>
+          <td width="16%"><label>
+          
+      </label></td></tr></tbody></table></td>
+      </tr>
+    <tr>
+      <td width="9%" height="30">Purpose:</td>
+      <td colspan="7"><table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr>
+         
+          <td width="20%">{!lead.Purpose__c}</td>
+          <td width="16%"><label>
+          
+      </label></td></tr></tbody></table></td>
+    </tr>
+      <tr>
+      
+      <td colspan="7"><table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr>
+          
+          
+      </tr></tbody></table></td>
+    </tr>
+    <tr>
+      <td colspan="8" height="12"><apex:image value="{!URLFOR($Resource.casa_by_lodha_web_2_lead, 'images/xpress_sperator.gif')}"/></td>
+    </tr>
+    <tr>
+      <td colspan="8"><span class="form_heading">Budget in lakhs</span></td>
+      </tr>
+     <tr>
+           <td width="1%">Value:</td>
+          <td width="4%">{!lead.Budget_in_Lakhs__c}&nbsp;lacs</td>
+          <td width="16%"><label>
+            
+           
+         
+        </label></td></tr>
+      </tbody></table>
+</div>
+
+<div style="padding:5px 0px 0px 0px;" align="center" id="printbutton" ></div>
+
+
+
+</div>
+
+</div>
+
+
+
+
+</apex:page>

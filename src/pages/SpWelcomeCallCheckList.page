@@ -1,0 +1,828 @@
+<!--
+        Version      Date        Author             Description
+         1.0       21/03/2014   Lodha Group IT     Initial Draft
+         1.1       17/09/2014   Asmita (Eternus)   IT HD-46636 - Welcome call checklist print bug resolution.
+		 1.2       17/11/2014   Deepak Pudi        IT HD-46636 - Welcome call checklist print bug resolution.
+		 2.0       18/11/2014   Siddharth          IT HD-44967 - Welcome Call Checklist Revamp
+ -->
+<apex:page standardController="Welcome_Call_CheckList__c" extensions="SpWelcomeCallCheckListController" sidebar="false">
+
+
+
+<style>
+th{background-color:#00BFFF;color:#fff;padding:3px;text-align:center}  
+td{padding:3px; font-weight: bold}
+ .td-color{background-color:#000080; color:#fff; text-align:center}
+</style>
+
+
+<apex:form id="WELCOMEFORM">
+<div align="Right"><apex:image value="{!$Resource.Lodha_Logo}"/></div>
+
+  <table width="100%" border="2" style="border-collapse: collapse">
+      <tr>
+          <td colspan="4"><div style="font-size:10px;color:red;font-weight: bold">* Indicate mandatory for FAME Accept.</div></td>
+      </tr>
+      <tr>
+<!--           <td colspan="4" class="td-color" style="font-size:25px;"><Center>WELCOME CALL CHECKLIST</Center></td> -->
+          <td colspan="4" class="td-color" style="font-size:25px;"><Center>Relationship Call Checklist</Center></td>          
+      </tr>
+      <tr>
+          <td colspan="4">  
+              <apex:outputText style="font-weight: bold">CUSTOMER NAME:&nbsp;</apex:outputText>
+              <apex:outputText >{!customer_name_details }</apex:outputText> &nbsp;&nbsp;&nbsp;
+<!--               <apex:outputText style="font-weight: bold"> FLAT DETAILS:&nbsp;</apex:outputText> -->
+<!--               <apex:outputText > {!flat_details}</apex:outputText> -->
+          </td>
+      </tr>
+      <!-- Siddharth 2.0 -->
+      <tr>
+          <td colspan="4">  
+              <apex:outputText style="font-weight: bold"> FLAT DETAILS:&nbsp;</apex:outputText>
+              <apex:outputText > {!flat_details}</apex:outputText>
+          </td>
+      </tr>      
+  </table> 
+  <br/>
+<table width="100%" border="2" style="border-collapse: collapse">
+<!-- <tr> -->
+<!-- <th>Topics</th> -->
+<!-- <th>Parameters checked by PI/RM</th> -->
+<!-- <th>Choose from here</th> -->
+<!-- </tr> -->
+<!-- Siddharth 2.0 -->
+<tr>
+<th>Relationship Call Content</th>
+<th>Details</th>
+<th>Status</th>
+<th>Associate Comments (If Any)</th>  <!-- Siddharth 2.0 -->
+</tr>
+<tr>
+      <td colspan="5"></td>
+    </tr>
+<tr>
+<!-- <td class="td-color" style="width:250px;"> -->
+<!-- INTRODUCTION -->
+<!-- </td> -->
+<!-- Siddharth 2.0 -->
+<td class="td-color" style="width:250px;" rowspan="2">
+Greeting, Introduction &amp; Permission
+</td>
+<!-- <td style="width:550px;"> -->
+<!-- Greeting, Introduction, Seek permission &amp; congratulate -->
+<!-- </td> -->
+<td style="width:550px;">
+1.Am I speaking to {!customer_name_details }? Good morning {!customer_name_details }, this is {!$User.FirstName} {!$User.LastName} from Lodha Group.
+</td>
+<td style="width:300px;">
+<apex:selectradio value="{!welcomecall.Welcome_Call__c}"> 
+<apex:selectOptions value="{!yesitems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+    <td>
+        <div id="divWelcomeRemarks" style="display:block">
+            <apex:inputfield id="remarksWelcomeCall" value="{!welcomecall.Welcome_Call_Remarks__c}" style="width:200px;"/>
+        </div>
+        <div id="divWelcomeRemarksPrint" style="display:none;width:200px;"/>
+    </td>        
+</tr>
+
+<!-- Siddharth 2.0 -->
+    <tr>
+        <td>
+            2.Hearty Congratulations on your new home &amp; a very warm welcome to the Lodha Family. Is this is a good time to speak to you?
+        </td>
+        <td>
+            <apex:selectradio value="{!welcomecall.Greetings__c}"> 
+<!--             <apex:selectOptions value="{!CorrectItems}"></apex:selectOptions> -->
+                <apex:selectOptions value="{!yesitems}"></apex:selectOptions>
+            </apex:selectradio>
+        </td>
+        <td>
+            <div id="divGreetingRemarks" style="display:block">
+                <apex:inputfield id="remarksGreetings" value="{!welcomecall.Greetings_Remarks__c}" style="width:200px;"/>
+            </div>
+            <div id="divGreetingRemarksPrint" style="display:none;width:200px;"/>
+        </td>
+    </tr>
+
+<tr>
+<td colspan="3">
+</td>
+</tr>
+
+<!-- Siddharth 2.0 BOOKING SOURCE SECTION -->
+    <tr>
+        <td class="td-color" style="width:250px;" rowspan="2">
+            Booking Source (MANDATORY)
+        </td>
+        <td style="width:550px;">
+            1. We would like to confirm your source of booking?
+        </td>
+        <td style="width:12%;">
+            <apex:selectradio value="{!welcomecall.Source_of_Booking__c}" required="true"> 
+                <apex:selectOptions value="{!yesitems}"></apex:selectOptions>
+            </apex:selectradio>
+        </td>
+        <td>
+            <div id="divSourceBookingRemarks" style="display:block">
+                <apex:inputfield id="remarksSourceOfBooking" value="{!welcomecall.Source_of_Booking_Remarks__c}" style="width:200px;"/>
+            </div>
+            <div id="divSourceBookingPrint" style="display:none;width:200px;"/>
+        </td>        
+    </tr>
+
+    <tr>
+        <td>
+            2. Probe the customer to get details of the source. 
+        </td>
+        <td>
+            <apex:selectradio value="{!welcomecall.Details_of_Source__c}" required="true">
+<!--                 <apex:selectOptions value="{!CorrectItems}"></apex:selectOptions> -->
+                <apex:selectOptions value="{!disputeItems}"></apex:selectOptions>
+                <apex:actionSupport event="onchange" action="{!verifySourceOfBooking}"/>
+            </apex:selectradio>
+        </td>
+        <td>
+            <div id="divDetailSourceRemarks" style="display:block">
+                <apex:inputfield id="remarksDetailsOfSource" value="{!welcomecall.Details_of_Source_Remarks__c}" style="width:200px;"/>
+            </div>
+            <div id="divDetailSourcePrint" style="display:none;width:200px;"/>
+        </td>
+        <td>
+            <apex:outputText value="New Source" rendered="{!blnIsNewSource}"/>
+            <apex:inputField value="{!welcomecall.New_Booking_Source__c}" rendered="{!blnIsNewSource}" required="true"/>
+        </td>
+    </tr>
+
+<tr>
+<td colspan="3">
+</td>
+</tr>
+
+<!-- Siddharth 2.0 BOOKING SOURCE SECTION -->
+    <tr>
+        <td class="td-color" style="width:250px;" rowspan="1">
+            Closing Note
+        </td>
+        <td style="width:550px;">
+            We assure you of nurturing this relationship into a pleasant experience
+        </td>
+        <td style="width:300px;">
+            <apex:selectradio value="{!welcomecall.Closing_Note__c}"> 
+                <apex:selectOptions value="{!yesitems}"></apex:selectOptions>
+            </apex:selectradio>
+        </td>
+        <td>
+            <div id="divClosingNoteRemarks" style="display:block">
+                <apex:inputfield id="remarksClosingNote" value="{!welcomecall.Closing_Note_Remarks__c}" style="width:200px;"/>
+            </div>
+            <div id="divClosingNotePrint" style="display:none;width:200px;"/>
+        </td>        
+    </tr>
+   
+<!--     
+<tr>
+<td class="td-color" rowspan="6">
+BOOKING DETAILS
+</td>
+<td>
+APPLICANT &amp; CO-APPLICANT NAME *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Applicant_Co_applicant_Name__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td>
+Date of booking, Flat Details &amp; Carpet Area *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Date_of_booking_Flat_Details_Carpet_A__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td>
+Information on Exclusive area for use/garden area *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Information_on_Exclusive_area_for_use__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td>
+Consideration Value *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Consideration_Value__c}"> 
+<apex:selectOptions value="{!OrderItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td>
+Other charges &amp; taxes as applicable
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Other_charges_taxes_as_applicable__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td>
+Parking allotment *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Parking_allotment__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<td class="td-color" rowspan="10">
+SOURCE OF BOOKING
+</td>
+<td>
+Channel Partner Deal
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Channel_Partner_Deal__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Channel Partner Name
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Channel_Partner_Name__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Channel Partner REAP ID
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Channel_Partner_REAP_ID__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Referral Deal
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Referral_Deal__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Loyalty Source ID
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Loyalty_Source_ID__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Source Flat details
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Source_Flat_details__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Loyalty discount
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Loyalty_discount__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Corporate Booking Deal
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Corporate_Booking_Deal__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+LCUBE/Corporate ID
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.LCUBE_Corporate_ID__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Corporate Discount
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Corporate_Discount__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+-->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="7">
+PAYMENT SCHEDULE
+</td>
+</tr>
+<tr>
+<td>
+21 days *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.PAYMENT_SCHEDULE_21_days__c}"> 
+<apex:selectOptions value="{!OrderItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+42nd/45th day &amp; registration process (Timelines for submitting the SDR along with PDF) *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.PS_42nd_45th_day_registration_process__c}"> 
+<apex:selectOptions value="{!OrderItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+75th day/next milestone if applicable
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.PS_75th_day_next_milestone__c}"> 
+<apex:selectOptions value="{!OrderNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Construction linked payment &amp; preparation needed for the same *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.PS_Construction_linked_payment__c}"> 
+<apex:selectOptions value="{!OrderItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Service tax of 3.09/3.708% on Construction service and 12.36% on Preferential location explained
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.PS_Service_tax__c}"> 
+<apex:selectOptions value="{!OrderItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Information about the Welcome Kit being dispatched
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Source_Flat_details__c}"> 
+<apex:selectOptions value="{!OrderNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+-->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="4">
+REGISTRATION PROCESS (SDR)
+</td>
+</tr>
+<tr>
+<td>
+Stamp duty DD *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.RP_Stamp_duty_DD__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+MVAT DD *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.RP_MVAT_DD__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Registration DD *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.RP_Registration_DD__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+-->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="4">
+PAYMENT DETAILS
+</td>
+</tr>
+<tr>
+<td>
+Due date &amp; late payment charges *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.PD_Due_date__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Payment favouring
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.PD_Payment_favouring__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+RTGS/NEFT options &amp; details
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.PD_RTGS_NEFT__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+-->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="2">
+INTRODUCTION OF CSS PORTAL
+</td>
+</tr>
+<tr>
+<td>
+User ID &amp; password information
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.User_ID_password_information__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+-->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="2">
+CHOICE OF FUNDING
+</td>
+</tr>
+<tr>
+<td>
+Introduction to LFC
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Introduction_to_LFC__c}"> 
+<apex:selectOptions value="{!CorrectNAItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="2">
+TENTATIVE POSSESSION DATE
+</td>
+</tr>
+<tr>
+<td>
+As per the Latest Update
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.TENTATIVE_POSSESSION_DATE__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="2">
+CONTACT DETAILS
+</td>
+</tr>
+<tr>
+<td>
+Residence &amp; Office address, Tel numbers, Email IDs is as per the Application form *
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Contact_Details__c}"> 
+<apex:selectOptions value="{!CorrectItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="3">
+RM SUPPORT
+</td>
+</tr>
+<tr>
+<td>
+Shared contact details &amp; email address of RM
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Shared_contact_details__c}"> 
+<apex:selectOptions value="{!YesNoItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Shared work timings 10:00 – 06:00 (Monday to Friday)
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.Shared_work_timings__c}"> 
+<apex:selectOptions value="{!YesNoItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<!-- 
+<tr>
+<td colspan="3">
+</td>
+</tr>
+<tr>
+<td class="td-color" rowspan="3">
+MISC
+</td>
+</tr>
+<tr>
+<td>
+Information on TDS/taxes provided
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.MISC_TDS_taxes__c}"> 
+<apex:selectOptions value="{!YesNoItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+<tr>
+<td>
+Club Casa Awareness/Offer
+</td>
+<td>
+<apex:selectradio value="{!welcomecall.MISC_Club_Casa_Awareness__c}"> 
+<apex:selectOptions value="{!YesNoItems}"></apex:selectOptions>
+</apex:selectradio>
+</td>
+</tr>
+ -->
+
+<table width="70%">
+<tr>
+<td width="20%">
+Welcome Call Date : 
+</td>
+
+<td width="25%">
+<apex:inputField value="{!welcomecall.Welcome_Call_Date__c}" />
+</td>
+<td width="5%"/>
+
+
+<td width="25%">
+Relationship Call date
+</td>
+
+<td width="25%">
+<apex:inputField value="{!welcomecall.Welcome_Call_Monitor_date__c}" id="welcomecallmoniterdate"/>
+</td>
+</tr>
+
+<tr>
+<!-- <td width="20%"> -->
+<!-- RM Name :   -->
+<!-- </td> -->
+<!-- Siddharth 2.0 -->
+<td width="20%">
+Associate Name :  
+</td>
+
+<td width="25%">
+<apex:outputLabel value="{!$User.FirstName} {!$User.LastName}"/>
+<!-- <apex:outputField value="{!wing.Project_Incharge_Relationship_Manager__r.Name}" /> -->
+</td>
+
+<td width="5%"/>
+
+
+<td width="25%">
+RM Signature : 
+</td>
+
+<td width="25%">
+_ _ _ _ _ _ _ _ _ _ _ _ _ __ _ _ _ _ _ 
+</td>
+</tr>
+
+
+<tr>
+<td width="20%">
+PI/TL Name : 
+</td>
+
+<td width="25%">
+<!-- <apex:Outputfield value="{!projdet.Project_Incharge__r.Name}" /> -->
+<apex:outputLabel value="{!managerUser.Name}" />
+</td>
+
+<td width="5%"/>
+
+
+<td width="25%">
+PI/TL Signature : 
+</td>
+
+<td width="25%">
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+</td>
+</tr>
+
+<tr>
+<td width="20%">
+Welcome Call Status:
+</td>
+
+<td width="25%">
+<apex:inputfield value="{!welcomecall.Welcome_Call_Status__c}" />
+</td>
+</tr>
+
+<tr>
+<td width="20%">
+Remarks:
+</td>
+
+<td width="25%"> 
+<!-- 1.1 Asmita(Eternus) -->
+<div id="idTextAreaDiv" style="display:block">
+<apex:inputfield id="remarksTextArea" value="{!welcomecall.Remarks__c}" style="width:200px;"/>
+</div>
+<div id="idDiv" style="display:none;width:200px;"/>
+</td>
+</tr>
+
+
+</table>
+
+</table>
+<apex:pageMessages ></apex:pageMessages>
+<center><apex:commandButton value="SAVE" action="{!save}" disabled="{!isSaved}"/>
+        <apex:commandButton value="Submit" action="{!submit}" disabled="{!isSubmitted}"/>
+        <apex:commandButton value="PRINT" action="{!welcomeCallPrint}" oncomplete="printPage();"/>
+<!--         <apex:commandButton value="PRINT"  onclick="printPage();"/> -->
+<!--         <apex:commandButton value="PRINT" onClick="showHideTextArea('{!$Component.remarksTextArea}', '{!$Component.remarksTextAreaCustom}')"/> -->
+</center>
+
+<Script language="JavaScript">
+document.getElementById('{!$Component.WELCOMEFORM:welcomecallmoniterdate}').disabled = true;
+<!-- 1.2 Deepak Pudi -->
+function printPage(){
+    
+    setContent(document.getElementById('{!$Component.WELCOMEFORM:remarksTextArea}').value, 'idTextAreaDiv', 'idDiv');
+    setContent(document.getElementById('{!$Component.WELCOMEFORM:remarksWelcomeCall}').value, 'divWelcomeRemarks', 'divWelcomeRemarksPrint');
+    setContent(document.getElementById('{!$Component.WELCOMEFORM:remarksGreetings}').value, 'divGreetingRemarks', 'divGreetingRemarksPrint');
+    setContent(document.getElementById('{!$Component.WELCOMEFORM:remarksSourceOfBooking}').value, 'divSourceBookingRemarks', 'divSourceBookingPrint');
+    setContent(document.getElementById('{!$Component.WELCOMEFORM:remarksDetailsOfSource}').value, 'divDetailSourceRemarks', 'divDetailSourcePrint');
+    setContent(document.getElementById('{!$Component.WELCOMEFORM:remarksClosingNote}').value, 'divClosingNoteRemarks', 'divClosingNotePrint');
+    
+    window.print();
+    
+    clearContent('idTextAreaDiv', 'idDiv');
+    clearContent('divWelcomeRemarks', 'divWelcomeRemarksPrint');
+    clearContent('divGreetingRemarks', 'divGreetingRemarksPrint');
+    clearContent('divSourceBookingRemarks', 'divSourceBookingPrint');
+    clearContent('divDetailSourceRemarks', 'divDetailSourcePrint');
+    clearContent('divClosingNoteRemarks', 'divClosingNotePrint');
+}
+
+    //Siddharth 2.0
+    function setContent(pStrRemakrs, pIdInputText, pIdDiv){
+    
+		document.getElementById(pIdInputText).style.display = "none";
+		document.getElementById(pIdDiv).style.display = "block"; 
+		document.getElementById(pIdDiv).innerHTML = pStrRemakrs.replace(/\n/g, "<br />"); 		
+    }
+    
+    //Siddharth 2.0
+    function clearContent(pIdInputText, pIdDiv){
+		document.getElementById(pIdInputText).style.display = "block";
+		document.getElementById(pIdDiv).style.display = "none";    
+    }
+
+</Script>
+
+</apex:form>
+</apex:page>

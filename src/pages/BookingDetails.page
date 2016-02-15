@@ -1,0 +1,114 @@
+<apex:page standardcontroller="Booking_Details__c" 
+           extensions="BookingDetailsController" 
+           standardstylesheets="true" 
+           tabStyle="Booking_Details__c">
+    
+    <apex:stylesheet value="/sCSS/16.0/sprites/1251310209000/Theme3/en/dStandard.css"/>
+    <apex:stylesheet value="/sCSS/16.0/sprites/1245343872000/Theme3/en/common.css"/>
+    <apex:stylesheet value="/sCSS/16.0/sprites/1245343872000/Theme3/en/elements.css"/>
+    
+   <style>
+      .activeTab {background-color: #236FBD; color:white; 
+         background-image:none}
+      .inactiveTab { background-color: lightgrey; color:black; 
+         background-image:none}
+      .sample {font-weight:bold;}
+      .header{text-align:right}
+   </style>
+   
+    <apex:pageblock >
+    <apex:pageBlockSection title="Profile" columns="2">
+    <apex:outputtext value="{!Booking_Details__c.Primary_Applicant__c}"/>
+    <apex:outputtext value="{!Booking_Details__c.Contact__c}"/>
+    <apex:outputtext value="{!Booking_Details__c.Co_Applicant__c}"/>
+    <apex:outputtext value="{!Booking_Details__c.Phone__c}"/>
+    <apex:outputtext value="{!Booking_Details__c.Address__c}"/>
+    <apex:outputtext value="{!Booking_Details__c.Email__c}"/>
+    </apex:pageBlockSection>
+    <apex:pageBlockSection title="Flat Specifications" columns="2">
+    <apex:outputtext value="{!Booking_Details__c.Account__r.name}"/>
+    <apex:outputtext value="{!Booking_Details__c.Flat_ID__c}"/>
+    <apex:outputtext value="{!Booking_Details__c.CRN__c}"/>
+    <apex:outputtext value="{!Booking_Details__c.Flat_Type__c}"/>
+    <apex:outputtext value="{!Booking_Details__c.Project__c}"/>
+    <apex:outputfield value="{!Booking_Details__c.Application_Date__c}"/> 
+    <apex:outputtext value="{!Booking_Details__c.CLuster__c}"/>
+    <apex:outputfield value="{!Booking_Details__c.Allotment_Date__c}"/>         
+    <apex:outputtext value="{!Booking_Details__c.Wing__c}"/>
+    <!--apex:outputtext value="{!Booking_Details__c.Consideration_Value__c}"/-->
+    <apex:outputtext label="Consideration Value" value="{0,number,#,##0.00}">
+        <apex:param value="{!Booking_Details__c.Consideration_Value__c}"/>
+    </apex:outputtext>
+    <apex:outputtext value="{!Booking_Details__c.Flat_No__c}"/>   
+    <apex:outputfield value="{!Booking_Details__c.LastModifiedDate}"/>   
+    </apex:pageBlockSection>    
+    </apex:pageblock>
+   
+    <div class="pbBody">
+    <apex:pageblock title="Demand Details">
+    <apex:pageBlockTable styleclass="listRelatedObject" value="{!AllDemands}" var="demand" id="theTable" rowClasses="odd,even" styleClass="tableClass">
+        <apex:column >
+                <apex:facet name="header">Payment Milestone</apex:facet>
+                <apex:facet name="footer">Total</apex:facet>
+                <apex:outputText styleclass="dataCell" value="{!demand.Payment_Milestone_Formula__c}"/>
+        </apex:column>
+        <apex:column >
+                <apex:facet name="header">Due Date</apex:facet>
+                <apex:outputfield value="{!demand.Custom_Due_Date__c}"/>
+                <!-- <apex:outputText value="{0,date,dd'/'mm'/'yyyy}">           
+                    <apex:param value="{!demand.Due_Date__c}" />        
+                </apex:outputText> -->        
+        </apex:column>
+                <apex:column >
+                <apex:facet name="header" >Payment Received On</apex:facet>
+                <apex:outputfield value="{!demand.Payment_received_on__c}"/>
+                <!-- <apex:outputText value="{0,date,dd'/'mm'/'yyyy }">           
+                    <apex:param value="{!demand.Payment_received_on__c}" />     
+                </apex:outputText> -->
+        </apex:column>
+                <apex:column headerClass="header" footerclass="header">
+                <apex:facet name="header">Demand Amount</apex:facet>
+                <apex:facet name="footer">{!totalDemandAmt}</apex:facet>
+                <apex:outputText style="float:right;" value="{!demand.CurrencyIsoCode} {0, number, ###,###,###,##0}"> 
+                <apex:param value="{!demand.Demand_amount__c}"/> 
+                </apex:outputText>
+        </apex:column>
+        <apex:column headerClass="header" footerclass="header">
+                <apex:facet name="header">Amount Received</apex:facet>
+                <apex:facet name="footer">{!totalAmtReceived}</apex:facet>
+                <apex:outputText style="float:right;" value="{!demand.CurrencyIsoCode} {0, number, ###,###,###,##0}"> 
+                <apex:param value="{!demand.Amount_received__c}"/> 
+                </apex:outputText>
+        </apex:column>
+        <apex:column headerClass="header" footerclass="header">
+                <apex:facet name="header">Balance Due</apex:facet>
+                <apex:facet name="footer">{!totalBalnceDue}</apex:facet>
+                <apex:outputText style="float:right;" value="{!demand.CurrencyIsoCode} {0, number, ###,###,###,##0}"> 
+                <apex:param value="{!demand.Balance_Due__c}"/> 
+                </apex:outputText>
+        </apex:column>
+                <apex:column >
+                <apex:facet name="header">Overdue Status</apex:facet>
+                <apex:outputText value="{!demand.Overdue_Status__c}" escape="false"/>
+        </apex:column>
+    </apex:pageBlockTable>
+    </apex:pageblock>
+    </div>
+    
+    <apex:pageblock title="Interest Calculator">
+    <apex:composition template="InterestCalculatorForBookingDetails"></apex:composition>
+    </apex:pageblock>
+    <apex:relatedList list="Service_Tax_Details__r" />
+     <!-- For Tracking using google analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-41070804-1', 'force.com');
+      ga('send', 'pageview');
+    
+    </script>
+
+</apex:page>

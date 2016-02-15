@@ -1,0 +1,21 @@
+<apex:page controller="PersonAccountHomeLoanController"  tabStyle="Account" >
+     <apex:form id="theform">
+     
+     <apex:sectionHeader subtitle="Search" title="Person Accounts"/>
+     <center>     
+     <apex:inputText label="Name" value="{!inputvalue}"/>
+     <apex:CommandButton action="{!Searchbyname}" value="Search" reRender="filterblock,theform"/>  
+     <apex:CommandButton action="{!ViewAll}" value="View All Accounts"/>   
+     </center><br/><br/>
+   
+     <apex:sectionHeader subtitle="List" title="Person Accounts"/>
+     <apex:pageBlock title="Person Account">        
+             <apex:pageBlockTable value="{!wrapperlist}" var="acc">
+             <apex:column headerValue="Account Name">                        
+             <apex:commandLink action="/{!acc.Accountid}" value="{!acc.AccountName}"/>
+             </apex:column> 
+              <apex:column headerValue="Mobile Number" value="{!acc.mobilenumber}"/>               
+             </apex:pageBlockTable>
+     </apex:pageBlock>          
+     </apex:form>
+</apex:page>

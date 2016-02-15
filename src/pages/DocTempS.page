@@ -1,0 +1,259 @@
+<apex:page controller="RecentDocsSMSDispatchDetailRMController">
+<html>
+    <head>
+        <link href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+  
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/plug-ins/1.10.7/sorting/date-de.js"></script>
+
+    
+<!--
+Created using JS Bin
+http://live.datatables.net
+
+Copyright (c) 2015 by anonymous (http://live.datatables.net/ipogen/461/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+        <title>DataTables - JS Bin</title>
+    
+<style id="jsbin-css">
+
+
+</style>
+</head>
+    <body>
+        <div class="container">
+        <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+ 
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+ 
+        <tbody>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>28/02/2015</td>
+                <td>$320,800</td>
+            </tr>
+            <tr>
+                <td>Garrett Winters</td>
+                <td>Accountant</td>
+                <td>Tokyo</td>
+                <td>63</td>
+                <td>20/03/2015</td>
+                <td>$170,750</td>
+            </tr>
+            <tr>
+                <td>Ashton Cox</td>
+                <td>Junior Technical Author</td>
+                <td>San Francisco</td>
+                <td>66</td>
+                <td>10/04/2014</td>
+                <td>$86,000</td>
+            </tr>
+         
+        </tbody>
+    </table>
+   
+        </div>
+        
+       <div class="container">
+       
+        <table id="tableId" class="display"
+                            cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <apex:repeat value="{!$ObjectType.Documents__c.FieldSets.DocumentDetailView_RM}"
+                                        var="f">
+                                        <th class="table-heading">{!f.Label}
+                                           
+                                           
+                                        </th>
+                                    </apex:repeat>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!docList}" var="c">
+                                    <tr>
+                                        
+                                        <apex:repeat value="{!$ObjectType.Documents__c.FieldSets.DocumentDetailView_RM}"
+                                            var="f">
+                                            <td>
+                                                <apex:outputLink value="/{!c.Id}" target="_blank" 
+                                                                 rendered="{!f.Label == 'Document Name'}">
+                                                    <apex:outputField value="{!c[f]}" />
+                                                </apex:outputLink>
+                                                
+                                                <apex:outputField value="{!c[f]}" rendered="{!AND(f.Label != 'Document Name',f.Label != 'Date of Generation') }"/>
+                                                <!--<apex:outputField value="{!c[f]}" rendered="{!f.Label == 'Date of Generation' }"/>-->
+                                               
+                                             <!--<apex:outputText value="{!RIGHT(TEXT(DAY(DATEVALUE(c[f]))+ 100), 2) & '/' & RIGHT(TEXT(MONTH(DATEVALUE(c[f]))+ 100), 2) & '/' & TEXT(Year(DATEVALUE(c[f])))  }" rendered="{!f.Label == 'Date of Generation' }"/>-->
+                                  
+                                          <!-- <apex:outputText value="{0,Date,dd/MM/yyyy  HH:mm a}" rendered="{!f.Label == 'Date of Generation' }"> <apex:param value="{!c[f]}" /> </apex:outputText>-->
+                                            <apex:outputText value="{0,date,dd/MM/yyyy }" 
+                                                            rendered="{!Or(f.type == 'datetime', f.type == 'date')}"> 
+                                                            <apex:param value="{!c[f]}" /> 
+                                                        </apex:outputText> 
+                                                        
+                                            </td>
+                                        </apex:repeat>
+                                         
+                                        
+                                        
+                                         
+                                    </tr>
+                                </apex:repeat>
+                                 <tr style="{!If(docList.size > 0, 'display:none','' )}">  
+                                   <td colspan="{!$ObjectType.Documents__c.FieldSets.DocumentDetailView_RM.size+1}" 
+                                        >
+                                        <span style="align: center">
+                                        No records to display
+                                        </span>
+                                   </td>
+                                 </tr>
+                            </tbody>
+                        </table>
+       
+       </div>
+    <script>
+$(document).ready(function() {    
+$('#example').dataTable( {
+     columnDefs: [
+       { type: 'de_datetime', targets: 0 },
+       { type: 'de_date', targets: 1 },
+     
+     ]
+  } );
+ } ); 
+$('#tableId').dataTable( {
+     columnDefs: [
+       { type: 'de_datetime', targets: 0 },
+       { type: 'de_date', targets: 1 }
+         
+     ]
+  } ); 
+  
+  function trim(str) {
+    str = str.replace(/^\s+/, '');
+    for (var i = str.length - 1; i >= 0; i--) {
+        if (/\S/.test(str.charAt(i))) {
+            str = str.substring(0, i + 1);
+            break;
+        }
+    }
+    return str;
+} 
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "de_datetime-asc": function ( a, b ) {
+        var x, y;
+        if (jQuery.trim(a) !== '') {
+            var deDatea = jQuery.trim(a).split(' ');
+            var deTimea = deDatea[1].split(':');
+            var deDatea2 = deDatea[0].split('/');
+            x = (deDatea2[2] + deDatea2[1] + deDatea2[0] + deTimea[0] + deTimea[1]) * 1;
+        } else {
+            x = Infinity; // = l'an 1000 ...
+        }
+ 
+        if (jQuery.trim(b) !== '') {
+            var deDateb = jQuery.trim(b).split(' ');
+            var deTimeb = deDateb[1].split(':');
+            deDateb = deDateb[0].split('.');
+            y = (deDateb[2] + deDateb[1] + deDateb[0] + deTimeb[0] + deTimeb[1]) * 1;
+        } else {
+            y = Infinity;
+        }
+        var z = ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        return z;
+    },
+ 
+    "de_datetime-desc": function ( a, b ) {
+        var x, y;
+        if (jQuery.trim(a) !== '') {
+            var deDatea = jQuery.trim(a).split(' ');
+            var deTimea = deDatea[1].split(':');
+            var deDatea2 = deDatea[0].split('.');
+            x = (deDatea2[2] + deDatea2[1] + deDatea2[0] + deTimea[0] + deTimea[1]) * 1;
+        } else {
+            x = Infinity;
+        }
+ 
+        if (jQuery.trim(b) !== '') {
+            var deDateb = jQuery.trim(b).split(' ');
+            var deTimeb = deDateb[1].split(':');
+            deDateb = deDateb[0].split('.');
+            y = (deDateb[2] + deDateb[1] + deDateb[0] + deTimeb[0] + deTimeb[1]) * 1;
+        } else {
+            y = Infinity;
+        }
+        var z = ((x < y) ? 1 : ((x > y) ? -1 : 0));
+        return z;
+    },
+ 
+    "de_date-asc": function ( a, b ) {
+        var x, y;
+        if (jQuery.trim(a) !== '') {
+            var deDatea = jQuery.trim(a).split('.');
+            x = (deDatea[2] + deDatea[1] + deDatea[0]) * 1;
+        } else {
+            x = Infinity; // = l'an 1000 ...
+        }
+ 
+        if (jQuery.trim(b) !== '') {
+            var deDateb = jQuery.trim(b).split('.');
+            y = (deDateb[2] + deDateb[1] + deDateb[0]) * 1;
+        } else {
+            y = Infinity;
+        }
+        var z = ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        return z;
+    },
+ 
+    "de_date-desc": function ( a, b ) {
+        var x, y;
+        if (jQuery.trim(a) !== '') {
+            var deDatea = jQuery.trim(a).split('.');
+            x = (deDatea[2] + deDatea[1] + deDatea[0]) * 1;
+        } else {
+            x = Infinity;
+        }
+ 
+        if (jQuery.trim(b) !== '') {
+            var deDateb = jQuery.trim(b).split('.');
+            y = (deDateb[2] + deDateb[1] + deDateb[0]) * 1;
+        } else {
+            y = Infinity;
+        }
+        var z = ((x < y) ? 1 : ((x > y) ? -1 : 0));
+        return z;
+    }
+} );
+</script>
+
+</body>
+</html>
+</apex:page>

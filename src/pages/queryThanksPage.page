@@ -1,0 +1,14 @@
+<apex:page controller="CustQueryContrl" standardStylesheets="true" showHeader="false" title="Customer Query" tabStyle="STDesc__c">
+    <apex:image url="{!$Resource.Casa}"/>
+    <apex:sectionHeader title="Online Query Form"/>
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockSection title="Query Details" columns="1" collapsible="false">
+        <apex:outputText >
+        Thank you for submitting your query.<br/>
+        Please remember your query number is <b>{!CaseNo}</b>.<br/>
+        Our helpdesk personnel will contact you within <b>{!TAT}</b> working days.
+        </apex:outputText>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    <div align="right">&copy;&nbsp;Copyright 2011, Casa By Lodha. All rights reserved.&nbsp;&nbsp;&nbsp;&nbsp;</div><br/>
+</apex:page>

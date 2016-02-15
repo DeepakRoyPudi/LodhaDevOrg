@@ -1,0 +1,6 @@
+<apex:page StandardController="Lead" Extensions="Leads_Serviced"  recordSetVar="MarkAsServiced" action="{!mark}">
+<apex:sectionHeader title="Marking as Serviced"/>   
+<apex:outputPanel >       
+Marking as Serviced
+</apex:outputPanel>
+</apex:page>

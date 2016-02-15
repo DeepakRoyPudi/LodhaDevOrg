@@ -1,0 +1,142 @@
+<apex:page sidebar="false">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+   <!-- Latest compiled and minified CSS -->
+  <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+        var $j = jQuery.noConflict();
+</script>
+<style type="text/css"><!-- Spacing for the Nav bar -->
+      body {
+        font-size : 12px;
+      }
+      .panel-title {
+		font-size: 13px;
+	  }
+	  .col-md-6 {
+		 padding-right: 2px; 
+		 padding-left: 2px; 
+	  }	
+	  .col-md-3{
+		 padding-right: 2px; 
+		 padding-left: 2px; 
+	  }	
+    </style>
+
+<body>
+	<div class="container">
+	    <div class="panel panel-info  col-md-6 ">
+	        <div class="panel-heading">
+	            <h3 class="panel-title"><span class="glyphicon glyphicon-inbox"></span> 
+		            <b>Recent Activity(Cases)</b>
+		            <a  type="button" class="a" style="float: right;" data-toggle="modal" data-target="#RecentActivityDetail" >
+				      	<span style="font-size: 12px;">
+				      		View Details
+				      	</span>
+		      		</a>
+	            </h3>
+	        </div>
+	        <div class="panel-body">
+	            <c:RecentActivityRM CRN="100"/>
+	        </div>
+	    </div>
+	    
+	    <div class="panel panel-info  col-md-3 " >
+	        <div class="panel-heading">
+	            <h3 class="panel-title"><span class="glyphicon glyphicon-inbox"></span> 
+		            <b>Upcoming/Due Payments </b>
+		            <a  type="button" class="a" style="float: right;" data-toggle="modal" data-target="#RecentActivityDetail" >
+				      	<span style="font-size: 12px;">
+				      		View Details
+				      	</span>
+		      		</a>
+	            </h3>
+	        </div>
+	        <div class="panel-body">
+	            <c:UpcomingDuePaymentsRM CRN="100"/>
+	        </div>
+	    </div>
+	    
+	    <div class="panel panel-info  col-md-3 ">
+	        <div class="panel-heading">
+	            <h3 class="panel-title"><span class="glyphicon glyphicon-inbox"></span> 
+		            <b>Payments Received </b>
+		            <a  type="button" class="a" style="float: right;" data-toggle="modal" data-target="#RecentActivityDetail" >
+				      	<span style="font-size: 12px;">
+				      		View Details
+				      	</span>
+		      		</a>
+	            </h3>
+	        </div>
+	        <div class="panel-body">
+	            <c:PaymentsReceivedRM CRN="100"/>
+	        </div>
+	    </div>
+	    
+	    <div class="panel panel-info  col-md-3 ">
+	        <div class="panel-heading">
+	            <h3 class="panel-title"><span class="glyphicon glyphicon-inbox"></span> 
+		            <b>Recent Docs/SMS/Dispatch </b>
+		            <a  type="button" class="a" style="float: right;" data-toggle="modal" data-target="#RecentActivityDetail" >
+				      	<span style="font-size: 12px;">
+				      		View Details
+				      	</span>
+		      		</a>
+	            </h3>
+	        </div>
+	        <div class="panel-body">
+	            <c:RecentDocsSmsDispatchRM CRN="100"/>
+	        </div>
+	    </div>
+	    
+	     <div class="panel panel-info  col-md-3 ">
+	        <div class="panel-heading">
+	            <h3 class="panel-title"><span class="glyphicon glyphicon-inbox"></span> 
+		            <b>Booking Payments Transactions </b>
+		            <a class="a" href="url" style="float: right;">
+				      	<span style="font-size: 12px;">
+				      		View Details
+				      	</span>
+		      		</a>
+	            </h3>
+	        </div>
+	        <div class="panel-body">
+	            <c:BookingPaymentsRM CRN="100"/>
+	        </div>
+	    </div>
+	
+	
+	<div class="modal fade" id="RecentActivityDetail" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-body">
+	                <div class="container">
+	                    <div class="table-responsive col-md-6 ">
+	                        <!-- Component for Recent Activity detail View -->
+<!-- 	                        <c:RecentActivityDetail/> -->
+	                    </div>
+	                </div>
+	            </div>
+	
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	            </div>
+	
+	        </div>
+	    </div>
+	</div>
+	
+	</div>
+	
+</body>
+</head>
+</apex:page>

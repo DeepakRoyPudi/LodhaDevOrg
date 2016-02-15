@@ -1,0 +1,207 @@
+<!-- /* 
+    Description:
+    This page is used for RecentActivityCSS (crisp) Component
+    
+     @Created by: Trupti Dhoka.
+     @Created Date:  27/02/2015
+     
+     --------------------------------------------------------------------------------
+     | Modified By      | Modified Date       | Version        | Description         |
+     --------------------------------------------------------------------------------
+     |Aditi Mulmule       15/01/2016           1.1              Replaced By Favoring 
+                                                                Details Info
+     --------------------------------------------------------------------------------
+     |
+     --------------------------------------------------------------------------------
+    */ -->
+<apex:component controller="RecentActivityCSSController" allowDML="true" id="caseCrisp">
+    <style type="text/css">
+        .empty-column-content {
+        display: none;
+        }
+        .marginbtm {
+        margin-bottom: 25px;
+        }
+        .relatedTosmalltext {
+        font-size: 11px;
+        }
+        .floatleftclas {
+        float: left;
+        }
+        .floatrightclas {
+        float: right;
+        }
+        .floatcenterclas {
+        float: center;
+        }
+        .favFont {
+        font-size: 11px;
+        }
+        .mode_col{
+            width: 17%
+        }
+        .fav_col {
+           width: 45%
+        }  
+        .link_trans
+        {
+           font-size: 13px;
+           margin-left: 20%;
+           text-decoration: underline;
+        }  
+    </style>
+    <apex:attribute name="CRN" description="This is CRF Type." type="String" required="true" assignTo="{!Customer_CRN}" />
+    <apex:form >
+        <apex:actionFunction name="TrackClick" action="{!clickCount}" rerender="Table1">
+        </apex:actionFunction>
+        <div class="col-md-6 ">
+            <apex:outputpanel id="Table1">
+                <div class="panel panel-default Widgetset ">
+                    <div class="panel-heading">
+                        <div class="panel-title table_title"><i class="fa fa-list-ul fa-lg"></i>Favoring Details</div>
+                        <div>
+                        <!--<a class="link_trans"  onclick="TrackClick();"  href="{!URLFOR($Page.PaymentModesCSS2_0)}"> New Payment Transaction</a> -->
+                        <apex:outputLink styleClass="link_trans" onclick="TrackClick();" value="{!URLFOR($Page.PaymentModesCSS2_0)}" target="_self"> New Payment Transaction <apex:param name="widget" value="favoring"/></apex:outputLink>
+                    </div>
+                    </div>
+                    <div class="panel-body " style="height:220px;overflow: auto">
+                        <table class="table table-hover " id="mode">
+                            <thead>
+                                <tr>
+                                    <th align="left" class="table_header mode_col">Mode</th>
+                                    <th align="left" class="table_header fav_col">Favoring</th>
+                                    <th align="left" class="table_header">Steps to make payment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="favFont">
+                                    <td align="left" class="mode_col">
+                                        <b><apex:outputText value="Cheque DD PayOrder"/></b>
+                                    </td>
+                                    <td class="fav_col">
+                                        <apex:outputText value="{!mode.In_Favor_of__c}" /><br/>
+                                        <apex:outputLabel value="Payable at: "/>&nbsp;
+                                        <apex:outputText value="{!mode.Branch__c }" />
+                                    </td>
+                                    <td>1. Drop at Site or corporate office <br/> Or <br/>2. Send Via courier to corporate office
+                                 
+                                    </td>
+                                </tr>
+                                <tr class="favFont">
+                                    <td align="left" class="mode_col">
+                                        <b><apex:outputText value="NEFT / RTGS"/></b>
+                                    </td>
+                                    <td class="fav_col">
+                                        <apex:outputText value="{!mode.In_Favor_of__c}" rendered="{!mode.In_Favor_of__c!=null}"/><br/>    
+                                        <apex:outputText value="{!mode.Account_Number__c}" rendered="{!mode.Account_Number__c!=null}">
+                                        <apex:outputLabel value="A/C: " style="margin-bottom:0px"/>&nbsp; 
+                                    </apex:outputText><br/>
+                                        <apex:outputText value="{!mode.Bank_Name__c}, " rendered="{!mode.Bank_Name__c!=null}"/>
+                                        <apex:outputText value="{!mode.Bank_Address__c}." rendered="{!mode.Bank_Address__c!=null}"/>
+                                    </td>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <apex:outputLabel value="Mention"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <apex:outputLabel value="IFSC: "/>&nbsp;
+                                                    <apex:outputText value="{!mode.IFSC_Code__c}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <apex:outputLabel value="MICR: "/>&nbsp;
+                                                    <apex:outputText value="{!mode.MICR_Code__c}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <apex:outputLabel value="SWIFT: "/>&nbsp;
+                                                    <apex:outputText value="{!mode.SWIFT_Code__c}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </apex:outputpanel>
+        </div>
+        <!--  <div class="col-md-6 ">
+            <div class="panel panel-default Widgetset ">
+                <div class="panel-heading">
+                    <div class="panel-title table_title"><i class="fa fa-list-ul fa-lg"></i>My Queries</div>
+                    <button type="button" class="submitQuerybtn1" href="#SubmitQuery" data-toggle="modal" data-backdrop="static" data-keyboard="false" onclick="ResetQueryField();return false;" style="">
+                        Submit Query
+                    </button>
+            
+                    <div class="view_all">
+                        <a onclick="TrackClick();return false;" href="#myModal" data-toggle="modal">
+                    View All
+                </a>
+            
+                    </div>
+                </div>
+            
+                <div class="panel-body ">
+                    <div class="table-responsive crispRecentActivity_Scroll">
+                        <table id="Table" class="table table-hover " style="{!IF( lstCase_crispView.size>0 , '', 'No records to display.')}">
+                            <thead>
+                                <tr styleclass="floatleftclas">
+                                     <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityCrispView_CSS2_0}" var="f">
+                                        <th> <apex:outputText value="{!f.Label}" /></th> 
+                                    </apex:repeat>
+            
+                                </tr>
+                            </thead>
+            
+                            <tbody>
+                                <apex:repeat value="{!lstCase_crispView}" var="c"  rows="3">
+            
+                                    <tr>
+                                        <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityCrispView_CSS2_0}" var="f" >
+                                            <td>
+                                                <apex:outputText value="Complete" rendered="{!AND(f.Label=='Status', c[f] == 'Complete') }" Styleclass="label label-success"></apex:outputText>
+                                                <apex:outputText value="In Progress" rendered="{!AND(f.Label=='Status', c[f] != 'Complete', c[f] != 'Closed') }" Styleclass="label label-warning"></apex:outputText>
+            
+                                                <apex:outputText value="Closed" rendered="{!AND(f.Label=='Status', c[f] == 'Closed') }" Styleclass="label label-success"></apex:outputText>
+                                                <apex:outputText value="NA" rendered="{!AND(f.Label=='Related To', c[f] == '|') }"></apex:outputText>
+            
+                                                <apex:outputText value="{!c[f]}"  rendered="{!AND(f.type != 'datetime',f.type != 'date',f.Label !='Status')}"/>
+                                                <br/>
+                                                <apex:outputText styleclass="relatedTosmalltext" value="( Reference No. {!c.CaseNumber} | " rendered="{!(f.Label=='Related To')}" />
+            
+                                                <apex:outputText styleclass="relatedTosmalltext" value="Open Date. {0,date,dd MMM yyyy} )" rendered="{!(f.Label=='Related To')}">
+                                                    <apex:param value="{!DATEVALUE(c.CreatedDate)}" />
+                                                </apex:outputText>
+                                                
+                                                <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                                          <c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                                                </apex:outputPanel> 
+                                                 <apex:outputPanel rendered="{!f.type == 'date'}">
+                                                         <c:FormatDateComponent date_value="{!c[f]}"/>
+                                                </apex:outputPanel>
+                                            </td>
+                                        </apex:repeat>
+                                    </tr>
+            
+                                </apex:repeat>
+                                <tr style="{!If(lstCase_crispView.size > 0, 'display:none','' )}">
+                                    <td align="center" colspan="{!$ObjectType.case.FieldSets.RecentActivityCrispView_CSS2_0.size}">
+                                        No records to display.
+                                     </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                     </div>
+                </div>
+            </div>
+            </div> -->
+    </apex:form>
+</apex:component>

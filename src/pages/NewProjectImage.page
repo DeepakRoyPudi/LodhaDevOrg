@@ -1,0 +1,98 @@
+<apex:page standardController="Project_Image__c" extensions="NewProjectImageController">
+    
+    <apex:form >
+        
+        <apex:pageBlock title="Project Images" >
+        
+            <apex:pageBlockSection >
+
+                
+                <apex:outputpanel >
+                <apex:pageMessages ></apex:pageMessages><br/>
+                
+                <div style="font-family: Arial,Helvetica,sans-serif; font-size: 91%; font-weight: bold; color:#4a4a56;">
+                
+                    
+                    
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                    <apex:outputLabel value="Project Name " />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                    <apex:selectList size="1" value="{!projId}" required="true">               
+                        <apex:actionsupport reRender="cluster, wing"  event="onchange" status="counterStatus"/>
+                        <apex:selectOptions value="{!projList}"></apex:selectOptions>
+                    </apex:selectList><br/><br/>
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                    <apex:outputLabel value="IsCommon " />&nbsp;&nbsp;&nbsp;&nbsp;
+                    <apex:inputcheckbox label="IsCommon" value="{!IsCommon}" >
+                            <apex:actionsupport reRender="cluster,wing"  event="onchange" status="counterStatus2" action="{!myaction}"/>                            
+                        </apex:inputcheckbox> 
+                        <apex:actionStatus id="counterStatus2" startText="  Please wait..." stopText="" startStyleclass="Loadingclass"/> 
+                    <apex:outputpanel id="cluster"><br/><br/>
+                    
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                        <apex:outputLabel value="Cluster " />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        
+                      
+                        <apex:selectList size="1" value="{!clusterId}" disabled="{!DisCluster}" required="true">
+                            <apex:selectOptions value="{!ClusterFilter}"></apex:selectOptions>
+                            <apex:actionSupport event="onchange" reRender="wing" status="counterStatus1"/>
+                        </apex:selectList> 
+                        
+                        <apex:actionStatus id="counterStatus" startText="  Please wait..." stopText=""/>
+                        
+                        <br/><br/>
+                    </apex:outputpanel>
+                    
+                    
+                    
+                    <apex:outputpanel id="wing">
+                    
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        
+                        <apex:outputLabel value="Wing " />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <apex:selectList size="1" value="{!wingId}" required="true" disabled="{!Diswing}">
+                           <apex:selectOptions value="{!WingFilter}"></apex:selectOptions>
+                        </apex:selectList>
+                        
+                        <apex:actionStatus id="counterStatus1" startText="  Please wait..." stopText="" />
+                        
+                        <br/> <br/>   
+                    </apex:outputpanel>
+                    
+                </div>
+                </apex:outputpanel>
+                <br/>
+                
+                <apex:inputField label="Trade" value="{!p.Trade__c}"/><br/>
+                <apex:inputField label="Photo Description" value="{!p.Photo_Description__c}"/><br/> 
+                <apex:inputField label="IsActive" value="{!p.IsActive__c}"/><br/>
+                <apex:inputField label="Project View" value="{!p.Project_View__c}"/>
+                
+                
+                
+            
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+                <apex:commandButton action="{!cancel}" value="Cancel"/>
+            </apex:pageBlockButtons>
+        
+        </apex:pageBlock>
+        
+    </apex:form>
+  
+</apex:page>

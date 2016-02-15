@@ -1,0 +1,663 @@
+<apex:page controller="wrapperControllerRM"  showHeader="true">
+
+
+<apex:form >
+<apex:param name="CRN" assignTo="{!CRN}" value=""/>
+<html>
+<head>
+ 
+ <style>
+ 	.invisible { 
+    	display: none; 
+     	visibility: hidden; 
+ 	} 
+
+  </style>       
+ 	
+        
+ <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> -->
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">-->
+<link href="{!URLFOR($Resource.bootStrap, 'bootstrap/css/bootstrap.min.css')}" rel="stylesheet" media="screen"/>
+<apex:includeScript value="{!URLFOR($Resource.Bootstrap, 'js/bootstrap.min.js')}"/>
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<!--  Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<div class="bs">
+	<ul class="tabs">
+		<li class="active" rel="tab1">Personal Details</li>
+		<li rel="tab2">Other Details</li>
+		<li rel="tab3">Customer Life Cycle</li>
+
+	</ul>
+	<div class="tab_container">
+		<div id="tab1" class="tab_content">
+			<!-----------------------first div of personal details (start)--------------------------->
+
+			<div class="col-md-4 col-sm-6" style="width: 18%; padding: 5px;">
+
+
+				<div class="media" style="padding: 5px;">
+					<a class="thumbnail pull-left" style="width: 20%; padding: 0px;">
+						<apex:image value="{!wrapperobj.profileimage}" />
+					</a>
+					<div style="margin-top: 15px; margin-bottom: 10px;">
+						<apex:outputText value="Sudeep Kumar Dube"
+							style="font-size:13px; font-weight:bold; color:rgb(0, 153, 204)" />
+						<p style="margin-top: 5px;">
+							<apex:outputLink >View Details</apex:outputLink>
+						</p>
+					</div>
+					<p style="margin-bottom: 5px;">
+						<span style="color: black; display: block; font-size: 12px;">Profile
+							Completeness( <apex:outputText value="{!wrapperobj.profile_completion}" />)
+						</span>
+					</p>
+					<p style="margin-bottom: 0px;">
+					<div class="progress"
+						style="height: 10px; width: 85%; margin-bottom: 0px;">
+						<div class="progress-bar progress-bar-info" style="width: 50%">
+						</div>
+					</div>
+					</p>
+					<p style="margin-bottom: 0px; margin-bottom: 0px;">
+						<apex:image value="https://icons.iconarchive.com/icons/flaticonmaker/flat-style/256/email-icon.png"
+							style="width:10%; height:10%;" />
+						<apex:commandLink value="{!wrapperobj.email}"
+							style="color:black;font-size: 11px;" />
+					</p>
+					<p style="margin-bottom: 0px; margin-bottom: 0px;">
+						<apex:image value="https://icons.iconarchive.com/icons/custom-icon-design/pretty-office-7/256/Mobile-icon.png"
+							style="width:10%; height:10%;" />
+						<apex:outputText value="{!wrapperobj.phone}"
+							style="color:black;font-size: 11px;" />
+					</p>
+					<p style="margin-top: 5px; margin-bottom: 0px;">
+						<apex:commandLink value="MyGain Availed"
+							style="color:black;font-size: 11px;margin-left:12%;vertical-align: super !important;"
+							rendered="{!wrapperobj.mygain}" />
+					</p>
+				</div>
+			</div>
+
+			<div class="divstyle">
+				<div class="subdiv">
+					<table class="table1">
+						<tr>
+							<td class="labelleft">PAN No:</td>
+							<td class="valueleft"><apex:outputText value="{!wrapperobj.pan_no}" /></td>
+
+							<td class="labelright">Preferred time to call :</td>
+							<td class="valueright"><apex:outputText value="{!wrapperobj.prefered_time}" /></td>
+						</tr>
+					</table>
+				</div>
+				<div class="subdiv">
+					<table class="table1">
+						<tr>
+							<td class="labelleft">Billing Address :</td>
+							<td class="valueleft"><apex:outputText value="{!wrapperobj.Billing_addr}" /></td>
+							<td class="labelright">Preferred Comm.Mode :</td>
+							<td class="valueright"><apex:outputText value="{!wrapperobj.perfered_comm}" /></td>
+						</tr>
+					</table>
+				</div>
+				<div class="subdiv">
+					<table class="table1">
+						<tr>
+							<td class="labelleft">Special Instr. for RM :</td>
+							<td class="valuebottom"><apex:outputText value="{!wrapperobj.special_instr}" /></td>
+						</tr>
+					</table>
+				</div>
+				<div class="subdiv">
+					<table class="table1">
+						<tr>
+							<td class="labelleft">Instr. by PI/HOD :</td>
+							<td class="valuebottom"><apex:outputText value="{!wrapperobj.instr_by_hod}" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<!---------------------------------------------------------------------------------------------------------------------->
+			<div class="profileD_div">
+				<div
+					style="height: 10%; margin-top: 3px; font-weight: bold; margin-left: 5px">
+					Profile Details</div>
+				<div style="width: 100%; height: 35%; margin-top: 5px">
+
+					<div class="profileD_items">
+						<apex:image value="http://www.alphasandesh.com/blog/wp-content/uploads/2013/11/email-list-segmentation.jpg"
+							style="height:80%; width:100%" />
+						Seg
+					</div>
+					<div class="profileD_items">
+						<apex:image value="https://cdn0.iconfinder.com/data/icons/admin-panel/512/Referrals-128.png"
+							style="height:80%; width:100%" />
+						Source
+					</div>
+					<div class="profileD_items">
+						<apex:image value="https://cdn2.iconfinder.com/data/icons/shopping-11/512/Badge-512.png"
+							style="height:80%; width:100%" />
+						LP
+					</div>
+					<div class="profileD_items">
+						<apex:image value="http://www.uh.edu/provost/_images/uh-in-4/piggy-bank.png"
+							style="height:80%; width:100%" />
+						CI
+					</div>
+					<div class="profileD_items">
+						<apex:image value="http://c279160.r60.cf1.rackcdn.com/assets/blog_post/meta_og_image/87/PS_icon.png"
+							style="height:80%; width:100%" />
+						SI
+					</div>
+					<div class="profileD_items">
+						<apex:image value="http://www2.psd100.com/ppp/2013/11/2701/Pie-chart-1127182343.png"
+							style="height:80%; width:100%" />
+						%CV
+					</div>
+
+				</div>
+				<div
+					style="height: 17%; width: 100%; margin-top: 15px; font-weight: bold; margin-left: 5px; font-size: 12px;">
+					Other Flags</div>
+				<div style="width: 100%; height: 17%;">
+
+					<apex:outputtext value="TDS" styleclass="r_rectbox"
+						style="background:#FD0000" rendered="{!!wrapperobj.TDS}" />
+					<apex:outputtext value="TDS" styleclass="r_rectbox"
+						style="background:#11CE03" rendered="{!wrapperobj.TDS}" />
+					<apex:outputtext value="DND" styleclass="r_rectbox"
+						style="background:#FD0000" rendered="{!!wrapperobj.DND}" />
+					<apex:outputtext value="DND" styleclass="r_rectbox"
+						style="background:#11CE03" rendered="{!wrapperobj.DND}" />
+					<apex:outputtext value="LA" styleclass="r_rectbox"
+						style="background:#FD0000" rendered="{!!wrapperobj.LA}" />
+					<apex:outputtext value="LA" styleclass="r_rectbox"
+						style="background:#11CE03" rendered="{!wrapperobj.LA}" />
+					<apex:outputtext value="CIP" styleclass="r_rectbox"
+						style="background:#FD0000" rendered="{!!wrapperobj.CIP}" />
+					<apex:outputtext value="CIP" styleclass="r_rectbox"
+						style="background:#11CE03" rendered="{!wrapperobj.CIP}" />
+					<apex:outputtext value="LAP" styleclass="r_rectbox"
+						style="background:#FD0000" rendered="{!!wrapperobj.LAP}" />
+					<apex:outputtext value="LAP" styleclass="r_rectbox"
+						style="background:#11CE03" rendered="{!wrapperobj.LAP}" />
+					<apex:outputtext value="MB" styleclass="r_rectbox"
+						style="background:#FD0000" rendered="{!!wrapperobj.MB}" />
+					<apex:outputtext value="MB" styleclass="r_rectbox"
+						style="background:#11CE03" rendered="{!wrapperobj.MB}" />
+
+				</div>
+			</div>
+
+			<!---------------------------------------------------------------------------------------------------------------------->
+		</div>
+		<!-- #tab1 -->
+
+		<div id="tab2" class="tab_content">
+
+			<!-- --------------------------------- -->
+			<div
+				style="border-right: 1px solid #1897c0; width: 50%; height: 80%; padding: 10px; margin: 7px; float: left">
+				<div class="otherDHeading">Login details</div>
+				<div class="otherDDiv">
+					<table style="height: 100%; width: 100%;">
+						<tr>
+							<td class="loginDLabel_col">Last Login :</td>
+							<td class="loginDvalue_left"><apex:outputText value="6-Fed-15" styleclass="rectbox1" /></td>
+							<td class="loginDLabel_col">Total Logins Till Now :</td>
+							<td class="loginDvalue_right"><apex:outputText value="99"
+									styleclass="rectbox1" /></td>
+
+						</tr>
+						<tr>
+							<td class="loginDLabel_col">Logins In Last Month :</td>
+							<td class="loginDvalue_left"><apex:outputText value="10"
+									styleclass="rectbox1" /></td>
+							<td class="loginDLabel_col">Max. Viewed Page :</td>
+							<td class="loginDvalue_right"><apex:outputText value="Payment" styleclass="rectbox1" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<!-- --------------------------------- -->
+			<div
+				style="width: 44%; height: 80%; padding: 10px; margin: 7px; float: left; padding-left: 0px; margin-left: 3px;">
+				<div class="otherDHeading">Booking details</div>
+				<div class="otherDDiv">
+					<table style="height: 100%; width: 100%;">
+						<tr>
+							<td class="bookingDLabel_col">CRN :</td>
+							<td class="bookingDvalue_left"><apex:outputText value="{!CRN}" /></td>
+							<td class="bookingDLabel_col">Flat No :</td>
+							<td class="bookingDvalue_right"><apex:outputText value="1406" /></td>
+
+						</tr>
+						<tr>
+							<td class="bookingDLabel_col">Project :</td>
+							<td class="bookingDvalue_left"><apex:outputText value="Casa Bella Gold" /></td>
+							<td class="bookingDLabel_col">Location :</td>
+							<td class="bookingDvalue_right"><apex:outputText value="Dombivali" /></td>
+						</tr>
+						<tr>
+							<td class="bookingDLabel_col">Cluster :</td>
+							<td class="bookingDvalue_left"><apex:outputText value="Elitra" /></td>
+							<td class="bookingDLabel_col">CV :</td>
+							<td class="bookingDvalue_right"><apex:outputText value="2,158,992.00" /></td>
+						</tr>
+						<tr>
+							<td class="bookingDLabel_col">Wing :</td>
+							<td class="bookingDvalue_left"><apex:outputText value="E" />
+							</td>
+							<td class="bookingDLabel_col">Parking :</td>
+							<td class="bookingDvalue_right"><apex:outputText value="1-0|S-0|C-1|M-0|O-0" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- #tab2 -->
+
+		<div id="tab3" class="tab_content">Third Tab Content</div>
+		<!-- #tab3 -->
+	</div>
+	<!-- .tab_container -->
+
+	<!-----  widgets section started------------------------------------------------>
+	<div class="container" id="main">
+
+		<hr style="margin-top: 2px; margin-bottom: 2px" />
+
+		<div class="row">
+
+			<div class="col-md-4 col-sm-6"
+				style="width: 48%; padding-left: 0px; padding-right: 1%;">
+<!-- 				<div class="panel panel-default" style="margin-bottom: 5px;"> -->
+						
+					<c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="7"
+										rendered="{!firstDiv == 'Recent Activity'}"/>
+					<c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="7"
+											 rendered="{!firstDiv == 'Upcoming/Due Payments'}"/>
+					<c:PaymentsReceivedRM test_CRN="{!CRN}" rendered="{!firstDiv == 'Payments Received'}"/>
+					<c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!firstDiv == 'Recent Documents/SMS/Dispatch'}"/>
+					<c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!firstDiv == 'Booking Payments Transactions'}"/>
+<!-- 				</div> -->
+			</div>
+			<div class="col-md-4 col-sm-6"
+				Style="width: 26%; padding-left: 0px; padding-right: 1%;">
+				
+				<c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="3"
+										rendered="{!secondDiv == 'Recent Activity'}"/>
+				<c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="3"
+										 rendered="{!secondDiv == 'Upcoming/Due Payments'}"/>
+				<c:PaymentsReceivedRM test_CRN="{!CRN}" rendered="{!secondDiv == 'Payments Received'}"/>
+				<c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3"  rendered="{!secondDiv == 'Recent Documents/SMS/Dispatch'}"/>
+				<c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!secondDiv == 'Booking Payments Transactions'}"/>
+				
+
+				<!----------------3------------------------>
+<!-- 				<div class="panel panel-default" style="margin-bottom: 5px;"> -->
+					
+						
+						<c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="3"
+										rendered="{!fourthDiv == 'Recent Activity'}"/>
+						<c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="3"
+												 rendered="{!fourthDiv == 'Upcoming/Due Payments'}"/>
+						<c:PaymentsReceivedRM test_CRN="{!CRN}" rendered="{!fourthDiv == 'Payments Received'}"/>
+						<c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!fourthDiv == 'Recent Documents/SMS/Dispatch'}"/>
+						<c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!fourthDiv == 'Booking Payments Transactions'}"/>
+					
+<!-- 				</div> -->
+			</div>
+			<div class="col-md-4 col-sm-6"
+				Style="width: 26%; padding-left: 0px; padding-right: 1%;">
+				
+				<c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="3"
+										rendered="{!thirdDiv == 'Recent Activity'}"/>
+				<c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="3"
+										 rendered="{!thirdDiv == 'Upcoming/Due Payments'}"/>
+				<c:PaymentsReceivedRM test_CRN="{!CRN}" rendered="{!thirdDiv == 'Payments Received'}"/>
+				<c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!thirdDiv == 'Recent Documents/SMS/Dispatch'}"/>
+				<c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!thirdDiv == 'Booking Payments Transactions'}"/>
+					
+
+				<!----------------3------------------------>
+<!-- 				<div class="panel panel-default" style="margin-bottom: 5px;"> -->
+					<c:RecentActivityRM CRN="{!CRN}" NoOfRecrd="3"
+										rendered="{!fifthDiv == 'Recent Activity'}"/>
+					<c:UpcomingDuePaymentsRM CRN="{!CRN}"  NoOfRecrd="3"
+											 rendered="{!fifthDiv == 'Upcoming/Due Payments'}"/>
+					<c:PaymentsReceivedRM test_CRN="{!CRN}" rendered="{!fifthDiv == 'Payments Received'}"/>
+					<c:RecentDocsSmsDispatchRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!fifthDiv == 'Recent Documents/SMS/Dispatch'}"/>
+					<c:BookingPaymentsRM CRN="{!CRN}" NoOfRecrd="3" rendered="{!fifthDiv == 'Booking Payments Transactions'}"/>
+					
+<!-- 				</div> -->
+			</div>
+			<!--/articles-->
+		</div>
+	</div>
+</div>
+<!-- Start CSS Style for tabPanel -->
+ <style type="text/css">
+
+    ul.tabs {
+                margin: 0;
+                padding: 1px;
+                float: left;
+                list-style: none;
+                height: 26px;
+                border-bottom: 1px solid #1897c0;
+                border-left: 0px solid #1897c0;
+                border-radius: 10px 10px 0px 0px;
+                width: 100%;
+            }
+    ul.tabs li {
+                float: left;
+                margin: 0;
+                margin-left: 10px;
+                cursor: pointer;
+                padding: 0px 21px ;
+                height: 25px;
+                line-height: 25px;
+                border: 1px solid #1897c0;
+                border-left: none;
+                font-weight: bold;
+                background:#1897c0;
+                overflow: hidden;
+                position: relative;
+                color:White;
+                border-radius: 6px 6px 0px 0px;;
+            }
+    ul.tabs li:hover {
+                        background: ;
+                      }   
+    ul.tabs li.active{
+                        background: #f0f9ff; /* Old browsers */
+                        background: -moz-linear-gradient(top,  #f0f9ff 0%, #cbebff 47%, #b2dfee 100%); /* FF3.6+ */
+                        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f9ff), color-stop(47%,#cbebff), color-stop(100%,#b2dfee)); /* Chrome,Safari4+ */
+                        background: -webkit-linear-gradient(top,  #f0f9ff 0%,#cbebff 47%,#b2dfee 100%); /* Chrome10+,Safari5.1+ */
+                        background: -o-linear-gradient(top,  #f0f9ff 0%,#cbebff 47%,#b2dfee 100%); /* Opera 11.10+ */
+                        background: -ms-linear-gradient(top,  #f0f9ff 0%,#cbebff 47%,#b2dfee 100%); /* IE10+ */
+                        background: linear-gradient(to bottom,  #f0f9ff 0%,#cbebff 47%,#b2dfee 100%); /* W3C */
+                        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', endColorstr='#b2dfee',GradientType=0 ); /* IE6-9 */
+                        border-bottom: 1px solid #B2DFEE;
+                        color:Black;
+                    }
+    .tab_container {
+                        border: 1px solid #1897c0;
+                        border-top: none;
+                        clear: both;
+                        float: left; 
+                        width: 100%;
+                        background: #b2dfee; /* Old browsers */
+                        background: -moz-linear-gradient(top,  #b2dfee 0%, #f0f9ff 100%); /* FF3.6+ */
+                        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b2dfee), color-stop(100%,#f0f9ff)); /* Chrome,Safari4+ */
+                        background: -webkit-linear-gradient(top,  #b2dfee 0%,#f0f9ff 100%); /* Chrome10+,Safari5.1+ */
+                        background: -o-linear-gradient(top,  #b2dfee 0%,#f0f9ff 100%); /* Opera 11.10+ */
+                        background: -ms-linear-gradient(top,  #b2dfee 0%,#f0f9ff 100%); /* IE10+ */
+                        background: linear-gradient(to bottom,  #b2dfee 0%,#f0f9ff 100%); /* W3C */
+                        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b2dfee', endColorstr='#f0f9ff',GradientType=0 ); /* IE6-9 */
+                    }
+        .tab_content {
+                        padding: 0px;
+                        font-size: 85%;
+                        display: none;
+                        font-color: Black;
+                        height: 170px;;
+                      }
+      <!-- End-->
+ 
+</style>
+
+<!-- Start CSS Style for Table in Personal Detail -->
+<style>
+
+               .table1 {
+                            width:100%;
+                            height:100%;
+                            position: realtive;
+                            background-color:white
+                       }
+
+          td.labelleft {
+                            width:25%;
+                            text-align:right;
+                            font-weight:Bold;
+                            vertical-align: bottom;
+                       }
+
+          td.valueleft {
+                            width:45%;
+                            text-align:left;
+                            vertical-align: bottom;
+                       }
+        td.valuebottom {
+                             width:80%;
+                             text-align:left;
+                             vertical-align: bottom;
+                       }
+         td.labelright {
+                             width:25%;
+                             text-align:right;
+                             font-weight:Bold;
+                             vertical-align: bottom;
+                        }
+           td.valueright{
+                            width:15%;
+                            text-align:left;
+                            vertical-align: bottom;
+                        }
+                       
+                       
+  div.tab_content div.divstyle {
+                             width:54%;
+                        
+                             margin-top: 3%;
+                             border-top: 1px solid #C0C0C0;
+                             border-left: 1px solid #C0C0C0;
+                             border-right: 1px solid #C0C0C0;
+                             float:left;
+                             margin-left:2%;
+                             font-size:100%;
+                             background-color:white
+                        }
+                .subdiv {
+                             width:100%;
+                             height:30px;
+                             border-bottom: 1px solid #C0C0C0;
+                        }
+</style>
+<!-- End-->
+
+<!-- start profile image div css style  -->
+<style>
+  div.tab_content div.firstInfo {
+                                    width:18%;
+                                    height:100%;
+                                    margin-left:10px;
+                                    margin-top:2px;
+                                    float:left;
+                                } 
+
+</style>   
+<!-- end -->
+
+
+<!-- start profile detials css style  -->
+<style>
+            .r_rectbox {
+                                padding: 2% 3%; 
+                                
+                                border-radius: 30%;
+                                margin-left: 2%;
+                                margin-right: 1%;
+                                color: white;
+                                font-size:99%;
+                            
+                       }
+                       
+          .profileD_div{
+                                border: 1px solid #C0C0C0;
+                                width: 24.5%;
+                                font-size: 11.5px;
+                                height: 123px;
+                                background: white;
+                                float: left;
+                                margin-left: 1%;
+                                margin-top: 3%;
+                         
+                        }
+                        
+         .profileD_items{
+                                width:15%;
+                                height:100%;
+                                float:left;
+                                text-align:center;
+                                font-weight: bold;
+                                margin-left: 3px;
+                        }
+            
+</style>
+<!-- end -->
+
+<!-- start css fro profile completeness  -->
+<style>
+            .graph {
+                            width: 90%; /* width and height are arbitrary, just make sure the #bar styles are changed accordingly */
+                            height: 26%;
+                            background: white;
+                            border-radius: 15px;
+                            position: relative;
+                            display:block;
+                    }
+               #bar {
+                            height: 100%; 
+                            background: #1897c0; 
+                            border-radius: 15px;
+                            border: 1px solid #fceabb;
+                    }
+
+</style>
+
+<!-- end -->
+
+
+<!-- start other details css style  -->
+<style>
+
+            <!-- start other details css style  -->
+            
+        .otherDHeading {
+                            width:100%; 
+                            height:15%; 
+                            font-weight:bold;
+                            color:#1897C0;
+                            font-size:13px;
+                            margin-bottom:5px;
+                        }
+
+             .otherDDiv {
+                            border: 1px solid #C0C0C0;
+                            width:100%; 
+                            height:80%; 
+                            background:white
+                        }
+                        
+                        
+            <!-- start login details css style  -->
+              .rectbox1 {
+                            padding: 5px 9px; 
+                            width: 60px;
+                            border-radius: 4px;
+                            margin-left: 6px;
+                            margin-right: 2px;
+                            color: white;
+                            background: #1897C0;
+                            
+                        }
+     td.loginDLabel_col {
+                            height:50%; 
+                            width:25%; 
+                            font-weight:bold; 
+                            vertical-align: middle; 
+                            padding-left: 10px;
+                        }
+    td.loginDvalue_left {
+                            height:50%;
+                            width:20%; 
+                            vertical-align: middle;
+                        }
+   td.loginDvalue_right {
+                            height:50%; 
+                            width:30%; 
+                            vertical-align: middle;
+                        }
+                         
+                         
+               <!-- start Booking details css style  -->
+   td.bookingDLabel_col {
+                            height:20%;
+                            width:15%;
+                            font-weight:bold;
+                            vertical-align: middle;
+                            padding-left: 10px;
+                            text-align:right;
+                        }
+ td.bookingDvalue_right {
+                            height:20%;
+                            width:40%;
+                            vertical-align: middle;
+                            text-align:left;
+                            margin-left:10px;
+                        }
+   td.bookingDvalue_left{
+                            height:20%; 
+                            width:20%; 
+                            vertical-align: middle;
+                            text-align:left; 
+                            margin-left:10px;
+                        }
+</style>
+<!-- end -->
+<!--Start Widget header background -color Style class--------->
+<style>
+ .widgetHeaderBGColor{   background: #feffff; /* Old browsers */
+background: -moz-linear-gradient(top,  #feffff 0%, #e0f6fc 100%, #a0d8ef 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#feffff), color-stop(100%,#e0f6fc), color-stop(100%,#a0d8ef)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #feffff 0%,#e0f6fc 100%,#a0d8ef 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #feffff 0%,#e0f6fc 100%,#a0d8ef 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #feffff 0%,#e0f6fc 100%,#a0d8ef 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #feffff 0%,#e0f6fc 100%,#a0d8ef 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#a0d8ef',GradientType=0 ); /* IE6-9 */
+
+                        }
+</style>
+<!-- end -->
+
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    $(".tab_content").hide();
+    $(".tab_content:first").show();
+    $("ul.tabs li").click(function() {
+        $("ul.tabs li").removeClass("active");
+        $(this).addClass("active");
+        $(".tab_content").hide();
+        var activeTab = $(this).attr("rel"); 
+        $("#"+activeTab).fadeIn(); 
+    });
+});
+
+</script> 
+</html>
+</apex:form>  
+</apex:page>

@@ -1,0 +1,168 @@
+<!--
+   Description:This page contains CRN as a parameter and open new payments information in context of CRN 
+   @Created by: Sudeep Dube
+   @Created Date: 01/06/2015
+   
+   --------------------------------------------------------------------------------
+   | Modified By      | Modified Date       | Version        | Description         |
+   --------------------------------------------------------------------------------
+   |
+   --------------------------------------------------------------------------------
+   |
+   --------------------------------------------------------------------------------
+   -->
+<apex:page standardController="Booking_Payment_Transaction__c" extensions="RMNewPaymentTransactionController" action="{!Fetch}" >
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+   <script src="{!$Resource.YearRangeIncr}"></script>
+  
+<apex:param assignTo="{!crn}" name="crn" value=""/>
+
+ <apex:form id="form1">
+     <apex:actionRegion > 
+        <apex:pageBlock title="Payment Transaction" id="pbId">
+            <apex:pageMessages id="msg"></apex:pageMessages><br/>
+           
+            <apex:outputPanel rendered="{!Isduplicate}">
+                <apex:outputlink value="{!error}" target="_blank" style="color:red;">
+                    Click here to see duplicate record 
+                </apex:outputlink><br/><br/>
+            </apex:outputPanel>
+            
+            <apex:pageBlockSection title="Fetch Details" rendered="{!closeFetch}">
+                <center>
+                    <b>CRN No.</b><apex:inputText value="{!crn}"/><br/>
+                    <apex:commandButton value="Fetch Details" action="{!Fetch}"/>
+                </center>  
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="New Payment Transaction" rendered="{!newBpt}" columns="2" collapsible="false">
+                
+                <apex:outputField value="{!bpt.CRN__c}"/>
+                <apex:outputField value="{!bpt.Booking__c}"/>
+                
+                <apex:outputField value="{!bpt.Account_Name_New__c}"/>
+                <apex:outputField value="{!bpt.Co_Applicant_Name_New__c}"/>
+                
+                <apex:outputField value="{!bpt.Project_Name__c}"/>
+                <apex:outputField value="{!bpt.Cluster__c}"/>
+                <apex:outputField value="{!bpt.Wing__c}"/>
+                <apex:outputField value="{!bpt.Flat__c}"/>
+                                
+                <apex:inputField value="{!bpt.Type_of_Transaction_del__c}" required="true"/> 
+                <apex:inputField value="{!bpt.MT940__c}"/>
+                
+                <apex:inputField value="{!bpt.UTR_Code__c}"/>
+                <apex:inputField value="{!bpt.Bank_Name__c}" required="true"/>
+                <apex:inputField value="{!bpt.Amount_Transferred__c}" required="true"/>
+                <apex:inputField value="{!bpt.Remitted_to_Account__c}" required="true"/>
+                <apex:inputField value="{!bpt.Transaction_Date__c}" required="true"/>
+                <apex:inputField value="{!bpt.Bank_Account_Holders_Name__c}" required="true"/>
+                <apex:inputField value="{!bpt.Towards__c}" required="false" />
+               
+              
+                  
+            </apex:pageBlockSection>
+             
+            <apex:pageBlockSection title="Uploaded Attachments" rendered="{!lstInsertAttachment.size > 0}" columns="2">
+               <apex:repeat value="{!lstInsertAttachment}" var="rec" >
+                  <apex:outputText value="{!rec.name}"   />
+                </apex:repeat>
+               </apex:pageBlockSection>
+           
+          
+              
+          <apex:pageBlockButtons rendered="{!newBpt}" location="bottom">
+           
+           
+           <apex:commandButton id="saveID1" Value="Save" action="{!bptsave}"  reRender="form1,pbId,msg"  oncomplete="reloadBothIframe('vw','{!isRecordSaved}');" />
+           
+            <!--<apex:commandButton Value="Cancel" action="{!Cancel}"/>-->
+            <apex:commandButton Value="File Attachment"  action="{!addAttachment}" />
+          </apex:pageBlockButtons>
+                  
+              <apex:actionStatus id="actStatusId" >
+             <apex:facet name="start" >
+               <img src="/img/loading.gif" />                    
+                </apex:facet>
+              </apex:actionStatus>
+             </apex:pageBlock> 
+            </apex:actionRegion> 
+         
+            
+               
+                 <apex:actionRegion rendered="{!lstAttachment.size > 0}">
+                
+                 <apex:pageblock id="pdId2">
+                 
+                  <apex:pageBlockSection title="File Attachment Here" rendered="{!lstAttachment.size > 0}" columns="1">
+                   <apex:repeat value="{!lstAttachment}" var="rec" >
+                
+                    <apex:inputFile id="ipf" value="{!rec.body}" fileName="{!rec.name}" >
+                     
+                    </apex:inputFile>
+                   </apex:repeat>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockButtons location="top">
+                   <apex:commandButton style="align:center" value="Upload Attachment" action="{!UploadFile}" />  
+                    </apex:pageBlockButtons>
+                  
+                  </apex:pageblock>
+                  
+                </apex:actionRegion>
+               
+               <apex:actionRegion >
+               <apex:actionFunction name="yearIncrcall" oncomplete="yearIncr();"/>
+               </apex:actionRegion>
+             </apex:form>
+           
+          
+           <!--<apex:form > -->
+             
+          
+           <!--</apex:form>  -->
+     
+            <!-- <apex:outputPanel rendered="{!noRecord}">
+                <div><b>Insufficient Privileges </b></div>
+            </apex:outputPanel> -->
+         
+         
+    
+   
+  <!--call action function Which is further calling above action function and action function call js yearIncr() function 
+     defined in js file for year range extention-->
+     
+     
+     
+   <script>
+   
+        yearIncrcall();
+       
+   </script>
+   
+  
+  
+   <script>
+        
+         function reloadBothIframe(theParameter,isSaved){
+        
+         var params = window.location.search.substr(1).split('&');
+        
+          for (var i = 0; i < params.length; i++) {
+              var p=params[i].split('=');
+              console.log(p[1]);
+             
+              if (p[1] == theParameter && isSaved=='true' ) {
+            
+                parent.document.getElementById('PaymentsHistoryIframe').src=parent.document.getElementById('PaymentsHistoryIframe').src;parent.document.getElementById('BptIframe').src=parent.document.getElementById('BptIframe').src; 
+          
+                  }
+              }
+       
+        
+        }
+       
+   </script>
+ 
+  
+</apex:page>

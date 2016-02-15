@@ -1,0 +1,106 @@
+<apex:component >
+    <apex:attribute name="Page" 
+                    description="This is the Name of the Page." 
+                    type="String" 
+                    required="true" 
+                     /> 
+    <apex:attribute name="Project" 
+                    description="This is the Name of the Project" 
+                    type="String" 
+                    required="true" 
+                     />
+    <apex:attribute name="Segment" 
+                    description="This is the Name of the Segment" 
+                    type="String" 
+                    required="true" 
+                     />
+    <apex:attribute name="User" 
+                    description="This is the Name of the User" 
+                    type="String" 
+                    required="true" 
+                     />
+    
+    <apex:attribute name="Gender" 
+                    description="Attribute stores Gender" 
+                    type="String" 
+                    required="true" 
+                     />
+    
+    <apex:attribute name="CRN" 
+                    description="This is the CRN of the User" 
+                    type="String" 
+                    required="true" 
+                     />
+     <apex:attribute name="LastLogin" 
+                    description="Tracks no of logins for User" 
+                    type="DateTime" 
+                    required="false" 
+                     />
+    <apex:attribute name="NoOfLogins" 
+                    description="Tracks no of logins for User" 
+                    type="Integer" 
+                    required="false" 
+                     />
+    
+    <apex:attribute name="TotalLogins" 
+                    description="Tracks Total no of logins for all Users" 
+                    type="Integer" 
+                    required="false" 
+                     />
+    <apex:attribute name="PageNotFound" 
+                    description="Tracks Total Page Not found instance all Users" 
+                    type="DateTime" 
+                    required="false" 
+                     />
+    
+    <apex:attribute name="DownTime" 
+                    description="Tracks Total Page Not found instance all Users" 
+                    type="DateTime" 
+                    required="false" 
+                     />
+                     
+                     
+<script>	
+  
+  
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61071058-1',{'siteSpeedSampleRate': 50});
+   ga('send', {
+			  'hitType': 'pageview',
+			  'page': '{!Page}',
+			  'title': '{!Page}'
+			});
+   
+    <!--  Dimension1 is for Project -->
+	var dimensionValue = '{!Project}';
+    ga('set', 'dimension1', dimensionValue); 
+    
+    var dimensionValue = '{!User}';
+    ga('set', 'dimension2', dimensionValue); 
+    
+    var dimensionValue = '{!Segment}';
+    ga('set', 'dimension3', dimensionValue); 
+    
+    var dimensionValue = '{!Gender}';
+    ga('set', 'dimension4', dimensionValue); 
+    
+    var dimensionValue = '{!CRN}';
+    ga('set', 'dimension5', dimensionValue);
+    
+    var dimensionValue = '{!LastLogin}';
+    ga('set', 'dimension6', dimensionValue);
+    
+    var dimensionValue = '{!NoOfLogins}';
+    ga('set', 'dimension7', dimensionValue);
+    
+    var dimensionValue = '{!TotalLogins}';
+    ga('set', 'dimension8', dimensionValue);
+    
+    
+</script>
+
+</apex:component>

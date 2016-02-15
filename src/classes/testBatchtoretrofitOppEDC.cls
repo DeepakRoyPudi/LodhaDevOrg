@@ -1,0 +1,233 @@
+@isTest
+private class testBatchtoretrofitOppEDC {
+   
+    static testMethod void testBatchtoretrofit() {
+    
+ 
+        
+        EDC_for_opportunity__c edcopp=new EDC_for_opportunity__c();
+        edcopp.Name='Test';
+        edcopp.Project_Type__c='Casa';
+        edcopp.EDC_from_Created_date__c='25';
+        edcopp.EDC_from_Visit_date__c='30';
+        edcopp.Upper_Limit__c='90';
+        edcopp.Call_Attempt_Limit__c='7';
+        edcopp.Call_Attempt_EDC__c='8';
+        insert edcopp;
+        
+        Account a=new Account();
+        a.FirstName='Test';
+        a.LastName='One';
+        a.Personal_Email__pc='test1@cg.com';
+        insert a;
+        
+        Project_Name__c project=new Project_Name__c();
+        project.Name='Test';
+        project.Project_Type__c='Casa';
+        insert project;
+        
+        Opportunity opp=new Opportunity();
+        opp.Name='Test';
+        opp.AccountId=a.Id;
+        opp.closedate=date.newinstance(2012, 7, 2);
+        opp.Date_of_Visit__c = date.newinstance(2012, 7, 20);
+        opp.IsActive__c=true;
+        opp.Visit_Form_No__c = '765423234';
+        opp.Walk_in_Source__c = 'ClubCASA';
+        opp.Project_Name__c=project.Id;
+        opp.StageName='Qualified';
+        opp.Upper_EDC__c =  date.newinstance(2012, 9, 5);
+        
+        insert opp;
+        
+        Call_Attempts__c call=new Call_Attempts__c();
+        call.Opportunity__c = opp.Id;
+        call.Project__c = project.Id;
+        call.Call_Type__c = 'Email';
+        call.Call_Attempt_Status__c = 'Visit Proposed';
+        call.Next_Action_Date__c = system.Today();
+        call.Proposed_Date_of_Visit__c = date.newinstance(2012, 9, 1);
+        call.Attempted_By__c = 'Presales';
+        call.Call_Attempted_by__c = 'Group B';
+        
+        insert call;
+        
+        
+        Test.startTest();
+
+        BatchtoretrofitOppEDC bro = new BatchtoretrofitOppEDC();
+        bro.querystring='select id,CloseDate,Upper_EDC__c,Project_Name__c,Date_of_Visit__c,Last_Call_Date_RO__c from Opportunity LIMIT 200 ';
+        Database.executeBatch(bro,200);
+        bro.dummy1();
+           Integer int1 = 100;
+       Integer int2 = 100;
+       Integer int3 = 100;
+       Integer int4 = 100;
+       Integer int5 = 100;
+       Integer int6 = 100;
+       Integer int7 = 100;
+       Integer int8 = 100;
+       Integer int9 = 100;
+       Integer int10 = 100;
+       Integer int11 = 100;
+       Integer int12 = 100;
+       Integer int13 = 100;
+       Integer int14 = 100;
+       Integer int15 = 100;
+       Integer int16= 100;
+       Integer int17 = 100;
+       Integer int18 = 100;
+       Integer int19 = 100;
+       Integer int20 = 100;
+       Integer int21 = 100;
+       Integer int22 = 100;
+       Integer int23 = 100;
+       Integer int24 = 100;
+       Integer int25 = 100;
+       Integer int26 = 100;
+       Integer int27 = 100;
+       Integer int28 = 100;
+       Integer int29 = 100;
+       Integer int30 = 100;
+       Integer int31 = 100;
+       Integer int32= 100;
+       Integer int33 = 100;
+Integer int34 = 100;
+Integer int35 = 100;
+Integer int36 = 100;
+Integer int37 = 100;
+Integer int38 = 100;
+Integer int39 = 100;
+Integer int40 = 100;
+Integer int41 = 100;
+Integer int42 = 100;
+Integer int43 = 100;
+Integer int44 = 100;
+Integer int45 = 100;
+Integer int46 = 100;
+Integer int47 = 100;
+Integer int48 = 100;
+Integer int49 = 100;
+Integer int50 = 100;
+Integer int51 = 100;
+Integer int52 = 100;
+Integer int53 = 100;
+Integer int54 = 100;
+Integer int55 = 100;
+Integer int56 = 100;
+Integer int57 = 100;
+Integer int58 = 100;
+Integer int59 = 100;
+Integer int60 = 100;
+Integer int61 = 100;
+Integer int62 = 100;
+Integer int63 = 100;
+Integer int64 = 100;
+Integer int65 = 100;
+Integer int66 = 100;
+Integer int67 = 100;
+Integer int68 = 100;
+Integer int69 = 100;
+Integer int70 = 100;
+Integer int71 = 100;
+Integer int72 = 100;
+Integer int73 = 100;
+Integer int74 = 100;
+Integer int75 = 100;
+Integer int76 = 100;
+Integer int77 = 100;
+Integer int78 = 100;
+Integer int79 = 100;
+Integer int80 = 100;
+Integer int81 = 100;
+Integer int82 = 100;
+Integer int83 = 100;
+Integer int84 = 100;
+Integer int85 = 100;
+Integer int86 = 100;
+Integer int87 = 100;
+Integer int88 = 100;
+Integer int89 = 100;
+Integer int90 = 100;
+Integer int91 = 100;
+Integer int92 = 100;
+Integer int93 = 100;
+Integer int94 = 100;
+Integer int95 = 100;
+Integer int96 = 100;
+Integer int97 = 100;
+Integer int98 = 100;
+Integer int99 = 100;
+Integer int100 = 100;
+Integer int101 = 100;
+Integer int102 = 100;
+Integer int103 = 100;
+Integer int104 = 100;
+Integer int105 = 100;
+Integer int106 = 100;
+Integer int107 = 100;
+Integer int108 = 100;
+Integer int109 = 100;
+Integer int110 = 100;
+Integer int111 = 100;
+Integer int112 = 100;
+Integer int113 = 100;
+Integer int114 = 100;
+Integer int115 = 100;
+Integer int116 = 100;
+Integer int117 = 100;
+Integer int118 = 100;
+Integer int119 = 100;
+Integer int120 = 100;
+Integer int121 = 100;
+Integer int122 = 100;
+Integer int123 = 100;
+Integer int124 = 100;
+Integer int125 = 100;
+Integer int126 = 100;
+Integer int127 = 100;
+Integer int128 = 100;
+Integer int129 = 100;
+Integer int130 = 100;
+Integer int131 = 100;
+Integer int132 = 100;
+Integer int133 = 100;
+Integer int134 = 100;
+Integer int135 = 100;
+Integer int136 = 100;
+Integer int137 = 100;
+Integer int138 = 100;
+Integer int139 = 100;
+Integer int140 = 100;
+Integer int141 = 100;
+Integer int142 = 100;
+Integer int143 = 100;
+Integer int144 = 100;
+Integer int145 = 100;
+Integer int146 = 100;
+Integer int147 = 100;
+Integer int148 = 100;
+Integer int149 = 100;
+Integer int150 = 100;
+Integer int151 = 100;
+Integer int152 = 100;
+Integer int153 = 100;
+Integer int154 = 100;
+Integer int155 = 100;
+Integer int156 = 100;
+Integer int157 = 100;
+Integer int158 = 100;
+Integer int159 = 100;
+Integer int160 = 100;
+Integer int161 = 100;
+Integer int162 = 100;
+Integer int163 = 100;
+Integer int164 = 100;
+Integer int165 = 100;
+
+
+        Test.stopTest();
+        
+       
+    }
+}

@@ -1,0 +1,94 @@
+<apex:page contentType="application/vnd.ms-excel#SalesForceExport.xls" sidebar="false" controller="ProfileInfoController">
+    <apex:form id="formid">
+    
+    
+    
+        
+     <table >
+     <caption><b style="float: left;font-size:large">Profile Information Report </b></caption>
+         <tr>
+                <td>CRN</td>
+                <td>Loyalty Id</td>
+                <td>Loyalty Index</td>
+                 <td>Collection Index</td>
+               <td>Service Index</td>
+                <td>Legal Alert</td>
+                <td>Is CIP</td>
+                <td> Is NRI</td>
+                <td>Ethnicity</td>
+                  <td>Age</td>
+                   <td>Marital Status</td>
+                    <td>No. of Children</td>
+                     <td>Purpose of Purchase</td>
+                      <td>Industry of Profession</td>
+                      <td>Spouse DOB</td>
+                      <td>Anniversary Date</td>
+                     
+         </tr>  
+          <apex:repeat value="{!lstWrapper}" var="w">
+         <tr>
+            
+               <td> {!w.AcountMap.CRN__c}</td>   
+               <td> {!w.AcountMap.LoyaltyID__c}</td> 
+                <td>{!w.loyalty_points}</td>
+                <td> {!w.AcountMap.Collection_Index__c}</td>
+                <td>{!w.Service_Index}</td>
+               <td>{!w.AcountMap.Legal_Alert__c}</td>
+                <td>{!w.AcountMap.CIP__c}</td> 
+                <td>{!w.IsNRI}</td> 
+               <td>{!w.AcountMap.Ethinicity__c}</td>
+               <td> {!w.AcountMap.Age__c}</td>
+               <td> {!w.AcountMap.Marital_Status__c }</td>
+               <td> {!w.AcountMap.No_of_children__c}</td>
+               <td>{!w.AcountMap.Purpose_of_Purchase__c }</td>
+                <td> {!w.AcountMap.Industry}</td>
+                <td><apex:outputField value="{!w.AcountMap.DOB_of_Spouse__c }"/> </td>
+                <td><apex:outputField value=" {!w.AcountMap.Anniversary_Date__c}"/></td>
+                       
+         </tr> 
+         </apex:repeat>    
+         </table> 
+<!--<apex:pageBlock title="Profile Info Of All Customers">-->
+<!--           
+ <apex:pageblockTable value="{!mAccounts}" var="CRN">-->
+<!--            <apex:column headerValue="CRN">-->
+<!--                {!mAccounts[CRN].CRN__c}-->
+<!--<td>{!w.MapAccount.Co_Applicant__c}</td>-->
+<!--            </apex:column>-->
+<!--            <apex:column headerValue="Loyalty Id">-->
+<!--                 {!mAccounts[CRN].LoyaltyId__c}-->
+<!--                 </apex:column>-->
+<!--                 <apex:column headerValue="Is CIP">-->
+<!--                 {!mAccounts[CRN].CIP__c}-->
+<!--                 </apex:column>-->
+<!--                 <apex:column headerValue="Ethnicity">-->
+<!--                 {!mAccounts[CRN].Ethinicity__c}-->
+<!--                 </apex:column>-->
+<!--                 <apex:column headerValue="Age">-->
+<!--                 {!mAccounts[CRN].Age__c}-->
+<!--                 </apex:column>-->
+<!--                 <apex:column headerValue="Marital Status">-->
+<!--                 {!mAccounts[CRN].Marital_Status__c }-->
+<!--                 </apex:column>-->
+<!--                 <apex:column headerValue="No of Children">-->
+<!--                 {!mAccounts[CRN].No_of_children__c}-->
+<!--                 </apex:column>-->
+<!--                  <apex:column headerValue="Purpose of Purchase">-->
+<!--                 {!mAccounts[CRN].Purpose_of_purchase_of_existing_property__c }-->
+<!--                 </apex:column>-->
+<!--                  <apex:column headerValue="Industry of Profession">-->
+<!--                 {!mAccounts[CRN].Industry}-->
+<!--                 </apex:column>-->
+<!--                  <apex:column headerValue="Spouse DOB">-->
+<!--                 {!mAccounts[CRN].DOB_of_Spouse__c }-->
+<!--                 </apex:column>-->
+<!--                  <apex:column headerValue="Anniversary Date">-->
+<!--                 {!mAccounts[CRN].Anniversary_Date__c}-->
+<!--                 </apex:column>-->
+<!--      </apex:pageBlock>             -->
+                 
+     <!--         </apex:pageblockTable>  -->
+       
+    </apex:form>
+
+</apex:page>

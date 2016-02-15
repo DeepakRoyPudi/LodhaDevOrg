@@ -1,0 +1,3 @@
+<apex:page StandardController="Case" Extensions="CaseIntermediateController" action="{!autoAssignment}">   
+<apex:sectionHeader title="New Cases"/>   
+</apex:page>

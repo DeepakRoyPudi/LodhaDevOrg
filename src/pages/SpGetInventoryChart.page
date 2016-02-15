@@ -1,0 +1,146 @@
+<apex:page standardController="Wing__c" extensions="SpGetInventoryChart" action="{!getInventory}" sidebar="false">
+    <link rel="Stylesheet" type="text/css" href="{!$Resource.ExtJS}/Extjs/resources/css/ext-all.css" />
+    <style>
+         .x-grid-cell {height: 50px; }
+        .x-grid-cell a
+        {  
+           color: black;
+           font-weight: bold;   
+        }
+        .x-grid-cell.flat-open
+        {
+            background-color: #92D050;
+            font-size:130%;
+            
+        }
+        .x-grid-cell.flat-hold
+        {
+            background-color: #000000;
+            font-size:130%;
+            
+        }
+        .x-grid-cell.flat-all
+        {
+            background-color: white;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-blocked
+        {
+            background-color: #FFFF00;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-booking
+        {
+            background-color: #7030A0;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-booked
+        {
+            background-color: #FFC000;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-cancellation
+        {
+            background-color: #984807;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-not-available
+        {
+            background-color: #FFFFFF;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-sold
+        {
+            background-color: #FF0000;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-scud
+        {
+            background-color: #C0504D;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-scud-reject
+        {
+            background-color: #D99795;
+            font-size:130%;
+        }
+        .x-grid-cell.flat-fame-return
+        {
+            background-color: #FAC090;
+            font-size:130%;
+        }
+        .x-grid-cell.status-unknown
+        {
+            background-color: red;
+            font-size:130%;
+        }
+        .x-grid-cell.search-result
+        {   
+            background-color: #0070C0;
+            font-size:130%;
+        }
+ 
+        a .ttip {
+          display:none;
+        }
+        a:hover{
+          z-index:2; 
+        }
+        a:hover .ttip {  
+          display:block;
+          position:absolute;
+          top:2px;
+          left:50px; 
+          width:180px;
+          height:auto;
+          border:2px double #0cf;
+          background-color:#cff; 
+          color:#099;
+          font-size:10px;
+          font-style:normal;
+         }
+    </style>
+        <script type="text/javascript" src="{!$Resource.ExtJS}/Extjs/ext-all.js"></script>
+        <apex:form >
+            <div  align="center" style="font-size: 170%"><b>Cluster: {!cluster_name}&nbsp;&nbsp;&nbsp;Wing: {!wing_name}</b></div>           
+            <br/>
+            <div id="gridSpace" align="center"></div>
+            <br/>
+            <div align="center"><apex:commandButton value="BACK" action="{!goBack}"/></div>
+            
+        </apex:form>
+    
+<script type="text/javascript" >
+var fieldValueArray = new Array();
+var columnValueArray = new Array();
+var dataValueArray = new Array();
+var flatperfloorcount; 
+
+fieldValueArray = {!fieldValue};
+columnValueArray = {!columnValue};
+dataValueArray = {!dataValue};
+flatperfloorcount = {!flatperfloorcount};
+
+    Ext.create('Ext.data.Store', {
+        storeId:'Lodha',
+        fields:fieldValueArray[0],
+        data:dataValueArray[0],
+        proxy: {
+            type: 'memory',
+            reader: {
+                type: 'json',
+                root: 'items'
+            }
+        }
+    });
+    
+   var grid =  Ext.create('Ext.grid.Panel', {
+        title: '',
+        store: Ext.data.StoreManager.lookup('Lodha'),
+        columns:columnValueArray[0],
+        width:(flatperfloorcount+1)*100,          
+        columnLines : true,
+        renderTo: gridSpace
+    });
+    </script>
+</apex:page>

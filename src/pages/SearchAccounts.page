@@ -1,0 +1,181 @@
+<apex:page controller="SearchAccountClass" showHeader="true" sidebar="true" >
+<script>
+function fn(){
+    var a=document.getElementById('{!$Component.myform.block.input}').value;
+    var a=a.trim();
+    if(a == "" || a =="Enter text to search..."){
+        alert("Please enter something...");
+        location.reload();
+    }
+    else{
+        var x=document.getElementById('{!$Component.myform.Accvarhidden}').value=document.getElementById('{!$Component.myform.block.input}').value;
+        //alert(a+'-'+x);
+        Search();               
+    }         
+ }
+
+function fnn(variable){
+    if(variable=='Name'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='Name';
+    //alert(b);
+    }
+    if(variable=='Project Name'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='Project_Name__c';
+    //alert(b);
+    }
+    if(variable=='Cluster'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='Cluster__c';
+    //alert(b);
+    }
+    if(variable=='Wing'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='Wing__c';
+    //alert(b);
+    }
+    if(variable=='Flat No'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='Flat_No__c';
+    //alert(b);
+    }
+    if(variable=='Mobile No'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='Mobile_Phone__c';
+    //alert(b);
+    }
+    if(variable=='CRN No'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='CRN__c';
+    //alert(b);
+    }
+    if(variable=='Loyalty ID'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='LoyaltyID__c';
+    //alert(b);
+    }
+    if(variable=='RM Name'){
+    var b=document.getElementById('{!$Component.myform.linkvariable}').value='owner.name';
+    //alert(b);
+    }   
+    if(document.getElementById('{!$Component.myform.block.input}').value==document.getElementById('{!$Component.myform.Accvarhidden}').value){
+        //alert("done");
+        dynamicsearch();
+    }
+    else{
+        //alert(document.getElementById('{!$Component.myform.block.input}').value+'-'+document.getElementById('{!$Component.myform.Accvarhidden}').value);
+        alert("Changing search text while refining is not allowable...Try again");
+        location.reload();
+    }
+    
+}
+</script>
+<apex:form id="myform">
+
+<apex:actionFunction name="Search" action="{!Search}"/>
+<apex:pageBlock id="block" title="Search Account records:">
+<apex:inputText id="input" value="{!Accvar}" style="border-radius:10px;width:200px;height:20px;font-family:arial;" onclick="if(this.value=='Enter text to search...'){this.value='';}" onblur="if(this.value==''){this.value='Enter text to search...';}" title="Please enter text to search Booked Account records" tabindex="0"/>
+<apex:commandButton value="Search" style="border-radius:5px;"  title="Click to search"  oncomplete="fn();"/>
+<apex:outputPanel rendered="{!buttonchange}" style="margin-left:10px;">
+    <b style="color:red;">Refine your search By:  </b> 
+    <b ><apex:outputPanel rendered="{!bname}" id="panel8">
+    <a href='' value="name" onclick="fnn('Name');" id="aa">Name</a>
+    </apex:outputPanel></b>
+    
+    <b><apex:outputPanel rendered="{!bproject}" id="panel">
+    &#44;&nbsp;<a href='' value="Project Name" onclick="fnn('Project Name');">Project Name</a>
+    </apex:outputPanel></b>
+    
+    <b><apex:outputPanel rendered="{!bcluster}" id="panel1">
+    &#44;&nbsp;<a href='' value="Cluster" onclick="fnn('Cluster');">Cluster</a>
+    </apex:outputPanel></b>
+    
+    <b><apex:outputPanel rendered="{!bwing}" id="panel2">
+    &#44;&nbsp;<a href='' value="Wing" onclick="fnn('Wing');">Wing</a>
+    </apex:outputPanel></b>
+    
+    <b><apex:outputPanel rendered="{!bflatno}" id="panel3">
+    &#44;&nbsp;<a href='' value="Flat No" onclick="fnn('Flat No');">Flat No</a>
+    </apex:outputPanel></b>
+    
+    <b><apex:outputPanel rendered="{!bmobileno}" id="panel4">
+    &#44;&nbsp;<a href='' value="Mobile No" onclick="fnn('Mobile No');">Mobile No</a>
+    </apex:outputPanel></b>
+    
+    <b><apex:outputPanel rendered="{!bcrn}" id="panel5">
+    &#44;&nbsp;<a href='' value="CRN No" onclick="fnn('CRN No');">CRN No</a>
+    </apex:outputPanel></b>
+    
+    <b><apex:outputPanel rendered="{!bloyaltyid}" id="panel6">
+    &#44;&nbsp;<a href='' value="Loyalty ID" onclick="fnn('Loyalty ID');">Loyalty Id</a>
+    </apex:outputPanel></b>
+    
+    <b><apex:outputPanel rendered="{!bownername}" id="panel7">
+    &#44;&nbsp;<a href='' value="RM Name" onclick="fnn('RM Name');">RM Name</a> 
+    </apex:outputPanel></b>
+</apex:outputPanel>
+</apex:pageBlock>
+
+
+<apex:actionFunction name="dynamicsearch" action="{!dynamicsearch}" />
+
+<apex:inputHidden value="{!linkvar}" id="linkvariable"/>
+<apex:inputHidden value="{!Accvarhidden}" id="Accvarhidden"/>
+
+<apex:pageBlock title="{!tittle}" tabStyle="account" id="pageblock">
+<apex:pageMessages /><br/>
+
+<apex:outputPanel rendered="{!buttonchange}">
+<br/><br/>
+</apex:outputPanel>
+<apex:outputPanel title="Note :" rendered="{!flag}">
+Note: Please use (*) in combination with search string for efficient search...ex: {!Accvar}* or *{!Accvar} or AB*C
+</apex:outputPanel>
+
+<apex:pageblockTable value="{!Acclst}" var="a" columns="11" rendered="{!CCprofileRender}"> 
+<apex:column value="{!a.CRN__c}" headerValue="CRN No"/>
+<apex:column value="{!a.LoyaltyID__c}" headerValue="Loyalty ID"/>
+<apex:column headerValue="Account Name"><apex:outputLink value="/{!a.id}" target="_blank"> {!a.Name}</apex:outputLink></apex:column>
+<apex:column value="{!a.Project_Name__c}" headerValue="Project Name"/>
+<apex:column value="{!a.owner.name}" headerValue="RM Name"/>
+<apex:column value="{!a.Cluster__c}" headerValue="Cluster"/>
+<apex:column value="{!a.Wing__c}" headerValue="Wing"/>
+<apex:column value="{!a.Flat_No__c}" headerValue="Flat No"/>
+<apex:column value="{!a.Mobile_Phone__c}" headerValue="Mobile No"/>
+<apex:column value="{!a.Status__c}" headerValue="Status"/>
+<apex:column value="{!a.recordtype.name}" headerValue="RecordType"/>
+</apex:pageblockTable>
+
+<apex:pageblockTable value="{!Acclst}" var="a" columns="14" rendered="{!CCOperatorProfileRender}"> 
+<apex:column value="{!a.CRN__c}" headerValue="CRN No"/>
+<apex:column value="{!a.LoyaltyID__c}" headerValue="Loyalty ID"/>
+<apex:column headerValue="Account Name"><apex:outputLink value="/{!a.id}" target="_blank"> {!a.Name}</apex:outputLink></apex:column>
+<apex:column value="{!a.Project_Name__c}" headerValue="Project Name"/>
+<apex:column value="{!a.owner.name}" headerValue="RM Name"/>
+<apex:column value="{!a.Cluster__c}" headerValue="Cluster"/>
+<apex:column value="{!a.Wing__c}" headerValue="Wing"/>
+<apex:column value="{!a.Flat_No__c}" headerValue="Flat No"/>
+<apex:column value="{!a.Mobile_Phone__c}" headerValue="Mobile No"/>
+<apex:column value="{!a.Status__c}" headerValue="Status"/>
+<apex:column value="{!a.recordtype.name}" headerValue="RecordType"/>
+
+<apex:column value="{!a.Primary_PAN_number__c}" headerValue="PAN Number"/>
+<apex:column value="{!a.PersonEmail}" headerValue="Email"/>
+<apex:column value="{!a.Personal_Email__pc}" headerValue="Personal Email"/>
+</apex:pageblockTable>
+
+<apex:pageblockTable value="{!Acclst}" var="a" columns="14" rendered="{!OtherProfileRender}"> 
+<apex:column value="{!a.CRN__c}" headerValue="CRN No"/>
+<apex:column value="{!a.LoyaltyID__c}" headerValue="Loyalty ID"/>
+<apex:column headerValue="Account Name"><apex:outputLink value="/{!a.id}" target="_blank"> {!a.Name}</apex:outputLink></apex:column>
+<apex:column value="{!a.Project_Name__c}" headerValue="Project Name"/>
+<apex:column value="{!a.owner.name}" headerValue="RM Name"/>
+<apex:column value="{!a.Cluster__c}" headerValue="Cluster"/>
+<apex:column value="{!a.Wing__c}" headerValue="Wing"/>
+<apex:column value="{!a.Flat_No__c}" headerValue="Flat No"/>
+<apex:column value="{!a.Mobile_Phone__c}" headerValue="Mobile No"/>
+<apex:column value="{!a.Status__c}" headerValue="Status"/>
+<apex:column value="{!a.recordtype.name}" headerValue="RecordType"/>
+
+<apex:column value="{!a.Primary_PAN_number__c}" headerValue="PAN Number"/>
+<apex:column value="{!a.PersonEmail}" headerValue="Email"/>
+<apex:column value="{!a.Personal_Email__pc}" headerValue="Personal Email"/>
+</apex:pageblockTable>
+
+</apex:pageBlock>
+<apex:inputHidden value="{!NoOfAccounts}" id="hidden"/>
+</apex:form>
+</apex:page>

@@ -1,0 +1,709 @@
+<apex:page standardController="Opportunity" extensions="OpportunityExtensions" sidebar="false" showHeader="false">
+<!--
+        /* Added by CG Dev Team 22/09/2011
+        *   Changes to include Wadala Project Form And CSS
+        *   Note: The CSS below can be removed after testing as it is replaced with static resource
+        */  
+ -->   
+<!--
+<style>
+.headerFont
+{
+    color:#FFFFFF;
+    font-family:Arial;https://c.cs8.visual.force.com/apex/OpportunityPage?aid=001L0000003sh2O&pid=a09L0000000BGlc
+    font-weight:bold;
+    font-size:16px;
+}
+.sideBarFont
+{
+    color:#FFFFFF;
+    font-family:Arial;
+    font-size:16px;
+    background-color:#FFFFFF;
+}
+.inputLabel
+{
+    color:#FFFFFF;
+    font-family:Arial;
+    font-size:12px;
+}
+.smallText
+{
+    font-family:Arial;
+    font-size:10px;
+    color:#FFFFFF;
+    padding:0px;
+    margin:0px;
+}
+.inputFieldClass
+{
+    background-color:#FFFFFF;
+    color:#494949;
+    font-family:Arial;
+    font-size:11px;  
+}
+.inputLookUpClass
+{
+    color:#494949;
+    font-family:Arial;
+    font-size:11px; 
+}
+.inputCheckBoxClass
+{
+    color:#FFFFFF;
+    font-family:Arial;
+    font-size:10px;    
+}
+.inputCheckBoxClass label
+{
+    color:#FFFFFF;
+     font-family:Arial;
+    font-size:0.87em;     
+}
+.btnCustomClass
+{
+    background-color:#FFFFFFF;
+    font-family:Arial;
+    font-size:14px;  
+    color:#FFFFFF;
+}
+.errorClass
+{
+    color:#DA4C3C;
+    padding-left:15px;   
+}
+</style>
+-->
+<apex:form rendered="{!showFiorenzaForm}" styleclass="lodha_form_style" >
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background: url('{!$Resource.Lodha_Fiorenza_BG_center}') left top no-repeat; -webkit-background-size: 1024px 2000px;}
+
+form.lodha_form_style .action_btn{text-align: center; width: auto; margin-top: 20px;}
+/*.bottom_logo{ background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center bottom no-repeat; width: auto; height: 100px; margin-top: 250px;}*/
+/*form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center bottom no-repeat; width: auto; height: 100px; margin-top: 150px; margin-left: 4px;}
+*/
+td#other_lead{float: right;text-align: right; width: 200px; clear: both;}
+.btn.lodha_btn:hover,.btn.lodha_btn{background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;}
+
+.btn.lodha_btn:hover,.btn.lodha_btn{background:url('{!$Resource.fiorenza_btn_bg}') left top repeat-x; color: #f00; border: 2px solid #E1464D;}
+form.lodha_form_style #about_indulgences table td span { width: 251px;}
+form.lodha_form_style table td span {color: #fff;}
+form.lodha_form_style table td label {color: #fff;}
+
+span.dateFormat a{color: #fff;}
+form.lodha_form_style table td span.dateFormat{display: inline;}
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_Wadala_Lead_css}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper">
+      
+      
+      <div id="about_residence" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">Help us choose a residence for you.</th></tr>
+          <tr>
+            <td style="padding-left: 8px;"><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!o.Budgeted_Price__c}"  /><em style="font-style: normal; padding-left: 2px; color: #fff;">&nbsp;lacs</em></td>
+          </tr>
+        </tbody>
+
+      </table>
+      </div>
+      
+        
+      <div id="about_flat_type" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">You are looking for</th></tr>
+         <tr>
+            <apex:selectCheckboxes value="{!accomTypes}">
+                <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">It is a privilege to have here. How did you hear of us.</th></tr>
+             
+            <apex:selectradio value="{!leadsource}" id="others_label">
+                <apex:selectOption itemValue="Corporate Tie-Up" itemLabel="Corporate Tie-Up"/>
+                <apex:selectOption itemValue="Newspaper" itemLabel="Newspaper"/>
+                <apex:selectOption itemValue="Hoarding" itemLabel="Billboard"/>
+                <apex:selectOption itemValue="Channel Partner" itemLabel="Channel Partner"/>
+                <apex:selectOption itemValue="Web" itemLabel="Website"/>    
+                <apex:selectOption itemValue="Emailer" itemLabel="E-mailer/Personal Invites"/>     
+                <apex:selectOption itemValue="Others" itemLabel="Others" />
+            </apex:selectradio>
+            
+        </tbody>
+      </table>
+      </div>
+       
+      <div id="about_partner" class="inputs_block">
+      <table>
+        <tbody>
+
+         <tr>
+            <!-- Modified by CG Dev Team - 14/10/2011
+              -  Start: Changes in field mapping from LeadSource to Walkin field -->
+            <td><span>Corporate Account Name:</span><apex:inputField value="{!o.Walk_in_Corporate_Account__c}" /></td>
+            <td><span>Channel Partner Name:</span><apex:inputField value="{!o.Walk_in_Channel_Partner__c}" /></td>
+            <td style="width: auto; padding-left: 0;"><span style="width: 100px;">Specify Others:</span><apex:inputfield value="{!o.Walk_in_Source_Details__c}" style="float: right; width: 100px;" /> </td>                            
+            <!-- End: Changes in field mapping from LeadSource to Walkin field -->
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div class="action_btn">
+        <apex:commandbutton value="Previous Page" action="{!goBack}"  styleClass="lodha_btn" style="margin-left: 17px;"/>
+        <apex:commandbutton value="Submit" action="{!submitOpportunity}" styleClass="lodha_btn" />
+      </div>
+       <div class="wadala_bottom_logo" style="margin-top: 180px;">&nbsp;</div>
+  </div>
+  <script type="text/javascript">
+
+
+ var screenHeight;
+ 
+ // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+ 
+ if (typeof window.innerWidth != 'undefined')
+ {
+
+      screenHeight = screen.height;
+      var x = document.getElementById('lodha_form_wrapper');
+      x.style.height = screenHeight -150 +'px';
+ }
+
+
+</script>
+</apex:form>
+<apex:form rendered="false"><!-- Modified by CG Dev Team 22/09/2011 Display Fiorenza-Project Specific form -->
+<apex:stylesheet value="{!$Resource.Lodha_Fiorenza_Lead_css}"/> <!--Added by CG Dev Team 22/09/2011 to Display Fiorenza-Project Specific CSS-->
+
+<apex:pageMessages />
+
+<table  background="{!$Resource.bgimage}" style= "border:solid 1px #494949;" width="100%" cellpadding="0" cellspacing="0" height="865px">
+<tr>
+<td  valign="top">
+<table width="100%" border="0" align="left" cellpadding="2" cellspacing="2"  >   
+  <tr>
+    <td colspan="9"  align="right" valign="bottom" class="inputLabel"><div class="headerFont" style="float:left;"> Help us choose a residence for you.&nbsp;&nbsp;&nbsp;</div>
+      <div class="inputLabel" style="float:left;padding-top:10px;"> Budget &nbsp;
+        <apex:image value="{!$Resource.RupeeFont}" width="9px" height="10px"/>
+  &nbsp;&nbsp;</div>
+      <div style="float:left;padding-top:5px;"><apex:inputField value="{!o.Budgeted_Price__c}" styleClass="inputFieldClass"/>
+      </div>      <div class="inputLabel" style="float:left;padding-top:10px;padding-left:10px;">lacs</div></td>
+    </tr>
+    <tr>
+    <td width="1%"  align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    <td width="18%" align="left" valign="bottom" class="headerFont">&nbsp;</td>
+    <td colspan="7" align="left"   >&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="9"  align="left" valign="bottom" class="headerFont">You are looking for:</td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    <td  colspan="8" align="left" valign="bottom" class="inputLabel"><apex:selectCheckboxes value="{!accomTypes}" styleClass="inputCheckBoxClass" >
+      <apex:selectOptions value="{!items}"  />
+    </apex:selectCheckboxes></td>
+    </tr>
+  <tr>
+    <td  align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    <td  colspan="8" align="left" valign="bottom" class="headerFont">&nbsp;</td>
+    </tr>
+  <tr>
+    <td colspan="9"  align="right" valign="bottom" class="inputLabel"><div class="headerFont" style="float:left;"> It is a privilege to have you here. How did you hear of us? &nbsp;&nbsp;&nbsp;</div></td>
+    </tr> 
+  <tr>
+   <td align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+   <td colspan="8">
+   <apex:selectradio value="{!leadsource}" styleClass="inputCheckBoxClass" >
+    <apex:selectOption itemValue="Hoarding" itemLabel="Billboard"/>
+    <apex:selectOption itemValue="Channel Partner" itemLabel="Channel Partner"/>
+    <apex:selectOption itemValue="Newspaper" itemLabel="Newspaper"/>
+        <apex:selectOption itemValue="Web" itemLabel="Website"/>
+    <apex:selectOption itemValue="Corporate Tie-Up" itemLabel="Corporate Tie-Up"/>
+    <apex:selectOption itemValue="Emailer" itemLabel="E-mailer/Personal Invites"/>     
+    <apex:selectOption itemValue="Others" itemLabel="Others"/>
+   </apex:selectradio>
+   </td>
+  </tr>
+  <tr>
+   <td align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+   <td colspan="8">
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   &nbsp;&nbsp;&nbsp;
+   <!-- Modified by CG Dev Team - 14/10/2011
+     -  Start: Changes in field mapping from LeadSource to Walkin field -->
+   <apex:inputField styleClass="inputLookUpClass" value="{!o.Walk_in_Channel_Partner__c}" />
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <apex:inputField styleClass="inputLookUpClass" value="{!o.Walk_in_Corporate_Account__c}" />
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <apex:inputField value="{!o.Walk_in_Source_Details__c}" styleClass="inputFieldClass" />
+   <!-- End: Changes in field mapping from LeadSource to Walkin field -->
+   </td>
+  </tr>
+    <tr>
+   <td align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+   <td colspan="8" class="inputCheckBoxClass">
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   &nbsp;&nbsp;&nbsp;&nbsp;
+   <i>Please Specify Channel Partner</i>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   &nbsp;&nbsp;
+   <i>Please Specify Corporate Account</i>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <i>Please Specify Others</i>
+   </td>
+  </tr>
+  <tr>
+    <td  align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    <td colspan="8"  align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    </tr>
+      <tr>
+    <td  align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    <td colspan="8"  align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    </tr>
+    
+  <tr>
+    <td  align="right" valign="bottom" class="inputLabel">&nbsp;</td>
+    <td colspan="8"  align="center" valign="bottom" ><apex:commandbutton value="Go back to Previous Page" action="{!goBack}" style="background-image:none;background-color:#FFD7C4;color:#FF0000;border:#FF0000;font-size:12px;"/>&nbsp;&nbsp;<apex:commandbutton value="Submit" action="{!submitOpportunity}" style="background-image:none;background-color:#FFD7C4;color:#FF0000;border:#FF0000;font-size:12px;"/></td>
+    </tr>
+</table>
+</td>
+<td width="15%"  valign="top" class="sideBarFont"><apex:image value="{!$Resource.Logo}" width="200px" height="48px"/></td>
+</tr>
+</table>
+</apex:form>
+<!-- 
+     // CG Dev Team 22/09/2011
+    //Start:Additions to include Wadala Project Form And Css
+-->
+<apex:form rendered="{!showWadalaForm}" styleclass="lodha_form_style" >
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background:#3cb3ad url('{!$Resource.Lodha_Wadala_BG_right}') center 5px no-repeat; }
+
+form.lodha_form_style .action_btn{text-align: center; width: auto; margin-top: 20px;}
+/*.bottom_logo{ background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center bottom no-repeat; width: auto; height: 100px; margin-top: 250px;}*/
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_Wadala_BG_bottom}') center bottom no-repeat; width: auto; height: 100px; margin-top: 150px; margin-left: 4px;}
+
+td#other_lead{float: right;text-align: right; width: 200px; clear: both;}
+.btn.lodha_btn:hover,.btn.lodha_btn{background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;}
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_Wadala_Lead_css}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper">
+      
+      
+      <div id="about_residence" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">Help us choose a residence for you.</th></tr>
+          <tr>
+            <td><span>Cluster:</span><apex:inputField value="{!o.Cluster_Name__c}"/></td>
+            <td style="padding-left: 8px;"><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!o.Budgeted_Price__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;lacs</em></td>
+          </tr>
+        </tbody>
+
+      </table>
+      </div>
+      
+        
+      <div id="about_flat_type" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">You are looking for</th></tr>
+         <tr>
+            <apex:selectCheckboxes value="{!accomTypes}">
+                <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">It is a privilege to have here. How did you hear of us.</th></tr>
+             
+            <apex:selectradio value="{!leadsource}" id="others_label">
+                <apex:selectOption itemValue="Corporate Tie-Up" itemLabel="Corporate Tie-Up"/>
+                <apex:selectOption itemValue="Newspaper" itemLabel="Newspaper"/>
+                <apex:selectOption itemValue="Hoarding" itemLabel="Billboard"/>
+                <apex:selectOption itemValue="Channel Partner" itemLabel="Channel Partner"/>
+                <apex:selectOption itemValue="Web" itemLabel="Website"/>    
+                <apex:selectOption itemValue="Emailer" itemLabel="E-mailer/Personal Invites"/>     
+                <apex:selectOption itemValue="Others" itemLabel="Others" />
+            </apex:selectradio>
+            
+        </tbody>
+      </table>
+      </div>
+       
+      <div id="about_partner" class="inputs_block">
+      <table>
+        <tbody>
+
+         <tr>
+            <!-- Modified by CG Dev Team - 14/10/2011
+              -  Start: Changes in field mapping from LeadSource to Walkin field -->
+            <td><span>Corporate Account Name:</span><apex:inputField value="{!o.Walk_in_Corporate_Account__c}" /></td>
+            <td><span>Channel Partner Name:</span><apex:inputField value="{!o.Walk_in_Channel_Partner__c}" /></td>
+            <td style="width: auto; padding-left: 0;"><span style="width: 100px;">Specify Others:</span><apex:inputfield value="{!o.Walk_in_Source_Details__c}" style="float: right; width: 100px;" /> </td>                            
+            <!-- End: Changes in field mapping from LeadSource to Walkin field -->
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div class="action_btn">
+        <apex:commandbutton value="Previous Page" action="{!goBack}"  styleClass="lodha_btn" style="margin-left: 17px;"/>
+        <apex:commandbutton value="Submit" action="{!submitOpportunity}" styleClass="lodha_btn" />
+      </div>
+       <div class="wadala_bottom_logo" style="margin-top: 180px;">&nbsp;</div>
+  </div>
+  <script type="text/javascript">
+
+
+ var screenHeight;
+ 
+ // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+ 
+ if (typeof window.innerWidth != 'undefined')
+ {
+
+      screenHeight = screen.height;
+      var x = document.getElementById('lodha_form_wrapper');
+      x.style.height = screenHeight -150 +'px';
+ }
+
+
+</script>
+</apex:form>
+<!-- End:Additions to include Wadala Project form and CSS--> 
+
+<!-- 
+     // CG Dev Team 19/10/2011
+    //Start:Additions to include WorldOne/WorldCrest Project Form And Css
+-->
+<apex:form rendered="{!showWorldOneForm}" styleclass="lodha_form_style" >
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background:#fff url('{!$Resource.Lodha_World_Tower_BG}') center 55px no-repeat; }
+
+form.lodha_form_style .action_btn{text-align: center; width: auto; margin-top: 20px;}
+
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_WT_Bottom_Logo}') center top no-repeat; width: auto; height: 260px; margin-top: 150px;}
+
+td#other_lead{float: right;text-align: right; width: 200px; clear: both;}
+.btn.lodha_btn:hover,.btn.lodha_btn{/*background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;*/}
+</style>
+
+<apex:stylesheet value="{!$Resource.Lodha_World_One}" />
+        <apex:pageMessages />
+ <div id="lodha_form_wrapper">
+      
+      
+      <div id="about_residence" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">Help us choose an iconic residence for you.</th></tr>
+          <tr>
+            <td style="padding-left: 8px;"><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!o.Budgeted_Price__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;lacs</em></td>
+             <td style="padding-left: 8px;"><span style="padding-right: 0;">Cluster Name: </span><apex:inputField value="{!o.Cluster_Name__c}"  /></td>
+          </tr>
+        </tbody>
+
+      </table>
+      </div>
+      
+        
+      <div id="about_flat_type" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">Type of iconic residence needed</th></tr>
+         <tr>
+            <apex:selectCheckboxes value="{!accomTypes}">
+                <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">It is a privilege to have here. How did you hear of us?</th></tr>
+             
+            <apex:selectradio value="{!leadsource}" id="others_label">
+                <apex:selectOption itemValue="Corporate Tie-Up" itemLabel="Corporate Partner"/>
+                <apex:selectOption itemValue="Hoarding" itemLabel="Billboard"/>
+                <apex:selectOption itemValue="Web" itemLabel="Online"/>    
+                <apex:selectOption itemValue="Direct Mailer" itemLabel="Direct Mailer"/>     
+                <apex:selectOption itemValue="Channel Partner" itemLabel="Channel Partner"/>
+                <apex:selectOption itemValue="References" itemLabel="Reference"/>                            
+                <apex:selectOption itemValue="Newspaper" itemLabel="Newspaper"/>
+                <apex:selectOption itemValue="Others" itemLabel="Others" />
+            </apex:selectradio>
+            
+        </tbody>
+      </table>
+      </div>
+       
+      <div id="about_partner" class="inputs_block" style="margin-top: -11px;">
+      <table>
+        <tbody>
+
+         <tr>
+            <!-- Modified by CG Dev Team - 14/10/2011
+              -  Start: Changes in field mapping from LeadSource to Walkin field -->
+            <td><span>Corporate Account Name:</span><apex:inputField value="{!o.Walk_in_Corporate_Account__c}" /></td>
+            <td><span>Channel Partner Name:</span><apex:inputField value="{!o.Walk_in_Channel_Partner__c}" /></td>
+            <td style="width: auto; padding-left: 0;"><span style="width: 100px;">Specify Others:</span><apex:inputfield value="{!o.Walk_in_Source_Details__c}" style="float: right; width: 100px;" /> </td>                            
+            <!-- End: Changes in field mapping from LeadSource to Walkin field -->
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div class="action_btn">
+        <apex:commandbutton value="Previous Page" action="{!goBack}"  styleClass="lodha_btn" style="margin-left: 17px;"/>
+        <apex:commandbutton value="Submit" action="{!submitOpportunity}" styleClass="lodha_btn" />
+      </div>
+       <div class="wadala_bottom_logo" style="margin-top: 45px;">&nbsp;</div>
+  </div>
+  <script type="text/javascript">
+
+
+ var screenHeight;
+ 
+ // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+ 
+ if (typeof window.innerWidth != 'undefined')
+ {
+
+      screenHeight = screen.height;
+      var x = document.getElementById('lodha_form_wrapper');
+      x.style.height = screenHeight -180 +'px';
+ }
+
+
+</script>
+</apex:form>
+<!-- End:Additions to include WorldOne/WorldCrest Project form and CSS--> 
+
+
+<apex:form rendered="{!showTheParkForm}" styleclass="lodha_form_style" >
+<style>  
+form.lodha_form_style #lodha_form_wrapper{ background:#fff url('{!$Resource.Lodha_ThePark_Background_new}') center 55px repeat; }
+
+form.lodha_form_style .action_btn{text-align: center; width: auto; margin-top: 20px;}
+
+form.lodha_form_style .wadala_bottom_logo{text-align: center; background:url('{!$Resource.Lodha_The_Park_Logo}') center top no-repeat; width: auto; height: 260px; margin-top: 150px;}
+form.lodha_form_style  #Lodha_WT_Header{width: 1000px; background:rgb(148, 177, 134) url('{!$Resource.Lodha_ThePark_Header}') center top no-repeat; height: 50px;}
+td#other_lead{float: right;text-align: right; width: 200px; clear: both;}
+.btn.lodha_btn:hover,.btn.lodha_btn{/*background:url('{!$Resource.lodha_btn_bg}') left top repeat-x;*/}
+</style>
+
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>
+<script type="text/javascript">  
+$(document).ready(function(){
+var w=document.getElementById("j_id0:j_id225:radios").value;
+if(w=='Newspaper'){
+document.getElementById("radio1").checked=true;
+}
+if(w=='Hoarding'){
+document.getElementById("radio2").checked=true;
+}
+if(w=='Web'){
+document.getElementById("radio3").checked=true;
+}
+if(w=='Lodha contact center'){
+document.getElementById("radio4").checked=true;
+}
+if(w=='Direct Mailer'){
+document.getElementById("radio5").checked=true;
+}
+if(w=='Exhibition'){
+document.getElementById("radio6").checked=true;
+}
+if(w=='Magazine'){
+document.getElementById("radio7").checked=true;
+}
+if(w=='Email'){
+document.getElementById("radio8").checked=true;
+}
+if(w=='Radio'){
+document.getElementById("radio9").checked=true;
+}
+if(w=='TV'){
+document.getElementById("radio10").checked=true;
+}
+if(w=='Word of mouth'){
+document.getElementById("radio11").checked=true;
+}
+if(w=='Corporate Tie-Up'){
+document.getElementById("radio12").checked=true;
+}
+if(w=='Referred by Lodha booked customer'){
+document.getElementById("radio13").checked=true;
+}
+if(w=='Channel Partner'){
+document.getElementById("radio14").checked=true;
+}
+});
+</script> 
+
+<apex:stylesheet value="{!$Resource.Lodha_World_One}" />
+        <apex:pageMessages />
+         <div id="Lodha_WT_Header"></div>
+ <div id="lodha_form_wrapper">
+      
+      <apex:inputhidden value="{!leadsource}" id="radios"/>
+      <div id="visitors_update" class="inputs_block">
+      <table width="70%">
+        <tbody>
+          <tr><th colspan="3">Visiting / Meeting on behalf of?</th></tr>
+          <tr>
+            <td colspan="3" style="padding-left:80px;"><apex:selectRadio value="{!visitors}"> 
+                    <apex:selectOption itemValue="Self" itemLabel="Self"/>
+                    <apex:selectOption itemValue="Family" itemLabel="Family"/>
+                    <apex:selectOption itemValue="Friends/Colleague" itemLabel="Friends/Colleague"/>
+                </apex:selectRadio></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div id="about_residence" class="inputs_block">
+      <table width="80%">
+        <tbody>
+          <tr><th colspan="2">Allow us to aid you in choosing your dream residence.</th></tr>
+          <tr>           
+            <td style=""><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!o.Budgeted_Price__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;lacs</em></td>          
+            <td style=""><span>Cluster Name: </span><apex:inputField value="{!o.Cluster_Name__c}"  /></td>          
+          </tr>
+          <tr>
+          <td style="padding-left:40px;">Configuration interested in:
+          <apex:selectCheckboxes value="{!accomTypes}">
+          <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes></td>                    
+            <td style=""><span>Possession desired in: </span><apex:inputField value="{!o.Possession_desired_in__c}"  /></td>          
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr style="padding-left:5px;"><th colspan="3">It is a privilege to have here. How did you hear of us?</th></tr>
+          <tr>
+          <td><input type="radio" name="radios" value="Newspaper" id="radio1" onclick="fn(this.id);">&nbsp;&nbsp;Newspaper</input></td>
+          <td><input type="radio" name="radios" value="Hoarding" id="radio2" onclick="fn(this.id);">&nbsp;&nbsp;Billboard/Hoarding</input></td>
+          <td><input type="radio" name="radios" value="Web" id="radio3" onclick="fn(this.id);">&nbsp;&nbsp;Web</input></td>
+          <td><input type="radio" name="radios" value="Lodha contact center" id="radio4" onclick="fn(this.id);">&nbsp;&nbsp;Lodha contact center</input></td>
+          <td><input type="radio" name="radios" value="Direct Mailer" id="radio5" onclick="fn(this.id);">&nbsp;&nbsp;Direct mailer/Invitation</input></td></tr>
+          <tr>
+          <td><input type="radio" name="radios" value="Exhibition" id="radio6" onclick="fn(this.id);">&nbsp;&nbsp;Exhibition</input></td>
+          <td><input type="radio" name="radios" value="Magazine" id="radio7" onclick="fn(this.id);">&nbsp;&nbsp;Magazine</input></td>
+          <td><input type="radio" name="radios" value="Email" id="radio8" onclick="fn(this.id);">&nbsp;&nbsp;E-mail</input></td>
+          <td><input type="radio" name="radios" value="Radio" id="radio9" onclick="fn(this.id);">&nbsp;&nbsp;Radio</input></td>
+          <td><input type="radio" name="radios" value="TV" id="radio10" onclick="fn(this.id);">&nbsp;&nbsp;TV</input></td>
+          </tr>
+          <tr>
+          <td><input type="radio" name="radios" value="Word of mouth" id="radio11" onclick="fn(this.id);">&nbsp;&nbsp;Word of mouth</input></td>
+          <td><input type="radio" name="radios" value="Corporate Tie-Up" id="radio12" onclick="fn(this.id);">&nbsp;&nbsp;Corporate Tie-Up</input></td>
+          <td><input type="radio" name="radios" value="Referred by Lodha booked customer" id="radio13" onclick="fn(this.id);">&nbsp;&nbsp;Referred by Lodha booked customer</input></td>
+          <td><input type="radio" name="radios" value="Channel Partner" id="radio14" onclick="fn(this.id);">&nbsp;&nbsp;Channel Partner</input></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+    <div id="about_residence" class="inputs_block" style="margin-top: -11px;">
+      <table>
+        <tbody>
+
+         <tr>
+            <td><span>Source Details:</span><apex:inputField value="{!o.Walk_in_Source_Details__c}" /></td>
+            <td><span>Corporate Account Name:</span><apex:inputField value="{!o.Walk_in_Corporate_Account__c}" style="text-align:left;"/></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div id="about_residence" class="inputs_block" style="margin-top: -11px;">
+      <table>
+        <tbody>
+
+         <tr>          
+            <td><span>Referred Account:</span><apex:inputField value="{!o.Walk_in_Referred_Booked_Account__c}" /></td>
+            <td><span>Referrer Account CRN:</span><apex:inputField value="{!o.Walk_in_Referred_Booked_Account_CRN__c}" style="text-align:left;"/></td>            
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div id="about_residence" class="inputs_block" style="margin-top: -11px;">
+      <table>
+        <tbody>
+         <tr>
+            <td><span>Channel Partner Name:</span><apex:inputField value="{!o.Walk_in_Channel_Partner__c}" /></td>         
+            <td><span>CP REAP Id:</span><apex:inputField value="{!o.CP_Walk_in_REAP_ID__c}" style="text-align:left;"/></td>                                     
+          </tr>
+        </tbody>
+      </table>
+      </div>
+       
+      
+      
+      <div class="action_btn">
+        <apex:commandbutton value="Previous Page" action="{!goBack}"  styleClass="lodha_btn" style="margin-left: 17px;"/>
+        <apex:commandbutton value="Submit" action="{!submitOpportunity}" styleClass="lodha_btn" />
+      </div>
+       <div class="wadala_bottom_logo" style="margin-top: 45px;height: 204px;">&nbsp;</div>
+  </div>
+  <script type="text/javascript">
+
+
+ var screenHeight;
+ 
+ // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+ 
+ if (typeof window.innerWidth != 'undefined')
+ {
+
+      screenHeight = screen.height;
+      var x = document.getElementById('lodha_form_wrapper');
+      /x.style.height = screenHeight -180 +'px';
+ }
+
+
+</script>
+<script>
+function fn(value){
+var e=document.getElementById(value).value;
+var d=document.getElementById("j_id0:j_id225:radios").value=e;
+}
+
+</script>
+</apex:form>
+
+</apex:page>

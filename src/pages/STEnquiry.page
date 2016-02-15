@@ -1,0 +1,70 @@
+<apex:page showHeader="false" title="Service Tax Enquiry" >
+    <script>
+        function clickSubmit(){
+            var num = document.getElementById('txtFltNo').value;
+            if(document.getElementById('txtCustomerId').value==''){
+                alert('Customer ID is required before you Submit');
+            }
+            else if(document.getElementById('txtFltNo').value==''){
+                alert('Flat No is required before you Submit');
+            }
+            else if(num.indexOf(".")!= -1 ){
+                alert('Flat No must not contain a dot');
+            }
+            else if(isNaN(num)){
+                alert('Please enter the numeric flat number only');
+            }
+            else{
+               var f=document.createElement('form'); 
+               f.action='/visitform/STEnquiryResult'; 
+               f.method='post'; 
+               f.target='_self';
+               
+               ch=document.createElement('input'); 
+               ch.id='CustID'; 
+               ch.name='CustID'; 
+               ch.type='hidden'; 
+               ch.value = document.getElementById('txtCustomerId').value; 
+               f.appendChild(ch);
+               
+               ch=document.createElement('input'); 
+               ch.id='FlatNum'; 
+               ch.name='FlatNum'; 
+               ch.type='hidden'; 
+               ch.value=document.getElementById('txtFltNo').value; 
+               f.appendChild(ch);
+               
+               document.body.appendChild(f); 
+               f.submit();
+            }            
+        }
+    </script>
+    
+    <center>   
+        <table style="padding-top:150px;">
+            <tr>
+                <td>
+                    Customer ID *
+                </td>
+                <td>
+                    <input id="txtCustomerId" maxlength="10" />
+                </td>                
+            </tr>
+            <tr>
+                <td>
+                    Flat No *
+                </td>
+                <td>
+                    <input id="txtFltNo" maxlength="4"/>
+                </td>                
+            </tr>
+            <tr>                
+                <td colspan="2" align="center" style="padding-top:30px;">
+                    <input type="button" class="btn" id="btnSubmit" value="Submit" onclick="clickSubmit();" />
+                </td>                
+            </tr>
+        
+        </table>
+            
+    </center>  
+</apex:page>

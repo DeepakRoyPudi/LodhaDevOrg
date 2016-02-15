@@ -1,0 +1,84 @@
+<apex:page Controller="SpAssignStageController" sidebar="false">
+<style type="text/css">
+  table td{padding:5px;}
+  .tbl-bdr{border:0px solid #757575;}
+  .alignRight{text-align:right;padding-right:10px; font-weight: bold;} 
+</style>
+
+<apex:form id="assignform">
+<apex:pagemessages />
+<apex:actionFunction name="update" action="{!updateList}" rerender="formsdiv"/>
+<apex:pageBlock id="formsdiv" title="Assign Stage Details at Wing level ">
+<table class="tbl-bdr" width="50%" align="center" border ="1">
+  <tr>
+    <td align="right" style="font-weight: bold;">
+      Project Name *
+    </td>                                        
+    <td align="right" style="font-weight: bold;">
+      <apex:selectList style="width:100%;" size="1" id="ProjectList" value="{!selectedProjID}" onchange="update(this.options[this.selectedIndex])" label="PROJECT">
+        <apex:selectOptions value="{!ProjectsSelectionList}"/>                    
+      </apex:selectList>
+    </td>
+  </tr>
+  <tr>
+    <td align="right" style="font-weight: bold;">
+      CLUSTER *
+    </td>
+    <td align="right" style="font-weight: bold;">
+      <apex:selectList size="1" style="width:100%;" id="ClusterList" value="{!selectedclsuterID}" onchange="update(this.options[this.selectedIndex])" label="CLUSTER">
+        <apex:selectOptions value="{!ClusterSelectionList}"/>
+      </apex:selectList>
+    </td>
+  </tr>
+  <tr>
+    <td align="right" style="font-weight: bold;">
+      WING
+    </td>
+    <td align="right" style="font-weight: bold;">
+      <apex:selectList size="1" style="margin-top:10px;width:100%;" id="WingList" value="{!selectedwingID}" onchange="update(this.options[this.selectedIndex])" label="WING">
+        <apex:selectOptions value="{!WingsSelectionList}"/>
+      </apex:selectList>
+    </td>
+  </tr>
+  <tr>
+    <td align="right" style="font-weight: bold;">
+      Stage *
+    </td>
+    <td>
+      <apex:inputText style="margin-top:10px;width:10%;" id="StageList" value="{!selectedStageID}" label="STAGE" />
+    </td>
+  </tr>
+  <tr>
+    <td  colspan="2" align="center">
+        <apex:commandButton value="Show Stage Details" action="{!showStageDetails}"/>&nbsp;&nbsp;&nbsp;
+      <apex:commandButton value="Reset" action="{!resetAssignStage}"/>
+    </td>
+    
+  </tr>
+</table>
+    <apex:pageBlockSection title="Stage Details" id="stagetableSection" rendered="{!display_stge_table}">    
+          <apex:pageBlockTable value="{!stgDetListsample}" id="stagetable" var="stgd" columns="4" title="Stage Details" align="center" >
+              <apex:column headerValue="StageNo">
+                <apex:OutputText value="{!stgd.Name}"/>
+              </apex:column>
+              <apex:column headerValue="Description">
+                <apex:inputText value="{!stgd.Description__c}">
+                </apex:inputText>
+              </apex:column>
+              <apex:column headerValue="Slab%">
+                <apex:inputText id="Slab" value="{!stgd.Slab__c}" > 
+                </apex:inputText>
+              </apex:column>
+              <apex:column headerValue="Completed On">
+                <apex:inputField value="{!stgd.Expected_Completion_Date__c}">
+                </apex:inputField>
+              </apex:column>    
+                      
+          </apex:pageBlockTable>  
+            <apex:commandButton value="Check Percentage" action="{!checkpercentage}"/>        
+      <apex:commandButton value="Assign" action="{!assignStage}"/>    
+    </apex:pageBlockSection>
+
+</apex:pageBlock>
+</apex:form>
+</apex:page>

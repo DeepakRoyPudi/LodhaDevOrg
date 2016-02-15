@@ -1,0 +1,15 @@
+<apex:page controller="OppUpdaterController" >   
+   <apex:form >
+   <br/><br/><br/><br/><br/>
+            <h2>
+            Click on <i>Update Opportunities</i> button to begin updating Opportunities.
+            </h2><br/><br/>
+            <apex:commandButton action="{!autoUpdate}" value="Update Opportunities"/>
+            <br/>
+            <br/>
+            Please do not hit the button twice, hit once and close this window.
+            No explicit message would be thrown.<br/><br/>
+            If you want you may browse to <b>Setup - Administration Setup -
+            Monitoring - Apex Jobs</b> and verify that the job is queued.
+   </apex:form>
+</apex:page>

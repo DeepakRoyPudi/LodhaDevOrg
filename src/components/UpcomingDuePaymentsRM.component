@@ -1,0 +1,214 @@
+<!--
+   Description: component fot upcoming payments widget  
+   @Created by: Sneha P.
+   @Created Date: 26/02/2015
+   
+   --------------------------------------------------------------------------------
+   | Modified By      | Modified Date       | Version        | Description         |
+   --------------------------------------------------------------------------------
+   | Shruti Nikam     | 1/3/2015            |1.0              |created recods and displayed on page  
+   --------------------------------------------------------------------------------
+   |
+   --------------------------------------------------------------------------------
+   -->
+<apex:component controller="UpcomingDuePaymentsRMController">
+    
+   <style>
+      .tab-heading{text-align: center; }
+      .bs .well
+      {
+      /* min-height: 20px; */
+      /* padding: 19px; */
+      /* margin-bottom: 20px; */
+      margin-bottom: 0px !important;
+      background-color: #f5f5f5;
+      border: 1px solid #e3e3e3;
+      /* border-radius: 4px; */
+      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+      font-size: 10px;
+      }
+      .viewAll{color:#000 !important; text-decoration: underline!important;}
+   </style>
+   <apex:attribute name="CRN" description="This is the CRN value for the User" 
+      type="String" assignTo="{!CustomerCRN}" required="true"/>
+   <apex:attribute name="NoOfRecrd" description="No of records to be displayed in widgets crisp view" 
+      type="Integer" 
+      assignTo="{!noOfRecords}" 
+      required="true"/>
+   <apex:outputLabel value="{!PreIntialize}" style="display:none;"/>
+      
+   <div class="panel-heading widgetHeaderBGColor"
+      style="padding: 5px 15px;">
+     <!-- <a class="pull-right" style="font-size: small;" 
+         data-backdrop="static" 
+         data-keyboard="false" href="#" 
+         data-toggle="modal" 
+         data-target="#UpcomingDuePaymentsDetail"
+         onclick="disableScroll()">View All</a> -->
+         <a class="pull-right viewAll" style="font-size: small;" data-dismiss="modal" data-toggle="modal" href="#"
+                              data-target="#PaymentsReceivedDetail" onclick="Reloadupcomingdetailview()"> <span
+                              style="font-size: 12px;"> View All </span>
+                           </a>
+         
+      <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+      <h4 style="margin-top: 0px; margin-bottom: 0px; font-size: 100%; font-weight: bold">
+         Milestones Outstanding
+      </h4>
+   </div>
+   <div style="display: block; height: 33px;">
+   <div class="well well-sm" style="width:56%; float:left; padding: 3px;   border-radius: 0px !important;" >
+      <div class="thumbnail" style="background-color:#FC3916; height:30px; width:30px; float:left;">
+         <img src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/asset.png')}" style="  height: 100%; width: 100%; "/>
+      </div>
+      <div style="float:left;  font-weight: bold;  color: gray;margin-left:3px;">
+         Total Due
+         <p>INR&nbsp;
+            <c:FormatCurrencyComponent currency_value="{!Text(RestAPICalloutPayment_obj.TotalDue)}"/>
+            <!--<apex:outputtext value="INR {!RestAPICalloutPayment_obj.TotalDue}" style="color:#FC3916"/>-->
+         </p>
+      </div>
+   </div>
+   <div class="well well-sm" style="width:44%;float:right; padding: 3px;   border-radius: 0px !important;" >
+      <div class="thumbnail" style="background-color:#FC3916;  height:30px; width:30px; float:left;">
+         <img src="https://cdn4.iconfinder.com/data/icons/pretty-office-part-5-simple-style/128/Percent.png" style="  height: 100%; width: 100%; "/>
+      </div>
+      <div style="float:left;  font-weight: bold;  color: gray;margin-left:2px;">
+         Due
+         <p>
+            <apex:outputtext value="{!RestAPICalloutPayment_obj.due_percent} " style="color:#FC3916"/>
+         </p>
+      </div>
+   </div>
+   </div>
+   <div class="panel-body" style="padding: 5px">
+   <div class="{!If(noOfRecords==3, 'small_widget_tbody','large_widget_tbody' )}">
+      <table class="table" style="font-size: 90%">
+         <thead>
+            <tr>
+               <th>Milestone</th>
+               <th>Amt. Due {!$Label.Currency_INR_notation_RM_CSS}</th>
+               <th>Due Date</th>
+            </tr>
+         </thead>
+         <tbody>
+            <apex:repeat value="{!RestAPICalloutPayment_obj.PaymentUpcomingList}" var="UpcomingDuePW" rows="{!NoOfRecrd}">
+               <tr>
+                  <td style="color:{!UpcomingDuePW.Payment_color}">
+                      <apex:outputText value="{!UpcomingDuePW.payment_milestone}"/>
+                  </td>
+                  <td style="color:{!UpcomingDuePW.Payment_color}">
+                      <c:FormatCurrencyComponent currency_value="{!UpcomingDuePW.total_due}"/>
+                      <!--<apex:outputText value="INR {!UpcomingDuePW.total_due}" rendered="{!AND(UpcomingDuePW.total_due!=null, UpcomingDuePW.total_due!=' ')}"/>-->
+                  </td>
+                  <td style="color:{!UpcomingDuePW.Payment_color}">
+                      <apex:outputText value="{!UpcomingDuePW.due_date}"/>
+                  </td>
+               </tr>
+            </apex:repeat>
+            
+            <tr style="{!If(RestAPICalloutPayment_obj.PaymentUpcomingList.size > 0, 'display:none','text-align: center;' )}">  
+                 <td colspan="3">
+                 No records to display
+                </td>
+             </tr>
+             
+         </tbody>
+      </table>
+   </div>
+   </div> 
+    <div class="modal fade" id="PaymentsReceivedDetail" tabindex="-1"
+      role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+      <div class="modal-dialog" style="height: initial" >
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="ReloadPaymentsDetailView(),scrollBodyOnClose();">
+               <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+               </button>
+               <h4 class="modal-title" id="myModalLabel"><span aria-hidden="true" class="glyphicon glyphicon-ok-circle"></span>Payments Information 
+               </h4>
+            </div>
+            <div class="modal-body">
+               <div class="container">
+                  <table width="100%" class="tab-heading" >
+                     <tr >
+                        <td>
+                           <a type="button" data-dismiss="modal" href="#"
+                              data-toggle="modal" data-target="#RecentActivityDetail" onclick="ReloadPaymentsDetailView()">
+                           <span style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-edit"></span> Recent Activity </span>
+                           </a>
+                        </td>
+                        <td>
+                           <a type="button" href="#"
+                              data-dismiss="modal" data-toggle="modal"
+                              data-target="#RecentDocumentsSmsDispatchDetail" onclick="ReloadPaymentsDetailView()"> <span
+                              style="font-size: 12px;" ><span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp; Recent Documents/SMS/Dispatch </span>
+                           </a> 
+                        </td>
+             
+                        <td style="border-right:solid 1px #fff !important">
+                           <a type="button" href="#"
+                              data-dismiss="modal" data-toggle="modal"
+                              data-target="#favouringDetail" onclick="ReloadPaymentsDetailView()"> <span
+                              style="font-size: 12px;" > <span aria-hidden="true" class="glyphicon glyphicon-list"></span> {!'Favoring Details & Payment Transactions'} </span>
+                           </a>
+                        </td>
+                     </tr>
+                  </table>
+                  <br /> 
+                  <!-- Iframe Placeholder for Recent Activity detail View -->
+                  <apex:iframe src="/apex/PaymentsDetailView?CRN={!CRN}" scrolling="true" id="PaymentIframe" height="500"/>
+                  
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   
+   
+
+   
+   
+ <script>
+      function scrollBodyOnClose() {
+         alert('Close');
+            $('html, body').css({
+                          'overflow': 'auto'
+                           });
+      }
+        
+      function ReloadPaymentsDetailView () {
+          var f = document.getElementById('PaymentIframe');
+          f.src = f.src;
+          disableScroll();
+      }
+      
+       function ReloadPaymentsDetailView () {
+          var f = document.getElementById('PaymentIframe');
+          f.src = f.src;
+          disableScroll();
+      }
+      
+       function ReloadFavoringDetailView () {
+          var f = document.getElementById('favouringIframe');
+          f.src = f.src;
+          disableScroll();
+      }
+      
+      function disableScroll() {
+             $('html, body').css({
+                     'overflow': 'hidden'
+                      });
+        }
+     
+     //function reloadIframeParent(){
+    //   var f = document.getElementById('favouringIframe');
+    //      f.src = f.src;
+   //       disableScroll();
+    
+    // }   
+       
+   </script> 
+
+    
+</apex:component>

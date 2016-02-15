@@ -1,0 +1,31 @@
+<apex:page standardController="Lead" standardStylesheets="false" extensions="SendLeadSMSController">
+
+<style type="text/css">
+.button {
+    position:absolute;
+    top: 0px;
+    left: 330px;
+}
+.text {
+    position:absolute;
+    top: 70px;
+    left: 100px;
+}
+.dropdown {
+    position:absolute;
+    top: 40px;
+    left: 100px;
+}
+</style>
+<apex:form >
+    <apex:commandButton styleClass="button" value="Send SMS" action="{!sendSMS}" disabled="{!sendSMS}" oncomplete="window.top.location='/{!Lead.id}';" /> <br/>
+    <br/><br/>
+    <apex:outputLabel value="SMS Type:" />  <br/><br/>
+    <apex:selectList styleClass="dropdown" value="{!smsType}" size="1" >
+                <apex:selectOptions value="{!items}"/>
+                <apex:actionSupport event="onchange" reRender="smsText" action="{!smsTemplate}"/>
+            </apex:selectList>
+    <apex:outputLabel value="SMS Template:" />
+    <apex:inputtextarea cols="100" rows="3" readonly="True" styleClass="text" id="smsText" value="{!smsText}" />
+</apex:form>
+</apex:page>

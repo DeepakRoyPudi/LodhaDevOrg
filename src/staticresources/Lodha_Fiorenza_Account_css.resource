@@ -1,0 +1,59 @@
+.headerFont
+{
+    color:#FFFFFF;
+    font-family:Arial;
+    font-weight:bold;
+    font-size:16px;
+}
+.sideBarFont
+{
+    color:#FFFFFF;
+    font-family:Arial;
+    font-size:16px;
+    background-color:#FFFFFF;
+}
+.inputLabel
+{
+    color:#FFFFFF;
+    font-family:Arial;
+    font-size:12px;
+}
+.smallText
+{
+    font-family:Arial;
+    font-size:10px;
+    color:#FFFFFF;
+    padding:0px;
+    margin:0px;
+}
+.inputFieldClass
+{
+    background-color:#FFFFFF;
+    color:#494949;
+    font-family:Arial;
+    font-size:11px;  
+}
+.inputCheckBoxClass
+{
+    color:#FFFFFF;
+     font-family:Arial;    
+}
+.inputCheckBoxClass label
+{
+    color:#FFFFFF;
+     font-family:Arial;
+    font-size:0.85em;    
+}
+.btnCustomClass
+{
+    background-color:#FFFFFFF;
+    font-family:Arial;
+    font-size:14px;  
+    color:#FFFFFF;
+}
+.errorClass
+{
+    color:#DA4C3C;
+    padding-left:15px;   
+}
+.dateFormat{display:none;}

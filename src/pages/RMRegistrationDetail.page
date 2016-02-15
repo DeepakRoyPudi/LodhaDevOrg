@@ -1,0 +1,298 @@
+<!-- Rgistration Page for RM 
+    @Created by: Sudeep Dube
+    @Created Date: 10/march/2015
+    @Input Parameter: CRN No as String.
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    |
+    --------------------------------------------------------------------------------
+    | Aditi Mulmule     04/06/2015             1.2             1.Changes in Registration 
+                                                               Details Popup for Resheduling Dates
+                                                               by user and mail functionality to
+                                                               send email to RM
+    | Aditi Mulmule     17/06/2015             1.3              Changed Universal Standard to
+                                                                Universal Standard and Responses.
+                                                                Removed Responses Link.   
+      Sudeep Dube       24/06/2015             1.4              Change Links click functionality and fix UI Issue                                                           
+    --------------------------------------------------------------------------------
+    -->
+<apex:page controller="RMRegistrationDetailController" docType="html-5.0" showHeader="false" sidebar="false" action="{!getIntialMethod}">
+
+ <link href="{!URLFOR($Resource.bootStrap, '/bootstrap/css/bootstrap.min.css')}" rel="stylesheet" />
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                    <script src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+                    <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/js/bootstrap.min.js')}"></script>
+                    <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/js/jquery.sidebar.js')}"></script>
+     <script src="{!$Resource.YearRangeIncr}"></script>
+    
+  
+    <!-------------------------------------------------------------------------->
+    <style>
+        a {
+           
+            outline: none !important;
+        }
+        .Rlabel {
+        height: 25%;
+        width: 50%;
+        text-align: right;
+        font-weight:bold;
+        }
+        .Rvalue {
+        height: 25%;
+        width: 50%;
+        padding-left: 5%;
+        }
+        
+        .well {
+        margin-bottom:0px;
+        }       
+        .link {
+        width: 25%;
+        float: left;
+        text-align: left;
+        text-decoration: underline;
+        font-size: 14px;
+        }
+        .reg
+        {
+        left: 12.5%;
+        }
+        @media (min-width: 100px) and (max-width:1199px){
+        .reg{left: 50px;}
+        }  
+        
+        .setFontHeader
+        {
+           font-size:14px;
+        } 
+        .setFontContent
+        {
+          font-size:13px;
+        
+        } 
+        .datePicker {
+                 z-index: 99999;/*Changed this css property which was 100 prior*/
+                
+        } 
+        .setFontSideBar
+        {
+            font-size: 60%;
+        }
+        bs a:focus {
+    outline: none;
+    outline-offset: -2px;
+}
+.linkClass{
+
+
+}
+
+           #assign-action-spinner-main {position: fixed;left: 0;top: 0;background-color:rgba(0,0,0,.6);height: 100%;width: 100%;z-index: 9999999;align: center;vertical-align: middle !important;}
+           #assign-action-spinner-content {position: absolute; top: 50%;left: 50%;z-index: 1000;background-color:none;width: 40px;height: 40px;}
+           #assign-action-spinner-content img {width: 40px;height: 40px;align: center;vertical-align: middle !important;}
+    </style>
+    <!-------------------------------------------------------------------------->
+    <!----------Sibar code Start-------------------->
+    <div class="bs">
+               <apex:actionStatus id="loading" layout="block" style="align:center">
+                                <apex:facet name="start">
+                                    <div id="assign-action-spinner-main" style="align:center">
+                                        <div id="assign-action-spinner-content" style="align:center"> 
+                                            <img  style="align:center" src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}"  />  
+                                        </div>
+                                    </div>
+                                </apex:facet>
+               </apex:actionStatus>
+       
+               <apex:pageMessages id="submitmsg" />
+                          
+                            <br/>
+                        
+                        <div class="col-md-12" style="margin-left:3%">
+                            <div class="col-md-6">
+                             <p class="sidebar">
+                             
+                             <a class="sidebar" id="RegistrationGuidelines" href="{!RegistrationLink}"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                                    <span style="font-size: 14px;">
+                                      Registration Guidelines
+                                   </span>
+                              </a>     
+                             </p>
+                            </div>
+                            <div class="col-md-3">
+                                <apex:outputLabel >Registration Charges :</apex:outputLabel>
+                            </div>
+                            <div class="col-md-3">
+
+                              <apex:outputPanel rendered="{!registration_charges!=null && registration_charges!=''}">
+                              
+                                {!'INR '}<c:FormatCurrencyComponent currency_value="{!registration_charges}" />
+                              </apex:outputPanel>
+                            </div>
+                            <div class="clear"></div>
+                            <br/>
+                            <br/>
+                             <div class="col-md-6 ">
+                              <!--<a class="sidebar" id="DemandLink" href="#"  style="Background-color:transparent;cursor: hand;" target="_blank">
+                                    <span style="font-size: 14px;">
+                                      Draft Agreement Link
+                                   </span>
+                                </a>--> 
+                            </div>
+                            <div class="col-md-3">
+                                <apex:outputLabel >Stamp Duty : </apex:outputLabel>
+                            </div>
+                            <div class="col-md-3">
+
+                                <apex:outputPanel rendered="{!stamp_duty!=null && stamp_duty!=''}">
+                              
+                                {!'INR '}<c:FormatCurrencyComponent currency_value="{!stamp_duty}" />
+                              </apex:outputPanel>
+                                
+                            </div>
+                            <div class="clear"></div>
+                            <br/>
+                            <br/>
+                             <div class="col-md-3">
+                                <apex:outputLabel > Agreement Date :</apex:outputLabel>
+                            </div>
+                            <div class="col-md-3">
+                                
+                            </div>
+                             <div class="col-md-3">
+                                <apex:outputLabel >Registration Number :</apex:outputLabel>
+                            </div>
+                            <div class="col-md-3">
+                               
+                            </div>
+                             <div class="clear"></div>
+                            <br/>
+                            <br/>
+                             <div class="col-md-3">
+                                <apex:outputLabel >Registration Date :</apex:outputLabel>
+                            </div>
+                            <div class="col-md-3">
+                                <apex:outputText value="{!registration_date}" />
+                            </div>
+                             <div class="col-md-3">
+                                <apex:outputLabel >Registration Location :</apex:outputLabel>
+                            </div>
+                            <div class="col-md-3">
+                                
+                            </div>
+                              <div class="clear">
+                            </div>
+                            <br/>
+                            </div>
+                            <!-- Registration Visit Rescheduling Form -->
+                            
+                            <apex:outputPanel rendered="{!OR(registration_date==null,registration_date=='')}" id="registrationCaseInfoID">
+                           
+                            <div style="width:92% ;margin-left:2.5%;margin-top:4%" align="center">
+                                <div class="panel panel-default" style="width: 103%;">
+    
+                                            <apex:outputPanel rendered="{!NOT(isQueryTypeCaseExist)}">
+                                            <h6> (Registration Related Query Not Exist)</h6>
+                                        </apex:outputPanel>
+                                  
+                                    <div class="panel-body" style="height: 185px; " >
+                                        <div align="center" style="width:100%;">
+                                            <div class="well col-md-5 well1"  style="margin-bottom: 0%;height: 155px; width:49%">
+                                                <div class="col-md-12 setFontHeader" align="left">
+                                                    <apex:outputLabel ><b>Scheduled Visit Details</b></apex:outputLabel>
+                                                </div>
+                                                <div class="clear"></div>
+                                                <br/>
+                                                <div class="container" style="width:100%;" align="left">
+                                                    <div class="col-md-7 setFontContent" align="left">
+                                                        <apex:outputLabel >Date : </apex:outputLabel>
+                                                    </div>
+                                                    <div class="col-md-5 setFontContent">
+                                                        <apex:outputText value="{0,date,dd' 'MMM' 'yyyy}">
+                                                            <apex:param value="{!schedule_Date}"/>
+                                                        </apex:outputText>
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    <div class="col-md-7 setFontContent">
+                                                        <apex:outputLabel >Time : </apex:outputLabel>
+                                                    </div>
+                                                    <div class="col-md-5 setFontContent">
+                                                        <apex:outputText value="{0,Date,HH:mm:ss}"  >
+                                                            <apeX:param value="{!schedule_Date}"/>
+                                                        </apex:outputText>
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    <div class="col-md-7 setFontContent">
+                                                        <apex:outputLabel >Venue : </apex:outputLabel>
+                                                    </div>
+                                                    <div class="col-md-5 setFontContent">
+                                                        <apex:outputText value="xxxxx"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--Scheduled Visit-->
+                                            <div class=" well col-md-5 well2" style="padding-bottom:4.7%;margin-bottom: 0%;margin-left:6px;height: 155px;width:49%">
+                                                <apex:outputPanel id="reschedulefieldSectionID">
+                                                   <apex:form > 
+                                                    <div class="col-md-16 setFontHeader" align="left">
+                                                        <apex:outputLabel ><b>Registration Rescheduling Request</b></apex:outputLabel>
+                                                        <apex:commandLink value="Reschedule Request" action="{!toggleEdit}" oncomplete="$('.dateFormat').hide();" reRender="reschedulefieldSectionID"  style="float:right;color:#015BA7" Rendered="{!AND(Not(isEdit),isQueryTypeCaseExist)}" status="loading"/>
+                                                        <apex:commandLink value=" Cancel" action="{!toggleEdit}" reRender="reschedulefieldSectionID,statusMail,submitmsg,formID"  style="float:right;color:#015BA7" Rendered="{!AND(isEdit,isQueryTypeCaseExist)}" status="loading"/>
+                                                        <apex:outputText value=" | " rendered="{!isEdit}" style="float:right;padding-left: 10px;padding-right: 10px;"/>
+                                                        <apex:commandLink value="Send " action="{!sendEmailToRM}" reRender="reschedulefieldSectionID,statusMail,submitmsg,formID" oncomplete="$('.dateFormat').hide();" style="float:right;color:#015BA7" Rendered="{!AND(isEdit,isQueryTypeCaseExist)}" status="loading"/>
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    <br/>
+                                                    <div class="container" style="width:100%;" align="left">
+                                                        <div class="col-md-7 setFontContent">
+                                                            <apex:outputLabel >Proposed Date : </apex:outputLabel>
+                                                        </div>
+                                                        <div class="col-md-5 setFontContent">
+                                                            <apex:outputText value="{0,date,dd' 'MMM' 'yyyy}"  rendered="{!Not(isEdit)}">
+                                                                <apex:param value="{!reSchedule_Date}"/>
+                                                            </apex:outputText> 
+                                                            
+                                                            <apex:inputField value="{!virtualcase.Stage_Date__c}" rendered="{!isEdit}" onclick="yearIncr();" id="datefield" style=".datePicker, .datePicker .dateBar ,.datePicker .calBody, .datePicker .calDays, .datePicker .buttonBar, .datePicker Select { display:none;};width:100%;"/>
+                                                        </div>
+                                                        <div class="clear"></div>
+                                                        <div class="col-md-7 setFontContent">
+                                                            <apex:outputLabel >Proposed Time : </apex:outputLabel>
+                                                        </div>
+                                                        <div class="col-md-5 setFontContent">
+                                                            <apex:outputText value="{0,Date,HH:mm:ss}"  rendered="{!Not(isEdit)}">
+                                                                <apex:param value="{!reSchedule_Date}"/>
+                                                            </apex:outputText> 
+                                                            <apex:outputPanel rendered="{!isEdit}">
+                                                                <div class="input-append bootstrap-timepicker">
+                                                                    <!--<input id="timepicker1" value="{!virtualTime}" type="text" class="input-small" style="width:75%">-->
+                                                                    <apex:input id="timepicker1" value="{!virtualTime}" type="time" styleclass="input-small" style="width:100%"/>
+                                                                    <i class="icon-time"></i>
+                                                                </div>
+                                                                <script type="text/javascript">
+                                                                    $('#timepicker1').timepicker();
+                                                                 
+                                                                </script>
+                                                            </apex:outputPanel>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <apex:outputText value=" " />
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <apex:outputText value=" " />
+                                                        </div>
+                                                    </div>
+                                                   </apex:form> 
+                                                </apex:outputPanel>
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                           </apex:outputPanel>   
+                        
+    </div>
+</apex:page>

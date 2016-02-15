@@ -1,0 +1,456 @@
+<!--
+   Description: this is visualforce component that displays customer lifecycle 
+   the life cycle to display on page using javascript for making it dynamic.
+   
+      
+   @Created by: Sudeep 
+   @Created Date: 25/3/2015
+   
+   
+   --------------------------------------------------------------------------------
+   | Modified By      | Modified Date       | Version        | Description         |
+   --------------------------------------------------------------------------------
+   | Sudeep Dube        13/07/2015              1.1          add out side click close  list                                                         
+   --------------------------------------------------------------------------------
+   |
+   --------------------------------------------------------------------------------
+   -->
+<apex:component controller="RMCustomerLifeCycleController">
+<apex:attribute name="CRN" assignTo="{!PARAM_CRN}" description="This is the CRN value for the User" type="String"   default="12"/>
+<apex:outputLabel value="{!PreInitialize}" style="display:none"></apex:outputLabel>
+   <head>
+      <!----style for color code milestone indicator--->
+      <style>
+        
+         .milestone_indicator{
+         background: #2F76D2;
+         width: 16px;
+         height: 16px;
+         border-radius: 50%;
+         border:1px solid #04397b;
+         position: absolute;
+         content:'';
+         margin-top:6%;;
+         margin-left:40%;
+         } 
+         .bs p {
+         margin: 0 0 2px;
+         }  
+      </style>
+      <!--End Style of Color code milestone indicator -->
+      
+      <!-----Start Life Cycle CSS--------->
+      <style>
+         * {
+         margin: 0;
+         padding: 0;
+         }
+         .parent
+         {
+         margin:60px 45px 0;
+         width: 90%;
+         border-bottom: 2px solid #2F76D2;
+         position: relative;
+         }
+         .parent .child {
+         background: #2F76D2;
+         width: 16px;
+         height: 16px;
+         border-radius: 50%;
+         border:1px solid #04397b;
+         position: absolute;
+         content:'';
+         top: -8px;
+         }
+         .child {
+         //left: 50%;
+         margin-left: -8px;
+         }
+         .rotate{
+         /* Rotate div */
+         -ms-transform: rotate(-45deg); /* IE 9 */
+         -webkit-transform: rotate(-45deg); /* Chrome, Safari, Opera */
+         transform: rotate(-45deg);  
+         -moz-transform: rotate(-45deg)
+         -o-transform: rotate(-45deg)
+         }
+         .rotate45{
+         /* Rotate div */
+         -ms-transform: rotate(45deg); /* IE 9 */
+         -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+         transform: rotate(45deg);  
+         -moz-transform: rotate(45deg)
+         -o-transform: rotate(45deg)
+         }                       
+      </style>
+      <!------End Life Cycle CSS--------->
+      <style>
+         .popover.fade.bottom.in {
+         width: 239px;
+         height:inherit;
+         }
+         .hoverclass{
+         }
+         
+        .popover_backg{
+        width:102%;
+        height:112%;
+        position:absolute;
+        top:-11%;
+        left:-1%;
+        background:rgba(255,255,255,0.3);
+        z-index:99;
+        } 
+      </style>
+      
+   <style>
+      .indicator_div{  
+      // width: 10%;
+      // border: 1px solid;
+      margin-top: 7%;
+      margin-left: 50%;}
+      .milestonediv{
+      //background: #2F76D2;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border:1px solid #04397b;
+      top: 173px;
+      float:left;
+      margin-left: 6%;
+      }
+      .labeldiv {float:left;
+      margin-left: 5%;
+      font-size: 13px;}
+   </style>
+   
+      
+      
+      <script>
+      /*
+      the below variable used for get the pop over click object id 
+      used in another function when it close
+      */      
+      var storePooverID;
+       
+       
+         $(document).ready(function(){
+            //this is script for the on click popover 
+           
+         $('.hoverclass').popover();   
+            //this no is less than no of milestone..
+            var No_of_MileStones=13;//this no have to be calculated from controller list of milestone
+          
+          var count=0;
+          <apex:repeat value="{!finalList}" var="milestoneObject">
+       
+          count=count+1;
+          </apex:repeat>
+          
+          No_of_MileStones=count-1;
+          
+          var child_id_prefix='c';
+          var div_id_prefix='d';
+          
+         var i=0;
+         
+         <apex:repeat value="{!finalList}" var="obj">
+         
+         //add anchor tag to the parent class div 
+         //the below div is mile stone 
+         var anch = $('<div> </div>'); 
+             
+         if("{!obj.hover_data}"!=null && "{!obj.hover_data}"!='' ){
+         
+         
+         $(anch).attr('class', 'child hoverclass');
+         //add hover to milestone..
+         $(anch).attr('data-value','first');
+         $(anch).attr('data-state','open');
+         $(anch).attr('data-content',"{!obj.hover_data}");
+         $(anch).attr('data-html','true');
+         $(anch).attr('rel','popover');
+         $(anch).attr('data-placement','left');
+                 
+         $(anch).attr('data-trigger','hover');
+         $(anch).attr('data-toggle','popover');
+         
+         }else{
+         $(anch).attr('class', 'child');
+        
+         }
+         $(anch).attr('style','Background-Color:{!obj.milestone_color};');
+         
+         
+         
+         
+         var id_evaluate=child_id_prefix+i;
+         $(anch).attr('id',id_evaluate);
+                 
+         $('.parent').append(anch);
+         
+         //add div tag to the anchor child tag for the tiltles 
+         var div_id_evaluate=div_id_prefix+i;
+         
+         var titlediv='<div></div>';
+         if(i%2==0){
+                
+                
+                 titlediv='<div style="margin-top:-48px;width:99px;height:50px;margin-left:-22px;position: relative;">';
+                 titlediv=titlediv+'<span style="font-size:11px"><p>{!obj.milestone_title}</p>';
+                 titlediv=titlediv+'<p>{!obj.milestone_date}</p></span></div>';
+                       
+                 var child_id='#'+id_evaluate;
+                 $(child_id).append(titlediv);
+              
+         
+        
+         
+         //check sublist is contains in milestone means sublist not null
+         
+         if("{!obj.MileStoneSublist.size}"!=null && "{!obj.MileStoneSublist.size}"!='' )
+         {
+            if("{!obj.MileStoneSublist.size}">0 )
+            {
+         
+             //add image to mile stone + image
+             var anchr='anchr'+i; 
+             var anch1 = $('<a id='+anchr+'> </a>'); 
+             $(anch1).attr('href', '#');
+             $(child_id).append(anch1);
+         
+             var img=$('<img id=imgid'+i+'></img>'); 
+             $(img).attr('src','{!URLFOR($Resource.RMImages2, 'RMImages2/Plus__Orange.png')}');
+             $(img).attr('width','14');
+             $(img).attr('height','14');
+             $(img).attr('data-value','first');
+             $(img).attr('data-state','open');
+             $(img).css({"margin-top": "-2px"});
+             
+            //This below content a list on the mile stone........
+         
+          
+             content_data='<div class=table-responsive>';          
+             content_data=content_data+'<table class=table>';
+             content_data=content_data+'<thead>';
+             content_data=content_data+'<tr>';
+             content_data=content_data+'<th>Milestone Desc.</th>';
+             content_data=content_data+'<th>Date</th>'
+             content_data=content_data+'</tr></thead><tbody>';
+         
+            var content_data1='';
+         
+            <apex:repeat value="{!obj.MileStoneSublist}" var="sub_list">
+                if("{!sub_list.hover_data}"!=null && "{!sub_list.hover_data}"!='' ){
+         
+                     content_data1=content_data1+'<tr style="background-color:{!sub_list.milestone_color}" ';
+                     content_data1=content_data1+'title="{!sub_list.hover_data}">';
+                     content_data1=content_data1+'<td> {!sub_list.milestone_title}</td>';
+                     content_data1=content_data1+'<td>{!sub_list.milestone_date}</td></tr>';
+             
+         
+                }else{
+         
+                     content_data1=content_data1+'<tr style="background-color:{!sub_list.milestone_color}">';
+                     content_data1=content_data1+'<td>{!sub_list.milestone_title}</td>';
+                     content_data1=content_data1+'<td>{!sub_list.milestone_date}</td></tr>';
+             
+                    }
+         </apex:repeat>
+         
+         content_data=content_data+content_data1;
+         content_data=content_data+'</tbody></table></div>';
+               
+         $(img).attr('data-content',content_data);
+         $(img).attr('data-html','true');
+         $(img).attr('rel','popover');
+         $(img).attr('data-placement','bottom');
+                 //$(img).attr('data-original-title','Title');
+         $(img).attr('data-trigger','click');
+         $(img).attr('class','popOpenClose');
+         
+         var anchr_id='#'+anchr;
+         $(anchr_id).append(img);
+            }
+         }
+         
+        }
+        else{
+         
+             var child_id='#'+id_evaluate;
+             
+             //check sublist is contains in milestone means sublist not null
+             if("{!obj.MileStoneSublist.size}"!=null || "{!obj.MileStoneSublist.size}"!='' )
+             {
+             if("{!obj.MileStoneSublist.size}">0 )
+             {
+         
+                 //add image to mile stone + image
+                 var anchr='anchr'+i; 
+                 var anch2 = $('<a id='+anchr+'> </a>'); 
+                 $(anch2).attr('href', '#');
+                 $(child_id).append(anch2);
+         
+                 var img=$('<img id=imgid'+i+'></img>'); 
+                 $(img).attr('src','{!URLFOR($Resource.RMImages2, 'RMImages2/Plus__Orange.png')}');
+                 $(img).attr('width','14');
+                 $(img).attr('height','14');
+                 $(img).attr('data-value','first');
+                 $(img).attr('data-state','open');
+                 
+                 
+                 
+                 content_data='<div class=table-responsive>';          
+                 content_data=content_data+'<table class=table>';
+                 content_data=content_data+'<thead>';
+                 content_data=content_data+'<tr>';
+                 content_data=content_data+'<th>Milestone Desc.</th>';
+                 content_data=content_data+'<th>Date</th>'
+                 content_data=content_data+'</tr></thead><tbody>';
+                 
+                 var content_data1='';
+         
+         <apex:repeat value="{!obj.MileStoneSublist}" var="sub_list">
+                if("{!sub_list.hover_data}"!=null && "{!sub_list.hover_data}"!='' ){
+         
+                     content_data1=content_data1+'<tr style="background-color:{!sub_list.milestone_color}" ';
+                     content_data1=content_data1+'title="{!sub_list.hover_data}">';
+                     content_data1=content_data1+'<td> {!sub_list.milestone_title}</td>';
+                     content_data1=content_data1+'<td>{!sub_list.milestone_date}</td></tr>';
+             
+         
+                }else{
+         
+                     content_data1=content_data1+'<tr style="background-color:{!sub_list.milestone_color}">';
+                     content_data1=content_data1+'<td>{!sub_list.milestone_title}</td>';
+                     content_data1=content_data1+'<td>{!sub_list.milestone_date}</td></tr>';
+             
+                    }
+         </apex:repeat>
+         
+         content_data=content_data+content_data1;
+         content_data=content_data+'</tbody></table></div>';
+         
+         $(img).attr('data-content',content_data);
+         $(img).attr('data-html','true');
+         $(img).attr('rel','popover');
+         $(img).attr('data-placement','bottom');
+                 //$(img).attr('data-original-title','Title');
+         $(img).attr('data-trigger','click');
+         
+         $(img).attr('class','popOpenClose');
+         
+         var anchr_id='#'+anchr;
+         $(anchr_id).append(img);
+         
+         }
+        }
+         if("{!obj.MileStoneSublist.size}"!=null || "{!obj.MileStoneSublist.size}"!='' )
+          {
+             if("{!obj.MileStoneSublist.size}">0 )
+            {
+              titlediv='<div style="margin-top:+12px;width:99px;height:76px;margin-left:-22px;position: relative;">';
+            }
+            else{
+             titlediv='<div style="margin-top:+24px;width:99px;height:76px;margin-left:-22px;position: relative;">';
+            }
+          }
+         //titlediv='<div style="margin-top:+24px;width:99px;height:76px;margin-left:-22px;position: relative;">';
+         titlediv=titlediv+'<span style="font-size:11px">';
+         titlediv=titlediv+'<p>{!obj.milestone_title}</p>';
+         titlediv=titlediv+'<p>{!obj.milestone_date}</p></span></div>';
+            
+         var child_id='#'+id_evaluate;
+         $(child_id).append(titlediv);
+               
+                 
+         }
+         i=i+1;
+         </apex:repeat>
+        
+        
+           var common_margin=(100/(No_of_MileStones));
+           for(var i=0;i<=No_of_MileStones;i++){
+              var milestone_id='#'+child_id_prefix+i; 
+              milestone_margin_left=(common_margin*(i))+'%';
+              $(milestone_id).css({"margin-left":milestone_margin_left})  ;
+             }
+          
+         $(".child a img").on("click", function () {
+                              
+                                 var $this = $(this);
+                   
+                                 var id1 = $this.attr("id");
+                                 
+                                 storePooverID=id1;
+                                 
+                                 var action = $this.attr("data-state");
+                                 
+                                 var compleid='#'+id1;//+':first';
+                                 
+                                 storePooverID=compleid;
+                              
+                                 if(action=='open'){
+                                
+                               
+                                 $(compleid).addClass('rotate');
+                                
+                                  $('#popover_backgID').addClass('popover_backg');  
+                                 
+                                  $this.attr({"data-state":"close"});  
+                                    
+                                 }else
+                                 {
+                                 
+                                 $(compleid).removeClass('rotate');                       
+                                
+                                 $this.attr({"data-state":"open"});
+                                 
+                                   
+                                 }
+                                
+                             
+                               }); 
+         
+         $('.popOpenClose').popover();                     
+         $('.hoverclass').popover();    
+             
+         });
+         
+      </script>
+   </head>
+   <div id="lifecyclebodyid" style="height:0px">
+      <div class="parent">
+      </div>
+      <div class="indicator_div">
+         <div class="milestonediv" style="background:{!colorList[0]}"></div>
+         <div class="labeldiv">Completed </div>
+         <div class="milestonediv" style="background:{!colorList[1]}"></div>
+         <div class="labeldiv">Current</div>
+         <div class="milestonediv" style="background:{!colorList[2]}"></div>
+         <div class="labeldiv">Upcoming </div>
+      </div>
+   </div>
+   <div id="popover_backgID">
+   
+   </div>
+   
+   <script>
+        
+         $("#popover_backgID").click(function(e)  {
+        
+                 $('#popover_backgID').removeClass('popover_backg');
+                 
+               
+                 $(storePooverID).removeClass('rotate'); 
+                 
+                 $(".child a img").attr({"data-state":"open"});
+               
+                 $(storePooverID).popover('toggle');
+        
+             
+          });
+            
+   </script>
+
+</apex:component>

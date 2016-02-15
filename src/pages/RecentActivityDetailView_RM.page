@@ -1,0 +1,46 @@
+<apex:page controller="RecentActivityDetailViewController_RM" showHeader="false" sidebar="false" standardStylesheets="false">
+<apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js"/>
+<apex:includeScript value="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"/>
+<apex:includeScript value="https://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"/>
+
+<apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<apex:stylesheet value="https://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css"/>
+
+<style>
+    body { font-size: 140%; }
+</style>
+
+ <script>
+$(document).ready(function() {
+    $('#example').dataTable();
+} );
+        
+</script>
+
+<apex:form >
+    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%" title="All Activities">
+         <thead>
+            <tr>
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityDetailView_RM}" var="f">
+                    <th>
+                        {!f.Label}
+                    </th>
+                </apex:repeat>
+            </tr>
+         </thead>
+         <tbody> 
+             <apex:repeat value="{!lstCase}" var="c">
+             <tr>
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityDetailView_RM}" var="f">
+                <td>
+               {!c[f]} 
+                    
+                </td>
+                </apex:repeat>
+
+             </tr>
+            </apex:repeat>
+        </tbody>
+    </table>
+</apex:form>
+</apex:page>

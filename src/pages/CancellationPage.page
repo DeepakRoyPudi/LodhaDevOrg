@@ -1,0 +1,163 @@
+<apex:page controller="CancellationController" sidebar="false" action="{!renderRemarks}">
+<style>
+    td{font-family:"Calibra", Times, serif;font-size:15px;}
+    th{background-color:#000080; color:#fff; text-align:center}
+</style>
+  <apex:pagemessages />
+<!--<apex:form id="BookingForm" rendered="{!iscancelled}==false">-->
+<apex:form id="BookingForm" rendered="{!iscancelled}">
+  <table width= "50%" id="Booking_Main_Table" margin="10px" border="2" style="border-collapse: collapse">
+    <tr>
+      <th colspan="2" >
+          Cancellation Details - {!booking.Oasys_Flat_Code__c}
+      </th>
+    </tr>
+    <tr>
+      <td>
+          Cancellation Type:   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Cancellation_Type__c}" />
+      </td>
+    </tr>
+    
+        <tr>
+      <td>
+         Is the customer registered:   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Is_the_customer_registered__c}" />
+      </td>
+      </tr>
+      
+      <tr>
+      <td>
+         Has the customer initiated deed of cancellation:   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.has_the_customer_initiated_deed_of_cance__c}">
+          <!--<apex:actionsupport action="{!renderRemarks}" event="onchange"/>-->
+          </apex:inputField>
+      </td>
+    </tr>
+
+
+      <tr>
+       
+      <td>
+         Cancellation Remarks:
+      </td>
+      
+      
+      <td>
+          <apex:inputField value="{!booking.Confirmation_Remark__c}" id="confirm"/>
+      </td>
+      
+    </tr>
+   
+     <tr>
+      <td>
+         Has retention efforts been carried out:   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Has_retention_efforts_been_carried_out__c}" />
+      </td>
+    </tr>
+    
+       <tr>
+      <td>
+         Result of retention efforts:   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Result_of_retention_efforts__c }" >
+          <apex:actionsupport action="{!renderRemarks}" event="onchange"/>
+          </apex:inputField>
+      </td>
+    </tr>
+    
+    
+    
+    
+        
+    
+    
+    <tr>
+      <td>
+          Date of confirmation :
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Cancel_Confirm_Date__c}" rendered="{!isNegativeRetention}"/>
+      </td>
+    </tr>
+
+    
+    
+    
+           <tr>
+      <td>
+          Approval sought :   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Approval_sought__c}" >
+          <apex:actionsupport action="{!renderRemarks}" event="onchange"/>
+          </apex:inputField>
+      </td>
+    </tr>
+    
+     <tr>
+      <td>
+          Approver’s name :   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Approver_s_name__c}" rendered="{!IsApprover}"/>
+      </td>
+    </tr>
+
+    
+    
+    
+        
+         <tr>
+      <td>
+          Reason for cancellation:   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Reason_for_Cancellation__c}" id="cancelreason"/>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+          Cancellation Date:   
+      </td>
+          
+      <td>
+          <apex:inputField value="{!booking.Cancellation_Date__c}" id="Cancellationdate"/>
+      </td>
+    </tr>
+    
+    
+    
+    
+    <tr>
+      <td colspan="2" align="center">
+          <apex:commandButton value="Cofirm Cancellation" action="{!Confirm}" title="Click here to cancel booking"/>
+      </td>
+    </tr>
+       
+  </table>
+</apex:form>
+<script>
+document.getElementById('{!$Component.BookingForm.Cancellationdate}').disabled=true;
+document.getElementById('{!$Component.BookingForm.cancelreason}').disabled=true;
+</script>
+</apex:page>

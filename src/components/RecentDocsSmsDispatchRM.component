@@ -1,0 +1,361 @@
+<!--   Version         Created By      Created Date    Description
+ *
+ *  Initial Draft       Sneha P.      26/02/2015       Component for crisp view of Docs/SMS/Dispatch 
+ *                                                     widget displays Docs/SMS/Dispatch for a user 
+ *                                                     based on CRN   
+ *
+ -->
+<apex:component controller="RecentDocsSmsDispatchRMController"> 
+
+    <apex:includeScript value="{!$Resource.YearRangeIncr}"/>
+<style>
+  .table{
+  width:100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  }
+  #t {
+    margin-left: -1.5em;
+  }
+  ul li, ol li {
+    margin-left: -0.5em;
+  }
+  
+  .tab-heading{text-align: center;}
+  .viewAll{color:#000 !important; text-decoration: underline!important;}
+</style>
+
+    <apex:attribute name="CRN" description="This is the CRN value for the User" 
+                               type="String" assignTo="{!PARAM_CRN}" required="true"/>
+ 
+    <apex:attribute name="NoOfRecrd" 
+                    description="No of records to be displayed in widgets crisp view" 
+                    type="Integer" 
+                    assignTo="{!noOfRecords}" 
+                    required="true"/>
+    
+    <apex:actionFunction action="{!ViewAll}" name="ViewAllFunction"  rerender="dummy">
+        <apex:param name="selectedTab" value=""/>
+    </apex:actionFunction>
+          
+    <apex:actionFunction name="rerenderPanel"  rerender="dummy">
+    </apex:actionFunction>
+    
+    <apex:outputPanel id="dummy">
+    
+
+    <div class="panel-heading widgetHeaderBGColor"
+        style="padding: 5px 15px;">
+        <a class="view-all-link pull-right viewAll"  href="#" 
+                                  onclick="ReloadDocsSmSDetailView()"
+                                  data-toggle="modal" 
+                                  data-target="#RecentDocumentsSmsDispatchDetail"
+                                  status="statusMsg">
+            View All
+        </a>
+        <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp;
+        <h4
+            style="margin-top: 0px; margin-bottom: 0px; font-size: 100%; font-weight: bold">Recent
+            Docs/SMS/Dispatch</h4>
+    </div>
+                    
+    <div class="panel-body" style="padding: 5px">
+<div class="container" style="padding:0px !important">
+             <div id="content">
+                 <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                     <li class="t active">
+                        <a href="#Documents" data-toggle="tab" 
+                                             style="padding:8px 15px">
+                            Documents
+                        </a>
+                     </li>
+                     <li class="t">
+                        <a href="#SMS" data-toggle="tab" style="padding:8px 15px">SMS</a>
+                     </li>
+                     <li class="t">
+                        <a href="#Dispatch" data-toggle="tab" style="padding:8px 15px">
+                            Dispatch
+                        </a>
+                     </li>
+                 </ul>
+ 
+                 <div id="my-tab-content" class="tab-content">
+                     <!-- Document Detail View -->
+                     <div class="{!If(noOfRecords==3, 'tab-pane active small_widget_tbody','tab-pane active large_widget_tbody' )}" id="Documents">
+                         <table class="table" style="font-size: 90%">
+                             <thead>
+                                 <tr>
+                                     <apex:repeat value="{!$ObjectType.Documents__c.FieldSets.DocumentCrispView_RM}"
+                                         var="f" rows="{!noOfRecords}">
+                                         <th><apex:outputText value="{!f.Label}"
+                                                 rendered="{!AND(f.Label != 'Document Name',
+                                                                f.Label != 'Date of Generation',
+                                                                f.Label != 'Publish Mode')}" />
+ 
+                                             <apex:outputText value="Doc. Name"
+                                                 rendered="{!f.Label == 'Document Name'}" /> 
+                                             <apex:outputText value="Gen. Date"
+                                                 rendered="{!f.Label == 'Date of Generation'}" /> 
+                                             <apex:outputText value="Mode" 
+                                                             rendered="{!f.Label == 'Publish Mode'}" />
+                                         </th>
+                                     </apex:repeat>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <apex:repeat value="{!docList}" var="c" rows="{!noOfRecords}">
+                                     <tr>
+                                         <apex:repeat value="{!$ObjectType.Documents__c.FieldSets.DocumentCrispView_RM}"
+                                             var="f" rows="{!noOfRecords}">
+                                             <td>
+                                                 <apex:outputLink value="/{!c.Id}" target="_blank" rendered="{!f.Label == 'Document Name'}">
+                                                     <apex:outputField value="{!c[f]}" rendered="{!f.Label == 'Document Name'}"/>
+                                                 </apex:outputLink>
+                                                 
+                                                 <apex:outputField value="{!c[f]}" 
+                                                                  rendered="{!AND(f.Label != 'Document Name',
+                                                                            f.type != 'datetime',
+                                                                            f.type != 'date') }"/>
+                                                 
+                                                 <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                                   <c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                                                 </apex:outputPanel> 
+                                                   <apex:outputPanel rendered="{!f.type == 'date'}">
+                                                              <c:FormatDateComponent date_value="{!c[f]}"/>
+                                                     </apex:outputPanel>
+                                             </td>
+                                         </apex:repeat>
+                                     </tr>
+                                 </apex:repeat>
+                                 
+                                  <tr style="{!If(docList.size > 0, 'display:none','text-align: center;' )}">  
+                                          <td colspan="{!$ObjectType.Documents__c.FieldSets.DocumentCrispView_RM.size}" 
+                                         >
+                                         No records to display
+                                    </td>
+                                 </tr>
+         
+                             </tbody>
+                         </table>
+                     </div>
+ 
+                     <div class="{!If(noOfRecords==3, 'tab-pane small_widget_tbody','tab-pane large_widget_tbody' )}" id="SMS">
+                         <table class="table" style="font-size: 90%">
+                             <thead>
+                                 <tr>
+                                     <apex:repeat value="{!$ObjectType.SMS_History__c.FieldSets.SMSCrispView_RM}"
+                                         var="f" rows="{!noOfRecords}">
+                                         <th><apex:outputText value="{!f.Label}" rendered="{!f.Label != 'Created Date'}"/>
+                                             <apex:outputText value="Sent Date" rendered="{!f.Label == 'Created Date'}"/>
+                                         </th>
+                                     </apex:repeat>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <apex:repeat value="{!smsWrapperList}" var="c" rows="{!noOfRecords}">
+                                 
+                                     <tr>
+                                         <apex:repeat value="{!$ObjectType.SMS_History__c.FieldSets.SMSCrispView_RM}"
+                                             var="f" rows="{!noOfRecords}">
+                                             <td>
+                                                 <apex:outputLink value="/{!c.smshistory.Id}" 
+                                                                 target="_blank" 
+                                                                 rendered="{!f.Label == 'SMS Type'}">
+                                                     <apex:outputField value="{!c.smshistory[f]}" 
+                                                                      rendered="{!f.Label == 'SMS Type'}"/>
+                                                 </apex:outputLink>
+                                                  
+                                                 <apex:outputField value="{!c.smshistory[f]}" 
+                                                                  rendered="{!AND(f.Label != 'SMS Type',
+                                                                                f.type != 'datetime',
+                                                                                f.type != 'date')}"/>
+                                                             
+                                                 <apex:outputPanel rendered="{!f.type == 'datetime'}" 
+                                                                  title="{!c.mobileNo}">
+                                                   <c:FormatDateTimeComponent date_Timevalue="{!c.smshistory[f]}"/>
+                                                 </apex:outputPanel>      
+                                                 
+                                                    <apex:outputPanel rendered="{!f.type == 'date'}" 
+                                                                         title="{!c.mobileNo}">
+                                                        <c:FormatDateComponent date_value="{!c.smshistory[f]}"/>
+                                                     </apex:outputPanel>         
+                                             </td>
+                                         </apex:repeat>
+                                     </tr>
+                                 </apex:repeat>
+                                 
+                                  <tr style="{!If(smsWrapperList.size > 0, 'display:none','text-align: center;' )}">  
+                                          <td colspan="{!$ObjectType.SMS_History__c.FieldSets.SMSCrispView_RM.size}" 
+                                         >
+                                         No records to display
+                                    </td>
+                                 </tr>
+                                 
+                             </tbody>
+                         </table>
+                     </div>
+ 
+                     <div class="{!If(noOfRecords==3, 'tab-pane small_widget_tbody','tab-pane large_widget_tbody' )}" id="Dispatch">
+                         <table class="table" style="font-size: 90%">
+                             <thead>
+                                 <tr>
+                                     <apex:repeat value="{!$ObjectType.Despatch__c.FieldSets.DispatchCrispViewRM}"
+                                         var="f" rows="{!noOfRecords}">
+                                         <th>
+                                             <apex:outputText value="Doc. Name" rendered="{!f.label == 'Contents'}" />
+                                             <apex:outputText value="Dispatch Date" rendered="{!f.label == 'Despatch Date'}" />
+                                             <apex:outputText value="{!f.label}" 
+                                                 rendered="{!AND(f.label != 'Contents', f.label != 'Despatch Date')}" />
+                                         </th>
+                                     </apex:repeat>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <apex:repeat value="{!dispatchList}" var="c" rows="{!noOfRecords}">
+                                     <tr>
+                                         <apex:repeat value="{!$ObjectType.Despatch__c.FieldSets.DispatchCrispViewRM}"
+                                             var="f" rows="{!noOfRecords}">
+                                             <td>
+                                                <apex:outputLink value="/{!c.Id}" target="_blank" rendered="{!f.Label == 'Contents'}">
+                                                     <apex:outputField value="{!c[f]}" rendered="{!f.Label == 'Contents'}"/>
+                                                </apex:outputLink>
+
+                                                <apex:outputField value="{!c[f]}" rendered="{!AND(f.Label != 'Contents',f.type != 'datetime', f.type != 'date') }"/>
+                                                 <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                                     <c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                                                 </apex:outputPanel>
+                                                    
+                                                   <apex:outputPanel rendered="{!f.type == 'date'}">
+                                                           <c:FormatDateComponent date_value="{!c[f]}"/>
+                                                  </apex:outputPanel>
+                                             </td>
+                                         </apex:repeat>
+                                     </tr>
+                                 </apex:repeat>
+                                 
+                                 <tr style="{!If(dispatchList.size > 0, 'display:none','text-align: center;' )}">  
+                                          <td colspan="{!$ObjectType.Despatch__c.FieldSets.DispatchCrispViewRM.size}" 
+                                         >
+                                         No records to display
+                                    </td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+   
+
+      <div class="modal fade" id="RecentDocumentsSmsDispatchDetail"
+      tabindex="-1" role="dialog" aria-labelledby="largeModal"
+      aria-hidden="true">
+      <div class="modal-dialog" style="height:inherit !important;padding-bottom:0px;">
+          <div class="modal-content" >
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                          onclick="scrollBodyOnClose()">
+                      <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                  </button>
+                  
+                  <span class="glyphicon glyphicon-folder-open" aria-hidden="true" style="top:0px !important;"></span>&nbsp;
+                  <h4 class="modal-title" id="myModalLabel">Recent Documents/SMS/Dispatch</h4>
+              </div>
+              
+              <div class="modal-body">
+                  <div class="container">
+                       <table width="100%" class="tab-heading">
+                          <tr >
+                              <td>
+                                  <a href="#" type="button" class="a" onclick="ReloadDocsSmSDetailView()"
+                                      data-dismiss="modal" data-toggle="modal"
+                                      data-target="#RecentActivityDetail"> <span
+                                      style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-edit"></span> Recent Activity </span>
+                                  </a>
+                               </td>
+                                
+                               <td> 
+                                  <a href="#" type="button" class="a" onclick="ReloadDocsSmSDetailView()"
+                                      data-dismiss="modal" data-toggle="modal"
+                                      data-target="#PaymentsReceivedDetail"> <span
+                                      style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-ok-circle"></span> Payments Information </span>
+                                  </a> 
+                               </td>
+                               <td style="border-right:solid 1px #fff !important;">
+                                  <a href="#" type="button" class="a" onclick="ReloadDocsSmSDetailView()"
+                                      data-dismiss="modal" data-toggle="modal"
+                                      data-target="#favouringDetail"> <span
+                                      style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-list"></span> {!'Favoring Details & Payment Transactions'} </span>
+                                  </a>
+                               </td>
+                               </tr>
+                           </table>
+                           <br/>
+                      <!-- Page for Recent Activity detail View -->
+                      <apex:iframe src="/apex/RecentDocsSMSDispatchDetailRM?CRN={!PARAM_CRN}" 
+                                   scrolling="true" id="docsSmsDispatchIframe" height="500"/>
+                      
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div></apex:outputPanel>
+
+<script>
+       
+               
+       function ReloadDocsSmSDetailView () {
+           $('html, body').css({
+                         'overflow': 'hidden'
+                          });
+                          
+       }
+       
+       function scrollBodyOnClose() {
+           $('html, body').css({
+                         'overflow': 'auto'
+                          });
+       }
+   </script>
+    <script type="text/javascript">
+    
+    
+    $(window).load(function(){
+            console.log('******window load**');
+             yearIncr();<!-- This function is used for showing more values in year in datepicker-->
+             console.log('******window load2**');
+        });
+        
+    $(document).ready(function() {
+        $(".tab_content").hide();
+        $(".tab_content:first").show();
+      $("ul.tabs li").click(function() {
+            $("ul.tabs li").removeClass("active");
+            $(this).addClass("active");
+            $(".tab_content").hide();
+            console.log('***in click**');
+            var activeTab = $(this).attr("rel"); 
+            console.log('***activeTab**'+activeTab);
+            $("#"+activeTab).fadeIn(); 
+        });
+        
+         $(".t").click(function(event)
+         {
+             console.log('Clicked on View all');
+             var current_tab = $(this).text();
+             //$(this).closest(".panel").find("li.active a").attr("href");
+             
+             var static_location ="/apex/RecentDocsSMSDispatchDetailRM?CRN={!PARAM_CRN}&selectedTab=" ;
+             var abs_url = static_location + current_tab.trim();
+             
+             $('#docsSmsDispatchIframe').attr("src",abs_url);
+         
+             console.log('url changed'+abs_url);
+             
+           });
+               
+    });
+    
+</script> 
+</apex:component>

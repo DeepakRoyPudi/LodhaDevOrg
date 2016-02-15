@@ -1,0 +1,42 @@
+<!-- VisualForce Compoenent for showing reminder of profile completeness
+ 
+@Created by: Trupti Dhoka
+@Created Date: 26/06/2015
+
+--------------------------------------------------------------------------------
+| Modified By      | Modified Date       | Version        | Description         |
+--------------------------------------------------------------------------------
+|Trupti Dhoka         26/06/2015            Initial Draft    
+--------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-->
+
+
+<apex:component controller="LandingPageCSS2_0Controller" >
+<apex:attribute name="profileCompletenessValue" type="decimal" description="percentage of profilr completed from caller of component"/>
+    <apex:form >
+        
+        <p style="padding:3%"><b>Your profile has been {!profileCompletenessValue}% completed.
+          Please fill the remaining information.</b>
+        </p>
+        
+         <div align="center">
+            <apex:outputpanel id="bottons">
+                 <div class ="col-md-12">
+                      <div class="col-md-5">
+                      </div>
+                      <div class="col-md-1">
+                         <apex:commandButton value="OK" action="{!redirect_ProfileInfoPage}" styleClass="btn"/>
+                       </div>
+                      <div class="col-md-1">
+                          <apex:outputLink value="{!$Site.Prefix}/secur/logout.jsp" styleClass="btn">Cancel</apex:outputLink>
+                      </div>
+                      <div class="col-md-5">
+                      </div>
+                 </div>
+           </apex:outputpanel>
+       </div>
+    </apex:form>
+                  
+</apex:component>

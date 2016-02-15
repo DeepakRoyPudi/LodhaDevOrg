@@ -1,0 +1,137 @@
+<!-- VisualForce Component for submit a query 
+   @Created by: Aditi Mulmule
+   @Created Date: 04/03/2015
+   
+   --------------------------------------------------------------------------------
+   | Modified By      | Modified Date       | Version        | Description         |
+   --------------------------------------------------------------------------------
+   |Trupti Dhoka         18/03/2015             1.1            updated responsive 
+                                                               of modal popup.
+   --------------------------------------------------------------------------------
+   |Trupti Dhoka         23/03/2015             1.2            functionality for popup showing 
+                                                               success message
+  --------------------------------------------------------------------------------
+   |Aditi Mulmule      02/06/2015               1.3             1.Functionality for creating
+                                                             case for every query 
+                                                             2.Included L1 picklist on page
+                                                             3.Removed Email Functionality
+  --------------------------------------------------------------------------------
+   |Aditi Mulmule      08/07/2015               1.4       1.Removed Subject field of case updation
+  ------------------------------------------------------------------------------------
+   -->
+<apex:component controller="SubmitQueryCSS2_0Controller" id="submitquery" allowDML="true">
+   <head>
+      <style>
+         .line_Margin {
+         margin-top: 10px; 
+         }
+         .customPopup{
+         background-color: white;
+         border-style: solid;
+         padding:10px;
+         position: absolute;
+         z-index: 9999;
+         width: 100%;
+         border-radius: 5px;
+         border: solid 1px #000;
+         text-align:center;
+         font-weight: bold;
+         margin-top: 50px;
+         }
+         .mtb{margin: 10px auto;}
+      </style>
+      <style>
+         #assign-action-spinner-main {position: fixed;left: 0;top: 0;background-color:rgba(0,0,0,.6);height: 100%;width: 100%;z-index: 999;align: center;vertical-align: middle;}
+         #assign-action-spinner-content {position: absolute; top: 50%;left: 45%;z-index: 1000;background-color:none;width: 40px;height: 40px;}
+         #assign-action-spinner-content img {width: 40px;height: 40px;align: center;vertical-align: middle;}
+         .h{
+         font-weight: bold;
+         font-size: x-large;
+         }  
+         .header{
+         word-spacing: 50px;
+         padding-left:70px;
+         padding:7px 11px 8px 21px;
+         } 
+         .alert {
+         padding: 5px !important;  
+         margin-bottom: 0px !important; 
+         border: 1px solid transparent !important;
+         border-radius: 4px;
+         }
+         .setwidth
+         {
+         width: 79%;
+         }
+      </style>
+   </head>
+   <body>
+      <apex:form id="form">
+         <apex:actionStatus id="msg" layout="block" style="align:center">
+            <apex:facet name="start">
+               <div id="assign-action-spinner-main" style="align:center">
+                  <div id="assign-action-spinner-content" style="align:center"> 
+                     <img  style="align:center" src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}"  />  
+                  </div>
+               </div>
+            </apex:facet>
+         </apex:actionStatus>
+         <apex:pagemessages id="submitmsg"/>
+         <apex:outputPanel id="statusMail">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+               <apex:outputPanel styleClass="customPopup" layout="block" rendered="{!displayPopUp}">
+                  {!response}
+                  <br/> 
+                  <apex:commandButton value="OK" styleClass="btn" action="{!closePopup}" html-data-dismiss="modal" rerender="statusMail,bottons" onclick="resetFields();"/>
+                  <br/>
+               </apex:outputPanel>
+            </div>
+            <div class="col-md-3"></div>
+         </apex:outputPanel>
+         <div align="center">
+                <div align="left" class="col-md-4">
+                   <apex:outputLabel >Related To <span style="color:#f00">*</span> </apex:outputLabel>
+               </div >
+                <div align="justify" class="col-md-8">
+                   <apex:inputField value="{!case_obj.Request_for_L1__c}"  id="l1" styleClass="setwidth form-control"/>
+               </div >
+         </div>
+         <div class="clear"></div>
+         <br/>
+         <div align="center">
+            <div align="left" class="col-md-4 ">
+               <apex:outputLabel >Description <span style="color:#f00">*</span> </apex:outputLabel>
+            </div >
+            <div align="justify" class="col-md-8">
+               <apex:inputField value="{!case_obj.Description}" id="description" styleClass="setwidth form-control"/>
+            </div >
+         </div>
+         <div class="clear"></div>
+         <br/>
+         <div align="center">
+            <apex:outputpanel id="bottons">
+               <apex:commandButton title="Submit" value="Submit" rerender="statusMail,submitmsg,form" action="{!submitQuery}" status="msg"  styleClass="btn" id="submitbtn" disabled="{!displayPopUp}" onclick="showmsgpopup();"/>
+               &nbsp;&nbsp;
+               <apex:commandButton onclick="resetFields();" title="Cancel" styleClass="btn" html-data-dismiss="modal" value="Cancel" id="cancelbtn" disabled="{!displayPopUp}"/>
+            </apex:outputpanel>
+         </div>
+      </apex:form>
+   </body>
+   <script type="text/javascript"> 
+      function showmsgpopup() {
+        $("[id*=submitbtn]").show();
+        disablebtns();
+      }
+      function disablebtns() {
+           $('#cancelbtn').attr('disabled','disabled');
+      }
+      function resetFields() {
+      
+         $("[id*=l1]").val('');
+         $("[id*=description").val('');
+      
+      }
+      
+   </script>
+</apex:component>

@@ -1,0 +1,144 @@
+<!-- /*Description:
+This page is used for ecent activity (detail view) Component
+
+ @Created by: Trupti Dhoka
+ @Created Date:  16/03/15   
+ 
+ --------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |Trupti Dhoka          18/03/2015          1.1             Pagination logic
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+*/ -->
+
+
+
+<apex:component controller="RecentActivityDetail_CSSController">
+<apex:attribute name="CRN" description="This is CRF Type." type="String" required="true" assignTo="{!Customer_CRN}" />
+    
+    <style>
+        body { 
+            font-size: 140%; 
+        }
+        .empty-column-content {
+            display: none;
+        }
+        <!--  this style is used for loading symbol -->
+        #assign-action-spinner-main1 {position: fixed;left: 0;top: 0;background-color:rgba(0,0,0,.6);height: 100%;width:100% !important;z-index: 999;align: center;vertical-align: middle;}
+        #assign-action-spinner-content {position: absolute; top: 50%;left:45%;z-index: 1000;background-color:none;width: 40px;height: 40px;}
+        #assign-action-spinner-content img {width: 40px;height: 40px;align: center;vertical-align: middle;}
+        
+        .h
+        {
+            font-weight: bold;
+            font-size: x-large;
+        }  
+        .header
+        {
+            word-spacing: 50px;
+            padding-left:70px;
+            padding:7px 11px 8px 21px;
+        } 
+        .alert 
+        {
+            padding: 5px !important;  
+            margin-bottom: 0px !important; 
+            border: 1px solid transparent !important;
+            border-radius: 4px;
+        }
+        
+    .modal-body {
+        overflow: auto;
+    }
+    </style>
+    
+    
+    <apex:actionFunction name="redirectFirstPage" action="{!FirstPage}" status="msg" rerender="myactivities1"/> 
+    <apex:Outputpanel id="RecentActivityDetailForm"> 
+        <apex:actionStatus id="msg" layout="block" style="align:center">
+            <apex:facet name="start">
+                <div id="assign-action-spinner-main1" style="align:center">
+                    <div id="assign-action-spinner-content" style="align:center"> 
+                        <img  style="align:center" src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}"  />  
+                    </div>
+                </div>
+            </apex:facet>
+        </apex:actionStatus> 
+        
+        <apex:outputpanel id="myactivities1">
+            <table id="All_Activities1" class="table table-striped table-bordered"  width="100%" sstyle="{!IF(caseList.size>0 , '', 'display:none')}">
+                 
+                <thead>
+                                
+                    <tr>
+                        <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityDetailView_CSS2_0}" var="f">
+                             <th> 
+                                  <apex:commandLink action="{!toggleSortSMS}" rerender="RecentActivityDetailForm" status="msg">
+                                     <apex:outputText value="Reference Number" rendered="{!f.label == 'Case Number'}" />
+                                      <apex:outputText value="Creation Date" rendered="{!f.label == 'Created Date'}" />
+                                    
+                                      <apex:outputText value="{!f.Label}" rendered="{!AND(f.label != 'Case Number',f.label != 'Created Date')}" />
+                                     <apex:param name="sortField" value="{!f}" assignTo="{!sortField}"/>
+                                  </apex:commandLink>
+                            </th>
+                        </apex:repeat>
+                    </tr>
+                    
+                 </thead>
+                 
+                 <tbody> 
+                     <apex:repeat value="{!caseList}" var="c">
+                        <tr>
+                            <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityDetailView_CSS2_0}" var="f">
+                                    
+                                <td>
+                                  <apex:outputText value="Complete" rendered="{!AND(f.Label=='Status', c[f] == 'Complete') }" ></apex:outputText>
+                                    <apex:outputText value="In Progress"  rendered="{!AND(f.Label=='Status', c[f] != 'Complete', c[f] != 'Closed') }" > </apex:outputText>
+                                    <apex:outputText value="Closed" rendered="{!AND(f.Label=='Status', c[f] == 'Closed') }" ></apex:outputText>
+                                    <apex:outputText value="NA" rendered="{!AND(f.Label=='Related To', c[f] == '|') }"></apex:outputText>
+                                    <apex:outputField value="{!c[f]}"  rendered="{!AND(f.type != 'datetime',f.type != 'date' , f.Label != 'Status')}" />
+                                     <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                                              <c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                                     </apex:outputPanel> 
+                                     <apex:outputPanel rendered="{!f.type == 'date'}">
+                                             <c:FormatDateComponent date_value="{!c[f]}"/>
+                                    </apex:outputPanel>
+                                                
+                                </td>               
+                            </apex:repeat>
+                        </tr>
+                    </apex:repeat>
+                    <tr style="{!If(caseList.size > 0, 'display:none','' )}">  
+                        <td align="center" colspan="{!$ObjectType.case.FieldSets.RecentActivityDetailView_CSS2_0.size}">
+                            No records to display.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+         
+            <div style="margin-top:11px"> 
+                <div class="col-md-2">
+                </div>           
+                <div class="col-md-8">
+                    <div align="center" style="margin-bottom:10px;">
+                          <apex:commandButton value="First Page" action="{!FirstPage}" disabled="{!prev}" styleclass="btn " status="msg"  rerender="RecentActivityDetailForm" />&nbsp;&nbsp;
+                          <apex:commandButton value="Previous Page" action="{!previous}" disabled="{!prev}" styleclass="btn " status="msg" rerender="RecentActivityDetailForm" />&nbsp;&nbsp;
+                          <apex:commandButton value="Next Page"  action="{!next}" disabled="{!nxt}" styleclass="btn " status="msg" rerender="RecentActivityDetailForm"/>&nbsp;&nbsp;
+                          <apex:commandButton value="Last Page"  action="{!LastPage}" disabled="{!nxt}" styleclass="btn r" status="msg" rerender="RecentActivityDetailForm" />&nbsp;&nbsp;
+                    </div>
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+          </apex:outputpanel>
+      
+    </apex:Outputpanel>
+    <script>
+     $('#myModal').on('show.bs.modal', function (e) {
+         redirectFirstPage();
+     })
+
+    </script>
+</apex:component>

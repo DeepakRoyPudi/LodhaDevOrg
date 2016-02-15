@@ -1,0 +1,35 @@
+<apex:page >
+
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Language" content="en"/>
+</head>
+    
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="http://bxslider.com/lib/plugins/jquery.fitvids.js"></script>
+  <script src="http://bxslider.com/lib/jquery.bxslider.js"></script>
+    
+    <script>
+ jQuery(document).ready(function($) {
+         
+$('.bxslider').bxSlider({
+  video: true,
+  useCSS: false
+});
+        });
+    </script>
+    
+<body>  
+    <ul class="bxslider">
+      <li>
+        <iframe src="https://www.youtube.com/embed/SGPvYQ1o2x4" width="500" height="281" frameborder="0" ></iframe>
+      </li>
+       <li>
+        <iframe src="https://www.youtube.com/embed/SGPvYQ1o2x4" width="500" height="281" frameborder="0" ></iframe>
+      </li>
+    </ul>
+</body>
+</html>
+</apex:page>

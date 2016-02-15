@@ -1,0 +1,61 @@
+<apex:component allowDML="true" id="statecomponent">
+    
+    <apex:attribute name="value" description="" type="String" required="true"></apex:attribute>
+    <apex:attribute name="statelist_id" description="" type="String" required="true"></apex:attribute>
+    
+    <apex:selectList id="statelist_id" value="{!value}" size="1"  multiselect="false">
+        
+        <apex:selectOption itemValue="None" itemlabel="Select State"/> 
+        <apex:selectOption itemValue="ALABAMA" itemlabel="ALABAMA"/>
+        <apex:selectOption itemValue="ALASKA" itemlabel="ALASKA"/>
+        <apex:selectOption itemValue="ARIZONA" itemlabel="ARIZONA"/>
+        <apex:selectOption itemValue="ARKANSAS" itemlabel="ARKANSAS"/>
+        <apex:selectOption itemValue="CALIFORNIA" itemlabel="CALIFORNIA"/>
+        <apex:selectOption itemValue="COLORADO" itemlabel="COLORADO"/>
+        <apex:selectOption itemValue="CONNECTICUT" itemlabel="CONNECTICUT"/>
+        <apex:selectOption itemValue="DELAWARE" itemlabel="DELAWARE"/>
+        <apex:selectOption itemValue="FLORIDA" itemlabel="FLORIDA"/>
+        <apex:selectOption itemValue="GEORGIA" itemlabel="GEORGIA"/>
+        <apex:selectOption itemValue="HAWAII" itemlabel="HAWAII"/>
+        <apex:selectOption itemValue="IDAHO" itemlabel="IDAHO"/>
+        <apex:selectOption itemValue="ILLINOIS" itemlabel="ILLINOIS"/>
+        <apex:selectOption itemValue="INDIANA" itemlabel="INDIANA"/>
+        <apex:selectOption itemValue="IOWA" itemlabel="IOWA"/>
+        <apex:selectOption itemValue="KANSAS" itemlabel="KANSAS"/>
+        <apex:selectOption itemValue="KENTUCKY" itemlabel="KENTUCKY"/>
+        <apex:selectOption itemValue="LOUISIANA" itemlabel="LOUISIANA"/>
+        <apex:selectOption itemValue="MAINE" itemlabel="MAINE"/>
+        <apex:selectOption itemValue="MARYLAND" itemlabel="MARYLAND"/>
+        <apex:selectOption itemValue="MASSACHUSETTS" itemlabel="MASSACHUSETTS"/>
+        <apex:selectOption itemValue="MICHIGAN" itemlabel="MICHIGAN"/>
+        <apex:selectOption itemValue="MINNESOTA" itemlabel="MINNESOTA"/>
+        <apex:selectOption itemValue="MISSISSIPPI" itemlabel="MISSISSIPPI"/>
+        <apex:selectOption itemValue="MISSOURI" itemlabel="MISSOURI"/>
+        <apex:selectOption itemValue="MONTANA" itemlabel="MONTANA"/>
+        <apex:selectOption itemValue="NEBRASKA" itemlabel="NEBRASKA"/>
+        <apex:selectOption itemValue="NEVADA" itemlabel="NEVADA"/>
+        <apex:selectOption itemValue="NEW HAMPSHIRE" itemlabel="NEW HAMPSHIRE"/>
+        <apex:selectOption itemValue="NEW JERSEY" itemlabel="NEW JERSEY"/>
+        <apex:selectOption itemValue="NEW MEXICO" itemlabel="NEW MEXICO"/>
+        <apex:selectOption itemValue="NEW YORK" itemlabel="NEW YORK"/>
+        <apex:selectOption itemValue="NORTH CAROLINA" itemlabel="NORTH CAROLINA"/>
+        <apex:selectOption itemValue="NORTH DAKOTA" itemlabel="NORTH DAKOTA"/>
+        <apex:selectOption itemValue="OHIO" itemlabel="OHIO"/>
+        <apex:selectOption itemValue="OKLAHOMA" itemlabel="OKLAHOMA"/>
+        <apex:selectOption itemValue="OREGON" itemlabel="OREGON"/>
+        <apex:selectOption itemValue="PENNSYLVANIA" itemlabel="PENNSYLVANIA"/>
+        <apex:selectOption itemValue="RHODE ISLAND" itemlabel="RHODE ISLAND"/>
+        <apex:selectOption itemValue="SOUTH CAROLINA" itemlabel="SOUTH CAROLINA"/>
+        <apex:selectOption itemValue="SOUTH DAKOTA" itemlabel="SOUTH DAKOTA"/>
+        <apex:selectOption itemValue="TENNESSEE" itemlabel="TENNESSEE"/>
+        <apex:selectOption itemValue="TEXAS" itemlabel="TEXAS"/>
+        <apex:selectOption itemValue="UTAH" itemlabel="UTAH"/>
+        <apex:selectOption itemValue="VERMONT" itemlabel="VERMONT"/>
+        <apex:selectOption itemValue="VIRGINIA" itemlabel="VIRGINIA"/>
+        <apex:selectOption itemValue="WASHINGTON" itemlabel="WASHINGTON"/>
+        <apex:selectOption itemValue="WEST VIRGINIA" itemlabel="WEST VIRGINIA"/>
+        <apex:selectOption itemValue="WISCONSIN" itemlabel="WISCONSIN"/>
+        <apex:selectOption itemValue="WYOMING" itemlabel="WYOMING"/>
+        
+    </apex:selectList>
+</apex:component>

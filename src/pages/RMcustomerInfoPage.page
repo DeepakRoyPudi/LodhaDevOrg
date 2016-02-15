@@ -1,0 +1,1095 @@
+<!-- 
+    Description:
+    VisualForce page for Profile Information tab CSS
+    @Created by: Aditi Mulmule
+    @Created Date: 20/03/2015
+    --------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    | Aditi Mulmule     20/03/2015            Initial Draft    Profile Info
+                                                               in One Section
+    --------------------------------------------------------------------------------
+    |Aditi Mulmule       23/04/2015                           Seperate sections for 
+                                           1.1                each kind of detail
+                                                              with no of children 
+                                                              popup functionality
+                                                              and Profile Completeness
+                                                              updates meter
+    --------------------------------------------------------------------------------
+    -->
+<apex:page sidebar="false" showHeader="false"  docType="html-5.0"  standardStylesheets="true" controller="RMcustomerInfoPageController" id="page" >
+    <apex:param name="CRN" assignTo="{!CRN}" value=""/>
+         <!-- use to pass crn throught url-->
+         
+   <apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/style.css')}" rel="stylesheet" media="screen" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/bootstrap.min.css')}" rel="stylesheet" media="screen" />
+   <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/bootstrap.min.js')}"></script>
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/main.css')}" rel="stylesheet" media="screen" />
+   <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/responsive.css')}" rel="stylesheet" media="screen" />
+   <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/main.js')}"></script>
+   <script src="{!$Resource.YearRangeIncr}"></script>
+  
+            <!---------- start CSS for view detail  popup in personal detail tab -------->
+            <style>
+                
+                .ViewDlabel {
+                text-align: left;
+                Font-weight:Bold;
+                float: left;
+                }
+                 .ViewDlabel1 {
+                text-align: left;
+                Font-weight:Bold;
+                width: 20%;
+                float: left;
+                }
+                .ViewDvalue{
+              
+               
+                }
+                 .ViewDvalue1{
+                padding-left: 2%;
+                  float: left;
+                }
+                .setWidth{
+                width:50%;
+                }
+                .progressBar1{
+                height: 22px;
+                width: 50%;
+                margin-bottom: 0px;
+                margin-left: 25%;
+                border:1px solid #C0C0C0;
+                }
+                .progressBar2{
+                background-color:#5bc0de;
+                color
+                float:left;
+                height: 100%;
+                }
+                .ProgressTitle{
+                color:black;
+                display:block;
+                font-size: 110%;
+                Font-weight:Bold;
+                text-align: center;
+                }
+                .footer1{
+                padding: 1% 48% 1% 0%;
+                margin-top: 0%;
+                }
+                .footer2{
+                padding: 1% 43% 1% 0%;
+                margin-top: 0%;
+                }
+                .modal-footer {
+                padding: 19px 20px 20px;
+                margin-top: 15px;
+                text-align:center;
+                border-top: 1px solid #e5e5e5;
+                }
+                .mr18{width:auto !important;  margin-right: 18px; }  
+                .headingSection
+                {
+                width:56%;
+                float:left; 
+                text-align:left;
+                }
+                .valueSection
+                {
+                width:40%; 
+                float:right;
+                }
+                .datePicker{
+                z-index:99999;
+                 // position: fixed;
+                }
+                .dateOnlyInput input {
+                width: 12em;
+                }
+            </style>
+            <style>
+                #assign-action-spinner-main {position: fixed;left: 0;top: 0;background-color:rgba(0,0,0,.6);height: 100%;width: 100%;z-index: 9999999;align: center;vertical-align: middle;}
+                #assign-action-spinner-content {position: absolute; top: 50%;left:45%;z-index:999999;background-color:none;width: 40px;height: 40px;}
+                #assign-action-spinner-content img {width: 40px;height: 40px;align:center;vertical-align: middle;z-index:999999;}
+                .h{
+                font-weight: bold;
+                font-size: x-large;
+                }  
+                .header{
+                word-spacing: 50px;
+                padding-left:70px;
+                padding:7px 11px 8px 21px;
+                } 
+            </style>
+            <body>
+            <div class="bs">
+                <apex:actionStatus id="loading" layout="block" style="align:center">
+                    <apex:facet name="start">
+                        <div id="assign-action-spinner-main" style="align:center">
+                            <div id="assign-action-spinner-content" style="align:center"> 
+                                <img  style="align:center" src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}"  />  
+                            </div>
+                        </div>
+                    </apex:facet>
+                </apex:actionStatus>
+              
+                <apex:form >
+                    <apex:outputpanel id="mainBody">
+                        <div class="container " style="width:100%">
+                                  
+                                <!---testing purpose--->
+                                <div class="panel-body">
+                                <!--    <p style="margin-bottom: 5px;"> 
+                                    <p class="ProgressTitle">
+                                        <apex:outputText value="Your Profile is {!profile_completeness}% Completed" id="p2"/>
+                                    </p>
+                                    </p> -->
+                                    <p style="margin-bottom: 0px;">
+                                    <div class="progressBar1">
+                                        <apex:outputpanel id="p1">
+                                            <div style="width:{!profile_completeness}%" class="progressBar2">
+                                             <span style="color:black; display:block;font-size:15px;">
+                                                     <b><apex:outputText id="pc2" style="position: absolute;left: 43%;" value="Profile Completeness : {!profile_completeness}%"/></b>   
+                                             </span>
+                                            </div>
+                                        </apex:outputpanel>
+                                    </div>
+                                    </p>
+                                    <!--                 <apex:outputPanel id="detailview" > -->
+                                    <!--------------------------- non Editable view---------------------------->
+                                     <div class="panel panel-default">
+                                            <div class="panel-heading" align="left"><b>Information Registered With Lodha</b></div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table table-bordered table-responsive">
+                                                        <tr>
+                                                            <td class="setWidth">
+                                                                <div class="ViewDlabel col-md-5" >
+                                                                    CRN  
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputField value="{!account_obj.CRN__c}" />
+                                                                </div>
+                                                            </td>
+                                                            <td class="setWidth">
+                                                                <div class="ViewDlabel col-md-5" >
+                                                                    Primary Applicant PAN No. 
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputField value="{!account_obj.Primary_PAN_number__c}" />
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="setWidth">
+                                                                <div class="ViewDlabel col-md-5" >
+                                                                    Name  
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputField value="{!account_obj.name}" />
+                                                                </div>
+                                                            </td>
+                                                            <td class="setWidth">
+                                                           
+                                                                <div class="ViewDlabel col-md-5" >
+                                                                    Co-Applicant PAN No. 
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputField value="{!booking_obj.PAN_Number_of_Co_Applicant__c}" />
+                                                                </div> 
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="setWidth">
+                                                                <div class="ViewDlabel col-md-5" >
+                                                                    Co-Applicant Name  
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputField value="{!account_obj.Co_Applicant__c}" />
+                                                                </div>
+                                                            </td>
+                                                            <td class="setWidth">
+                                                                <div class="ViewDlabel col-md-5" >
+                                                                    Mobile No. 
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputText value="{!maskphoneno}" />
+                                                                </div>
+                                                            
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="setWidth">
+                                                                 <div class="ViewDlabel col-md-5" >
+                                                                    Co-Applicant_2 Name  
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputText value="{!RestAPICallout_wrapper_obj.co_applicant_2}" />
+                                                                </div>
+                                        
+                                                                 
+                                                                
+                                                            </td>
+                                                            <td class="setWidth">
+                                                                <div class="ViewDlabel col-md-5" >
+                                                                    Primary Email 
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputField value="{!account_obj.Person_email_from_trigger__c}" />
+                                                                </div>
+                                                               
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="setWidth">
+                                                                   <div class="ViewDlabel col-md-5" >
+                                                                    Co-Applicant_3 Name  
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputText value="{!RestAPICallout_wrapper_obj.co_applicant_3}" />
+                                                                </div>
+                                                                 
+                                                               
+                                                            </td>
+                                                            <td class="setWidth">
+                                                               <div class="ViewDlabel col-md-5" >
+                                                                    Personal Email 
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputField value="{!account_obj.PersonEmail}" />
+                                                                </div>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="setWidth">
+                                                               <div class="ViewDlabel col-md-5" >
+                                                                    Address 
+                                                                </div>
+                                                                <div class="ViewDvalue col-md-6">
+                                                                    <apex:outputText value="{!address}" />
+                                                                </div>
+                                                             </td>
+                                                             <td>
+                                                             </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <!--------------------------- end of non Editable view ---------------------------->
+                                    <!--------------------------- Detail View editable/Non editable---------------------------->
+                                    
+                                    <!--------------------------- Detail View Communication Details---------------------------->
+                                    <apex:outputPanel id="comView">
+                                        <apex:outputPanel id="Comm" rendered="{!!isEditCom}">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" align="center">
+                                                    <div class="headingSection">
+                                                        <b>Communication Details</b>
+                                                    </div>
+                                                    <div class="valueSection">
+                                                        <apex:commandLink action="{!editComm}" id="editCommunication" value="Edit" title="Edit" styleClass="view_all" status="loading"  rerender="comView"/>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table table-bordered table-responsive">
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Preferred Mode of Contact  
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objComm.Preferred_Mode_of_Contact__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        TRAI DND 
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objComm.TRAI_DND__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Preferred Time of Call  
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputText value="{!RestAPICallout_wrapper_obj.time_of_communication }" />
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div align="center">
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!isEditCom}">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" align="center">
+                                                    <div class="headingSection">
+                                                        <b>Communication Details</b>
+                                                    </div>
+                                                    <div class="valueSection">
+                                                        <apex:commandLink action="{!saveComm}" id="saveButtonComm"  title="Save" value="Save" styleClass="view_all mr18" style="margin-right:10px" rerender="comView,p1,p2"  status="loading"/>
+                                                        <apex:commandLink action="{!cancelCom}" id="cancelButtonComm" title="Cancel" value="Cancel" styleClass="view_all mr18" rerender="comView" status="loading" onclick="window.scroll(1500,0);"/>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table table-bordered table-responsive">
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Preferred Mode of Contact  
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objComm.Preferred_Mode_of_Contact__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        TRAI DND
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objComm.TRAI_DND__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Preferred Time of Call  
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputText value="{!RestAPICallout_wrapper_obj.time_of_communication }" />
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div align="center">
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+                                    <!---------------------------End of Detail View Communication Details---------------------------->
+                                    <!--------------------------- Detail View Personal Details ---------------------------->
+                                    <apex:outputPanel id="person">
+                                        <apex:outputPanel rendered="{!!isEditPerson}">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" align="center">
+                                                    <div class="headingSection">
+                                                        <b>Personal Details</b> 
+                                                    </div>
+                                                    <div class="valueSection">
+                                                        <apex:commandLink action="{!editPerson}" id="editPer1" value="Edit" title="Edit" styleClass="view_all headerSections"  status="loading"  rerender="person"  oncomplete="yearIncr();"/>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table table-bordered table-responsive">
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Age
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputText value="{!Age}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" > 
+                                                                        Occupation
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objPersn.Occupation_acc__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Date of Birth
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <c:FormatDateComponent date_value="{!account_objPersn.DOB_Of_Client__c}"/>
+                                                                       <!-- <apex:outputField value="{!account_objPersn.DOB_Of_Client__c}" /> -->
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Designation
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objPersn.Alternate_Designation__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Ethinicity
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objPersn.Ethinicity__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Industry of Occupation
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objPersn.Industry}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Hobbies
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objPersn.Hobbies__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Residence Status
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputText value="{!RestAPICallout_wrapper_obj.residential_status}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Car(s) Owned
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objPersn.Car_s_Owned__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Office Address
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputText value="{!RestAPICallout_wrapper_obj.office_address}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Club Membership
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objPersn.Club_Membership__pc}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">                                           
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!isEditPerson}">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" align="center">
+                                                    <div class="headingSection">
+                                                        <b>Personal Details</b>
+                                                    </div>
+                                                    <div class="valueSection">
+                                                        <apex:commandLink action="{!savePersn}" id="savePer"  title="Save" value="Save" styleClass="view_all mr18"  rerender="person,p1,p2" status="loading"/>
+                                                        <apex:commandLink action="{!cancelPersn}" id="cancelPer" title="Cancel" value="Cancel" styleClass="view_all mr18 " rerender="person" status="loading" onclick="window.scroll(1500,0);"/>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                   <apex:pageMessages />
+                                                    <div class="table-responsive">
+                                                        <table class="table table table-bordered table-responsive">
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Age
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputText value="{!Age}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" > 
+                                                                        Occupation
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objPersn.Occupation_acc__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Date of Birth
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objPersn.DOB_Of_Client__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Designation
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objPersn.Alternate_Designation__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Ethinicity
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objPersn.Ethinicity__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Industry of Occupation
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objPersn.Industry}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Hobbies
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objPersn.Hobbies__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Residence Status
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputText value="{!RestAPICallout_wrapper_obj.residential_status}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Car(s) Owned
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objPersn.Car_s_Owned__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Office Address
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputText value="{!RestAPICallout_wrapper_obj.office_address}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Club Membership
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objPersn.Club_Membership__pc}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">                                           
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div align="center">
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+                                    <!--                     -------------------------End of Detail View Personal Details Non editable-------------------------- -->
+                                    <!--                     ------------------------- Detail View 
+                                     Non editable-------------------------- -->
+                                    <apex:outputPanel id="family">
+                                        <apex:outputPanel rendered="{!!isEditFamily}">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading headerSections" align="center">
+                                                    <div class="headingSection"> 
+                                                        <b>Family Details</b>
+                                                    </div>
+                                                    <div class="valueSection">
+                                                        <apex:commandLink action="{!editFamily}" id="editfam" value="Edit" title="Edit" styleClass="view_all"  status="loading"  rerender="family"  oncomplete="yearIncr();" />
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table table-bordered table-responsive">
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Marital status
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objFamily.Marital_Status__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        No. of Children
+                                                                    </div>
+                                                                    <apex:outputpanel id="n3">
+                                                                        <div class="ViewDvalue col-md-6">
+                                                                            <apex:outputField value="{!account_objFamily.No_of_children__c}" />
+                                                                        </div>
+                                                                    </apex:outputpanel>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Spouse Name
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objFamily.Spouse_Name__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Children Name
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objFamily.Children_Names__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Spouse DOB
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <c:FormatDateComponent date_value="{!account_objFamily.DOB_of_Spouse__c}"/>
+                                                                        <!--<apex:outputField value="{!account_objFamily.DOB_of_Spouse__c}" /> -->
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        DOB of Child
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objFamily.Children_s_DOB__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Anniversary
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <c:FormatDateComponent date_value="{!account_objFamily.Anniversary_Date__c}"/>
+                                                                        <!--<apex:outputField value="{!account_objFamily.Anniversary_Date__c}" /> -->
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!isEditFamily}" id="editFamily" >
+                                            <apex:actionFunction name="echo" action="{!ChildPopup}" reRender="PopupChild">
+                                                <apex:param name="firstParam" assignTo="{!no_of_children}" value="" />
+                                            </apex:actionFunction>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading headerSections" align="center">
+                                                    <div class="headingSection">
+                                                        <b>Family Details</b>
+                                                    </div>
+                                                    <div class="valueSection">
+                                                        <apex:commandLink action="{!saveFamily}" id="savefam"  title="Save" value="Save" styleClass="view_all mr18" rerender="family,p1,p2" status="loading"/>
+                                                        <apex:commandLink action="{!cancelFamily}" id="cancelfam" title="Cancel" value="Cancel" styleClass="view_all mr18 " rerender="family" status="loading" onclick="window.scroll(1500,0);"/>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                  <apex:pageMessages />
+                                                    <div class="table-responsive">
+                                                        <table class="table table table-bordered table-responsive">
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Marital status
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objFamily.Marital_Status__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        No. of Children
+                                                                    </div>
+                                                                    <apex:outputpanel id="n2">
+                                                                        <div class="ViewDvalue col-md-6">
+                                                                            <apex:inputField value="{!account_objFamily.No_of_children__c}" id="child" onclick="viewAlert();window.scroll(1500,0);" onfocus="viewAlert();window.scroll(1500,0);" />
+                                                                        </div>
+                                                                    </apex:outputpanel>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Spouse Name
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objFamily.Spouse_Name__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Children Name
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objFamily.Children_Names__c}" onclick="viewAlert();window.scroll(1500,0);" onfocus="viewAlert();window.scroll(1500,0);" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Spouse DOB
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objFamily.DOB_of_Spouse__c}"  />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        DOB of Child
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objFamily.Children_s_DOB__c}" onclick="viewAlert();window.scroll(1500,0);" onfocus="viewAlert();window.scroll(1500,0);" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Anniversary
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objFamily.Anniversary_Date__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+                                    <!--                     -------------------------End of Detail View Family Details Non editable-------------------------- -->
+                                    <!--                     ------------------------- Detail View Residential Details Non editable-------------------------- -->
+                                    <apex:outputPanel id="residential">
+                                        <apex:outputPanel rendered="{!!isEditResidential}">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" align="center">
+                                                    <div class="headingSection">
+                                                        <b>Residential Details</b> 
+                                                    </div>
+                                                    <div class="valueSection">
+                                                        <apex:commandLink action="{!editRes}" id="editres" value="Edit" title="Edit" styleClass="view_all headerSections"  status="loading"  rerender="residential" />
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table table-bordered table-responsive">
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Assets Owned : No. of Homes
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objRes.Assets_Owned_Homes__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Current Residence Type
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objRes.Type_of_Home__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        No. of Residences Owned at Lodha Group
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objRes.Other_residences_owned_at_Lodha_Group_CC__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Current Residence Ownership
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objRes.Current_Home_ownership__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Specify Residences Owned at Lodha Group
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objRes.Specify_Residences_owned_at_Lodha_group__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Purpose of Purchase of Current Unit
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:outputField value="{!account_objRes.Purpose_of_Purchase__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!isEditResidential}" >
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" align="center">
+                                                    <div class="headingSection">
+                                                        <b>Residential Details</b>
+                                                    </div>
+                                                    <div class="valueSection">
+                                                        <apex:commandLink action="{!saveRes}" id="saveres"  title="Save" value="Save" styleClass="view_all mr18" rerender="residential,p1,p2,ResidentError" status="loading"/>
+                                                        <apex:commandLink action="{!cancelRes}" id="cancelres" title="Cancel" value="Cancel" styleClass="view_all mr18 " rerender="residential" status="loading" onclick="window.scroll(1500,0);"/>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                <apex:pageMessages id="ResidentError" />
+                                                    <div class="table-responsive">
+                                                        <table class="table table table-bordered table-responsive">
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Assets Owned : No. of Homes
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objRes.Assets_Owned_Homes__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Current Residence Type
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objRes.Type_of_Home__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        No. of Residences Owned at Lodha Group
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objRes.Other_residences_owned_at_Lodha_Group_CC__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Current Residence Ownership
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objRes.Current_Home_ownership__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Specify Residences Owned at Lodha Group
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objRes.Specify_Residences_owned_at_Lodha_group__c}" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="setWidth">
+                                                                    <div class="ViewDlabel col-md-6" >
+                                                                        Purpose of Purchase of Current Unit
+                                                                    </div>
+                                                                    <div class="ViewDvalue col-md-6">
+                                                                        <apex:inputField value="{!account_objRes.Purpose_of_Purchase__c}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+                                </div>
+                       
+                        </div>
+                        <div class="foorterdiv"></div>
+                       
+                        <div id="Popup" class="modal "> 
+                           
+                            <div class="modal-dialog" style="width:100%;  margin-top: 30px;">
+                                <div class="modal-content" >
+                                    <div class="modal-header">
+                                        <apex:commandButton id="close1"  title="Cancel" value="X" html-data-dismiss="modal" html-aria-hidden="true"   styleClass="close" style="background-color:#C0C0C0 !important; color:black" rerender="error,PopupChild,family"  status="loading" onclick="window.scroll(0,1000);enableScroll();"/>
+                                        <!--                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+                                        <h4 class="modal-title"><span class="glyphicon glyphicon-question-sign"></span> Children Details</h4>
+                                    </div>
+                                   
+                                    <div class="modal-body" id="mbody" style="padding-left:3%;">
+                                            
+                                        <apex:outputPanel id="PopupChild">
+                                           
+                                            <apex:pagemessages id="error" />
+                                            
+                                            <apex:actionStatus id="loading2" layout="block">
+                                                <apex:facet name="start">
+                                                    <div id="assign-action-spinner-main">
+                                                        <div id="assign-action-spinner-content">
+                                                            <img src="{!URLFOR($Resource.Bootstrap, '/bootstrap/images/loadimage.gif')}" />  
+                                                        </div>
+                                                    </div>
+                                                </apex:facet>
+                                            </apex:actionStatus>
+                                          <div class="ViewDlabel1 col-md-2" >
+                                                No. of Children 
+                                            </div>
+                                            <apex:outputpanel id="n1">
+                                                <div class="ViewDvalue1 col-md-4">
+                                                    <apex:outputField value="{!account_objFamily.No_of_children__c}" />
+                                                </div>
+                                            </apex:outputpanel>
+                                            <div align="right" class="col-md-6">
+                                                <apex:commandButton action="{!AddRow}" id="addRow"   title="Add New Child Details" value="Add New Child Details" styleClass="btn-default buttoncolor" style="align:right;margin-right:10px; background-color:#1897c0 !important;"  rerender="PopupChild,error" />
+                                            </div>
+                                            <div class="clear"></div>
+                                            <br/>
+                                               
+                                       <apex:repeat value="{!profileWrapList}" var="profile" id="theRepeat">
+                                     
+                                            <div class="ViewDlabel1 col-md-2 form-group" >
+                                                    Name of Child
+                                                </div>
+                                                <div class="ViewDvalue1 col-md-3 ">
+                                                    <apex:inputText value="{!profile.NameOfChild}" id="nameofChild" />
+                                                </div>
+                                                <div class="ViewDlabel1 col-md-2" style="margin-left: 2%;">
+                                                    Date of Birth
+                                                </div>
+                                                <div class="row ViewDvalue1 col-md-3 ">
+                                                  
+                                                    <apex:inputField value="{!profile.desObj.Despatch_Date__c}" />
+                                                  
+                                                </div>
+                                                
+                                                <br/><br/>
+                                            </apex:repeat> 
+                                           
+                                            
+                                        </apex:outputPanel>
+                                    </div>
+                                    <div align="center" class="modal-footer">
+                                        <apex:commandButton action="{!saveChildDetails}" id="saveChild"  title="Save" value="Save" styleClass="btn-default buttoncolor"  style="margin-right:10px;background-color:#1897c0 !important;"  rerender="error,PopupChild,family,p1,p2"  status="loading2" />
+                                        <apex:commandButton id="close"  title="Cancel" value="Cancel" html-data-dismiss="modal" styleClass="btn-default buttoncolor"  style="margin-right:10px;background-color:#1897c0 !important;" rerender="family,PopupChild"  status="loading" onclick="window.scroll(0,1000);enableScroll();"/>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                       </div>
+                       
+                    </apex:outputpanel>
+                
+                </apex:form>
+                
+                </div>
+                <script type="text/javascript">
+                
+               
+                
+                function viewAlert() 
+                    {
+                    
+                       
+                        
+                       //fetch no of children value from field
+                       var theValue = jQuery('[id$=child]').val();
+                      echo(theValue);
+                        
+                       $('#Popup').modal({
+                       backdrop: 'static',
+                       keyboard: false
+                      })
+                   
+                   $('html, body').css({
+                      'overflow': 'hidden',
+                     'height': '100%'
+                       }); 
+
+
+                    }
+                    
+                    
+function enableScroll()
+                    {
+                      $('html, body').css({
+                      'overflow': 'visible',
+                      'height': '100%'
+                       });  
+                    
+                    }
+              
+                </script>  
+                         
+            </body>
+          
+          
+         
+</apex:page>

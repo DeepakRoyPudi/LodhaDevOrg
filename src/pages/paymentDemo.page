@@ -1,0 +1,40 @@
+<apex:page sidebar="false" showHeader="false" controller="PaymentsReceivedRMController">
+
+
+                    <!------Start new Files Include with old-------------->
+                    <link href="{!URLFOR($Resource.bootStrap, '/bootstrap/css/bootstrap.min.css')}" rel="stylesheet" media="screen"/>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+                    <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/js/bootstrap.min.js')}"></script>
+                    <script src="{!URLFOR($Resource.bootStrap, '/bootstrap/js/jquery.sidebar.js')}"></script>
+                    <!----End new Files Include with old------->
+
+
+<table data-toggle="table"
+       data-url="https://api.github.com/users/wenzhixin/repos?type=owner&sort=full_name&direction=asc&per_page=100&page=1"
+       data-sort-name="stargazers_count"
+       data-sort-order="asc">
+    <thead>
+    <tr>
+        <th data-field="name" 
+            data-sortable="true"
+            data-formatter="nameFormatter">
+                Name
+        </th>
+        <th data-field="stargazers_count" 
+            data-sortable="true"
+            data-sorter="starsSorter">
+                Stars
+        </th>
+        <th data-field="forks_count" 
+            data-sortable="true">
+                Forks
+        </th>
+        <th data-field="description" 
+            data-sortable="true">
+                Description
+        </th>
+    </tr>
+    </thead>
+</table>
+</apex:page>

@@ -1,0 +1,40 @@
+<apex:page id="thePage" showHeader="true" sidebar="false">
+    <apex:form >
+        <apex:pageBlock >
+        
+            
+            <table width="100%" border="1" cellspacing="0" style="text-align:center;margin-top:1px;font-size:10pt;font-family:Arial Unicode MS;">
+                <tr style="font-weight:bold"><td width="100%" align="left">Service Tax related</td></tr>
+                <tr><td width="100%" align="left">1. Penal Interest, if any, for non/delayed payment of service tax shall be payable by the purchaser.</td></tr>
+                <tr><td width="100%" align="left">2. The above computation is provisional and subject to the final assessment by the service tax authorities. </td></tr>
+                <tr><td width="100%" align="left">3. The above computation is as per the rate of service tax applicable as on 30th June 2011 and would change, in case the rates change.</td></tr>
+                <tr><td width="100%" align="left">4. Errors and Omissions excepted.</td></tr>
+                <tr><td width="100%" align="left">5. The above computation pertains to service tax liability on the construction services, floor rise and view premium and does not pertain to taxes, cess and levies that are otherwise payable under the Agreement for Sale or in respect of the Unit. </td></tr>            
+            </table>
+            <table>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            </table>
+            <table width="100%" border="1" cellspacing="0" style="text-align:center;margin-top:1px;font-size:10pt;font-family:Arial Unicode MS;">
+                <tr style="font-weight:bold"><td width="100%" align="left">Interest related</td></tr>
+                <tr><td width="100%" align="left">1.  As per the terms of the Allotment Lettter/Agreement for Sale, Interest @ 18% p.a. shall be levied on delayed payments from the date of default till actual realisation.</td></tr>
+                <tr><td width="100%" align="left">2. Any payments received from you shall be appropriated in the following order:</td></tr>
+                <tr><td width="100%" align="left">&nbsp;&nbsp;&nbsp;a. Firstly, towards costs and expenses for enforcement of the Allotment/ Agreement and recovery of the Total Consideration,</td></tr>
+                <tr><td width="100%" align="left">&nbsp;&nbsp;&nbsp;b. Secondly, towards interest on the amounts (including Total Consideration) payable hereunder and </td></tr>
+                <tr><td width="100%" align="left">&nbsp;&nbsp;&nbsp;c. Finally towards Total Consideration and the charges and other amounts payable hereunder.</td></tr>
+            </table>
+
+            <table>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            <tr><td></td></tr>
+            </table>
+            <table width="100%" border="1" cellspacing="0" style="text-align:center;margin-top:1px;font-size:10pt;font-family:Arial Unicode MS;">
+                <tr style="font-weight:bold"><td width="100%" align="left">Disclaimer:</td></tr>
+                <tr><td width="100%" align="left">Information including calculations, dates and other factual data is for descriptive purposes.</td></tr>
+                <tr><td width="100%" align="left">Though Lodha endeavours to have a maximum accuracy, in the event of errors / queries / discrepancies, you are requested to contact the Lodha Customer Care team.</td></tr>            
+            </table>
+        </apex:pageBlock>    
+    </apex:form> 
+</apex:page>

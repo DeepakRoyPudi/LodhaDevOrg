@@ -1,0 +1,124 @@
+<apex:component access="global" controller="ScudEmailTemplateController" >
+<apex:attribute name="ScudInfo" type="ID" assignTo="{!ScudId}" description="This is the ID of the Scud."/>
+
+<html>
+<apex:variable value="{!0}" var="Percentage"/>
+<apex:variable value="{!0}" var="CurrentTotalAmount"/>
+<apex:variable value="{!0}" var="RequestedTotalAmount"/>
+
+<style type="text/css">
+  table td{padding:3px;}
+  th{background-color:#000;color:#fff;padding:3px;font-weight:bold;}
+</style>
+<apex:repeat value="{!SI}" var="si" >
+</apex:repeat>
+Dear {!scudInformation.Booking_Information__r.Owner.FirstName} &nbsp; {!scudInformation.Booking_Information__r.Owner.LastName}, <br/><br/>
+Following SCUD case has been Accepted: <br/><br/>
+
+Booking Date: <apex:outPutText value=" {!scudInformation.Booking_Information__r.Booking_Date__c}" /> <br/><br/>
+
+<b>Client Information: </b><br/>
+<TABLE border="1" cellspacing = "0">
+<TR>
+<TD align="left"><b>Name</b></TD>
+<TD align="left"><b>Occupation</b></TD>
+<TD align="left"><b>Company</b></TD>
+<TD align="left"><b>Designation</b></TD>
+<TD align="left"><b>Address</b></TD>
+<TD align="left"><b>Manager Name</b></TD>
+<TD align="left"><b>Source</b></TD>
+</TR>
+<TR>
+<TD align="left">{!scudInformation.Booking_Information__r.Name_of_Applicant__c}</TD>
+<TD align="left">{!scudInformation.AccountOccupation__c}</TD>
+<TD align="left">{!scudInformation.AccountCompany__c}</TD>
+<TD align="left">{!scudInformation.Accountdesignation__c}</TD>
+<TD align="left">{!scudInformation.AccountCorrespondence__c}</TD>
+<TD align="left">{!scudInformation.Booking_Information__r.Sales_Person__r.Name}</TD>
+<TD align="left">{!scudInformation.OpportunityWalkinSource__c}</TD>
+</TR>
+</TABLE><br/><br/>
+<b> Interested In: </b><br/>
+<TABLE border = "1" cellspacing = "0">
+<TR>
+<TD align="left"><b>Project</b></TD>
+<TD align="left"><b>Cluster</b></TD>
+<TD align="left"><b>Building/Wing </b></TD>
+<TD align="left"><b>Residence#</b></TD>
+<TD align="left"><b>Type</b></TD>
+<TD align="left"><b>Area</b></TD>
+<TD align="left"><b>CV</b></TD>
+</TR>
+<TR>
+<TD align="left">{!scudInformation.Project__c}</TD>
+<TD align="left">{!scudInformation.Cluster__c}</TD>
+<TD align="left">{!scudInformation.Wing__c}</TD>
+<TD align="right">{!scudInformation.Flat_Number__c}</TD>
+<TD align="left">{!scudInformation.Flat_Type__c}</TD>
+<TD align="right"><apex:outPutText value="{!round(scudInformation.Saleable_Area__c,0)}" /></TD>
+<TD align="right">
+<apex:outputText value="{0, number, ###,##0}">
+      <apex:param value="{!scudInformation.Booking_Information__r.Consideration_Actual_Rs__c}" />
+</apex:outputText>
+</TD>
+</TR>
+</TABLE><br/><br/>
+NPV Difference(Rs): {!scudInformation.NPV_Difference__c} <br/>
+<b> Price Information: </b><br/>
+<TABLE border = "1" cellspacing = "0">
+<TR>
+<TD align="left"><b>Rs/psf</b></TD>
+<TD align="left"><b>As is</b></TD>
+<TD align="left"><b>To be</b></TD>
+<TD align="left"><b>Difference</b></TD>
+</TR>
+<TR>
+<TD align="left"><b>Base Price </b></TD>
+<TD align="right">
+<apex:outputText value="{0, number, ###,##0.00}">
+              <apex:param value="{!scudInformation.Booking_Information__r.Base_Rate_Sq_ft_Actual_Rs__c}"/>
+</apex:outputText>
+</TD>
+<TD align="right">{!scudInformation.Booking_Information__r.TobeBasePrice__c}</TD>
+<TD align="right">{!scudInformation.Booking_Information__r.DifferenceBasePrice__c}</TD>
+</TR>
+<TR>
+<TD align="left"><b>Floor Rise </b></TD>
+<TD align="right">
+<apex:outputText value="{0, number, ###,##0.00}">
+              <apex:param value="{!scudInformation.Booking_Information__r.Floor_rise_Sq_ft_Rs__c}"/>
+</apex:outputText>
+</TD>
+<TD align="right">
+<apex:outputText value="{0, number, ###,##0.00}">
+              <apex:param value="{!scudInformation.Booking_Information__r.Floor_rise_Sq_ft_Actual_Rs__c}"/>
+</apex:outputText>
+</TD>
+<TD  align="right">0.00</TD>
+</TR>
+<TR>
+<TD align="left"><b>Premiums (if any)</b></TD>
+<TD align="right">
+<apex:outputText value="{0, number, ###,##0.00}">
+              <apex:param value="{!scudInformation.Booking_Information__r.Premium_Sq_ft_Rs__c}"/>
+</apex:outputText>
+</TD>
+<TD align="right">
+<apex:outputText value="{0, number, ###,##0.00}">
+              <apex:param value="{!scudInformation.Booking_Information__r.Premium_Sq_ft_Actual_Rs__c}"/>
+</apex:outputText>
+</TD>
+<TD  align="right">0.00</TD>
+</TR>
+<TR>
+<TD align="left"><b>Total</b></TD>
+<TD align="right">{!scudInformation.Booking_Information__r.Total_Base_Rate__c}</TD>
+<TD align="right">{!scudInformation.Booking_Information__r.Total_Actual_Base_Rate__c}</TD>
+<TD align="right">{!scudInformation.Booking_Information__r.DifferenceTotalRate__c}</TD>
+</TR>
+</TABLE><br/><br/>
+
+Regards, <br/>
+{!scudInformation.Booking_Information__r.Sales_Strategist_Hidden__c}
+</html>
+</apex:component>

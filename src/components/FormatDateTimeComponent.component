@@ -1,0 +1,24 @@
+<!-- VisualForce Component for converting DateTime value to required format 
+     like 10 Jul 2012 10:10 Am
+ @Created by: Sudeep Dube
+ @Created Date: 17/06/2015
+ @Input Parameter: DateTime Value.
+ the component prints DateTime value in above  declared format on VF.
+ --------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+-->
+
+<apex:component access="global" controller="FormatDateTimeController">
+
+     <apex:attribute assignTo="{!dateTimeValue}" description="The DateTime value to be rendered 
+     based upon required format 10 Jul 2012 10:10 Am" 
+     name="date_Timevalue" type="DateTime"></apex:attribute>
+     
+       {!TimeZoneValue}
+       
+</apex:component>

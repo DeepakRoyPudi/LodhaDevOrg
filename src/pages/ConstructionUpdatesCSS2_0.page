@@ -1,0 +1,505 @@
+<!-- /*Description:
+   This class is used for ConstructionUpdatesCSS2_0 Component 
+   
+    @Created by: Trupti Dhoka
+    @Created Date:  20/03/15  new  
+    
+    ------------------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description                   |
+    ------------------------------------------------------------------------------------------
+    |Trupti Dhoka          21/03/2015          1.0              Added slider for images       |
+    ------------------------------------------------------------------------------------------
+    |Trupti Dhoka          27/04/2015          1.1              Added slider for 6 videos     |
+    ------------------------------------------------------------------------------------------
+    |Trupti Dhoka          22/07/15            1.3              Added slider for 6 videos     |
+    ------------------------------------------------------------------------------------------
+    |Shruti Nikam          25/01/2015          1.4              Added project name and        |
+    |                                                           decription fields in full view|
+    |                                                           of common amunities           |
+    ------------------------------------------------------------------------------------------
+   */-->
+<apex:page sidebar="false" showHeader="false"
+    controller="ConstructionUpdatesCSS2_0Controller" docType="html-5.0">
+    <script
+        src="{!URLFOR($Resource.ConstructionUpdatesCSS2_0, '/color/jquery.colorbox.js')}"></script>
+    <script
+        src="{!URLFOR($Resource.ConstructionUpdatesCSS2_0, '/color/jquery.bootstrap.wizard.js')}"></script>
+    <script
+        src="{!URLFOR($Resource.ConstructionUpdatesCSS2_0, '/color/prettify.js')}"></script>
+    <link
+        href="{!URLFOR($Resource.ConstructionUpdatesCSS2_0, '/color/colorbox.css')}"
+        rel="stylesheet" />
+    <link
+        href="{!URLFOR($Resource.ConstructionUpdatesCSS2_0, '/color/prettify.css')}"
+        rel="stylesheet" />
+    <apex:composition template="LandingPageCSS2_0">
+        <apex:define name="body">
+            <head>
+<title>Construction Updates</title>
+<style>
+body {
+       background-image: url({! IF(isProjectWise, imageUrl, ($Resource.CSS_Background_Image))
+    });
+    background-position:center center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-size:cover;
+}
+h2 {
+    font-size: 13px;
+    margin: 15px 0 0 0;
+}
+/* class is used to align tabs(video/images) */
+.tab_align {
+    margin-left: 2%;
+    margin-top: 3%;
+    margin-right: 5%;
+    width: 11%;
+}
+
+ul.tabs {
+    margin: 0px;
+    padding: 0px;
+    list-style: outside none none;
+    text-align: center;
+    width: 85%;
+    font-size: 15px !important;
+}
+
+ul.tabs li {
+    background: none;
+    color: #222;
+    /*display: inline-block;*/
+    padding: 10px 15px;
+    cursor: pointer;
+    border: solid 1px #999;
+}
+
+ul.tabs li.current {
+    background: #A68D2B;
+    color: #fff;
+}
+
+.tab-content {
+    display: none;
+    background: #ededed;
+    padding: 15px;
+}
+
+.tab-content.current {
+    display: inherit;
+}
+
+.details {
+    padding: 5px;
+    width: 95.8%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    position: absolute;
+    top: 0;
+}
+
+.details-one {
+    padding: 5px;
+    width: 95.8%;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    position: absolute;
+    bottom: 0;
+}
+
+.constraction-update {
+    width: 100%;
+    max-height: 300px
+}
+
+.clr {
+    clear: both !important
+}
+
+.tab-left {
+    float: left;
+    width: 20%
+}
+
+.tab-right {
+    float: right;
+    width: 80%
+}
+
+.bordernew {
+    border: solid 1px #999
+}
+
+.tab-content img {
+    border-radius: 0px;
+}
+
+@media only screen and (min-width:150px) and (max-width: 767px) {
+    .tab-left {
+        float: left;
+        width: 100%
+    }
+    .tab-right {
+        float: right;
+        width: 100%
+    }
+}
+
+.imgcontainoverflow {
+    overflow: auto;
+    height: 400px;
+}
+
+#cboxTitle {
+    bottom: 5% !important;
+    width: 90%;
+    position: fixed;
+    color: white;
+    left: 13% !important;
+}
+
+.header_title {
+    font-size: 18px;
+    color: #2C2B2B;
+    padding: 14px 0px;
+    border-bottom: 1px solid rgb(180, 177, 177);
+    width: 100%;
+}
+
+.tab-content {
+    background: #FFFEFE;
+}
+
+.box-new {
+    text-align: center;
+    background: #CFCFCF none repeat scroll 0% 0%;
+    width: 80%;
+    font-size: 15px;
+    color: #000;
+    margin: 10px auto;
+    padding: 15px;
+    border-radius: 7px;
+    border: 1px solid #B0B0B0;
+}
+
+.impnote {
+    position: inherit !important;
+    background: #EFEFEF none repeat scroll 0% 0%;
+    padding: 10px;
+    font-size: 12px;
+    border-top: 1px solid #CCC !important;
+}
+.imgInfo {
+    border: solid 1px #fff;
+    width: 82%;
+    padding: 6px
+}
+
+#cboxLoadedContent{background:#000 !important}
+
+</style>
+        </head>
+        <body>
+            <apex:form >
+
+                <!-- Google Analtyics component -->
+                <c:GoogleAnalytics Page="Construction Updates" User="{!username}"
+                    Project="{!userProject}" Segment="{!userSeqment}" CRN="{!userCRN}"
+                    Gender="male" LastLogin="{!userLastLogin}" />
+                <div class="container container_allpages">
+                    <div class="panel panel-default panelmargintop"
+                        style="margin-right: 2%">
+                        <div class="tab-left">
+                            <ul class="tabs" style="margin-top: 11%;">
+                                <li class="tab-link current" data-tab="tab-1">Images</li>
+                                <li class="tab-link" data-tab="tab-2">Videos</li>
+                            </ul>
+                        </div>
+                        <div class="tab-right">
+
+                            <div id="tab-1" class="tab-content current ">
+                                <div class="header_title">Project Images</div>
+                                <div id="tab1" class="imgcontainoverflow">
+                                    <apex:repeat value="{!listConstrctionImg}" var="images">
+                                        <a class="images" href="{!images.project_View}"
+                                            title="Project Name: {!images.project_Name}, Cluster: {!images.Cluster},  Wing:  {!images.Wing}, Description: {!images.image_Description} " >
+                                            <div class="col-md-4" style="margin: 10px 0px; position: relative;">
+                                                <div class="details">
+                                                    Project Name: {!images.Project_Name}<br /> Cluster:
+                                                    {!images.Cluster} <br/> Wing: {!images.Wing}
+                                                </div>
+                                                <div class="clr"></div>
+                                                <div class="constraction-update">
+                                                    <apex:image value="{!images.project_View}"
+                                                        style="width: 100%; height:180px;" title="" />
+                                                </div>
+                                                <div class="clr"></div>
+                                                <div class="details-one">{!images.image_Description}</div>
+                                                <div class="clr"></div>
+                                            </div>
+                                        </a>
+                                    </apex:repeat>
+                                    <!-- This block will be shown if no images are present -->
+                                    <apex:outputpanel rendered="{!listConstrctionImg.size==0}">
+                                        <div class="box-new">
+                                            <apex:outputText value="No photos to display" escape="false" />
+                                        </div>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            <!-- Below code is used to show videos -->
+
+                            <div id="tab-2" class="tab-content w">
+                                <div class="header_title">Project Videos</div>
+                                <div id="tab2" class="imgcontainoverflow">
+                                    <apex:repeat value="{!listConstructionVideo}" var="videos">
+                                        <a class="videos" href="{!videos.youTube_URL}">
+                                            <div class="col-md-4" style="margin: 10px 0px; position: relative;">
+                                                <div class="clr"></div>
+                                                <div class="constraction-update">
+                                                    <apex:image value="{!videos.youTubeThumbnail_URL}"
+                                                        style="width: 100%; height:180px;" title="" />
+                                                </div>
+                                                <div class="clr"></div>
+                                            </div>
+                                        </a>
+                                    </apex:repeat>
+
+                                    <!-- This block will be shown if no videos are present -->
+                                    <apex:outputpanel rendered="{!listConstructionVideo.size == 0}">
+                                        <div class="box-new">
+                                            <apex:outputText value="No Videos to display" escape="false" />
+                                        </div>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            <div id="tab-3" style="padding: 15px">
+                                <div class="header_title">Common Amenities</div>
+                                <div id="tab3" class="imgcontainoverflow">
+                                    <apex:repeat value="{!CommonEminitiesImageslst}" var="images">
+                                        <a class="commonimages " href="{!images.project_View}"
+                                            
+                                           title="Project Name: {!images.project_Name}, Description: {!images.image_Description}">
+                                            <div class="col-md-4" style="margin: 10px 0px; position: relative;">
+                                                <div class="details">Project Name:
+                                                    {!images.project_Name}</div>
+                                                <div class="clr"></div>
+                                                <div class="constraction-update">
+                                                    <apex:image value="{!images.project_View}"
+                                                        style="width: 100%; height:180px;" title="" />
+                                                </div>
+                                                <div class="clr"></div>
+                                                <div class="details-one"> {!images.image_Description}</div>
+                                                <div class="clr"></div>
+                                            </div>
+                                        </a>
+                                    </apex:repeat>
+                                    <apex:outputpanel rendered="{!CommonEminitiesImageslst.size == 0}">
+                                        <div class="box-new">
+                                            <apex:outputText value="No Common Amenities photos to display"
+                                                escape="false" />
+                                        </div>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                            <!-- EOF tab3 -->
+                            <div class="clr"></div>
+                            <!-- This block will be shown if no common images are present -->
+
+                        </div>
+                        <div class="col-md-12 impnote">
+                            <header_title>
+                            <b>Important to Note: </b></header_title>
+                            <ul>
+                                <li>The Web Page is for the convenience of the customers
+                                    and the Photos uploaded herein depict the progress of your
+                                    Wing/Building as on the month mentioned above the respective
+                                    photo. We reserve our right to
+                                    <ol>(i) change/replace the Photos, as per our discretion;
+                                    </ol>
+                                    <ol>(ii) upload updated/new Photos in relation to your
+                                        Wing/Building and
+                                    </ol>
+                                    <ol>(iii) discontinue the services with respect to this
+                                        Web Page.
+                                    </ol>
+                                <li>The Photos depicted herein are taken on a periodic
+                                    basis and may not necessarily co-relate to the request/demand
+                                    letters sent to you in respect of your payment milestones. The
+                                    photos of the unit/wing/building are for representation only
+                                    and may not be in relation to your unit/wing/building. Errors
+                                    and Omissions excepted.</li>
+                                </li>
+                                <li>This Web Page is only for your viewing and you are not
+                                    authorised to download, reproduce and retransmit information /
+                                    photos uploaded on this web page , in any manner, format or
+                                    form , whatsoever. You acknowledge that Lodha Group and/or its
+                                    licensors and/or photographers retain all copyright for
+                                    content contained in the said Photos and reserves their rights
+                                    to take strict civil and criminal action against any
+                                    unauthorized use of the same.</li>
+                                <li>This web site and its content are owned by Lodha Group
+                                    or its affiliates or agents or its licensors and/or
+                                    photographers. All content, trademarks, services marks, trade
+                                    names, logos, and icons are proprietary to Lodha Group or its
+                                    affiliates or agents or its licensors. Nothing contained on
+                                    this web page should be construed as granting any rights of
+                                    any nature whatsoever.</li>
+                                <li>The terms and conditions and this website and use
+                                    thereof shall be governed in accordance with the laws of the
+                                    India.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- panel Default -->
+                </div>
+                <!--# EOF Container -->
+            </apex:form>
+        </body>
+            <!----------------------------->
+        <script>
+           $(document).ready(function(){
+               
+               $('ul.tabs li').click(function(){
+               var tab_id = $(this).attr('data-tab');
+               $('ul.tabs li').removeClass('current');
+               $('.tab-content').removeClass('current');
+               $(this).addClass('current');
+               $("#"+tab_id).addClass('current');
+           })
+              
+           //Examples of how to assign the Colorbox event to elements
+               $(".images").colorbox({rel:'images', transition:"none", width:"75%", height:"75%"});
+               $(".videos").colorbox({rel:'videos', iframe:"true",transition:"none", width:"75%", height:"75%"});
+               $('#rootwizard').bootstrapWizard({'tabClass': 'nav nav-tabs'});
+               $(".commonimages").colorbox({rel:'commonimages', transition:"none", width:"75%", height:"75%"});
+              
+               disableRightClick();
+               setTabContentHeight();
+              
+           });
+           
+           /*This function disabled the right click event of images in thubnails*/
+           function disableRightClick(){
+                $("img").on("contextmenu",function(e){
+                  return false;
+               });
+           }
+           /*this function is used to set height of tab content according to respective list size*/
+           function setTabContentHeight(){
+               var projectImgH={!listConstrctionImg.size};
+               var commonImgH={!CommonEminitiesImageslst.size};
+               var videoH={!listConstructionVideo.size};
+               if(projectImgH == 0){
+                   $("#tab1").height("80px");
+               }
+               else if(projectImgH<=3){
+               $("#tab1").height("200px");
+               }
+               else{
+                   $("#tab11").height("400px");
+               }
+               
+               if(commonImgH == 0){
+               $("#tab3").height("80px");
+               }
+               else if(commonImgH<=3){
+               $("#tab3").height("200px");
+               }
+               else{
+                   $("#tab3").height("400px");
+               }
+               
+               if(videoH == 0){
+               $("#tab2").height("80px");
+               }
+               else if(videoH <=3){
+               $("#tab2").height("200px");
+               }
+               else{
+                   $("#tab2").height("400px");
+               }
+               
+           }
+           /*used to disable right click functionality*/
+           $(document).bind('cbox_complete', function(){
+          
+            $("img").on("contextmenu",function(e){
+               return false;
+            });
+
+            //get title and hide the default element
+        var cDescription = $('#cboxTitle').text();
+        var splitstring = cDescription.split(", ");
+        console.log('cDescription****',cDescription);
+        $('#cboxTitle').hide();
+        $('#cboxTitle').offset({top: 0, left: 0});
+        $( ".cboxTitle" ).empty();
+        $( ".cboxTitle1" ).empty();
+        //find the position of colorbox and inject the title below it
+        var cPosition = $('#colorbox').position();
+        var cHeight = $('#colorbox').height(); //to add more top margin from colorbox
+        var cWidth = $('#colorbox').width()-65; //minus 40 from padding, see style.css line 56
+        var bottomtitle_margin = cHeight-108;
+        var toptitlestring = '';
+        var bottomtitlestring = '';
+        if(splitstring.length>0){
+            if(splitstring.length>2){
+                if(typeof(splitstring[0]) != 'undefined' && splitstring[0] != null)
+                    titlestring = '<p style= "background:rgba(0, 0, 0, 0.5); ">'+splitstring[0] + '<br/>';
+                if(typeof(splitstring[1]) != 'undefined' && splitstring[1] != null)
+                    titlestring = titlestring + splitstring[1] + '<br/>';
+                if(typeof(splitstring[2]) != 'undefined' && splitstring[2] != null)
+                    titlestring = titlestring +  splitstring[2] + '</p>';
+                if(typeof(splitstring[splitstring.length-1]) != 'undefined' && splitstring[splitstring.length-1] != null)
+                    if(splitstring[splitstring.length-1].indexOf('Description:')>-1){
+                        var str = splitstring[splitstring.length-1].replace('Description:','');
+                        bottomtitlestring =  '<p style= "background:rgba(0, 0, 0, 0.5); ">' + str +'</p>';
+                    }
+            }
+            else {
+                bottomtitle_margin = bottomtitle_margin+40;
+                if(typeof(splitstring[0]) != 'undefined' && splitstring[0] != null)
+                    titlestring = '<p style= "background:rgba(0, 0, 0, 0.5)">'+splitstring[0] + '<p/>';
+                if(typeof(splitstring[splitstring.length-1]) != 'undefined' && splitstring[splitstring.length-1] != null)
+                    if(splitstring[splitstring.length-1].indexOf('Description:')>-1) {
+                        var str = splitstring[splitstring.length-1].replace('Description:','');
+                        bottomtitlestring = '<p style= "background:rgba(0, 0, 0, 0.5);">' + str +'</p>';
+                        console.log('****bottomtitlestring****',bottomtitlestring);
+                    }
+            }
+            
+        }
+       
+        if(splitstring.length > 0){
+            $('<div class="cboxTitle" style="z-index:9999;color:white">' +titlestring+ '</div>').insertAfter('#colorbox');
+            $('.cboxTitle').offset({top:cPosition.top+5, left: cPosition.left +30});
+            $('.cboxTitle').width(cWidth);
+            $('.cboxTitle').height('100');
+            $('.cboxTitle').show();
+            $('<div class="cboxTitle1" style="z-index:9999;color:white">' +bottomtitlestring+ '</div>').insertAfter('#colorbox');
+            $('.cboxTitle1').offset({top:cPosition.top+457, left: cPosition.left +30});
+            $('.cboxTitle1').width(cWidth);
+            $('.cboxTitle1').height('20');
+            $('.cboxTitle1').show();
+        }
+        });
+        $(document).bind('cbox_cleanup', function(){
+        $('.cboxTitle').fadeOut(300, function(){
+            $('.cboxTitle').remove();
+        });
+        $('.cboxTitle1').fadeOut(300, function(){
+            $('.cboxTitle1').remove();
+        });
+        });  
+    
+      $('.details').attr("title","");
+        $('.details-one').attr("title","");
+        </script>
+    </apex:define>
+</apex:composition>
+</apex:page>

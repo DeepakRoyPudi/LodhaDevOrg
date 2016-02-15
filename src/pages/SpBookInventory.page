@@ -1,0 +1,853 @@
+<apex:page controller="SpBookInventory" sidebar="false" action="{!updateStatus}">
+
+<style type="text/css">
+  table td{padding:0px;}
+  .tbl-bdr{border:1px solid #757575;}
+  th{background-color:#000;color:#fff;padding:3px}
+  .alignRight{text-align:right;padding-right:10px; font-weight: bold;} 
+  .numalignRight{text-align:right;padding-right:10px;} 
+  input.hidebox 
+  {
+     display:none;
+  }
+</style>
+
+
+<apex:form id="BookingForm">
+
+  <apex:pagemessages />
+  <table width= "100%" id="Booking_Main_Table" margin="10px">
+    <tr>
+      <td colspan="2" align="center" style="font-weight: bold;">
+        <table class="tbl-bdr" width="100%" align="left" border ="0">
+          <tr>
+            <td align="center" style="font-weight: bold;">
+            {!oasys_flat_code}            
+            </td>
+            <td align="left" style="font-weight: bold;">
+              <apex:commandLink value="PAYMENT PLAN" action="{!generate_payment_plan}" target="_blank" style="display:block; border:1px; background-color:Orange; height:25px; width:95px; align:center;"/>
+            </td>
+          </tr>
+          <tr>
+            <td align="right" style="font-weight: bold;" width="50%">
+              STATUS
+              <!--<apex:inputfield id="BookingStatusList" label="STATUS" value="{!booking.Booking_Status__c}">
+                <apex:actionsupport event="onchange" action="{!updateStatus}" rerender="BookingForm"/>
+              </apex:inputField>-->
+              <apex:selectList id="BookingStatusList" value="{!DummyStatus}" label="STATUS" size="1"> 
+                  <apex:selectOptions value="{!DummyStatusLst}">                       
+                  </apex:selectOptions> 
+                  <apex:actionsupport event="onchange" action="{!updateStatus}" rerender="BookingForm"/>             
+              </apex:selectList>         
+            </td>
+            <td align="left" style="font-weight: bold;">
+              <apex:commandLink value="CREATE BDF" action="{!generate_bdf_form}" target="_blank" style="display:block; border:1px; background-color:Orange; height:25px; width:95px; align:center;"/>
+            </td>
+            <td align="left" style="font-weight: bold;margin-left:-20px;">
+             <apex:commandLink id="Initiate_Scud" value="INITIATE SCUD" target="_blank" action="{!open_scud_window}" style="visibility:hidden;border:5px; background-color:Orange; height:30px; width:95px;"/>                              
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+   <tr>
+     <td align="left">
+       <table class="tbl-bdr" width="100%" align="left" border ="0">
+         <tr>
+         <th colspan="2">FLAT DETAILS</th>
+         </tr>
+         <tr>
+           <td class="alignRight">
+            SALABLE AREA(SQ.FT.)
+           </td>
+           <td>
+             <apex:outputText id="SALABLE_AREA" label="SALABLE AREA(SQ.FT.)" value="{!saleablearea}" />
+           </td>
+           <td></td>
+         </tr>
+         <tr>
+           <td class="alignRight">  
+             CARPET AREA(SQ.FT.)
+           </td>
+           <td>
+             <apex:outputText id="CARPET_AREA" label="CARPET AREA(SQ.FT.)" value="{!carpetarea}"/>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">  
+             FLAT TYPE
+           </td>
+           <td>
+             <apex:outputText id="FLAT_TYPE" label="FLAT TYPE" value="{!flattype}"/>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">  
+             VIEW
+           </td>
+           <td>
+             <apex:outputText id="VIEW" label="VIEW" value="{!viewtype}"/>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">  
+             FAME STATUS
+           </td>
+           <td>
+             <apex:outputText id="FAME_STATUS" label="FAME STATUS"/>
+           </td>
+         </tr>
+      </table>     
+    </td>
+    <td rowspan="2" aligh="left">
+       <table class="tbl-bdr" width="100%" align="left" border ="0">
+         <tr>
+           <th>PRICE DETAILS</th>
+           <th>CARD</th>
+           <th>ACTUAL</th>
+           <th></th>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             BASE RATE/SQ.FT.(RS.)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="BASE_RATE" label="BASE RATE/SQ.FT.(RS.)" value="{0, number, #,###,###}">
+               <apex:param value="{!booking.Base_Rate_Sq_ft_Rs__c}"/>
+              </apex:outputText>
+           </td>  
+           <td class="numalignRight">  
+             <apex:outputField id="BASE_RATE_ACTUAL" value="{!booking.Base_Rate_Sq_ft_Actual_Rs__c}"/>
+           </td>
+           <td>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             FLOOR RISE/SQ.FT.(RS.)
+           </td>
+           <td class="numalignRight">  
+             <apex:outputText id="FLOOR_RISE" label="FLOOR RISE/SQ.FT.(RS.)" value="{!booking.Floor_rise_Sq_ft_Rs__c}"/>
+           </td>
+           <td class="numalignRight">  
+             <apex:outputField id="FLOOR_RISE_ACTUAL" value="{!booking.Floor_rise_Sq_ft_Actual_Rs__c}"/>
+           </td>
+           <td></td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             PREMIUM/SQ.FT.(RS.)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="PREMIUM_VIEW_RATE" label="PREMIUM/SQ.FT.(RS.)" value="{!booking.Premium_Sq_ft_Rs__c}"/>
+           </td>
+           <td class="numalignRight">
+              <apex:outputField id="PREMIUM_VIEW_RATE_ACTUAL" value="{!booking.Premium_Sq_ft_Actual_Rs__c}"/>
+           </td>
+           <td></td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             APPLICABLE WAIVER/SQ.FT.(RS)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="APPLICABLE_WAIVER" label="APPLICABLE WAIVER/SQ.FT.(RS)" value="{!booking.Applicable_Waiver_Sq_ft_Rs__c}"/>
+           </td>
+           <td class="numalignRight">
+             <apex:outputField id="APPLICABLE_WAIVER_ACTUAL" value="{!booking.Applicable_Waiver_Sq_ft_Actual_Rs__c}"/>
+           </td>
+           <td>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             DAM/OFFER/SCUD SQ.FT.(RS)
+           </td>
+           <td class="numalignRight">
+              <apex:outputText id="DAM_OFFER" label="DAM/OFFER/SCUD SQ.FT.(RS)" value="{!booking.DAM_Offer_Sq_ft_Rs__c}"/>
+           </td>
+           <td class="numalignRight">
+             
+              <apex:inputfield id="DAM_OFFER_ACTUAL" value="{!booking.DAM_Offer_Sq_ft_Actual_Rs__c}" style="text-align:right;">
+                <apex:actionsupport event="onchange" action="{!adjust_dam_amt}" rerender="BookingForm"/>
+              </apex:inputfield>
+           </td>
+           <td>
+
+             <apex:selectRadio id="DAM" value="{!booking.Selected_discount_type__c}" style="font-weight:bold">
+                <apex:selectOption itemValue="DAM" itemlabel="DAM"></apex:selectOption>
+                <apex:selectOption itemValue="SCUD" itemlabel="SCUD"></apex:selectOption>
+                <apex:selectOption itemValue="Sp_offer" itemlabel="Special Offer"></apex:selectOption>                
+                <apex:actionsupport event="onclick" action="{!calc_offer_amt}" rerender="BookingForm"  oncomplete="if(this.value=='SCUD'){document.getElementById('{!$Component.BookingForm.Initiate_Scud}').style.visibility='visible';}"/>
+              </apex:selectRadio>
+              
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             TOTAL RATE/SQ.FT.(RS)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="TOTAL_RATE" label="TOTAL RATE/SQ.FT.(RS)" value="{!booking.Total_Rate_Sq_ft_Rs__c}"/>
+           </td>
+           <td class="numalignRight">
+             <apex:outputField id="TOTAL_RATE_ACTUAL"  value="{!booking.Total_Rate_Sq_ft_Actual_Rs__c}"/>
+           </td>
+           <td>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             FLAT COST (RS.)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="FLAT_COST" label="FLAT COST (RS.)" value="{0, number, #,###,###}"> 
+             <apex:param value="{!booking.Flat_Cost_Rs__c}"/>
+             </apex:outputText>
+           </td>
+           <td class="numalignRight">
+             <apex:outputField id="FLAT_COST_ACTUAL"  value="{!booking.Flat_Cost_Actual_Rs__c}"/>
+           </td>
+           <td>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             INFRASTRUCTURE COST (RS.)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="INFRASTRUCTURE_COST" label="INFRASTRUCTURE COST (RS.)" value="{!booking.Infrastructure_Cost_Rs__c}"/>
+           </td>
+           <td class="numalignRight">
+              <apex:outputField id="INFRASTRUCTURE_COST_ACTUAL"  value="{!booking.Infrastructure_Cost_Actual_Rs__c}">
+<!--                 <apex:actionsupport event="onchange" action="{!cal_infra_cost}" rerender="BookingForm"/> -->
+              </apex:outputField>
+           </td>
+           <td>
+             <apex:inputfield id="INF_INC" value="{!booking.Infrastructure_Incl_in_CV__c}" label="INFRA INCL IN CV">
+               <apex:actionsupport event="onchange" action="{!inf_consideration_amt}" rerender="BookingForm" status="statusInfrastructure"/>
+               <apex:actionStatus id="statusInfrastructure" startText=" Processing..."/>
+             </apex:inputField>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             INFRASTRUCTURE 2(RS.)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="INFRASTRUCTURE_COST2" label="INFRASTRUCTURE 2(RS.)" value="{!booking.Infrastructure_Cost_2_Rs__c}"/>
+           </td>
+           <td class="numalignRight">
+              <apex:outputField id="INFRASTRUCTURE_COST2_ACTUAL"  value="{!booking.Infrastructure_Cost_2Actual_Rs__c}">
+<!--                 <apex:actionsupport event="onchange" action="{!cal_infra_cost}" rerender="BookingForm"/> -->
+              </apex:outputField>
+           </td>
+           <td>
+             <apex:inputfield id="INF_INC_2" value="{!booking.Infrastructure2_Incl_in_CV__c}" label="INFRA2 INCL IN CV">
+               <apex:actionsupport event="onchange" action="{!inf2_consideration_amt}" rerender="BookingForm" status="statusInfrastructure2"/>
+               <apex:actionStatus id="statusInfrastructure2" startText=" Processing..."/>
+             </apex:inputField>
+           </td>
+         </tr>     
+         <tr>
+           <td class="alignRight">
+             CLUB CHARGE (RS.)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="CLUB_CHARGE" label="CLUB CHARGE (RS.)" value="{!booking.Club_charges_Rs__c}"/>
+           </td>
+           <td class="numalignRight">
+             <apex:outputField id="CLUB_CHARGE_ACTUAL" value="{!booking.Club_charges_Actual_Rs__c}">
+<!--                <apex:actionsupport event="onchange" action="{!cal_infra_cost}" rerender="BookingForm"/> -->
+             </apex:outputField>
+           </td>
+           <td>
+             <apex:inputfield id="CLUB_CHRGE_INCL" value="{!booking.Club_charges_Incl_in_CV__c}" label="CLUB CHARGES INCL IN CV">
+               <apex:actionsupport event="onchange" action="{!clb_consideration_amt}" rerender="BookingForm" status="statusClubCharges"/>
+               <apex:actionStatus id="statusClubCharges" startText=" Processing..."/>
+             </apex:inputField>
+           </td>
+         </tr>
+         <tr>
+           <td class="alignRight">
+             CONSIDERATION (RS.)
+           </td>
+           <td class="numalignRight">
+             <apex:outputText id="CONSIDERATION" label="CONSIDERATION (RS.)" value="{!booking.Consideration_Rs__c}"/>
+           </td>
+           <td class="numalignRight">
+             <apex:outputField id="CONSIDERATION_ACTUAL" value="{!booking.Consideration_Actual_Rs__c}"/>
+           </td>
+           <td>
+           </td>
+         </tr>
+       </table>  
+        
+       <script language="JavaScript">
+          //document.getElementById('{!$Component.BookingForm.BASE_RATE_ACTUAL}').disabled = {!price_edit_disabled };
+          //document.getElementById('{!$Component.BookingForm.FLOOR_RISE_ACTUAL}').disabled = {!price_edit_disabled };
+          //document.getElementById('{!$Component.BookingForm.PREMIUM_VIEW_RATE_ACTUAL}').disabled = {!price_edit_disabled };
+         // document.getElementById('{!$Component.BookingForm.APPLICABLE_WAIVER_ACTUAL}').disabled = {!price_edit_disabled };
+          document.getElementById('{!$Component.BookingForm.DAM}').disabled = {!price_edit_disabled};
+          document.getElementById('{!$Component.BookingForm.INF_INC}').disabled = {!price_edit_disabled };
+          document.getElementById('{!$Component.BookingForm.INF_INC_2}').disabled = {!price_edit_disabled };
+          document.getElementById('{!$Component.BookingForm.CLUB_CHRGE_INCL}').disabled = {!price_edit_disabled };
+          document.getElementById('{!$Component.BookingForm.DAM_OFFER_ACTUAL}').disabled = {!price_edit_disabled };
+         // document.getElementById('{!$Component.BookingForm.TOTAL_RATE_ACTUAL}').disabled = {!price_edit_disabled };
+         // document.getElementById('{!$Component.BookingForm.FLAT_COST_ACTUAL}').disabled = {!price_edit_disabled };
+         // document.getElementById('{!$Component.BookingForm.INFRASTRUCTURE_COST_ACTUAL}').disabled = {!price_edit_disabled };
+         // document.getElementById('{!$Component.BookingForm.INFRASTRUCTURE_COST2_ACTUAL}').disabled = {!price_edit_disabled };
+         // document.getElementById('{!$Component.BookingForm.CLUB_CHARGE_ACTUAL}').disabled = {!price_edit_disabled };
+        //  document.getElementById('{!$Component.BookingForm.CONSIDERATION_ACTUAL}').disabled = {!price_edit_disabled };          
+      </script>
+    </td>
+  </tr>
+  <tr>
+    <td>
+       <table class="tbl-bdr" width="100%" align="left" border ="0" id="sd">
+        <tr>
+          <th colspan="2">STAGE DETAILS</th>
+        </tr>
+        <tr>
+          <td class="alignRight">
+            STAGE STATUS
+          </td>
+          <td>
+            <apex:outputText id="STAGE_STATUS" label="STAGE STATUS" value="{!stage_completed}"/>
+          </td>
+        </tr>  
+        <tr>
+          <td class="alignRight">
+            AMOUNT DUE(RS.)
+          </td>
+          <td>
+            <apex:outputText id="AMOUNT_DUE" label="AMOUNT DUE(RS.)" value="{!amt_due}"/>
+          </td>
+        </tr>
+        <tr>
+          <td class="alignRight">
+           TOKEN AMOUNT(RS.)
+          </td>
+          <td>
+            <apex:outputText id="TOKEN_AMOUNT" label="TOKEN AMOUNT(RS.)" value="{!token_amt }"/>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  
+  <tr>
+    <td colspan="2">
+       <table class="tbl-bdr" width="100%" align="left" border ="0">
+        <tr>
+          <th colspan="2">BLOCK DETAILS</th>
+        </tr>
+        <tr>
+          <td>
+             <table width="100%" align="left" border ="0">
+             <tr>
+               <td class="alignRight">
+                 BLOCK FOR #
+               </td>
+               <td>
+                 <apex:inputfield id="BLOCK_FOR" value="{!booking.Block_For__c}" required="false"/>       
+               </td>
+            </tr>
+            <tr>  
+              <td class="alignRight">  
+                BLOCK DETAIL #
+              </td>
+              <td>         
+                <apex:inputfield id="BLOCK_DETAIL" label="BLOCK DETAIL" value="{!booking.Block_Detail__c}" required="false"/>       
+             </td>
+           </tr>
+           <tr>  
+             <td class="alignRight">  
+               SALES PERSON
+             </td>
+             <td>         
+               <apex:inputfield id="BlockSalesPersonList" value="{!booking.Block_Sales_Person__c}" label="SALES PERSON" required="false" rendered="{!block_sales_person_visible}"/>
+               <apex:outputField value="{!booking.Block_Sales_Person__c}" rendered="{!output_block_sales_person_visible}"/>
+             </td>
+           </tr>
+           </table>
+          </td>
+          <td>
+             <table width="100%" align="left" border ="0">             
+             <tr>
+               <td class="alignRight">
+                 BLOCK FOR DAYS #
+               </td>
+               <td>
+                 <apex:inputfield id="BLOCK_FOR_DAYS" label="BLOCK FOR DAYS" value="{!booking.Block_For_Days__c}" required="false"/>       
+               </td>
+            </tr>
+            <tr>  
+              <td class="alignRight">  
+               
+              </td>
+              <td>         
+               
+             </td>
+           </tr>
+           <tr>  
+             <td class="alignRight">  
+               
+             </td>
+             <td>         
+               
+             </td>
+           </tr>
+           <tr>  
+             <td class="alignRight">  
+               BLOCK DATE
+             </td>
+             <td>
+               <apex:inputfield id="BLOCK_DATE" label="BLOCK DATE" value="{!booking.Block_Date__c}" required="false"/>  
+             </td>
+            </tr>
+           </table>
+           <script language="JavaScript">
+             document.getElementById('{!$Component.BookingForm.BLOCK_FOR}').disabled = {!block_disabled};
+             document.getElementById('{!$Component.BookingForm.BLOCK_DETAIL}').disabled = {!block_disabled};
+             //document.getElementById('{!$Component.BookingForm.BlockSalesPersonList}').disabled = {!block_disabled};    
+               
+             document.getElementById('{!$Component.BookingForm.BLOCK_FOR_DAYS}').disabled = {!block_disabled};
+             document.getElementById('{!$Component.BookingForm.BLOCK_DATE}').disabled = {!block_disabled};      
+           </script>       
+          </td>
+        </tr>
+      </table> 
+    </td>
+  </tr>
+  
+  <tr>
+    <td colspan ="2">
+       <table class="tbl-bdr" width="100%" align="left" border ="0">
+        <tr>
+          <th colspan="2">BOOKING DETAILS</th>
+        </tr>
+        <tr>
+          <td>
+             <table width="100%" align="left" border ="0">
+              <tr>
+                <td class="alignRight">
+                  NAME OF APPLICANT *
+                </td>
+                <td>
+                  <apex:inputfield id="NAME_OF_APPLICANT" label="NAME OF APPLICANT" value="{!booking.Name_of_Applicant__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  SECONDARY APPLICANT
+                </td>
+                <td>
+                  <apex:inputfield id="SECONDARY_APPLICANT" label="SECONDARY APPLICANT" value="{!booking.Secondary_Applicant__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  CONTACT NOS. *
+                </td>
+                <td>
+                  <apex:inputfield id="CONTACT_NOS" label="CONTACT NOS." value="{!booking.Contact_Nos__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  E MAIL
+                </td>
+                <td>
+                  <apex:inputfield id="EMAIL" label="E MAIL" value="{!booking.Email__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  ADDRESS 1
+                </td>
+                <td>
+                  <apex:inputfield id="ADDRESS1" label="" value="{!booking.Address1__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  ADDRESS 2
+                </td>
+                <td>
+                  <apex:inputfield id="ADDRESS2" label=" ADDRESS 2" value="{!booking.Address2__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  ADDRESS 3
+                </td>
+                <td>
+                  <apex:inputfield id="ADDRESS3" label=" ADDRESS 3" value="{!booking.Address3__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  LOYALTY ID *
+                </td>
+                <td>
+                  <apex:inputfield id="Loyalty_Id" label=" Loyalty Id" value="{!booking.Loyalty_Id__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  APPLICATION DATE
+                </td>
+                <td>
+                  <apex:inputfield id="APPLICATION_DATE" label="APPLICATION DATE" value="{!booking.Application_Date__c}"/> 
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  BOOKING DATE *
+                </td>
+                <td>
+                  <apex:inputfield id="BOOKING_DATE" label="BOOKING DATE" value="{!booking.Booking_Date__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  CRN # *
+                </td>
+                <td>
+                  <apex:inputfield id="CRN" label="CRN #" value="{!booking.CRN__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  SUBMIT DATE
+                </td>
+                <td>
+                  <apex:outputField id="SUBMIT_DATE" label="SUBMIT DATE" value="{!booking.Submit_Date__c}"/> 
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  BOOKING BY *
+                </td>
+                <td>           
+                  <apex:inputfield id="BookingByList" value="{!booking.Booking_By__c}" label="BOOKING BY">
+                    <apex:actionsupport event="onchange" action="{!toggledisplay}" rerender="BookingForm"/>  
+                  </apex:inputfield> 
+                  <b><apex:outputLabel rendered="{!rep_id_display_visible}" value="Channel Partner"/></b>&nbsp;&nbsp;
+                  <apex:inputfield value="{!booking.Reap_Id__c}" rendered="{!rep_id_display_visible}" label="Reap Id" id="Rep_Id"/>               
+                  <apex:outputField value="{!booking.Reap_Id__c}" rendered="{!output_rep_id_visible}"/>
+                  
+                  <b><apex:outputLabel rendered="{!ref_crn_display_visible}" value="REFERRAL CRN"/></b>&nbsp;&nbsp;
+                  <apex:inputfield value="{!booking.Referral_CRN__c}" rendered="{!ref_crn_display_visible}" label="REFERRAL CRN" id="REF_CRN">
+                    <apex:actionsupport event="onchange" action="{!getReferralCrn}" rerender="BookingForm"/>
+                  </apex:inputfield>
+                  
+                  <apex:inputField value="{!accountLookup.ReferralName__c}" rendered="{!ref_crn_display_visible}" styleClass="hidebox" />
+                  <br/>
+                  <b><apex:outputLabel rendered="{!ref_crn_display_visible}" value="Loyalty Source Id"/></b>&nbsp;&nbsp;
+                  <apex:inputField rendered="{!ref_crn_display_visible}" value="{!booking.Loyalty_Source_Id__c}" id="LOYALTY_SOURCE_ID">
+                    <apex:actionsupport event="onchange" action="{!getReferralCrn}" rerender="BookingForm"/> 
+                  </apex:inputField>  
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  PARKING NOS. 2W
+                </td>
+                <td>
+                  <apex:inputfield id="TWO_W" label="PARKING NOS. 2W" value="{!booking.Parking_Nos_2W__c}"/> 
+                  <b>4W</b>&nbsp;&nbsp;<apex:inputfield id="FOUR_W" label="PARKING NOS. 4W"  value="{!booking.Parking_Nos_4w__c}"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  PARKING TYPE
+                </td>
+                <td>
+                  <apex:inputfield id="ParkingTypeList" value="{!booking.Parking_Type__c}" label="PARKING TYPE"/>
+                </td>
+              </tr>
+              <tr>
+                <td class="alignRight">
+                  CONFIRMATION DATE
+                </td>
+                <td>
+                  <apex:outputField id="CONFIRMATION_DATE" label="CONFIRMATION DATE" value="{!booking.Confirmation_Date__c}"/>
+                </td>
+              </tr>
+            </table>
+          </td>  
+          
+          <td>
+             <table width="100%" align="left" border="0">
+             <tr>
+              <td class="alignRight">
+                VISIT FORM NO. *
+              </td>
+              <td>
+                <apex:inputfield id="VISIT_FORM_NO" label="VISIT FORM NO." value="{!booking.Visitor_Form_No__c}"/>
+              </td>             
+             </tr>
+             <tr>
+              <td class="alignRight">
+                CUSTOMER TYPE *
+              </td>
+              <td>
+                <apex:inputfield id="CustomerTypeList" value="{!booking.Customer_Type__c}" label="CUSTOMER TYPE">
+                  <apex:actionsupport event="onchange" action="{!corpToggleDisplay}" rerender="BookingForm"/>
+                </apex:inputfield>
+                <b><apex:outputLabel rendered="{!corp_display_visible }" value="Corporate Connection"/></b>&nbsp;&nbsp;
+                  <!--<apex:inputfield value="{!booking.Corporate_connection__c}" rendered="{!corp_display_visible }" label="Corporate Connection" id="Corporate_Connection">
+                    <apex:actionsupport event="onchange" action="{!calc_corp_discount}" rerender="BookingForm"/>
+                  </apex:inputfield>-->
+                  
+                  <apex:selectList size="1" id="CorpList" value="{!booking.Corporate_connection__c}" disabled="{!corp_disable}">
+                        <apex:selectOptions value="{!CorpSelectionList}"/>  
+                        <apex:actionsupport event="onchange" action="{!calc_corp_discount}" rerender="BookingForm"/>                  
+                   </apex:selectList>
+              </td>             
+             </tr>
+             <tr>
+              <td class="alignRight">
+                CITY
+              </td>
+              <td>
+                <apex:inputfield id="CITY" label="CITY" value="{!booking.City__c}"/>
+              </td>             
+             </tr>
+             <tr>
+              <td class="alignRight">
+                PIN CODE
+              </td>
+              <td>
+                <apex:inputfield id="PINCODE" label="PIN CODE" value="{!booking.Pincode__c}"/>
+              </td>             
+             </tr>
+             <tr>
+              <td class="alignRight">
+                DATE OF FIRST VISIT *
+              </td>
+              <td>
+                <apex:inputfield id="DATE_FIRST_VISIT" label="DATE OF FIRST VISIT" value="{!booking.Date_of_First_Visit__c}"/> 
+              </td>             
+             </tr>
+             <tr>
+              <td class="alignRight">
+                SALES PERSON *
+              </td>
+              <td id="test">
+                <apex:inputfield id="SalesPersonList" value="{!booking.Sales_Person__c}" label="SALES PERSON" rendered="{!sales_person_visible}"/>
+                <apex:outputField value="{!booking.Sales_Person__c}" rendered="{!output_sales_person_visible}"/>
+              </td>             
+             </tr>
+             
+             <tr>
+              <td></td>
+              <td>
+                <table>
+                  <tr>
+                    <th>TOKEN PAYMENT</th>
+                    <th>AMOUNT</th>
+                    <th>DETAILS</th>
+                  </tr>
+                  <tr>
+                    <td class="alignRight">
+                      CASH (RS.)
+                    </td>
+                    <td>
+                      <apex:inputfield id="CASH" label="CASH (RS)" value="{!booking.Cash_Rs__c}" style="text-align:right;"/>
+                    </td>
+                    <td></td>  
+                  </tr>
+                  <tr>
+                    <td class="alignRight">
+                      CHEQUE(RS.)
+                    </td>
+                    <td>
+                      <apex:inputfield id="CHEQUE" label="CHEQUE(RS.)" value="{!booking.Cheque_Rs__c}" style="text-align:right;"/>
+                    </td>
+                    <td>
+                      <apex:inputfield id="CHEQUE_DETAIL" label="CHEQUE DETAIL" value="{!booking.Cheque_Details__c}" />
+                    </td>  
+                  </tr>
+                  <tr>
+                    <td class="alignRight">
+                      CREDIT CARD(RS.)
+                    </td>
+                    <td>
+                      <apex:inputfield id="CREDITCARD" label="CREDIT CARD(RS)" value="{!booking.Credit_Card_Rs__c}" style="text-align:right;"/>
+                    </td>
+                    <td>
+                      <apex:inputfield id="CREDITCARD_DETAIL" label="CREDIT CARD DETAIL" value="{!booking.Credit_Card_Details__c}"/>
+                    </td>  
+                  </tr>
+                  <tr>
+                    <td class="alignRight">
+                      OTHER(RS.)
+                    </td>
+                    <td>
+                      <apex:inputfield id="OTHER" label="OTHER(RS)" value="{!booking.Other_Rs__c}" style="text-align:right;"/>
+                    </td>
+                    <td>
+                      <apex:inputfield id="OTHER_DETAIL" label="OTHER DETAIL" value="{!booking.Other_Details__c}"/>
+                    </td>  
+                  </tr>
+                  <tr>
+                    <td class="alignRight">
+                      TOTAL (RS.) *
+                    </td>
+                    <td>
+                      <apex:inputfield id="TOTAL" label="TOTAL (RS)" value="{!booking.Total__c}" style="text-align:right;">
+                        <apex:actionsupport event="onclick" action="{!cal_token_amt}" rerender="BookingForm"/>
+                      </apex:inputfield>
+                    </td>
+                    <td></td>  
+                  </tr>
+                  <tr>
+                    <td class="alignRight">
+                      BOOKING REMARK
+                    </td>
+                    <td>
+                      <apex:inputfield id="BOOKING_REMARK" label="BOOKING REMARK" value="{!booking.Booking_Remark__c}"/>
+                    </td>
+                    <td></td>  
+                  </tr>
+                </table>  
+              </td>             
+            </tr>             
+        </table>
+       </td>
+      </tr>
+      <tr>
+        <td colspan="2"> 
+          <table width="100%" align="left" border ="0">
+            <tr>
+              <th colspan="2"> CANCELLATION DETAILS</th>
+            </tr>
+            <tr>
+              <td>
+                <table width="100%" align="left">
+                  <tr>
+                    <td class="alignRight">
+                      CANCELLATION DATE
+                    </td>
+                    <td>
+                      <apex:inputfield id="CANCELLATION_DATE" label="CANCELLATION DATE" value="{!booking.Cancellation_Date__c}"/>       
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="alignRight">
+                      CONFIRM DATE
+                    </td>
+                    <td>
+                      <apex:inputfield id="CONFIRM_DATE" label="CONFIRM DATE" value="{!booking.Cancel_Confirm_Date__c}"/>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table width="100%" align="left">
+                  <tr>
+                    <td class="alignRight">
+                      REASON FOR CANCELLATION
+                    </td>
+                    <td>
+                      <apex:inputfield id="CANCELLATION_REASON" label="" value="{!booking.Reason_for_Cancellation__c}"/>       
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="alignRight">
+                      CONFIRMATION REMARK
+                    </td>
+                    <td>
+                      <apex:inputfield id="CONFIRM_REMARK" label="CONFIRMATION REMARK" value="{!booking.Confirmation_Remark__c}"/>
+                    </td>
+                  </tr>
+                </table>
+                <script>          
+                  document.getElementById('{!$Component.BookingForm.CANCELLATION_DATE}').disabled = {!cancel_date_disable};
+                  document.getElementById('{!$Component.BookingForm.CANCELLATION_REASON}').disabled = {!booking_cancel_disabled};
+                  document.getElementById('{!$Component.BookingForm.CONFIRM_DATE}').disabled = {!booking_cancel_disabled};
+                  document.getElementById('{!$Component.BookingForm.CONFIRM_REMARK}').disabled = {!booking_cancel_disabled};
+                </script>
+              </td>
+            </tr>
+          </table>
+        </td>   
+      </tr>
+    </table>   
+      <script language="JavaScript">       
+        document.getElementById('{!$Component.BookingForm.NAME_OF_APPLICANT}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.SECONDARY_APPLICANT}').disabled = {!booking_edit_disabled};         
+        document.getElementById('{!$Component.BookingForm.CONTACT_NOS}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.EMAIL}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.ADDRESS1}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.ADDRESS2}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.ADDRESS3}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.APPLICATION_DATE}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.BOOKING_DATE}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.CRN}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.SUBMIT_DATE}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.BookingByList}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.TWO_W}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.FOUR_W}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.ParkingTypeList}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.CONFIRMATION_DATE}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.VISIT_FORM_NO}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.CustomerTypeList}').disabled = {!booking_edit_disabled};   
+        document.getElementById('{!$Component.BookingForm.CITY}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.PINCODE}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.DATE_FIRST_VISIT}').disabled = {!booking_edit_disabled};
+        //document.getElementById('{!$Component.BookingForm.SalesPersonList}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.CHEQUE}').disabled = {!booking_edit_disabled  };
+        document.getElementById('{!$Component.BookingForm.CHEQUE_DETAIL}').disabled = {!booking_edit_disabled  };
+        document.getElementById('{!$Component.BookingForm.CREDITCARD}').disabled = {!booking_edit_disabled  };
+        document.getElementById('{!$Component.BookingForm.CREDITCARD_DETAIL}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.OTHER}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.OTHER_DETAIL}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.TOTAL}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.BOOKING_REMARK}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.CASH}').disabled = {!booking_edit_disabled};  
+        document.getElementById('{!$Component.BookingForm.Loyalty_Id}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.REF_CRN}').disabled = {!booking_edit_disabled};
+        document.getElementById('{!$Component.BookingForm.LOYALTY_SOURCE_ID}').disabled = {!booking_edit_disabled};
+        
+        
+        
+        
+      </script> 
+    </td>
+  </tr>
+  <tr>
+    <td class="alignRight">
+      RELATED COMMENTS
+    </td>
+    <td colspan="2" align="left">
+      <apex:inputfield id="COMMENTS" label="COMMENTS" value="{!booking.Related_Comments__c}"/>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <apex:commandButton value="SAVE" action="{!save}"/>
+    </td>          
+    
+  </tr>
+</table>
+<script>
+window.onload = new function() { updateSCUD();};
+function updateSCUD(){
+var aa=(document.getElementById('j_id0:BookingForm:DAM:1'));
+if(aa.checked==true)
+document.getElementById('{!$Component.BookingForm.Initiate_Scud}').style.visibility='visible';
+}
+
+function displayfame(){
+var aa=(document.getElementById('j_id0:BookingForm:BookingStatusList'));
+if(aa.value=='BOOKED')
+document.getElementById('{!$Component.BookingForm.fame}').style.visibility='visible';
+}
+
+</script>
+</apex:form>
+</apex:page>

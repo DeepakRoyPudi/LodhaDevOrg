@@ -1,0 +1,414 @@
+<!--@Created by: Deepak Pudi 
+    @Created Date: 27/4/2015 --> 
+<!-- ------------------------------------------------------------------------------
+    | Modified By      | Modified Date       | Version        | Description         |
+    --------------------------------------------------------------------------------
+    |Deepak Pudi           14/5/2015            1.0          
+    --------------------------------------------------------------------------------
+    |Deepak Pudi           07/07/2015           1.1            Pagination
+    ------------------------------------------------------------------------------ -->
+<apex:page sidebar="false" showHeader="false" controller="PaymentModesCSS2_0Controller" docType="html-5.0" >
+    <apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js" />
+    <!-- <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>-->
+    <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/style.css')}" rel="stylesheet" media="screen" />
+    <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/bootstrap.min.css')}" rel="stylesheet" media="screen" />
+    <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/bootstrap.min.js')}"></script>
+    <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/main.css')}" rel="stylesheet" media="screen" />
+    <link href="{!URLFOR($Resource.CSS2_0, '/CSS2_0/css/responsive.css')}" rel="stylesheet" media="screen" />
+    <script src="{!URLFOR($Resource.CSS2_0, '/CSS2_0/js/main.js')}"></script>
+    <!-- Script required for Making paginaton in Payment Transaction History -->
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js"/>
+    <apex:includeScript value="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"/>
+    <apex:stylesheet value="https://cdn.datatables.net/1.10.5/css/jquery.dataTables.css"/>
+    <style>
+        .sorting { background: none !important;}
+        .sorting_desc {background-image: none !important;}
+        .sorting_asc {background-image: none !important;}
+        .hFont{
+        color: black;
+        }
+        .dataTables_paginate {float:right!important;} 
+        #mytable_filter{float:right!important; width:35% !important;}
+        .m-width{min-width: 150px;  text-align: center;}
+        .export{  width: 20%;
+        text-align: right}
+        .table-striped{ min-width: 150px; text-align: left !important;}
+        .navbar-inverse {
+        background-color: TRANSPARENT;
+        }
+    </style>
+    <script type="text/javascript">
+        function newTranscation()
+        {  
+           var pageURL = window.location.search.substring(1);   
+           var uRLVariables = pageURL.split('?');
+           for (var i = 0; i < uRLVariables.length; i++) 
+           {
+              var parameterName = uRLVariables[i].split('=');
+              if (parameterName[1] == 'favoring') 
+              {
+                window.scroll(0,500);
+              }
+            }
+        }
+    
+        $(document).ready(function(event) { 
+        $('#mytable').dataTable( {
+          "order": [[ 0, "desc" ]]
+        } );
+      
+        $(".dataTables_paginate").click(function(event){
+        $( ".CmdButton" ).focus();
+         });
+        });
+   
+      
+    </script>              
+    
+    <style type="text/css">
+        .alignRight{text-align:right;padding-right:10px; font-weight: bold;}
+        .table_header{background:#A68D2B !important; color : white!important;}
+        media="screen" body {font-size: 13px;}
+        .bPageBlock .requiredInput .requiredBlock {
+        overflow: hidden; !important;
+        background-color: #FFF4F4; !important;
+        }
+        .table-responsive{
+        overflow-x: AUTO;
+        }
+        .body
+        {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;!important;
+        font-size: 12px;
+        }
+        body {
+        background-image: url({!IF(isProjectWise,imageUrl,($Resource.CSS_Background_Image))
+        }
+        );
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        }
+        .valuecol{
+        float:left;
+        margin-top: 2%;
+        }
+        .labelclo{
+        float:left;
+        margin-top: 2%;
+        
+        }
+        .midcol{
+        width: 30%;
+        }
+        .firstcol{
+         width: 30%;
+        }
+        .trstyle{
+        height: 10%;
+        }
+        .dateFormat {
+        display:none;
+        }
+        .container_allpages_new {
+        margin-left: 8%;
+        width: 83%;
+        margin-right: 9%;
+       }
+        label{ margin-bottom: 0 !important; }
+    </style>
+    <apex:composition template="LandingPageCSS2_0">
+        <apex:define name="body">
+        <body onload="newTranscation();">
+            <div class="container_allpages_new" style="margin-top:10px;padding: 20px;background-color:white;">
+                <apex:form >
+                    <div  class="panel-heading" style="height:4%;">
+                        <h class="panel-title">
+                        <div align="center" style="margin-left: 5%;"><i class="glyphicon glyphicon-list"></i> {!'Favoring Details & Payment Transactions'}
+                        <button align="right" type="button" class="btn buttoncolor" onclick="Payinfo();" style="margin-right: 5%;float:right;margin: 7px;margin-top:-1%" rerender="mode">Back To Payment </button>          
+                        </div></h>
+                    </div>
+                    <apex:actionFunction name="Payinfo" action="{!PaymentInfo}"/>
+                </apex:form>
+                <div class="panel panel-default panelmargintop" style="width: 100%;">
+                       <div class="panel-heading" style="height:4%;">
+                            <h3 class="panel-title">Favoring Details</h3>
+                       </div>
+                                    <!---testing purpose--->
+                <div class="panel-body">
+                <div class="table-responsive" style="width: 100%;">
+                    <table class="table table-bordered table-striped" id="mode">
+                        <thead>
+                        <tr>
+                            <th class="table_header" style="width:15%" >Mode</th>
+                            <th class="table_header" style="width:42%">Favoring</th>
+                            <th class="table_header">Steps to make payment</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <apex:outputLabel value="Cheque / Demand Draft / Pay Order"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!mode.In_Favor_of__c}" />
+                                    <br/>
+                                    <apex:outputLabel value="Payable at: "/>&nbsp;
+                                    <apex:outputText value="{!mode.Branch__c }" />
+                                </td>
+                                <td>
+                                    1. Drop Box available at site office or Corporate office.
+                                    <br/>
+                                    OR
+                                    <br/>
+                                    2. Send via Courier to our Corporate Office address.
+                                    <br/>
+                                    3. Please ensure that CRN is mentioned on the back of the Cheque.
+                            </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:outputLabel value="RTGS / NEFT"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!mode.In_Favor_of__c}" />
+                                    <br/> 
+                                    <apex:outputLabel value="A/C: "/>&nbsp;
+                                    <apex:outputText value="{!mode.Account_Number__c}" />
+                                    <br/>
+                                    <apex:outputText value="Of {!mode.Bank_Name__c}, " rendered="{!mode.Bank_Name__c!=null}"/>
+                                    <apex:outputText value=" {!mode.Bank_Address__c}." rendered="{!mode.Bank_Address__c!=null}"/>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <apex:outputLabel value="Mention"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <apex:outputLabel value="IFSC: "/>&nbsp;
+                                                <apex:outputText value="{!mode.IFSC_Code__c}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <apex:outputLabel value="MICR: "/>&nbsp;
+                                                <apex:outputText value="{!mode.MICR_Code__c}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <apex:outputLabel value="SWIFT: "/>&nbsp;
+                                                <apex:outputText value="{!mode.SWIFT_Code__c}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+                </div>
+                <br/>
+                <h1   style="font-size: 15px;color: #000; font-weight: bold">Now track your online transaction with us by filling Transaction Information Form</h1>
+                <br/><br/>
+                <apex:form id="payment_transaction_form">
+                   <!-- <apex:pageBlock title="Enter New Payment Details">  -->
+                   <div class="panel panel-default panelmargintop">
+                       <div class="panel-heading" style="height:4%;">
+                            <h3 class="panel-title">Enter New Payment Details</h3>
+                       </div>
+                                    <!---testing purpose--->
+                       <div class="panel-body">
+                        <apex:pageMessages />
+                        <span style="background-color: #C2E4FE; float: right">
+                            <!--<span class="requiredExample">&nbsp;</span>-->
+                            <!-- <span class="requiredMark">*</span>-->
+                            <!--<apex:outputlabel> <span style="color:#f00">*</span>= Required Information </apex:outputlabel>-->
+                            <!--<span class="requiredText"> = Required Information</span>-->
+                        </span>
+                       
+                        <div class="table-responsive">
+                            <table class="table table table-bordered table-responsive">
+                                <tr>
+                                    <th colspan="8" align="center" class="table_header"> Transaction Information Form </th>
+                                </tr>
+                                <tr class="trstyle">
+                                    <td class="firstcol">
+                                        <div class=" alignRight valuecol col-md-6">{!'CRN:'}</div>
+                                        <div class="labelclo col-md-6"><apex:inputField value="{!booking_tran.CRN__c}"/></div>
+                                    </td>
+                                    <td class="midcol">
+                                        <div class="alignRight valuecol col-md-6">Project Name:</div>
+                                        <div class="labelclo col-md-6"><apex:inputField value="{!booking_tran.Project_Name__c}"/></div>
+                                     </td>
+                                    
+                                    <td class="firstcol">
+                                        <div class="alignRight valuecol col-md-6">Cluster Name:</div>
+                                        <div class="labelclo col-md-6"><apex:inputField value="{!booking_tran.Cluster__c}"/></div>
+                                    </td>
+                                </tr>
+                                <tr class="trstyle">
+                                    <td class="firstcol">
+                                        <div class="alignRight valuecol col-md-6">Account Name:</div>
+                                        <div class="labelclo col-md-6"><apex:inputField value="{!booking_tran.Account_Name_New__c}"/></div>
+                                    </td>
+                                    <td class="midcol">
+                                        <div class="alignRight valuecol col-md-6">Co-Applicant Name:</div>
+                                        <div class="labelclo col-md-6"><apex:inputField value="{!booking_tran.Co_Applicant_Name_New__c}"/></div>
+                                    </td>
+                                    
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr class="trstyle">
+                                    <td class="firstcol">
+                                        <div class="alignRight valuecol col-md-6">Wing:</div>
+                                        <div class="labelclo col-md-6"><apex:inputField value="{!booking_tran.Wing__c}"/></div>
+                                    </td>
+                                    <td class="midcol">
+                                        <div class="alignRight valuecol col-md-6">Flat: </div>
+                                        <div class="labelclo col-md-6"><apex:inputField value="{!booking_tran.Flat__c}"/></div>
+                                    </td>
+                                    <td>
+                                        <div class="alignRight valuecol col-md-6">Type of Transaction:</div>
+                                        <div class="labelclo col-md-6" style=" height: 7px;"><apex:selectlist style="width: 100%;" value="{!typeoftransaction}" size="1">
+                                            <apex:selectOptions value="{!OldTransactionTypes}"></apex:selectOptions>
+                                        </apex:selectlist>
+                                        &nbsp;&nbsp;<span style="color:#c00">{!error1}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="trstyle">
+                                    <td class="firstcol">
+                                        <div class="alignRight valuecol col-md-6">UTR Code:<span style="color:#f00">*</span></div>
+                                        <div class="labelclo col-md-6"><apex:inputField style="width: 100%;" required="true" value="{!booking_tran.UTR_Code__c}" label="UTR Code"/>
+                                        <span style="color:#c00"><strong>{!error}</strong>{!dup_error}</span>
+                                        </div>
+                                    </td>
+                                    <td class="midcol">
+                                        <div class="alignRight valuecol col-md-6">Bank Name:<span style="color:#f00">*</span></div>
+                                        <div class="labelclo col-md-6"><apex:inputField style="width: 100%;" required="true"  value="{!booking_tran.Bank_Name__c}"/></div>
+                                    </td>
+                                    <td>
+                                        <div class="alignRight valuecol col-md-6">Amount Transferred:<span style="color:#f00">*</span></div>
+                                        <div class="labelclo col-md-6"><apex:inputField style="width: 100%;" required="true" value="{!booking_tran.Amount_Transferred__c}"/></div>
+                                    </td>
+                                </tr>
+                                <tr class="trstyle">
+                                    <td class="firstcol">
+                                        <div class="alignRight valuecol col-md-6">Bank Account Holders Name:</div>
+                                        <div class="labelclo col-md-6"><apex:inputField style="width: 100%;" value="{!booking_tran.Bank_Account_Holders_Name__c}"/></div>
+                                    </td>
+                                    <td class="midcol">
+                                        <div class="alignRight valuecol col-md-6">Remitted to Account:<span style="color:#f00">*</span></div>
+                                        <div class="labelclo col-md-6"><apex:inputField style="width: 100%;" required="true" value="{!booking_tran.Remitted_to_Account__c}"/></div>
+                                    </td>
+                                    <td>
+                                        <div class="alignRight valuecol col-md-6">Transaction Date:<span style="color:#f00">*</span></div>
+                                        <div class="labelclo col-md-6"><apex:inputField style="width: 100%;" required="true" value="{!booking_tran.Transaction_Date__c}"/></div>
+                                    </td>
+                                </tr>
+                                <tr class="trstyle">
+                                    <td colspan="6" align="center">
+                                        <apex:commandButton styleclass="btn" value="SAVE" action="{!paymentsave}"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        </div>
+                        </div>
+                        
+                   <!-- </apex:pageBlock> -->
+                   <!-- <apex:pageBlock title="Payment Transaction History"> -->
+                       <div class="panel panel-default panelmargintop">
+                       <div class="panel-heading" style="height:4%;">
+                             <h3 class="panel-title">Payment Transaction History</h3>
+                       </div>
+                                    <!---testing purpose--->
+                       <div class="panel-body">
+                        <div class="table-responsive">
+                            <table id="mytable" class="table table-striped table-bordered" >
+                                <thead >
+                                    <tr style="background:#A68D2B">
+                                        <apex:repeat value="{!headers}" var="h">
+                                            <td align="center" class="table_header">{!h}</td>
+                                        </apex:repeat>
+                                    </tr>
+                                </thead >
+                                <tbody align="center">
+                                    <apex:repeat value="{!TransactionList}"  var="tr">
+                                        <tr>
+                                            <td>
+                                                <apex:outputField value="{!tr.Name}"/>
+                                            </td>
+                                            <!-- <td><apex:outputField value="{!tr.Transaction_Date__c}"/></td> -->
+                                            <td>
+                                                <c:FormatDateComponent date_value="{!tr.Transaction_Date__c}"/>
+                                            </td>
+                                            <td>
+                                                <apex:outputField value="{!tr.Amount_Transferred__c}"/>
+                                            </td>
+                                            <td>
+                                                <apex:outputField value="{!tr.UTR_Code__c}"/>
+                                            </td>
+                                            <td>
+                                                <apex:outputField value="{!tr.Bank_Name__c}"/>
+                                            </td>
+                                            <td>
+                                                <apex:outputField value="{!tr.Bank_Account_Holders_Name__c}"/>
+                                            </td>
+                                            <td>
+                                                <apex:outputField value="{!tr.Remitted_to_Account__c}"/>
+                                            </td>
+                                            <td align="center">
+                                                <apex:outputField value="{!tr.Status__c}"/>
+                                            </td>
+                                            <td>
+                                                <apex:outputField value="{!tr.Receipt_No__c}"/>
+                                            </td>
+                                            <td>
+                                                <apex:outputField value="{!tr.CreatedBy.name}" />
+                                            </td>
+                                        </tr>
+                                    </apex:repeat>
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                        </div>
+                  <!--  </apex:pageBlock> -->
+                </apex:form>
+                <div>
+                    <H2 style="color: black;">Important to Note:</H2>
+                    <ul style="font-family: Arial,Helvetica,sans-serif;font-size: 13px;">
+                        <li>
+                            This Website is for the convenience of the customers and the data provided herein is as per our records in relation to your booking with us. As far as payment confirmation status is concerned, change of the same from “pending” to “approved” is subject to realization of payment by us. 
+                            In case of the payment not received by us the status shall state “rejected” or “pending”. Please note that the interest as Application Form/Allotment Letter/Agreement to Sell shall be applicable on outstanding payments till the date of realization of the same.
+                            Lodha Group reserves its right to discontinue this service, as per its discretion, any time.
+                        </li>
+                        <li>
+                            You may download, reproduce and retransmit information displayed on this web page for non-commercial, personal use. If you do so, you agree that Lodha Group and or its licensors retains all copyright and other proprietary notices contained on the materials. All information provided herein is sensitive, confidential and privileged and meant to be used only for your information.
+                        </li>
+                        <li>
+                            All content on this web site is provided to you on an "As Is" "As Available" basis without warranty of any kind either express or implied. Please provide correct UTR no. for reconciliation and Lodha Group should not be held responsible , in any manner whatsoever and under any circumstances whatsoever, in case you have provided incorrect details. Errors and omissions excepted.
+                        </li>
+                        <li>    This web site and its content are owned by Lodha Group or its affiliates or agents or its licensors. All content, trademarks, services marks, trade names, logos, and icons are proprietary to Lodha Group or its affiliates or agents or its licensors. Nothing contained on this web page should be construed as granting, any rights of any nature whatsoever.
+                        </li>
+                        <li>
+                            The terms and conditions and this website and use thereof shall be governed in accordance with the laws of India.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+           
+            <div class="foorterdiv"></div>
+            </body>
+        </apex:define>
+    </apex:composition>
+</apex:page>

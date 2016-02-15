@@ -1,0 +1,88 @@
+<apex:page StandardStylesheets="false" standardController="Opportunity" extensions="SendSMSController">
+
+<apex:includeScript value="{!URLFOR($Resource.jqueryui, 'js/jquery-1.5.1.min.js')}"/> 
+<apex:includeScript value="{!URLFOR($Resource.jqueryui, 'js/jquery-ui-1.8.14.custom.min.js')}"/> 
+<apex:stylesheet value="{!URLFOR($Resource.jqueryui, 'development-bundle/themes/base/jquery.ui.all.css')}"/>
+
+<style type="text/css">
+.button {
+    position:absolute;
+    top: 0px;
+    left: 330px;
+}
+.text {
+    position:absolute;
+    top: 85px;
+    left: 105px;
+}
+.dropdown {
+    position:absolute;
+    top: 55px;
+    left: 105px;
+}
+.errorMsg {
+    position:absolute;
+    top: 0px;
+    left: 250px;
+}
+</style>
+
+<apex:form id="formID">
+    <apex:outputLabel styleClass="errorMsg" style="" id="doNothing">{!errorMessage}</apex:outputLabel>
+    <br/>
+    <span style="padding:150px;"/>
+    <apex:commandButton value="Send SMS" action="{!sendSMS}" oncomplete="window.top.location='/{!opportunity.id}';" disabled="{!disableSendSMS}"/>
+    <!-- <apex:commandButton id="scheduleButton" reRender="doNothing" action="{!schedules}" oncomplete="if({!isSaved}) { window.top.location='/{!opportunity.id}'} " disabled="{!(!disableScheduleDate)}" value="Schedule SMS"/> <br/> -->
+    <br/>
+    <apex:outputLabel value="SMS Type:" />
+    <br/><br/>
+    <apex:selectList styleClass="dropdown" value="{!smsType}" size="1" >
+        <apex:selectOptions value="{!items}"/>
+        <apex:actionSupport event="onchange" reRender="smsText, scheduleSMS, scheduleDate, scheduleButton" action="{!smsTemplate}"/>
+    </apex:selectList>
+    <apex:outputLabel value="SMS Template:" />
+    <br/><br/><br/><br/>
+    <apex:inputtextarea cols="100" rows="3" readonly="True" styleClass="text" id="smsText" value="{!smsText}" />
+    <apex:outputPanel id="scheduleSMS">
+        <apex:outputLabel rendered="{!disableScheduleSMS}" value="Schedule SMS:" />
+        <span style="padding:4px;"></span>
+        <apex:inputCheckbox rendered="{!disableScheduleSMS}" value="{!scheduleSMS}">
+            <apex:actionSupport event="onclick" action="{!scheduleDate}" reRender="scheduleDate, scheduleButton"/>
+        </apex:inputCheckbox>
+    </apex:outputPanel>
+    <br/><br/>
+    <apex:outputPanel id="scheduleDate" >
+        <script type="text/javascript">
+            $j = jQuery.noConflict();
+            $j(document).ready(function() {
+                $j( '#' + '{!$Component.formID.textfield3}'.replace(/([^0-9a-z])/gi,"\\\\$1") ).datepicker({ dateFormat: 'dd/mm/yy', showOn: "button", buttonImageOnly: true, buttonImage: "{!$Resource.calendar}" });
+                $j( '#' + '{!$Component.formID.textfield3}'.replace(/([^0-9a-z])/gi,"\\\\$1") ).fadeIn('slow');
+            });
+            
+            function test1()
+            {
+                 alert('Saved Succefully: ' + {!isSaved});
+                
+            }
+        </script>
+    
+        <apex:outputPanel rendered="{!disableScheduleDate}">
+            <apex:outputLabel value="Schedule Date:" />
+            <span style="padding:4px;"></span>
+            
+            <apex:inputText id="textfield3" styleclass="validate[required] text-input_date" value="{!scheduleSMSDate}" />
+            
+            <span style="padding:4px;"/>
+            <apex:selectList id="chooseColor" value="{!scheduleSMSTime}" size="1">
+                <apex:selectOption itemValue="09:00" itemLabel=" 9:00 AM"/>
+                <apex:selectOption itemValue="12:00" itemLabel="12:00 PM"/>
+                <apex:selectOption itemValue="15:00" itemLabel=" 3:00 PM"/>
+            </apex:selectList>
+            <br/>
+    
+        </apex:outputPanel>
+    </apex:outputPanel>
+
+   
+</apex:form>
+</apex:page>

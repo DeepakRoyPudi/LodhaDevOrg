@@ -1,0 +1,5 @@
+<apex:page >
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>SORRY!</h1>
+  You Do Not Have Any Active Bookings As Of Now  <!-- End Default Content REMOVE THIS -->
+</apex:page>

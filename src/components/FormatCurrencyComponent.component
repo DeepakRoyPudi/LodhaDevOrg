@@ -1,0 +1,31 @@
+<!-- VisualForce Component for converting Date value to required format 
+     like 100,000.00 as local of user 
+ @Created by: Sudeep Dube
+ @Created Date: 17/06/2015
+ @Input Parameter: Date Value.
+ the componnet prints Date value in above  declared format on VF.
+ --------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+-->
+
+<apex:component access="global" controller="FormatCurrencyController">
+
+     <apex:attribute assignTo="{!CurrencyValue}" description="The Currency value 
+     to be rendered based upon required format 100,000.00 as local of user " 
+     name="currency_value" type="String"></apex:attribute>
+  
+    <apex:outputText value="{0, number,##,##,##,###.00}" rendered="{!And(Not(isBlank(CurrencyValue)),CurrencyZoneValue<>0)}">
+                                                        <apex:param value="{!CurrencyZoneValue}"/>
+                                                   </apex:outputtext>
+    <apex:outputText rendered="{!CurrencyZoneValue=0}">
+    {!CurrencyZoneValue}
+    </apex:outputText>
+        
+           
+  
+</apex:component>

@@ -1,0 +1,175 @@
+<apex:page controller="CAMPAIGNCAL.ccPlanningViewController" title="Campaign Calendar Planning Print Mode" label="Campaign Calendar Planning Print Mode" sidebar="false" showHeader="false">
+    <apex:styleSheet value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/jquery-ui-1.8.11.custom.css')}" /> 
+    <apex:styleSheet value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'calendar.css')}" />  
+    <apex:styleSheet value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.qtip.min.css')}" />  
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/jquery-1.5.2.min.js')}" />
+    <apex:styleSheet value="{!URLFOR($Resource.CAMPAIGNCAL__ccPlanningViewCSS)}"/>
+     <script type="text/javascript" src="{!URLFOR($Resource.ccPlanningViewJS)}"></script>  
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/jquery-ui-1.8.11.custom.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.loadmask-0.4.min.js')}" />   
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.framedialog-1.1.2.min.js')}" />  
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.hoverintent.min.js')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.qtip.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CAMPAIGNCAL__ccZipfile, 'jquery/plugins/jquery.cookie.js')}" />     
+    <script type="text/javascript">
+		var campaignCalendarIcon = '{!URLFOR($Resource.ccIcons, 'bracketlabs-cctoolbar-icon.png')}';
+        var isPrintView = true;
+        var blccFilterId = '{!JSENCODE($CurrentPage.parameters.filterId)}';
+        var printCurrentFilterId = '{!JSENCODE($CurrentPage.parameters.filterId)}';
+        var printCurrentYear=parseInt('{!JSENCODE($CurrentPage.parameters.currentYear)}');
+        var printCurrentPlanningView='{!JSENCODE($CurrentPage.parameters.currentPlanningView)}';
+        var printCurrentMonth=parseInt('{!JSENCODE($CurrentPage.parameters.currentMonth)}');   
+        var displayDates=true;
+        var monthLabelArr={1:'{!$Label.ccMonth_1}',2:'{!$Label.ccMonth_2}',3:'{!$Label.ccMonth_3}',4:'{!$Label.ccMonth_4}',5:'{!$Label.ccMonth_5}',6:'{!$Label.ccMonth_6}',7:'{!$Label.ccMonth_7}',8:'{!$Label.ccMonth_8}',9:'{!$Label.ccMonth_9}',10:'{!$Label.ccMonth_10}',11:'{!$Label.ccMonth_11}',12:'{!$Label.ccMonth_12}'};
+        var campaignsPlural='{!$Label.ccStr_Campaign_Plural}'; 
+        
+        function printViewBGToBorders(){
+        	$j('.planningViewData tr').each(function(index){
+        		var rowbg=$j(this).find('.campaignStart, .campaignMid, .campaignEnd, .campaignOne').first().css('background-color');
+        		$j(this).find('.campaignStart, .campaignMid, .campaignEnd, .campaignOne').css('border-color',rowbg).css('background-color','transparent');
+        		
+        	});
+        }
+    </script>
+    
+
+	<style type="text/css">
+		.campaignStart, .campaignMid, .campaignEnd, .campaignOne{
+			border: 2px solid black;
+			border-radius: 0px 0px 0px 0px !important;
+			-moz-border-radius: 0px 0px 0px 0px!important;
+			-webkit-border-radius: 0px 0px 0px 0px !important;
+		}
+		.campaignMid{
+			border-left: 0px solid transparent;
+			border-right: 0px solid transparent;
+		}
+		.campaignStart{
+			border-right: 0px solid transparent;
+		}
+		.campaignEnd{
+			border-left: 0px solid transparent;
+		}
+		.planningViewTables tr td{
+			border: 0px solid transparent;
+			padding-top: 4px;
+		}
+		
+		.previousnext{
+			min-width:80px;
+		}
+		.orientationSwitch Fieldset {
+    		border: 3px solid #0099CC;
+    		border-radius: 10px 10px 10px 10px;
+		}
+		.orientationSwitch {
+		    max-height: 50px;
+		    width: 270px;
+		}
+		.orientationSwitch p {
+		    margin: 0;
+		    padding: 0;
+		    text-align: center;
+		    font-size: 10px;
+		}
+		.orientationSwitch .btn{
+			margin-left: 105px;
+		}
+		.printTableHeader{
+			width: 100%;
+		}
+		.pageTitle{
+			width:45%;
+		}
+		.listviewText{
+			text-align: center;
+		    font-size: 1.8em;
+		    font-weight: normal;
+		    line-height: 1.1em;
+		}
+		@media print { 
+    		.orientationSwitch { display:none; } 
+		}
+		.inlineTextDate, .textDate{
+			color:black !important;
+			margin-top: -1px;
+			background-color: transparent !important;
+		}
+		
+	</style>    
+<apex:form id="campaignPlanForm" styleClass="campaignCalendarPlanView">
+            <table class="printTableHeader">
+            <tr>
+                <td class="pageTitle">
+                <apex:sectionHeader id="pageTitleDate" title="Campaign Calendar" subtitle="" />
+                </td>
+                <td class="orientationSwitch">
+                    <fieldset>
+                        <p style="font-size:10px;">Remember to also set orientation in printer settings.</p>
+                        <apex:commandButton value="Print" onClick="javascript: window.print(); return false;" alt="Print" lang="en-US" title="Recommended browsers for printing: IE8+, Firefox 3.0+, Safari" />
+                    </fieldset> 
+                </td>
+                <td class="listviewText">
+                    <h2>{!HTMLENCODE($CurrentPage.parameters.filterName)}</h2>
+                </td>
+                </tr>
+            </table>
+        <apex:outputPanel id="campaignList"><div class="bPageBlock apexDefaultPageBlock secondaryPalette"></div>
+            <div id="planningView" style="min-height:500px;">
+            <table id="planningViewTable_month" class="planningViewTables">
+                    <thead>
+                        <tr>
+                            <th class="wide" style="text-align: left;" tdtype="name">{!$Label.ccStr_Campaign}</th>
+                            <th tdtype="previous" class="planningMonth_previous previousnext">&laquo;</th>
+                            <th tdtype="calendar"></th>
+                            <th tdtype="next" class="planningMonth_next previousnext">&raquo;</th>
+                            <th class="wide" tdtype="description">{!$Label.ccStr_Description}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="planningViewData">
+                    </tbody>
+                </table>
+                <table id="planningViewTable_quarter" class="planningViewTables">
+                    <thead>
+                        <tr>
+                            <th class="wide" style="text-align: left;" >{!$Label.ccStr_Campaign}</th>
+                            <th class="previousnext">&laquo;</th>
+                            <th class="pv_QuarterViewMonth"></th>
+                            <th class="pv_QuarterViewMonth"></th>
+                            <th class="pv_QuarterViewMonth"></th>
+                            <th class="previousnext">&raquo;</th>
+                            <th class="wide">{!$Label.ccStr_Description}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="planningViewData">
+                    </tbody>
+                </table>
+                <table id="planningViewTable_year" class="planningViewTables">
+                    <thead>
+                        <tr>
+                            <th class="wide" style="text-align: left;" >{!$Label.ccStr_Campaign}</th>
+                            <th class="previousnext">&laquo;</th>
+                            <th>{!$Label.ccMonth_1}</th>
+                            <th>{!$Label.ccMonth_2}</th>
+                            <th>{!$Label.ccMonth_3}</th>
+                            <th>{!$Label.ccMonth_4}</th>
+                            <th>{!$Label.ccMonth_5}</th>
+                            <th>{!$Label.ccMonth_6}</th>
+                            <th>{!$Label.ccMonth_7}</th>
+                            <th>{!$Label.ccMonth_8}</th>
+                            <th>{!$Label.ccMonth_9}</th>
+                            <th>{!$Label.ccMonth_10}</th>
+                            <th>{!$Label.ccMonth_11}</th>
+                            <th>{!$Label.ccMonth_12}</th>
+                            <th class="previousnext">&raquo;</th>
+                            <th class="wide">{!$Label.ccStr_Description}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="planningViewData">
+                    </tbody>
+                </table>
+                
+            </div>
+        </apex:outputpanel>
+</apex:form>
+</apex:page>

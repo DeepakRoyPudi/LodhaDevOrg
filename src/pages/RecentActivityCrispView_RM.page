@@ -1,0 +1,81 @@
+<apex:page Controller="RecentActivityCrispViewController_RM" sidebar="false" showHeader="false" action="{!displaycaselist}">
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" />
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"/>
+    <apex:includeScript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"/>
+    <script>
+        $(document).ready(function()
+        {
+            $("[id$='accsTable']").tablesorter({theme: 'blue', dateFormat : "dd/mm/yyyy"});
+        });
+    </script>
+    <!-- <script>
+       var sd,sd2;
+        function openSimpleDialog(){
+            var htmlBody = "<p align='center'><img src='/img/msg_icons/confirm32.png' style='margin:0 5px;width:750;'/></p><p align='center'>This is awesome!</p><p align='center'><br /><button class='btn' onclick='sd.hide(); return false;'>cancel</button></p>";
+            sd = showSimpleDialog('SimpleDialog',htmlBody,false);
+        }
+        
+        /*function openSimpleDialogDraggable(){
+            var htmlBody = "<p align='center'><img src='/img/msg_icons/confirm32.png' style='margin:0 5px;'/></p><p align='center'>Hey! Look I am draggable</p><p align='center'><br /><button class='btn' onclick='sd2.hide(); return false;'>cancel</button></p>";
+            sd2 = showSimpleDialog('SimpleDialog',htmlBody,true);
+        }*/
+        
+        /*Simple dialog reusable function*/
+        function showSimpleDialog(title,htmlBody,isDraggable)\
+        {  
+         src = '/apex/Case_demo#' + encodeURIComponent( document.location.href );
+  
+           var sd = new SimpleDialog("SD"+Dialogs.getNextId(), isDraggable);    
+           sd.setTitle(title);    
+           sd.createDialog();     
+           //sd.setContentInnerHTML(htmlBody);
+           // Set the Visualforce page content into the iframe
+           //sd.setContentInnerHTML( '<iframe id="popupiframe"  width="500" height="300" src="' + src + '" />' );
+           sd.setContentInnerHTML('<div><iframe id="iframeContentId" src="' + src + '" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" scrolling="yes" /></div>');
+            sd.show();   
+           return sd;   
+        }
+    </script>-->
+    
+    <apex:form >
+        <!--//it was showing result according to the case status selected -->
+        <!--<apex:selectList value="{!getcasetype}" size="1">
+                <apex:selectOptions value="{!Casestatus}"></apex:selectOptions>
+                <apex:actionSupport event="onchange" action="{!displaycaselist}"/>
+            </apex:selectList>
+        <br/><br/><br/>-->
+     
+        <apex:dataTable value="{!lstCase}" var="c" rendered="{!NOT(ISNULL(lstCase))}" styleclass="table table-bordered" id="accsTable">
+            <apex:column headerValue="Case Number"><apex:outputLink value="/{!c.Id}" target="_blank">{!c.CaseNumber}</apex:outputLink></apex:column>
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.RecentActivityCrispView_RM}" var="f">
+                    <apex:column >
+                        <apex:facet name="header">{!f.Label}</apex:facet>
+                    {!c[f]}
+                    </apex:column>
+                </apex:repeat>
+        </apex:dataTable>
+        <!--<apex:commandButton value="View All" onclick="openSimpleDialog();return false;"/> -->
+        
+         <div class="col-md-3 border mt cancel-link">
+            <a href="#myModal" class="btn btn-lg btn-primary modelbtn event_btn" data-toggle="modal" bgcolor="#428bca" style="background: #428bca!important; border: 0px;"> View All</a>
+        </div>   
+        <div class="modal" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                      Content for the dialog / modal goes here.
+                      <iframe id="iframeContentId" src="/apex/RecentActivityDetailView_CSS" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" scrolling="no" />
+                    </div>
+                    <div class="modal-footer">
+                      <a href="#" data-dismiss="modal" class="btn">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </apex:form>
+</apex:page>

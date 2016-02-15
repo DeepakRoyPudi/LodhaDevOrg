@@ -1,0 +1,183 @@
+<apex:page standardController="Opportunity" extensions="VisitorOpportunityExtensions" sidebar="false" showHeader="false">
+
+  <apex:form rendered="{!userAccess}" styleclass="lodha_form_style" >
+  
+  <style type="text/css"> 
+ {!Usermap.OpportunityCSS__c}
+   
+</style>
+  <apex:stylesheet value="{!Usermap.CSS_URL__c}" />
+        <apex:pageMessages />
+  
+<apex:outputPanel rendered="{!AND(Usermap.isFiorenzaTemplate__c,Usermap.isWorldTowersTemplate__c)}">
+SOME ERROR IN VISTOR FORM SETTINGS:many defaults
+{!Usermap.isFiorenzaTemplate__c}{!Usermap.isWorldTowersTemplate__c}
+</apex:outputPanel>        
+
+<apex:outputPanel rendered="{!AND(NOT(Usermap.isFiorenzaTemplate__c),NOT(Usermap.isWorldTowersTemplate__c))}">
+SOME ERROR IN VISTOR FORM SETTINGS:no defaults
+{!Usermap.isFiorenzaTemplate__c}{!Usermap.isWorldTowersTemplate__c}
+</apex:outputPanel> 
+     
+<apex:outputPanel rendered="{!LeadSourceList.size == 0}">
+<br/>SOME ERROR IN VISTOR FORM SETTINGS :LeadSourceList
+</apex:outputPanel> 
+
+
+<apex:outputPanel rendered="{!Items.size == 0}">
+<br/>SOME ERROR IN VISTOR FORM SETTINGS :AccomodationMap
+</apex:outputPanel>   
+
+<apex:outputPanel rendered="{!Usermap.isFiorenzaTemplate__c}"> 
+
+  <div id="lodha_form_wrapper">    
+      <div id="about_residence" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.BudgetTitle__c}</th></tr>
+          <tr>
+            <td style="padding-left: 8px;">
+                <span style="padding-right: 0;" id="rupee_white">
+                    Budget:<apex:image value="{!$Resource.RupeeFont}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/>
+                </span>
+                <span style="padding-right: 0;" id="rupee_black">
+                    Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/>
+                </span>                
+                <apex:inputField value="{!o.Budgeted_Price__c}"  />
+                <em id="rupee_white" style="font-style: normal; padding-left: 2px; color: #fff;">&nbsp;lacs</em>
+                <em id="rupee_black" style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;lacs</em>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+      </div>
+      
+        
+      <div id="about_flat_type" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.ResidenceType__c}</th></tr>
+         <tr>
+            <apex:selectCheckboxes value="{!accomTypes}">
+                <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.SourceHeader__c}</th></tr>
+             
+            <apex:selectradio value="{!leadsource}" id="others_label1">
+                <apex:selectOptions value="{!LeadSourceList}"></apex:selectOptions>
+            </apex:selectradio>
+            
+        </tbody>
+      </table>
+      </div>
+       
+      <div id="about_partner" class="inputs_block">
+      <table>
+        <tbody>
+
+         <tr>
+            
+            <td><span>Corporate Account Name:</span><apex:inputField value="{!o.Walk_in_Corporate_Account__c}" /></td>
+            <td><span>Channel Partner Name:</span><apex:inputField value="{!o.Walk_in_Channel_Partner__c}" /></td>
+            <td style="width: auto; padding-left: 0;"><span style="width: 100px;">Specify Others:</span><apex:inputfield value="{!o.Walk_in_Source_Details__c}" style="float: right; width: 100px;" /> </td>                            
+            <!-- End: Changes in field mapping from LeadSource to Walkin field -->
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div class="action_btn">
+        <apex:commandbutton value="Previous Page" action="{!goBack}"  styleClass="lodha_btn" style="margin-left: 17px;"/>
+        <apex:commandbutton value="Submit" action="{!submitOpportunity}" styleClass="lodha_btn" />
+      </div>
+       <div class="wadala_bottom_logo" style="margin-top: 180px;">&nbsp;</div>
+  </div>
+
+</apex:outputPanel>           
+<apex:outputPanel rendered="{!Usermap.isWorldTowersTemplate__c}"> 
+  
+  
+  <div id="lodha_form_wrapper">
+      
+      
+      <div id="about_residence" class="inputs_block">
+
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.BudgetTitle__c}</th></tr>
+          <tr>
+            <td style="padding-left: 8px;"><span style="padding-right: 0;">Budget: <apex:image value="{!$Resource.RupeeFont_Blk}" height="11" width="8" style="vertical-align: middle; padding-left: 3px; padding-right: 3px;"/></span><apex:inputField value="{!o.Budgeted_Price__c}"  /><em style="font-style: normal; padding-left: 2px; color: #333;">&nbsp;lacs</em></td>
+          </tr>
+        </tbody>
+
+      </table>
+      </div>
+      
+        
+      <div id="about_flat_type" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.ResidenceType__c}</th></tr>
+         <tr>
+            <apex:selectCheckboxes value="{!accomTypes}">
+                <apex:selectOptions value="{!items}"  />
+            </apex:selectCheckboxes>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      
+      <div id="about_advt" class="inputs_block">
+      <table>
+        <tbody>
+          <tr><th colspan="3">{!UserMap.SourceHeader__c}</th></tr>
+             
+            <apex:selectradio value="{!leadsource}" id="others_label">
+                 <apex:selectOptions value="{!LeadSourceList}"></apex:selectOptions>
+            </apex:selectradio>
+            
+        </tbody>
+      </table>
+      </div>
+       
+      <div id="about_partner" class="inputs_block" style="margin-top: -11px;">
+      <table>
+        <tbody>
+
+         <tr>
+            <!-- Modified by CG Dev Team - 14/10/2011
+              -  Start: Changes in field mapping from LeadSource to Walkin field -->
+            <td><span>Corporate Account Name:</span><apex:inputField value="{!o.Walk_in_Corporate_Account__c}" /></td>
+            <td><span>Channel Partner Name:</span><apex:inputField value="{!o.Walk_in_Channel_Partner__c}" /></td>
+            <td style="width: auto; padding-left: 0;"><span style="width: 100px;">Specify Others:</span><apex:inputfield value="{!o.Walk_in_Source_Details__c}" style="float: right; width: 100px;" /> </td>                            
+            <!-- End: Changes in field mapping from LeadSource to Walkin field -->
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      
+      <div class="action_btn">
+        <apex:commandbutton value="Previous Page" action="{!goBack}"  styleClass="lodha_btn" style="margin-left: 17px;"/>
+        <apex:commandbutton value="Submit" action="{!submitOpportunity}" styleClass="lodha_btn" />
+      </div>
+       <div class="wadala_bottom_logo" style="margin-top: 45px;">&nbsp;</div>
+  </div>
+  </apex:outputPanel>   
+
+ 
+  
+  </apex:form>
+  
+</apex:page>

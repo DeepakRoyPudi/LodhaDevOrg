@@ -1,0 +1,44 @@
+<apex:page id="page" standardController="Booking_Payment_Transaction__c" extensions="attachmentCustomController" showHeader="false" sidebar="true" showChat="false"> 
+    <script>
+        function deletePopup(varId){
+	        var a = confirm('Are you sure to delete?');
+	        if(a)
+	        	calldelete(varId);
+        } 
+    </script>   
+    <apex:form id="form">
+	    <apex:actionfunction name="calldelete" action="{!deletemethod}" rerender="pBlock">
+	    	<apex:param name="varId" value="" assignTo="{!attchId}"/>
+	    </apex:actionfunction>
+	    <apex:pageMessages id="msg"></apex:pageMessages>
+        <apex:pageBlock id="pBlock">
+            <apex:pageMessages />
+            <apex:pageBlockTable id="pTab" value="{!attList}" var="attr">
+
+                <apex:column id="tabColumn" headerValue="Action" width="300" > 
+                	
+                    <apex:commandLink value="Edit" action="{!editmethod}" target="_blank"  rendered="{!isEdit}">
+                        <apex:param name="attchId" value="{!attr.id}" assignTo="{!attchId}"/>
+                    </apex:commandLink> 
+					<apex:outputPanel rendered="{!isEdit}"> &nbsp;|&nbsp; </apex:outputPanel>
+		            <apex:commandLink value="View" action="{!viewmethod}" target="_blank">
+		                <apex:param name="attchId" value="{!attr.id}" assignTo="{!attchId}"/>
+		            </apex:commandLink>
+            		<apex:outputPanel rendered="{!isDelete}"> &nbsp;|&nbsp; </apex:outputPanel>
+            		<apex:outputPanel rendered="{!isDelete}"> 
+            			<a style="cursor: pointer;text-decoration: underline;" onclick="return deletePopup('{!attr.id}');" >Delete</a>
+            	    </apex:outputPanel>
+<!-- 		            <apex:commandLink value="Delete" action="{!deletemethod}" onclick="deletePopup();"  rerender="pBlock" rendered="{!isDelete}"> -->
+<!-- 		                 <apex:param name="attchId" value="{!attr.id}" assignTo="{!attchId}"/>     -->
+<!-- 		            </apex:commandLink> -->
+            	</apex:column>      
+                    
+	            <apex:column headerValue="Title" value="{!attr.Name}" width="300" />
+	            <apex:column headerValue="Last Modified" value="{!attr.LastModifiedDate}" width="300" /> 
+	            <apex:column headerValue="Last Modified By" value="{!attr.LastModifiedById}" width="300" />                       
+	            <apex:column headerValue="Created By" value="{!attr.CreatedById}" width="300" />
+	            
+            </apex:pageBlockTable>
+    	</apex:pageBlock>     
+    </apex:form>       
+</apex:page>

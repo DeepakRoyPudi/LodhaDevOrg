@@ -1,0 +1,44 @@
+<apex:page standardController="Project_Image__c" extensions="EditNewProjectImageController">
+    
+    <apex:form >
+        
+       <apex:pageBlock title="Project Images" >        
+            <apex:pageBlockSection columns="2">                
+
+                    <apex:pageMessages ></apex:pageMessages><br/>
+                                              
+                        <apex:selectList size="1" value="{!projId}" required="true" label="Project Name" >               
+                            <apex:actionsupport reRender="cluster,wing"  event="onchange" status="counterStatus3"/>
+                            <apex:selectOptions value="{!projList}"></apex:selectOptions>                                                     
+                        </apex:selectList>
+                        <apex:actionStatus id="counterStatus3" startText="  Please wait..." stopText="" startStyleclass="Loadingclass" />                                                                                          
+                        
+                        <apex:inputcheckbox label="IsCommon" value="{!IsCommon}" disabled="true">
+                            <apex:actionsupport reRender="cluster,wing"  event="onchange" status="counterStatus2" action="{!myaction}"/>                            
+                        </apex:inputcheckbox> 
+                        <apex:actionStatus id="counterStatus2" startText="  Please wait..." stopText="" startStyleclass="Loadingclass"/>                      
+        
+                        <apex:selectList size="1" value="{!clusterId}" required="true" disabled="{!DisCluster}" label="Cluster" id="cluster">
+                            <apex:selectOptions value="{!ClusterFilter}"></apex:selectOptions>
+                            <apex:actionSupport event="onchange" reRender="wing" status="counterStatus"/>                            
+                        </apex:selectList>  
+                        <apex:actionStatus id="counterStatus" startText="  Please wait..." stopText="" startStyleclass="Loadingclass"/>            
+
+                        <apex:selectList size="1" value="{!wingId}" required="true" disabled="{!Diswing}" label="Wing" id="wing">
+                           <apex:selectOptions value="{!WingFilter}"></apex:selectOptions>                                  
+                        </apex:selectList>     <br/>                          
+            
+                        <apex:inputField label="Trade" value="{!p.Trade__c}" styleClass="Padding"/><br/> 
+                        <apex:inputField label="Photo Description" value="{!p.Photo_Description__c}" styleClass="Padding"/><br/> 
+                        <apex:inputField label="IsActive" value="{!p.IsActive__c}" styleClass="Padding"/><br/> 
+                        <apex:inputField label="Project View" value="{!p.Project_View__c}" styleClass="Padding"/>  <br/>       
+            </apex:pageBlockSection>            
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+                <apex:commandButton action="{!cancel}" value="Cancel"/>
+            </apex:pageBlockButtons>        
+        </apex:pageBlock>   
+        
+    </apex:form>
+  
+</apex:page>

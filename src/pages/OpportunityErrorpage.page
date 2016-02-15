@@ -1,0 +1,13 @@
+<apex:page standardController="Opportunity" sidebar="false" showHeader="false">
+<style>
+.textstyleclass{
+text-align:center;
+color:red;
+font-weight:bold;
+margin-top: 0;
+}
+</style>
+<apex:form rendered="{!if(((!Opportunity.IsActive__c)),true,false)}">
+<p class="textstyleclass">This is an inactive opportunity. You cannot edit it.</p>
+</apex:form>
+</apex:page>

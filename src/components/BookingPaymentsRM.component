@@ -1,0 +1,237 @@
+<!--   Version         Created By        Created Date       Description
+ *
+ *  Initial Draft       Sneha P.         26//02/2015       Component for crisp view of Booking Payments widget
+ *                                                         Displays BookingPayments for a user based on CRN     
+ *
+ -->
+<apex:component controller="BookingPaymentsRMController"> 
+<style>
+.bs .modal-header{text-align:center!important}
+.table-bordered{font-size:12px}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{padding: 6px 8px;}
+.tab-heading td{text-align: center; }
+.viewAll{color:#000 !important; text-decoration: underline!important;}
+.bs a:hover{color:#428bca!important}
+
+/*.bs .container {
+    max-width: 1300px; 
+}*/
+</style>
+
+ <apex:attribute name="CRN" description="This is the CRN value for the User" type="String" assignTo="{!userCRN}" required="true"/>
+ <apex:attribute name="NoOfRecrd" description="No of records to be displayed in widgets crisp view" 
+                    type="Integer" 
+                    assignTo="{!noOfRecords}" 
+                    required="true"/>
+        
+    <div class="panel-heading widgetHeaderBGColor"
+        style="padding: 5px 15px;">
+        <a class="viewAllBPT pull-right viewAll" href="#"  data-toggle="modal" 
+          onclick="disableScroll()"
+           data-target="#favouringDetail" >
+            View All 
+<!--             onclick="ReloadBookingPaymentsDetailView()" -->
+        </a>
+        
+        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+        <h4
+            style="margin-top: 0px; margin-bottom: 0px; font-size: 100%; font-weight: bold">
+           Payment Transaction Info</h4>
+    </div>
+                    
+    <div class="panel-body" style="padding: 5px">
+    <div style="width:100%; text-align:center;">
+        <button type="button" class="btn btn-primary center-block"
+                onclick="window.open('apex/RMNewPaymentTransaction?crn={!userCRN}');"
+                style=" margin:auto; font-size: 100%; padding: 0px 3px; margin-bottom: 14px;">
+               New Payment Transaction
+        </button>
+      </div>                          
+        <apex:outputPanel id="BptTable">
+        <div class="{!If(noOfRecords==3, 'small_widget_tbody','large_widget_tbody' )}">
+        <table class="table" style="font-size: 90%">
+            <thead>
+                <tr>
+                    <apex:repeat value="{!$ObjectType.Booking_Payment_Transaction__c.FieldSets.BookingPaymentsTransactionCrisp_RM}"
+                        var="f" rows="{!noOfRecords}">
+                        <th>
+                        
+                        <apex:outputText value="{!f.Label}" 
+                                        rendered="{!AND(f.Label != 'Amount Transferred',f.Label != 'Transaction Date')}"/>
+                            
+                            <apex:outputText value="Amt." rendered="{!f.Label == 'Amount Transferred'}"/>
+                            <apex:outputText value="Trans. Date" rendered="{!f.Label == 'Transaction Date'}"/>
+                            
+                            <apex:outputText value="{!$Label.Currency_INR_notation_RM_CSS}" rendered="{!f.type == 'double'}"/>
+                        </th>
+                    </apex:repeat>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!bookingPmntTransList}" var="c" rows="{!noOfRecords}">
+                    <tr>
+                        <apex:repeat value="{!$ObjectType.Booking_Payment_Transaction__c.FieldSets.BookingPaymentsTransactionCrisp_RM}"
+                            var="f" rows="{!noOfRecords}">
+                            <td>
+                                <apex:outputLink value="/{!c.Id}" target="_blank" 
+                                                                 rendered="{!f.Label == 'UTR Code'}">
+                                    <apex:outputField value="{!c[f]}"  rendered="{!f.Label == 'UTR Code'}"/>
+                                </apex:outputLink>
+                                
+<!--                                <apex:outputText value="INR " rendered="{!AND(f.type == 'double', c[f] != '', c[f] != null )}"/> -->
+                                
+                                <apex:outputField value="{!c[f]}"  rendered="{!AND(f.Label != 'UTR Code', f.type != 'datetime', f.type != 'date')}"/>
+                                
+                                
+                                <apex:outputPanel rendered="{!f.type == 'datetime'}">
+                              <c:FormatDateTimeComponent date_Timevalue="{!c[f]}"/>
+                            </apex:outputPanel>
+                              <apex:outputPanel rendered="{!f.type == 'date'}">
+                             <c:FormatDateComponent date_value="{!c[f]}"/>
+                            </apex:outputPanel>
+    
+                            </td>
+                        </apex:repeat>
+                    </tr>
+                </apex:repeat>
+                
+                <tr style="{!If(bookingPmntTransList.size > 0, 'display:none','text-align: center;' )}">  
+                     <td colspan="{!$ObjectType.Booking_Payment_Transaction__c.FieldSets.BookingPaymentsTransactionCrisp_RM.size}" 
+                    >
+                    No records to display
+               </td>
+            </tr>
+            </tbody>
+        </table>
+        </div> 
+        </apex:outputPanel>
+    </div>
+
+    <!-- <div class="modal fade" id="BookingPaymentsTransactionsDetail"
+        tabindex="-1" role="dialog" aria-labelledby="smallModal"
+        aria-hidden="true">
+        <div class="modal-dialog" style="height:initial;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" 
+                                          onclick="ReloadBookingPaymentsDetailView(),scrollBodyOnClose();">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    
+                    <span class="glyphicon glyphicon-list" aria-hidden="true" style="top:0px!important;"></span>
+                    <h4 class="modal-title" id="myModalLabel">Payment Transaction Info</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+
+                        <div align="center">
+                            <table width="100%" class="tab-heading" style="margin-left: 2%;">
+                                <tr>
+                                <td>
+                                    <a type="button" class="a" style="" href="#" onclick="ReloadBookingPaymentsDetailView()"
+                                        data-dismiss="modal" data-toggle="modal"
+                                        data-target="#RecentActivityDetail"> <span
+                                        style="font-size: 12px; margin-right: 11%;"><span aria-hidden="true" class="glyphicon glyphicon-edit"></span> Recent Activity </span>
+                                    </a> 
+                                </td>
+                                <td> 
+                                    <a type="button" class="a" style="" href="#" onclick="ReloadBookingPaymentsDetailView()"
+                                        data-dismiss="modal" data-toggle="modal"
+                                        data-target="#PaymentsReceivedDetail"> <span
+                                        style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-ok-circle"></span> Payments Information </span>
+                                    </a> 
+                                </td>
+                                
+                                <td style="border-right:solid 1px #fff !important">
+                                    <a type="button" class="a " href="#" onclick="ReloadBookingPaymentsDetailView()"
+                                        data-dismiss="modal" data-toggle="modal"
+                                        data-target="#RecentDocumentsSmsDispatchDetail"> <span
+                                        style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp; Recent Documents/SMS/Dispatch </span>
+                                    </a> 
+                                </td>
+                               </tr>
+                             </table>
+                        </div>
+                        <br/>
+                        <!-- Component for Recent Activity detail View -->
+                        <!--<apex:iframe src="/apex/BookingPaymentsDetailRM?CRN={!userCRN}" 
+                                     scrolling="true" 
+                                     id="BptIframe"
+                                     height="500" width="1270"
+                                     />-->
+                        <!--   <apex:iframe src="/apex/RMFavouringDetailsAndPaymentTransaction?CRN={!CRN}" 
+                                        scrolling="true" 
+                                        id="BptIframe" 
+                                        height="500"/>           
+                                   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+       <!-----favouring details and transcation history popup started----->
+   <div class="modal fade" id="favouringDetail" tabindex="-1"
+      role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+      <div class="modal-dialog" style="height: initial" >
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="ReloadFavoringDetailView(),scrollBodyOnClose();">
+               <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+               </button>
+               <h4 class="modal-title" id="myModalLabel"><span aria-hidden="true" class="glyphicon glyphicon-list"></span> {!'Favoring Details & Payment Transactions'} 
+               </h4>
+            </div>
+            <div class="modal-body">
+               <div class="container">
+               <table width="100%" class="tab-heading">
+                     <tr >
+                        <td>
+                           <a type="button" data-dismiss="modal" href="#"
+                              data-toggle="modal" data-target="#RecentActivityDetail" onclick="ReloadFavoringDetailView()">
+                           <span style="font-size: 12px;"><span aria-hidden="true" class="glyphicon glyphicon-edit"></span> Recent Activity </span>
+                           </a>
+                        </td>
+                        <td>
+                           <a type="button" href="#"
+                              data-dismiss="modal" data-toggle="modal"
+                              data-target="#RecentDocumentsSmsDispatchDetail" onclick="ReloadFavoringDetailView()"> <span
+                              style="font-size: 12px;" ><span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp; Recent Documents/SMS/Dispatch </span>
+                           </a> 
+                        </td>
+                        <td style="border-right:solid 1px #fff !important">
+                           <a type="button" href="#"
+                              data-dismiss="modal" data-toggle="modal"
+                              data-target="#PaymentsReceivedDetail" onclick="ReloadFavoringDetailView()"> <span
+                              style="font-size: 12px;" > <span aria-hidden="true" class="glyphicon glyphicon-list"></span> Payments Information </span>
+                           </a>
+                        </td>
+                     </tr>
+                  </table>
+                  <br />
+                  <!-- Iframe Placeholder for Recent Activity detail View -->
+                  <apex:iframe src="/apex/RMFavouringDetailsAndPaymentTransaction?CRN={!CRN}" scrolling="true" id="favouringIframe" height="500"/>
+                  
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+    <script>
+        function scrollBodyOnClose() {
+            $('html, body').css({
+                          'overflow': 'auto'
+                           });
+        }
+        
+        function ReloadBookingPaymentsDetailView () {
+            var f = document.getElementById('BptIframe');
+            f.src = f.src;
+            disableScroll();
+        }
+        function disableScroll() {
+             $('html, body').css({
+                     'overflow': 'hidden'
+                      });
+        }
+    </script>
+</apex:component>

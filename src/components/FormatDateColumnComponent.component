@@ -1,0 +1,23 @@
+<!-- VisualForce Component for converting Date value to required format like 10 Jul 2012 
+ @Created by: Sudeep Dube
+ @Created Date: 17/06/2015
+ @Input Parameter: Date Value.
+ the componnet prints Date value in above  declared format on VF.
+ --------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+ |
+ --------------------------------------------------------------------------------
+-->
+
+<apex:component access="global" controller="FormatDateColumnController">
+
+     <apex:attribute assignTo="{!dateValue}" description="The Date value to be rendered 
+      based upon required format 10 Jul 2012 " 
+     name="date_value" type="Date"></apex:attribute>
+      
+       {!DateZoneValue}
+
+</apex:component>

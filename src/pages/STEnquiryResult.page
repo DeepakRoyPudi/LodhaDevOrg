@@ -1,0 +1,191 @@
+<apex:page showHeader="false" title="Service Tax Enquiry" controller="STEnquiryResultController">
+
+<apex:pageBlock rendered="{!if(ISNULL(Result),'false','true')}">
+   
+        <table width="100%" border="0" cellspacing="0" style="font-size:14pt;font-weight:bold;font-family:Arial Unicode MS">
+            <tr>
+            <td width="25%">PROJECT</td>
+            <td width="75%"><apex:outputText >{!Result.Project_Name__c}</apex:outputText></td>
+            </tr>
+            
+            <tr>
+            <td width="25%">BUILDING-FLAT</td>
+            <td width="75%"><apex:outputText >{!Result.Building_Name__c}</apex:outputText></td>
+            </tr>
+        </table>
+        
+        <hr size="5" style="color:black;" noshade="noshade"/>  
+         
+        <table width="100%" border="1" cellspacing="1" style="font-size:10pt;font-family:Arial Unicode MS">   
+            <tr>
+                <td colspan="4" style="font-size:12pt;font-weight:bold;text-align:left">Calculation of Taxable Service Amount  - As on 25th May'2011</td>
+            </tr>
+            
+            <tr>
+                <td width="46%" style="font-size:12pt;font-weight:bold;text-align:center">Particulars</td>
+                <td width="18%" style="font-size:12pt;font-weight:bold;text-align:center">&nbsp;</td>
+                <td width="18%" style="font-size:12pt;font-weight:bold;text-align:center">% of CV</td>
+                <td width="18%" style="font-size:12pt;font-weight:bold;text-align:center">Amount</td>
+            </tr>
+            
+            <tr>
+                <td width="46%" style="font-weight:bold;text-align:left">Consideration Value (CV)</td>
+                <td width="18%" style="font-weight:bold;text-align:center">&nbsp;</td>
+                <td width="18%" style="font-weight:bold;text-align:center">100%</td>
+                <td width="18%" style="font-weight:bold;text-align:right">{!Result.CV__c}</td>
+            </tr>
+            
+            <tr>
+                <td width="46%" style="font-weight:bold;text-align:left">% of Completion of work as on 30.06.2010</td>
+                <td width="18%" style="font-weight:bold;text-align:center">A</td>
+                <td width="18%" style="font-weight:bold;text-align:center">{!Result.POC_Per__c}</td>
+                <td width="18%" style="font-weight:bold;text-align:right">{!Result.POC_Rs__c}</td>
+            </tr>
+
+            <tr>
+                <td width="46%" style="font-weight:bold;text-align:left">Amount Received as on 30.06.2010</td>
+                <td width="18%" style="font-weight:bold;text-align:center">B</td>
+                <td width="18%" style="font-weight:bold;text-align:center">{!Result.Amt_Received_Per__c}</td>
+                <td width="18%" style="font-weight:bold;text-align:right">{!Result.Amount_Recd__c}</td>
+            </tr>
+
+            <tr>
+                <td width="46%" style="font-weight:bold;text-align:left">Demand Raised till 25.5.2011</td>
+                <td width="18%" style="font-weight:bold;text-align:center">C</td>
+                <td width="18%" style="font-weight:bold;text-align:center">{!Result.Demand_Raised_Per__c}</td>
+                <td width="18%" style="font-weight:bold;text-align:right">{!Result.Total_Demand_Raised__c}</td>
+            </tr>
+
+            <tr>
+                <td width="46%" style="font-weight:bold;text-align:left">Eligible Exemption ( Higher Value of A or B)</td>
+                <td width="18%" style="font-weight:bold;text-align:center">D</td>
+                <td width="18%" style="font-weight:bold;text-align:center">{!Result.Eligible_Exemption_Per__c}</td>
+                <td width="18%" style="font-weight:bold;text-align:right">{!Result.Eligible_Exemption__c}</td>
+            </tr>
+
+            <tr>
+                <td width="46%" style="font-size:11pt;font-weight:bold;text-align:left">Service Taxable Amt</td>
+                <td width="18%" style="font-size:11pt;font-weight:bold;text-align:center">(C-D)</td>
+                <td width="18%" style="font-size:11pt;font-weight:bold;text-align:center">&nbsp;</td>
+                <td width="18%" style="font-size:11pt;font-weight:bold;text-align:right">{!Result.Amount_TS__c}</td>
+            </tr>
+
+        </table>
+        
+        <hr size="5" style="color:black;" noshade="noshade"/> 
+            
+        <table width="100%" border="1" cellspacing="1" style="font-size:10pt;font-family:Arial Unicode MS">   
+            <tr>
+                <td colspan="5" style="font-size:12pt;font-weight:bold;text-align:left">Calculation of Service Tax</td>
+            </tr>
+            
+            <tr>
+                <td width="44%" style="font-size:12pt;font-weight:bold;text-align:center">Components</td>
+                <td width="14%" style="font-size:12pt;font-weight:bold;text-align:center">Total Value - 100% of CV</td>
+                <td width="14%" style="font-size:12pt;font-weight:bold;text-align:center">Breakup of Taxable Service amount</td>
+                <td width="14%" style="font-size:12pt;font-weight:bold;text-align:center">% Service Tax Applicable</td>
+                <td width="14%" style="font-size:12pt;font-weight:bold;text-align:center">Net Payable Service Tax</td>
+            </tr>
+            
+            <tr>
+                <td width="44%" style="font-weight:bold;text-align:left">Construction Services (Construction of Complex Service or Construction of Commercial or Industrial Service)</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.Base__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.Net_Value_Inst__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:center">{!Result.Rate_CS__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.Service_Tax_Inst__c}</td>
+            </tr>
+            
+            <tr>
+                <td width="44%" style="font-weight:bold;text-align:left">Floor rise (Provision of Preferential Location Services)</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.FR__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.Net_Value_FR__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:center">{!Result.Rate_FR__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.Service_Tax_FR__c}</td>
+            </tr>
+            
+            <tr>
+                <td width="44%" style="font-weight:bold;text-align:left">View premium (Provision of Preferential Location Services)</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.PR__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.Net_Value_PR__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:center">{!Result.Rate_PR__c}</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.Service_Tax_PR__c}</td>
+            </tr>
+            
+            <tr>
+                <td width="44%" style="font-size:11pt;font-weight:bold;text-align:left">Total</td>
+                <td width="14%" style="font-size:11pt;font-weight:bold;text-align:right">{!Result.CV__c}</td>
+                <td width="14%" style="font-size:11pt;font-weight:bold;text-align:right">{!Result.Amount_TS__c}</td>
+                <td width="14%" style="font-size:11pt;font-weight:bold;text-align:center">&nbsp;</td>
+                <td width="14%" style="font-size:11pt;font-weight:bold;text-align:right">{!Result.Total__c}</td>
+            </tr>
+            
+            <tr>
+                <td width="44%" style="font-weight:bold;text-align:left">Less: Service tax amount received (`)</td>
+                <td width="14%" style="font-weight:bold;text-align:right">&nbsp;</td>
+                <td width="14%" style="font-weight:bold;text-align:right">&nbsp;</td>
+                <td width="14%" style="font-weight:bold;text-align:right">&nbsp;</td>
+                <td width="14%" style="font-weight:bold;text-align:right">{!Result.Service_Tax_Collected_CS__c}</td>
+            </tr>
+            
+            <tr>
+                <td colspan="4" width="44%" style="font-size:12pt;font-weight:bold;text-align:left">Net Service Tax payable</td>
+                <td width="14%" style="font-size:12pt;font-weight:bold;text-align:right">{!Result.Net_Payable_Service_Tax__c}</td>
+            </tr>           
+                        
+        </table>
+                
+        <br/><br/><br/>
+
+        <table width="100%" border="0" cellspacing="1" style="font-weight:bold;font-size:10pt;font-family:Arial Unicode MS;text-align:left;">  
+            <tr>
+                <td>Disclaimers:</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>1. The above computation is provisional and subject to the final assessment by the service tax authorities.</td>
+            </tr>
+            <tr>
+                <td>2. The above computation is as per the rate of service tax applicable as on 30th June 2011 and would change, in case the rates change.</td>
+            </tr>
+            <tr>
+                <td>3. Errors and Omissions excepted.</td>
+            </tr>
+            <tr>
+                <td>4. The above computation pertains to service tax liability on the construction services, floor rise and view premium and does not pertain to taxes, cess and levies that are otherwise payable under the Agreement for Sale or in respect of the Unit.</td>
+            </tr>
+        </table>                      
+        
+        <apex:form id="theForm1"> 
+        <table width="100%" border="0" cellspacing="0" style="font-size:14pt;font-family:Arial Unicode MS">
+        <tr><td>&nbsp;</td></tr>
+        <tr><td align = "center">
+        <apex:commandButton id="back1" value="Back" action="{!goBack}" />        
+        </td></tr>
+        </table>
+        </apex:form>
+</apex:pageBlock> 
+
+<apex:pageBlock rendered="{!if(ISNULL(Result),'true','false')}">
+<apex:form id="theForm1">
+<table width="50%" border="0" cellspacing="0">
+<tr>
+<td colspan = "2"><span style="font-size:16pt;font-weight:bold"><apex:outputText rendered="{!if(ISNULL(Result),'true','false')}">
+<br/><br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!ErrMsg}</apex:outputText></span>
+</td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+<td align = "center">
+<apex:commandButton id="back" value="Back" action="{!goBack}" />
+</td>
+</tr>
+</table>
+
+</apex:form>
+</apex:pageBlock>     
+
+</apex:page>

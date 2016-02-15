@@ -1,0 +1,93 @@
+<apex:page standardController="Flat__c" extensions="IdentifyStdFlat" sidebar="true">
+<apex:form >
+<apex:sectionHeader title="Flats"/>
+<apex:pageBlock title="Flat">
+
+<apex:pageBlockButtons style="padding-left:120px;">
+<apex:commandButton action="{!save}" value="Save"/>
+<apex:commandButton action="{!cancel}" value="Cancel"/>
+</apex:pageBlockButtons>
+<apex:pagemessages ></apex:pagemessages>
+
+<!-- section for sales planning & marketing profile -->
+
+<apex:pageBlockSection collapsible="true" title="Flat Detail" columns="2" rendered="{!salesNmarketing}">
+<apex:outputField value="{!flatrecord.name}" />
+<apex:outputField value="{!flatrecord.Oasys_Flat_code__c}" title="Oasys Flat code"/>
+<apex:outputField value="{!flatrecord.Wing__c}" title="Wing"/>
+<apex:outputField value="{!flatrecord.Flat_Type__c}" title="Flat Type"/>
+<apex:InputField value="{!flatrecord.Status__c}" />
+<apex:outputField value="{!flatrecord.ProjectName__c}" title="ProjectName"/>
+<apex:outputField value="{!flatrecord.View__c}" title="View"/>
+<apex:outputField value="{!flatrecord.Carpet_Area__c}" title="Carpet Area"/>
+<apex:outputField value="{!flatrecord.Salable_Area__c}" title="Salable Area"/>
+<apex:outputField value="{!flatrecord.Floor__c}" />
+<apex:outputField value="{!flatrecord.Flat_No__c}" />
+</apex:pageBlockSection>
+
+<!-- section for others -->
+
+<apex:pageBlockSection collapsible="true" title="Flat Detail" columns="2" rendered="{!salesNmarketing=false}">
+<apex:InputField value="{!flatrecord.name}"/>
+<apex:InputField value="{!flatrecord.Status__c}" />
+<apex:InputField value="{!flatrecord.Wing__c}" />
+<apex:InputField value="{!flatrecord.Oasys_Flat_code__c}" />
+<apex:InputField value="{!flatrecord.Flat_Type__c}" />
+<apex:InputField value="{!flatrecord.Carpet_Area__c}" />
+<apex:InputField value="{!flatrecord.Salable_Area__c}"/>
+<apex:InputField value="{!flatrecord.Floor__c}" />
+<apex:InputField value="{!flatrecord.Flat_No__c}" />
+<apex:InputField value="{!flatrecord.ProjectName__c}" />
+
+<apex:outputPanel style="padding-left:110px;">
+<apex:outputLabel value="Created By" style=""></apex:outputLabel>&nbsp;&nbsp;&nbsp;
+<apex:outputField value="{!flatrecord.CreatedByid}" />,&nbsp;<apex:outputfield value="{!flatrecord.createddate}" />
+</apex:outputPanel>
+
+<apex:outputPanel style="padding-left:80px;">
+<apex:outputLabel value="Last Modified By" style=""></apex:outputLabel>&nbsp;&nbsp;&nbsp;
+<apex:outputField value="{!flatrecord.LastmodifiedByid}" />,&nbsp;<apex:outputfield value="{!flatrecord.lastmodifieddate}"/>
+</apex:outputPanel>
+
+</apex:pageBlockSection>
+
+<apex:pageBlockSection collapsible="true" title="Flat Details" columns="1" rendered="{!salesNmarketing=false}">
+<apex:InputField value="{!flatrecord.View__c}" />
+</apex:pageBlockSection>
+
+<apex:pageBlockSection collapsible="true" title="Stage Details" columns="1" rendered="{!salesNmarketing=false}">
+<apex:InputField value="{!flatrecord.Stage_Completed__c}"/>
+<apex:InputField value="{!flatrecord.Amount_Due_Rs__c}" />
+<apex:InputField value="{!flatrecord.Token_Amount_Rs__c}" />
+</apex:pageBlockSection>
+
+<apex:pageBlockSection collapsible="true" title="Original Flat Price Details" columns="2" rendered="{!salesNmarketing=false}">
+<apex:InputField value="{!flatrecord.Base_Rate_Sq_Ft_Rs__c}"/>
+<apex:InputField value="{!flatrecord.Infrastructure_Cost_Rs__c}" />
+<apex:InputField value="{!flatrecord.Floor_Rise_Sq_Ft_Rs__c}" />
+<apex:InputField value="{!flatrecord.Infrastructure_Cost2_Rs__c}" />
+<apex:InputField value="{!flatrecord.Premium_Sq_Ft_Rs__c}" />
+<apex:InputField value="{!flatrecord.Club_Charges_Rs__c}" />
+<apex:InputField value="{!flatrecord.Calculated_Total_SqFt_Rate__c}"/>
+<apex:InputField value="{!flatrecord.Consideration_Rs__c}" />
+<apex:InputField value="{!flatrecord.Flat_Cost_Rs__c}" />
+</apex:pageBlockSection>
+
+<apex:pageBlockSection collapsible="true" title="Prices Details from Booking" columns="2" rendered="{!salesNmarketing=false}">
+<apex:InputField value="{!flatrecord.Applicable_Waiver_Sq_Ft_Rs__c}"/>
+<apex:InputField value="{!flatrecord.Infrastructure_Incl_in_CV__c}" />
+<apex:InputField value="{!flatrecord.DAM_Offer_Sq_Ft_Rs__c}" />
+<apex:InputField value="{!flatrecord.Infrastructure2_Incl_in_CV__c}" />
+<apex:InputField value="{!flatrecord.Total_Rate_Sq_Ft_Rs__c}" />
+<apex:InputField value="{!flatrecord.Club_Charges_Incl_in_CV__c}" />
+<apex:InputField value="{!flatrecord.Actual_Consideration__c}"/>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection collapsible="true" title="Other Information" columns="1" rendered="{!salesNmarketing=false}">
+<apex:InputField value="{!flatrecord.Message__c}" style="width:700px;height:150px;"/>
+</apex:pageBlockSection>
+
+</apex:pageBlock>
+
+</apex:form>
+</apex:page>

@@ -1,0 +1,10 @@
+<apex:page showHeader="false" controller="popupcontroller">
+<apex:form >
+<body style="background:whitesmoke">
+<div style="text-align:center;">
+<apex:image value="{!$Resource.MyGainImage}" title="MyGain" width="60%" height="60%"/><br/>
+<apex:commandButton action="{!showlogin}" value="Proceed to portal >>" style="padding: 5px 5px 5px 5px;background:maroon;"/>
+</div>
+</body>
+</apex:form>
+</apex:page>

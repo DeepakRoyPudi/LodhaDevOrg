@@ -1,0 +1,177 @@
+<!--@Created by: Deepak Pudi 
+     @Created Date: 3/3/2015 -->
+ 
+ <!-- ------------------------------------------------------------------------------
+ | Modified By      | Modified Date       | Version        | Description         |
+ --------------------------------------------------------------------------------
+ |Deepak Pudi            20/4/2015            1.0           CaseInformation of all Customers
+ --------------------------------------------------------------------------------
+ |
+ ------------------------------------------------------------------------------ -->
+<apex:page sidebar="false" controller="AdminReportCaseInfoController" standardStylesheets="true">
+
+
+<h3 align="Center"> Case Information Report</h3>
+
+<apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!--     Latest compiled JavaScript --> 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<apex:includeScript value="https://code.jquery.com/jquery-1.11.1.min.js"/>
+<apex:includeScript value="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"/>
+<apex:stylesheet value="https://cdn.datatables.net/1.10.5/css/jquery.dataTables.css"/>
+    <style>
+    .sorting { background: none !important;}
+
+    .sorting_desc {background-image: none !important;}
+
+    .sorting_asc {background-image: none !important;} 
+
+    .hFont{
+  color: aliceblue;
+  }
+  
+    .messageCell{width:100% !important; text-align:left; border:none;}
+   
+   .message tr td{border:none !important}
+   .dataTables_paginate {float:left!important; width:31% !important;}        
+   #mytable_filter{float:left!important; width:40% !important; margin-top: 15px;}
+   
+   
+   .top-date{width:100%;margin-top: 15px;}
+   .From-Date{float:left}
+   .To-Date{float:left;  margin-left: 15px;}
+   .Gobtn{width:200px;float:left; padding-left: 20px;   text-align: left;}
+   
+   .dateInput{  margin-left: 11px;}
+   .text-left{text-align: left;}
+   .export{   width: 20%;
+              text-align: right;
+              margin-top: 15px;
+              }
+
+    </style> 
+     
+ <script type="text/javascript">
+    $(document).ready(function() {
+     
+       $('#mytable').dataTable( {
+                    "order": [[ 0, "desc" ]]
+                } );
+               
+        $(".dataTables_paginate").click(function(event){
+        
+       			 console.log('----paginate_button------');
+        
+       				 $( ".buttonGo" ).focus();
+   			 });
+                } );
+                
+                function setmytable()
+                {
+                      $('#mytable').dataTable( {
+                    "order": [[ 0, "desc" ]]
+                } );
+                }
+</script>
+
+
+
+    <apex:form id="formid">
+    
+     <!--Display Error Msg when false date Entered -->
+     
+     <apex:pageMessages id="msg">
+        </apex:pageMessages>
+        
+    <div class="top-date">
+        
+            <div class="From-Date">
+                <apex:outputText ><b>From Date</b> </apex:outputText>
+                <apex:inputfield value="{!fromDateSearch.Date_of_Complaint__c}" />
+            </div>
+            <div class="To-Date">
+                <apex:outputText ><b>To Date</b> </apex:outputText>
+                <apex:inputfield value="{!toDateSearch.Date_of_Complaint__c}" onChange="setFocus();" onblur="setFocus();"/>
+            </div>  
+            <div class="Gobtn">
+                <apex:commandButton value="Go" styleClass="buttonGo" oncomplete="setmytable();"     action="{!searchByFilter}" status="search" rerender="data,msg" />
+                <apex:actionStatus startText=" Please wait ....." stopText=" " id="search" />
+           </div>  
+    </div> <br/>
+    
+         
+       
+     
+    <!--Export Button Functionality  -->
+    <div class="export">
+     <apex:commandButton value="Export CSV" action="{!ExportToCSV}" status="search1"  />
+      <apex:actionStatus startText=" Please wait ....." stopText=" " id="search1" />
+      </div>
+      
+    <apex:outputPanel id="data">
+     <table id="mytable" class="table table-striped table-bordered">
+         <thead >
+         <tr style="  background-color:  #7DD3F0;color:aliceblue " >
+                    <th>CRN</th>
+                    <th>No. of Cases Tagged</th>
+                    <th>No. of Cases Open for Today</th>
+                    <th>No. of Cases Open Overall</th>
+                    <th>No. of Grievances</th>
+                    <th>No. of Complaints where Director Approval Is Needed</th>
+                    <th>No. of Complaints where Director Approval Is Not Needed</th>
+                    <th>No. of Calls (Inbound)</th>
+                    <th>No. of Emails (Inbound)</th>
+                    <th>No. of Calls (Outbound)</th>
+                    <th>No. of Emails (Outbound)</th>
+                    <th>Inbound Cases</th>
+                    <th>Outbound Cases</th>
+                     
+         </tr>  
+        </thead>
+        <tbody align="center">
+             <apex:repeat value="{!finalmap}" var="a">
+                    <tr>
+                        <td>
+                               
+                                    <apex:outputlink value="/{!mapCRNAndAccount[a].Id}" target="_blank">{!a}</apex:outputlink>
+                            
+                            </td>
+                       
+                        
+                        <apex:repeat value="{!finalmap[a]}" var="b">
+                            <td>
+                                
+                                    <apex:outputtext value="{!b}" />
+                                
+                            </td>
+                        
+                        </apex:repeat>
+                    </tr>
+                    
+                </apex:repeat>
+        </tbody>         
+         </table> 
+    </apex:outputPanel>
+    
+    <script>
+ /*   window.onload = setFocus;*/
+        function setFocus() {
+            //$(".Gobtn").focus();
+            //var keycode;
+            //if (window.event) keycode = window.event.keyCode;
+            //if (window.event.keyCode = 13 ) return false;
+            $('html').bind('keypress', function(e)
+        {
+           if(e.keyCode == 13)
+           {
+              return false;
+           }
+        });
+            
+        }
+        
+       
+</script>
+    </apex:form>
+
+</apex:page>

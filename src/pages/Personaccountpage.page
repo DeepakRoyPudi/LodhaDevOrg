@@ -1,0 +1,87 @@
+<apex:page controller="Personaccountcontroller" tabStyle="Account" >
+
+<apex:form id="theform">
+<script>
+ function errorFunc()
+        {
+       var test=document.getElementById("{!$Component.theform.recordssize}").value;
+       if(test=='0'){
+       document.getElementById("errorBlock").innerHTML="No matching records found";
+       }
+        }
+        
+      
+      function pressEnter(e){     
+        if(window.event){
+        key = window.event.keyCode; //IE
+        } else{
+        key = e.which; //firefox
+        }
+        if(key == 13) {
+        var ele=document.getElementById('saveAndclosePopUp');           
+        ele.click();            
+        return false;
+        } else{
+        return true;
+        }
+
+       }
+</script>
+<apex:actionFunction name="CallApexMethod" action="{!Searchbyname}" oncomplete="errorFunc();" reRender="displayfilteredpanel,theform" />  
+<apex:sectionHeader subtitle="Search" title="Person Accounts"/>
+     <center> 
+     <apex:inputhidden value="{!recordssize}" id="recordssize" />      
+     <apex:inputText label="Name" value="{!inputvalue}" onkeypress="return pressEnter(event);"/>
+    
+     <apex:CommandButton action="{!Searchbyname}" oncomplete="errorFunc();" value="Search" reRender="displayfilteredpanel,theform"/>  
+      <input type="button" id="saveAndclosePopUp" value="" onclick="CallApexMethod()" style="color: transparent; background-color: transparent; border-color: transparent; cursor: default;"/>
+    <!-- <apex:CommandButton action="{!ViewAll}" value="View All Accounts"/>   -->
+     </center><br/><br/> 
+     <apex:sectionHeader subtitle="List" title="Person Accounts"/>
+
+<!--
+<apex:outputPanel rendered="{!displayall}" id="displayallpanel">
+<apex:pageBlock id="pblock">
+       <apex:pageBlockSection title="Search Results" columns="1">
+            <apex:pageblockTable value="{!accwrapperlist}" var="acc">    
+             <apex:column headerValue="Account Name">                        
+             <apex:commandLink value="{!acc.Cat.Name}" action="/{!acc.cat.Id}"/>
+             </apex:column> 
+             <apex:column headerValue="Mobile Number" value="{!acc.cat.Mobile_Phone__c}"/>
+             <apex:column headerValue="H Mobile Number" value="{!acc.cat.H_Mobile_No__c}"/> 
+            </apex:pageblockTable>
+        </apex:pageBlockSection>
+</apex:pageBlock>
+
+<apex:commandLink action="{!first}">First</apex:commandlink>&nbsp;&nbsp;
+<apex:commandLink action="{!previous}" >Previous</apex:commandlink>&nbsp;&nbsp;
+<apex:commandLink action="{!next}" >Next</apex:commandlink>&nbsp;&nbsp;
+<apex:commandLink action="{!last}">Last</apex:commandlink>&nbsp;&nbsp;
+Total Records Found:&nbsp;{!allaccountrecords.resultSize}
+&nbsp;({!IF(allaccountrecords.PageNumber == 1,1,((allaccountrecords.PageNumber -1) * allaccountrecords.PageSize)+1)}-{!IF(allaccountrecords.resultSize < allaccountrecords.PageSize,allaccountrecords.resultSize,allaccountrecords.PageNumber * allaccountrecords.pageSize)})&nbsp;
+</apex:outputPanel>  -->
+  
+ <apex:outputPanel rendered="{!displayfiltered}" id="displayfilteredpanel">
+ <div id="errorBlock" style="color:red"></div>
+<apex:pageBlock id="filteredblock">
+       <apex:pageBlockSection title="Search Results" columns="1">
+            <apex:pageblockTable value="{!Filteredaccwrapperlist}" var="acc">    
+             <apex:column headerValue="Account Name">                        
+             <apex:commandLink value="{!acc.Cat.Name}" action="/{!acc.cat.Id}"/>
+             </apex:column> 
+             <apex:column headerValue="Mobile Number" value="{!acc.cat.Mobile_Phone__c}"/>
+            <apex:column headerValue="H Mobile Number" value="{!acc.cat.H_Mobile_No__c}">                                   
+            </apex:column>             
+            </apex:pageblockTable>
+        </apex:pageBlockSection>
+</apex:pageBlock>
+
+<apex:commandLink action="{!filteredfirst}">First</apex:commandlink>&nbsp;&nbsp;
+<apex:commandLink action="{!filteredprevious}" >Previous</apex:commandlink>&nbsp;&nbsp;
+<apex:commandLink action="{!filterednext}" >Next</apex:commandlink>&nbsp;&nbsp;
+<apex:commandLink action="{!filteredlast}">Last</apex:commandlink>&nbsp;&nbsp;
+ Total Records Found:&nbsp;{!filteredaccounts.resultSize}
+&nbsp;({!IF(filteredaccounts.PageNumber == 1,1,((filteredaccounts.PageNumber -1) * filteredaccounts.PageSize)+1)}-{!IF(filteredaccounts.resultSize < filteredaccounts.PageSize,filteredaccounts.resultSize,filteredaccounts.PageNumber * filteredaccounts.pageSize)})&nbsp;
+ </apex:outputPanel>
+</apex:form>
+</apex:page>

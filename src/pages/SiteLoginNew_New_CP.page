@@ -1,0 +1,35 @@
+<apex:page id="loginPage" showHeader="false" title="{!$Label.site.site_login}" cache="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.w2l, "innerCSS")}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.w2l, "lodha.css")}"/>
+
+    <apex:panelGrid columns="1" id="theGrid" border="0" width="100%" cellpadding="0" cellspacing="5"  bgcolor="#E5E5E5"         style="font-family:futura_md_btmedium, Arial;">
+        
+        <apex:image url="{!URLFOR($Resource.SiteLoginNew_zip,'bg_01_01.jpg')}" width="100%"/> 
+        <br/>   
+        
+        <apex:panelGroup id="panelgroup">
+            <center><c:SiteLogin1 id="siteLogin1"/></center>    
+        </apex:panelGroup>   
+        <br/>
+
+
+        <apex:panelGrid columns="2" width="100%" Style="margin-top:0.5em; background-color:#afa8a2;">
+            
+            <apex:panelGroup >    
+                <div style="float:left; padding-left:2%;">
+                    <span style="color:#000000; font-size:12px;">Copyright©2011 Lodha Group. All rights reserved</span>
+                </div>
+            </apex:panelGroup>
+            <apex:panelGroup >
+                <div style="float:right;background-color:#afa8a2; padding-right:2%; ">
+                    <span style="color:#000000; text-align:right;  font-size:12px;">Terms &amp; Conditions</span>
+                </div>
+            </apex:panelGroup>
+            
+        </apex:panelGrid>  
+        
+    </apex:panelGrid>
+
+
+</apex:page>
